@@ -2,6 +2,8 @@
 // main.js
 //=============================================================================
 
+var $plugins = [];
+
 PluginManager.setup($plugins);
 
 window.onload = function() {
