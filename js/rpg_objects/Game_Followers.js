@@ -8,10 +8,10 @@ function Game_Followers() {
 }
 
 Game_Followers.prototype.initialize = function () {
-    this._visible = $dataSystem.optFollowers;
+    this._visible = global.$dataSystem.optFollowers;
     this._gathering = false;
     this._data = [];
-    for (var i = 1; i < $gameParty.maxBattleMembers(); i++) {
+    for (var i = 1; i < global.$gameParty.maxBattleMembers(); i++) {
         this._data.push(new Game_Follower(i));
     }
 };
@@ -64,17 +64,17 @@ Game_Followers.prototype.update = function () {
 
 Game_Followers.prototype.updateMove = function () {
     for (var i = this._data.length - 1; i >= 0; i--) {
-        var precedingCharacter = i > 0 ? this._data[i - 1] : $gamePlayer;
+        var precedingCharacter = i > 0 ? this._data[i - 1] : global.$gamePlayer;
         this._data[i].chaseCharacter(precedingCharacter);
     }
 };
 
 Game_Followers.prototype.jumpAll = function () {
-    if ($gamePlayer.isJumping()) {
+    if (global.$gamePlayer.isJumping()) {
         for (var i = 0; i < this._data.length; i++) {
             var follower = this._data[i];
-            var sx = $gamePlayer.deltaXFrom(follower.x);
-            var sy = $gamePlayer.deltaYFrom(follower.y);
+            var sx = global.$gamePlayer.deltaXFrom(follower.x);
+            var sy = global.$gamePlayer.deltaYFrom(follower.y);
             follower.jump(sx, sy);
         }
     }
@@ -109,7 +109,7 @@ Game_Followers.prototype.areMoving = function () {
 
 Game_Followers.prototype.areGathered = function () {
     return this.visibleFollowers().every(function (follower) {
-        return !follower.isMoving() && follower.pos($gamePlayer.x, $gamePlayer.y);
+        return !follower.isMoving() && follower.pos(global.$gamePlayer.x, global.$gamePlayer.y);
     }, this);
 };
 

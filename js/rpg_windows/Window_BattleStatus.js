@@ -33,7 +33,7 @@ Window_BattleStatus.prototype.numVisibleRows = function () {
 };
 
 Window_BattleStatus.prototype.maxItems = function () {
-    return $gameParty.battleMembers().length;
+    return global.$gameParty.battleMembers().length;
 };
 
 Window_BattleStatus.prototype.refresh = function () {
@@ -42,7 +42,7 @@ Window_BattleStatus.prototype.refresh = function () {
 };
 
 Window_BattleStatus.prototype.drawItem = function (index) {
-    var actor = $gameParty.battleMembers()[index];
+    var actor = global.$gameParty.battleMembers()[index];
     this.drawBasicArea(this.basicAreaRect(index), actor);
     this.drawGaugeArea(this.gaugeAreaRect(index), actor);
 };
@@ -70,7 +70,7 @@ Window_BattleStatus.prototype.drawBasicArea = function (rect, actor) {
 };
 
 Window_BattleStatus.prototype.drawGaugeArea = function (rect, actor) {
-    if ($dataSystem.optDisplayTp) {
+    if (global.$dataSystem.optDisplayTp) {
         this.drawGaugeAreaWithTp(rect, actor);
     } else {
         this.drawGaugeAreaWithoutTp(rect, actor);

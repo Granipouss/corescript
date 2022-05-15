@@ -20,8 +20,8 @@ Scene_Map.prototype.initialize = function () {
 
 Scene_Map.prototype.create = function () {
     Scene_Base.prototype.create.call(this);
-    this._transfer = $gamePlayer.isTransferring();
-    var mapId = this._transfer ? $gamePlayer.newMapId() : $gameMap.mapId();
+    this._transfer = global.$gamePlayer.isTransferring();
+    var mapId = this._transfer ? global.$gamePlayer.newMapId() : global.$gameMap.mapId();
     DataManager.loadMapData(mapId);
 };
 
@@ -35,7 +35,7 @@ Scene_Map.prototype.isReady = function () {
 
 Scene_Map.prototype.onMapLoaded = function () {
     if (this._transfer) {
-        $gamePlayer.performTransfer();
+        global.$gamePlayer.performTransfer();
     }
     this.createDisplayObjects();
 };
@@ -46,7 +46,7 @@ Scene_Map.prototype.start = function () {
     if (this._transfer) {
         this.fadeInForTransfer();
         this._mapNameWindow.open();
-        $gameMap.autoplay();
+        global.$gameMap.autoplay();
     } else if (this.needsFadeIn()) {
         this.startFadeIn(this.fadeSpeed(), false);
     }
@@ -77,15 +77,15 @@ Scene_Map.prototype.updateMainMultiply = function () {
 
 Scene_Map.prototype.updateMain = function () {
     var active = this.isActive();
-    $gameMap.update(active);
-    $gamePlayer.update(active);
-    $gameTimer.update(active);
-    $gameScreen.update();
+    global.$gameMap.update(active);
+    global.$gamePlayer.update(active);
+    global.$gameTimer.update(active);
+    global.$gameScreen.update();
 };
 
 Scene_Map.prototype.isFastForward = function () {
     return (
-        $gameMap.isEventRunning() &&
+        global.$gameMap.isEventRunning() &&
         !SceneManager.isSceneChanging() &&
         (Input.isLongPressed('ok') || TouchInput.isLongPressed())
     );
@@ -93,7 +93,7 @@ Scene_Map.prototype.isFastForward = function () {
 
 Scene_Map.prototype.stop = function () {
     Scene_Base.prototype.stop.call(this);
-    $gamePlayer.straighten();
+    global.$gamePlayer.straighten();
     this._mapNameWindow.close();
     if (this.needsSlowFadeOut()) {
         this.startFadeOut(this.slowFadeSpeed(), false);
@@ -127,7 +127,7 @@ Scene_Map.prototype.terminate = function () {
         ImageManager.clearRequest();
     }
 
-    $gameScreen.clearZoom();
+    global.$gameScreen.clearZoom();
 
     this.removeChild(this._fadeSprite);
     this.removeChild(this._mapNameWindow);
@@ -155,22 +155,22 @@ Scene_Map.prototype.updateDestination = function () {
     if (this.isMapTouchOk()) {
         this.processMapTouch();
     } else {
-        $gameTemp.clearDestination();
+        global.$gameTemp.clearDestination();
         this._touchCount = 0;
     }
 };
 
 Scene_Map.prototype.isMapTouchOk = function () {
-    return this.isActive() && $gamePlayer.canMove();
+    return this.isActive() && global.$gamePlayer.canMove();
 };
 
 Scene_Map.prototype.processMapTouch = function () {
     if (TouchInput.isTriggered() || this._touchCount > 0) {
         if (TouchInput.isPressed()) {
             if (this._touchCount === 0 || this._touchCount >= 15) {
-                var x = $gameMap.canvasToMapX(TouchInput.x);
-                var y = $gameMap.canvasToMapY(TouchInput.y);
-                $gameTemp.setDestination(x, y);
+                var x = global.$gameMap.canvasToMapX(TouchInput.x);
+                var y = global.$gameMap.canvasToMapY(TouchInput.y);
+                global.$gameTemp.setDestination(x, y);
             }
             this._touchCount++;
         } else {
@@ -180,7 +180,7 @@ Scene_Map.prototype.processMapTouch = function () {
 };
 
 Scene_Map.prototype.isSceneChangeOk = function () {
-    return this.isActive() && !$gameMessage.isBusy();
+    return this.isActive() && !global.$gameMessage.isBusy();
 };
 
 Scene_Map.prototype.updateScene = function () {
@@ -235,13 +235,13 @@ Scene_Map.prototype.createScrollTextWindow = function () {
 };
 
 Scene_Map.prototype.updateTransferPlayer = function () {
-    if ($gamePlayer.isTransferring()) {
+    if (global.$gamePlayer.isTransferring()) {
         SceneManager.goto(Scene_Map);
     }
 };
 
 Scene_Map.prototype.updateEncounter = function () {
-    if ($gamePlayer.executeEncounter()) {
+    if (global.$gamePlayer.executeEncounter()) {
         SceneManager.push(Scene_Battle);
     }
 };
@@ -251,7 +251,7 @@ Scene_Map.prototype.updateCallMenu = function () {
         if (this.isMenuCalled()) {
             this.menuCalling = true;
         }
-        if (this.menuCalling && !$gamePlayer.isMoving()) {
+        if (this.menuCalling && !global.$gamePlayer.isMoving()) {
             this.callMenu();
         }
     } else {
@@ -260,7 +260,7 @@ Scene_Map.prototype.updateCallMenu = function () {
 };
 
 Scene_Map.prototype.isMenuEnabled = function () {
-    return $gameSystem.isMenuEnabled() && !$gameMap.isEventRunning();
+    return global.$gameSystem.isMenuEnabled() && !global.$gameMap.isEventRunning();
 };
 
 Scene_Map.prototype.isMenuCalled = function () {
@@ -271,7 +271,7 @@ Scene_Map.prototype.callMenu = function () {
     SoundManager.playOk();
     SceneManager.push(Scene_Menu);
     Window_MenuCommand.initCommandPosition();
-    $gameTemp.clearDestination();
+    global.$gameTemp.clearDestination();
     this._mapNameWindow.hide();
     this._waitCount = 2;
 };
@@ -283,11 +283,11 @@ Scene_Map.prototype.updateCallDebug = function () {
 };
 
 Scene_Map.prototype.isDebugCalled = function () {
-    return Input.isTriggered('debug') && $gameTemp.isPlaytest();
+    return Input.isTriggered('debug') && global.$gameTemp.isPlaytest();
 };
 
 Scene_Map.prototype.fadeInForTransfer = function () {
-    var fadeType = $gamePlayer.fadeType();
+    var fadeType = global.$gamePlayer.fadeType();
     switch (fadeType) {
         case 0:
         case 1:
@@ -297,7 +297,7 @@ Scene_Map.prototype.fadeInForTransfer = function () {
 };
 
 Scene_Map.prototype.fadeOutForTransfer = function () {
-    var fadeType = $gamePlayer.fadeType();
+    var fadeType = global.$gamePlayer.fadeType();
     switch (fadeType) {
         case 0:
         case 1:
@@ -315,7 +315,7 @@ Scene_Map.prototype.launchBattle = function () {
 };
 
 Scene_Map.prototype.stopAudioOnBattleStart = function () {
-    if (!AudioManager.isCurrentBgm($gameSystem.battleBgm())) {
+    if (!AudioManager.isCurrentBgm(global.$gameSystem.battleBgm())) {
         AudioManager.stopBgm();
     }
     AudioManager.stopBgs();
@@ -335,14 +335,14 @@ Scene_Map.prototype.updateEncounterEffect = function () {
         var n = speed - this._encounterEffectDuration;
         var p = n / speed;
         var q = ((p - 1) * 20 * p + 5) * p + 1;
-        var zoomX = $gamePlayer.screenX();
-        var zoomY = $gamePlayer.screenY() - 24;
+        var zoomX = global.$gamePlayer.screenX();
+        var zoomY = global.$gamePlayer.screenY() - 24;
         if (n === 2) {
-            $gameScreen.setZoom(zoomX, zoomY, 1);
+            global.$gameScreen.setZoom(zoomX, zoomY, 1);
             this.snapForBattleBackground();
             this.startFlashForEncounter(speed / 2);
         }
-        $gameScreen.setZoom(zoomX, zoomY, q);
+        global.$gameScreen.setZoom(zoomX, zoomY, q);
         if (n === Math.floor(speed / 6)) {
             this.startFlashForEncounter(speed / 2);
         }
@@ -361,7 +361,7 @@ Scene_Map.prototype.snapForBattleBackground = function () {
 
 Scene_Map.prototype.startFlashForEncounter = function (duration) {
     var color = [255, 255, 255, 255];
-    $gameScreen.startFlash(color, duration);
+    global.$gameScreen.startFlash(color, duration);
 };
 
 Scene_Map.prototype.encounterEffectSpeed = function () {

@@ -99,7 +99,7 @@ Game_Troop.prototype.clear = function () {
 };
 
 Game_Troop.prototype.troop = function () {
-    return $dataTroops[this._troopId];
+    return global.$dataTroops[this._troopId];
 };
 
 Game_Troop.prototype.setup = function (troopId) {
@@ -107,7 +107,7 @@ Game_Troop.prototype.setup = function (troopId) {
     this._troopId = troopId;
     this._enemies = [];
     this.troop().members.forEach(function (member) {
-        if ($dataEnemies[member.enemyId]) {
+        if (global.$dataEnemies[member.enemyId]) {
             var enemyId = member.enemyId;
             var x = member.x;
             var y = member.y;
@@ -140,7 +140,7 @@ Game_Troop.prototype.makeUniqueNames = function () {
 };
 
 Game_Troop.prototype.letterTable = function () {
-    return $gameSystem.isCJK() ? Game_Troop.LETTER_TABLE_FULL : Game_Troop.LETTER_TABLE_HALF;
+    return global.$gameSystem.isCJK() ? Game_Troop.LETTER_TABLE_FULL : Game_Troop.LETTER_TABLE_HALF;
 };
 
 Game_Troop.prototype.enemyNames = function () {
@@ -176,19 +176,19 @@ Game_Troop.prototype.meetsConditions = function (page) {
         }
     }
     if (c.enemyValid) {
-        var enemy = $gameTroop.members()[c.enemyIndex];
+        var enemy = global.$gameTroop.members()[c.enemyIndex];
         if (!enemy || enemy.hpRate() * 100 > c.enemyHp) {
             return false;
         }
     }
     if (c.actorValid) {
-        var actor = $gameActors.actor(c.actorId);
+        var actor = global.$gameActors.actor(c.actorId);
         if (!actor || actor.hpRate() * 100 > c.actorHp) {
             return false;
         }
     }
     if (c.switchValid) {
-        if (!$gameSwitches.value(c.switchId)) {
+        if (!global.$gameSwitches.value(c.switchId)) {
             return false;
         }
     }
@@ -245,7 +245,7 @@ Game_Troop.prototype.goldTotal = function () {
 };
 
 Game_Troop.prototype.goldRate = function () {
-    return $gameParty.hasGoldDouble() ? 2 : 1;
+    return global.$gameParty.hasGoldDouble() ? 2 : 1;
 };
 
 Game_Troop.prototype.makeDropItems = function () {

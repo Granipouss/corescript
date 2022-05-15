@@ -116,5 +116,5 @@ Decrypter.extToEncryptExt = function (url) {
 };
 
 Decrypter.readEncryptionkey = function () {
-    this._encryptionKey = $dataSystem.encryptionKey.split(/(.{2})/).filter(Boolean);
+    this._encryptionKey = global.$dataSystem.encryptionKey.split(/(.{2})/).filter(Boolean);
 };

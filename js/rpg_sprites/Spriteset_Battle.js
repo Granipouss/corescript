@@ -78,7 +78,7 @@ Spriteset_Battle.prototype.locateBattleback = function () {
     var sprite2 = this._back2Sprite;
     sprite1.origin.x = sprite1.x + (sprite1.bitmap.width - width) / 2;
     sprite2.origin.x = sprite1.y + (sprite2.bitmap.width - width) / 2;
-    if ($gameSystem.isSideView()) {
+    if (global.$gameSystem.isSideView()) {
         sprite1.origin.y = sprite1.x + sprite1.bitmap.height - height;
         sprite2.origin.y = sprite1.y + sprite2.bitmap.height - height;
     }
@@ -94,10 +94,10 @@ Spriteset_Battle.prototype.battleback2Bitmap = function () {
 
 Spriteset_Battle.prototype.battleback1Name = function () {
     if (BattleManager.isBattleTest()) {
-        return $dataSystem.battleback1Name;
-    } else if ($gameMap.battleback1Name()) {
-        return $gameMap.battleback1Name();
-    } else if ($gameMap.isOverworld()) {
+        return global.$dataSystem.battleback1Name;
+    } else if (global.$gameMap.battleback1Name()) {
+        return global.$gameMap.battleback1Name();
+    } else if (global.$gameMap.isOverworld()) {
         return this.overworldBattleback1Name();
     } else {
         return '';
@@ -106,10 +106,10 @@ Spriteset_Battle.prototype.battleback1Name = function () {
 
 Spriteset_Battle.prototype.battleback2Name = function () {
     if (BattleManager.isBattleTest()) {
-        return $dataSystem.battleback2Name;
-    } else if ($gameMap.battleback2Name()) {
-        return $gameMap.battleback2Name();
-    } else if ($gameMap.isOverworld()) {
+        return global.$dataSystem.battleback2Name;
+    } else if (global.$gameMap.battleback2Name()) {
+        return global.$gameMap.battleback2Name();
+    } else if (global.$gameMap.isOverworld()) {
         return this.overworldBattleback2Name();
     } else {
         return '';
@@ -117,8 +117,8 @@ Spriteset_Battle.prototype.battleback2Name = function () {
 };
 
 Spriteset_Battle.prototype.overworldBattleback1Name = function () {
-    if ($gameMap.battleback1Name() === '') return '';
-    if ($gamePlayer.isInVehicle()) {
+    if (global.$gameMap.battleback1Name() === '') return '';
+    if (global.$gamePlayer.isInVehicle()) {
         return this.shipBattleback1Name();
     } else {
         return this.normalBattleback1Name();
@@ -126,8 +126,8 @@ Spriteset_Battle.prototype.overworldBattleback1Name = function () {
 };
 
 Spriteset_Battle.prototype.overworldBattleback2Name = function () {
-    if ($gameMap.battleback2Name() === '') return '';
-    if ($gamePlayer.isInVehicle()) {
+    if (global.$gameMap.battleback2Name() === '') return '';
+    if (global.$gamePlayer.isInVehicle()) {
         return this.shipBattleback2Name();
     } else {
         return this.normalBattleback2Name();
@@ -226,11 +226,11 @@ Spriteset_Battle.prototype.shipBattleback2Name = function () {
 };
 
 Spriteset_Battle.prototype.autotileType = function (z) {
-    return $gameMap.autotileType($gamePlayer.x, $gamePlayer.y, z);
+    return global.$gameMap.autotileType(global.$gamePlayer.x, global.$gamePlayer.y, z);
 };
 
 Spriteset_Battle.prototype.createEnemies = function () {
-    var enemies = $gameTroop.members();
+    var enemies = global.$gameTroop.members();
     var sprites = [];
     for (var i = 0; i < enemies.length; i++) {
         sprites[i] = new Sprite_Enemy(enemies[i]);
@@ -252,14 +252,14 @@ Spriteset_Battle.prototype.compareEnemySprite = function (a, b) {
 
 Spriteset_Battle.prototype.createActors = function () {
     this._actorSprites = [];
-    for (var i = 0; i < $gameParty.maxBattleMembers(); i++) {
+    for (var i = 0; i < global.$gameParty.maxBattleMembers(); i++) {
         this._actorSprites[i] = new Sprite_Actor();
         this._battleField.addChild(this._actorSprites[i]);
     }
 };
 
 Spriteset_Battle.prototype.updateActors = function () {
-    var members = $gameParty.battleMembers();
+    var members = global.$gameParty.battleMembers();
     for (var i = 0; i < this._actorSprites.length; i++) {
         this._actorSprites[i].setBattler(members[i]);
     }

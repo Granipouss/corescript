@@ -83,7 +83,7 @@ Window_MenuCommand.prototype.addGameEndCommand = function () {
 };
 
 Window_MenuCommand.prototype.needsCommand = function (name) {
-    var flags = $dataSystem.menuCommands;
+    var flags = global.$dataSystem.menuCommands;
     if (flags) {
         switch (name) {
             case 'item':
@@ -104,11 +104,11 @@ Window_MenuCommand.prototype.needsCommand = function (name) {
 };
 
 Window_MenuCommand.prototype.areMainCommandsEnabled = function () {
-    return $gameParty.exists();
+    return global.$gameParty.exists();
 };
 
 Window_MenuCommand.prototype.isFormationEnabled = function () {
-    return $gameParty.size() >= 2 && $gameSystem.isFormationEnabled();
+    return global.$gameParty.size() >= 2 && global.$gameSystem.isFormationEnabled();
 };
 
 Window_MenuCommand.prototype.isOptionsEnabled = function () {
@@ -116,7 +116,7 @@ Window_MenuCommand.prototype.isOptionsEnabled = function () {
 };
 
 Window_MenuCommand.prototype.isSaveEnabled = function () {
-    return !DataManager.isEventTest() && $gameSystem.isSaveEnabled();
+    return !DataManager.isEventTest() && global.$gameSystem.isSaveEnabled();
 };
 
 Window_MenuCommand.prototype.isGameEndEnabled = function () {

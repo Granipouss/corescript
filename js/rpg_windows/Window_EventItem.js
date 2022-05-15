@@ -46,7 +46,7 @@ Window_EventItem.prototype.updatePlacement = function () {
 };
 
 Window_EventItem.prototype.includes = function (item) {
-    var itypeId = $gameMessage.itemChoiceItypeId();
+    var itypeId = global.$gameMessage.itemChoiceItypeId();
     return DataManager.isItem(item) && item.itypeId === itypeId;
 };
 
@@ -57,13 +57,13 @@ Window_EventItem.prototype.isEnabled = function (_item) {
 Window_EventItem.prototype.onOk = function () {
     var item = this.item();
     var itemId = item ? item.id : 0;
-    $gameVariables.setValue($gameMessage.itemChoiceVariableId(), itemId);
+    global.$gameVariables.setValue(global.$gameMessage.itemChoiceVariableId(), itemId);
     this._messageWindow.terminateMessage();
     this.close();
 };
 
 Window_EventItem.prototype.onCancel = function () {
-    $gameVariables.setValue($gameMessage.itemChoiceVariableId(), 0);
+    global.$gameVariables.setValue(global.$gameMessage.itemChoiceVariableId(), 0);
     this._messageWindow.terminateMessage();
     this.close();
 };

@@ -30,27 +30,27 @@ Game_System.prototype.initialize = function () {
 };
 
 Game_System.prototype.isJapanese = function () {
-    return $dataSystem.locale.match(/^ja/);
+    return global.$dataSystem.locale.match(/^ja/);
 };
 
 Game_System.prototype.isChinese = function () {
-    return $dataSystem.locale.match(/^zh/);
+    return global.$dataSystem.locale.match(/^zh/);
 };
 
 Game_System.prototype.isKorean = function () {
-    return $dataSystem.locale.match(/^ko/);
+    return global.$dataSystem.locale.match(/^ko/);
 };
 
 Game_System.prototype.isCJK = function () {
-    return $dataSystem.locale.match(/^(ja|zh|ko)/);
+    return global.$dataSystem.locale.match(/^(ja|zh|ko)/);
 };
 
 Game_System.prototype.isRussian = function () {
-    return $dataSystem.locale.match(/^ru/);
+    return global.$dataSystem.locale.match(/^ru/);
 };
 
 Game_System.prototype.isSideView = function () {
-    return $dataSystem.optSideView;
+    return global.$dataSystem.optSideView;
 };
 
 Game_System.prototype.isSaveEnabled = function () {
@@ -122,7 +122,7 @@ Game_System.prototype.versionId = function () {
 };
 
 Game_System.prototype.windowTone = function () {
-    return this._windowTone || $dataSystem.windowTone;
+    return this._windowTone || global.$dataSystem.windowTone;
 };
 
 Game_System.prototype.setWindowTone = function (value) {
@@ -130,7 +130,7 @@ Game_System.prototype.setWindowTone = function (value) {
 };
 
 Game_System.prototype.battleBgm = function () {
-    return this._battleBgm || $dataSystem.battleBgm;
+    return this._battleBgm || global.$dataSystem.battleBgm;
 };
 
 Game_System.prototype.setBattleBgm = function (value) {
@@ -138,7 +138,7 @@ Game_System.prototype.setBattleBgm = function (value) {
 };
 
 Game_System.prototype.victoryMe = function () {
-    return this._victoryMe || $dataSystem.victoryMe;
+    return this._victoryMe || global.$dataSystem.victoryMe;
 };
 
 Game_System.prototype.setVictoryMe = function (value) {
@@ -146,7 +146,7 @@ Game_System.prototype.setVictoryMe = function (value) {
 };
 
 Game_System.prototype.defeatMe = function () {
-    return this._defeatMe || $dataSystem.defeatMe;
+    return this._defeatMe || global.$dataSystem.defeatMe;
 };
 
 Game_System.prototype.setDefeatMe = function (value) {
@@ -167,7 +167,7 @@ Game_System.prototype.onBattleEscape = function () {
 
 Game_System.prototype.onBeforeSave = function () {
     this._saveCount++;
-    this._versionId = $dataSystem.versionId;
+    this._versionId = global.$dataSystem.versionId;
     this._framesOnSave = Graphics.frameCount;
     this._sceneFramesOnSave = SceneManager.frameCount();
     this._bgmOnSave = AudioManager.saveBgm();
@@ -213,5 +213,5 @@ Game_System.prototype.replayWalkingBgm = function () {
 };
 
 Game_System.prototype.saveWalkingBgm2 = function () {
-    this._walkingBgm = $dataMap.bgm;
+    this._walkingBgm = global.$dataMap.bgm;
 };

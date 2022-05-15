@@ -96,9 +96,9 @@ Scene_ItemBase.prototype.itemTargetActors = function () {
     if (!action.isForFriend()) {
         return [];
     } else if (action.isForAll()) {
-        return $gameParty.members();
+        return global.$gameParty.members();
     } else {
-        return [$gameParty.members()[this._actorWindow.index()]];
+        return [global.$gameParty.members()[this._actorWindow.index()]];
     }
 };
 
@@ -130,7 +130,7 @@ Scene_ItemBase.prototype.applyItem = function () {
 };
 
 Scene_ItemBase.prototype.checkCommonEvent = function () {
-    if ($gameTemp.isCommonEventReserved()) {
+    if (global.$gameTemp.isCommonEventReserved()) {
         SceneManager.goto(Scene_Map);
     }
 };

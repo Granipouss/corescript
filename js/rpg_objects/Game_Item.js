@@ -50,13 +50,13 @@ Game_Item.prototype.itemId = function () {
 
 Game_Item.prototype.object = function () {
     if (this.isSkill()) {
-        return $dataSkills[this._itemId];
+        return global.$dataSkills[this._itemId];
     } else if (this.isItem()) {
-        return $dataItems[this._itemId];
+        return global.$dataItems[this._itemId];
     } else if (this.isWeapon()) {
-        return $dataWeapons[this._itemId];
+        return global.$dataWeapons[this._itemId];
     } else if (this.isArmor()) {
-        return $dataArmors[this._itemId];
+        return global.$dataArmors[this._itemId];
     } else {
         return null;
     }

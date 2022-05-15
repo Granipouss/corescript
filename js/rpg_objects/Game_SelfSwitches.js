@@ -29,5 +29,5 @@ Game_SelfSwitches.prototype.setValue = function (key, value) {
 };
 
 Game_SelfSwitches.prototype.onChange = function () {
-    $gameMap.requestRefresh();
+    global.$gameMap.requestRefresh();
 };

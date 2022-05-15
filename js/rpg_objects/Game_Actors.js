@@ -12,7 +12,7 @@ Game_Actors.prototype.initialize = function () {
 };
 
 Game_Actors.prototype.actor = function (actorId) {
-    if ($dataActors[actorId]) {
+    if (global.$dataActors[actorId]) {
         if (!this._data[actorId]) {
             this._data[actorId] = new Game_Actor(actorId);
         }

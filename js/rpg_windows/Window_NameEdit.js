@@ -72,7 +72,7 @@ Window_NameEdit.prototype.faceWidth = function () {
 };
 
 Window_NameEdit.prototype.charWidth = function () {
-    var text = $gameSystem.isJapanese() ? '\uff21' : 'A';
+    var text = global.$gameSystem.isJapanese() ? '\uff21' : 'A';
     return this.textWidth(text);
 };
 

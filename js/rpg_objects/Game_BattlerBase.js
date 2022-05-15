@@ -302,7 +302,7 @@ Game_BattlerBase.prototype.deathStateId = function () {
 };
 
 Game_BattlerBase.prototype.resetStateCounts = function (stateId) {
-    var state = $dataStates[stateId];
+    var state = global.$dataStates[stateId];
     var variance = 1 + Math.max(state.maxTurns - state.minTurns, 0);
     this._stateTurns[stateId] = state.minTurns + Math.randomInt(variance);
 };
@@ -401,7 +401,7 @@ Game_BattlerBase.prototype.revive = function () {
 
 Game_BattlerBase.prototype.states = function () {
     return this._states.map(function (id) {
-        return $dataStates[id];
+        return global.$dataStates[id];
     });
 };
 
@@ -765,8 +765,8 @@ Game_BattlerBase.prototype.isEnemy = function () {
 
 Game_BattlerBase.prototype.sortStates = function () {
     this._states.sort(function (a, b) {
-        var p1 = $dataStates[a].priority;
-        var p2 = $dataStates[b].priority;
+        var p1 = global.$dataStates[a].priority;
+        var p2 = global.$dataStates[b].priority;
         if (p1 !== p2) {
             return p2 - p1;
         }
@@ -849,7 +849,7 @@ Game_BattlerBase.prototype.paySkillCost = function (skill) {
 };
 
 Game_BattlerBase.prototype.isOccasionOk = function (item) {
-    if ($gameParty.inBattle()) {
+    if (global.$gameParty.inBattle()) {
         return item.occasion === 0 || item.occasion === 1;
     } else {
         return item.occasion === 0 || item.occasion === 2;
@@ -871,7 +871,7 @@ Game_BattlerBase.prototype.meetsSkillConditions = function (skill) {
 };
 
 Game_BattlerBase.prototype.meetsItemConditions = function (item) {
-    return this.meetsUsableItemConditions(item) && $gameParty.hasItem(item);
+    return this.meetsUsableItemConditions(item) && global.$gameParty.hasItem(item);
 };
 
 Game_BattlerBase.prototype.canUse = function (item) {
@@ -915,9 +915,9 @@ Game_BattlerBase.prototype.guardSkillId = function () {
 };
 
 Game_BattlerBase.prototype.canAttack = function () {
-    return this.canUse($dataSkills[this.attackSkillId()]);
+    return this.canUse(global.$dataSkills[this.attackSkillId()]);
 };
 
 Game_BattlerBase.prototype.canGuard = function () {
-    return this.canUse($dataSkills[this.guardSkillId()]);
+    return this.canUse(global.$dataSkills[this.guardSkillId()]);
 };

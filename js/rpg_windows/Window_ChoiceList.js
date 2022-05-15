@@ -28,11 +28,11 @@ Window_ChoiceList.prototype.start = function () {
 };
 
 Window_ChoiceList.prototype.selectDefault = function () {
-    this.select($gameMessage.choiceDefaultType());
+    this.select(global.$gameMessage.choiceDefaultType());
 };
 
 Window_ChoiceList.prototype.updatePlacement = function () {
-    var positionType = $gameMessage.choicePositionType();
+    var positionType = global.$gameMessage.choicePositionType();
     var messageY = this._messageWindow.y;
     this.width = this.windowWidth();
     this.height = this.windowHeight();
@@ -55,7 +55,7 @@ Window_ChoiceList.prototype.updatePlacement = function () {
 };
 
 Window_ChoiceList.prototype.updateBackground = function () {
-    this._background = $gameMessage.choiceBackground();
+    this._background = global.$gameMessage.choiceBackground();
     this.setBackgroundType(this._background);
 };
 
@@ -68,7 +68,7 @@ Window_ChoiceList.prototype.numVisibleRows = function () {
     var messageY = this._messageWindow.y;
     var messageHeight = this._messageWindow.height;
     var centerY = Graphics.boxHeight / 2;
-    var choices = $gameMessage.choices();
+    var choices = global.$gameMessage.choices();
     var numLines = choices.length;
     var maxLines = 8;
     if (messageY < centerY && messageY + messageHeight > centerY) {
@@ -82,7 +82,7 @@ Window_ChoiceList.prototype.numVisibleRows = function () {
 
 Window_ChoiceList.prototype.maxChoiceWidth = function () {
     var maxWidth = 96;
-    var choices = $gameMessage.choices();
+    var choices = global.$gameMessage.choices();
     for (var i = 0; i < choices.length; i++) {
         var choiceWidth = this.textWidthEx(choices[i]) + this.textPadding() * 2;
         if (maxWidth < choiceWidth) {
@@ -101,7 +101,7 @@ Window_ChoiceList.prototype.contentsHeight = function () {
 };
 
 Window_ChoiceList.prototype.makeCommandList = function () {
-    var choices = $gameMessage.choices();
+    var choices = global.$gameMessage.choices();
     for (var i = 0; i < choices.length; i++) {
         this.addCommand(choices[i], 'choice');
     }
@@ -113,7 +113,7 @@ Window_ChoiceList.prototype.drawItem = function (index) {
 };
 
 Window_ChoiceList.prototype.isCancelEnabled = function () {
-    return $gameMessage.choiceCancelType() !== -1;
+    return global.$gameMessage.choiceCancelType() !== -1;
 };
 
 Window_ChoiceList.prototype.isOkTriggered = function () {
@@ -121,13 +121,13 @@ Window_ChoiceList.prototype.isOkTriggered = function () {
 };
 
 Window_ChoiceList.prototype.callOkHandler = function () {
-    $gameMessage.onChoice(this.index());
+    global.$gameMessage.onChoice(this.index());
     this._messageWindow.terminateMessage();
     this.close();
 };
 
 Window_ChoiceList.prototype.callCancelHandler = function () {
-    $gameMessage.onChoice($gameMessage.choiceCancelType());
+    global.$gameMessage.onChoice(global.$gameMessage.choiceCancelType());
     this._messageWindow.terminateMessage();
     this.close();
 };

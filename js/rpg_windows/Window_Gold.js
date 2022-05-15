@@ -33,7 +33,7 @@ Window_Gold.prototype.refresh = function () {
 };
 
 Window_Gold.prototype.value = function () {
-    return $gameParty.gold();
+    return global.$gameParty.gold();
 };
 
 Window_Gold.prototype.currencyUnit = function () {

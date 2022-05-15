@@ -7,37 +7,35 @@ function DataManager() {
     throw new Error('This is a static class');
 }
 
-/* eslint-disable no-unused-vars */
-var $dataActors = null;
-var $dataClasses = null;
-var $dataSkills = null;
-var $dataItems = null;
-var $dataWeapons = null;
-var $dataArmors = null;
-var $dataEnemies = null;
-var $dataTroops = null;
-var $dataStates = null;
-var $dataAnimations = null;
-var $dataTilesets = null;
-var $dataCommonEvents = null;
-var $dataSystem = null;
-var $dataMapInfos = null;
-var $dataMap = null;
-var $gameTemp = null;
-var $gameSystem = null;
-var $gameScreen = null;
-var $gameTimer = null;
-var $gameMessage = null;
-var $gameSwitches = null;
-var $gameVariables = null;
-var $gameSelfSwitches = null;
-var $gameActors = null;
-var $gameParty = null;
-var $gameTroop = null;
-var $gameMap = null;
-var $gamePlayer = null;
-var $testEvent = null;
-/* eslint-enable no-unused-vars */
+global.$dataActors = null;
+global.$dataClasses = null;
+global.$dataSkills = null;
+global.$dataItems = null;
+global.$dataWeapons = null;
+global.$dataArmors = null;
+global.$dataEnemies = null;
+global.$dataTroops = null;
+global.$dataStates = null;
+global.$dataAnimations = null;
+global.$dataTilesets = null;
+global.$dataCommonEvents = null;
+global.$dataSystem = null;
+global.$dataMapInfos = null;
+global.$dataMap = null;
+global.$gameTemp = null;
+global.$gameSystem = null;
+global.$gameScreen = null;
+global.$gameTimer = null;
+global.$gameMessage = null;
+global.$gameSwitches = null;
+global.$gameVariables = null;
+global.$gameSelfSwitches = null;
+global.$gameActors = null;
+global.$gameParty = null;
+global.$gameTroop = null;
+global.$gameMap = null;
+global.$gamePlayer = null;
+global.$testEvent = null;
 
 DataManager._globalId = 'RPGMV';
 DataManager._lastAccessedId = 1;
@@ -118,22 +116,22 @@ DataManager.loadMapData = function (mapId) {
 };
 
 DataManager.makeEmptyMap = function () {
-    $dataMap = {};
-    $dataMap.data = [];
-    $dataMap.events = [];
-    $dataMap.width = 100;
-    $dataMap.height = 100;
-    $dataMap.scrollType = 3;
+    global.$dataMap = {};
+    global.$dataMap.data = [];
+    global.$dataMap.events = [];
+    global.$dataMap.width = 100;
+    global.$dataMap.height = 100;
+    global.$dataMap.scrollType = 3;
 };
 
 DataManager.isMapLoaded = function () {
     this.checkError();
-    return !!$dataMap;
+    return !!global.$dataMap;
 };
 
 DataManager.onLoad = function (object) {
     var array;
-    if (object === $dataMap) {
+    if (object === global.$dataMap) {
         this.extractMetadata(object);
         array = object.events;
     } else {
@@ -147,7 +145,7 @@ DataManager.onLoad = function (object) {
             }
         }
     }
-    if (object === $dataSystem) {
+    if (object === global.$dataSystem) {
         Decrypter.hasEncryptedImages = !!object.hasEncryptedImages;
         Decrypter.hasEncryptedAudio = !!object.hasEncryptedAudio;
         Scene_Boot.loadSystemImages();
@@ -186,50 +184,54 @@ DataManager.isEventTest = function () {
 };
 
 DataManager.isSkill = function (item) {
-    return item && $dataSkills.contains(item);
+    return item && global.$dataSkills.contains(item);
 };
 
 DataManager.isItem = function (item) {
-    return item && $dataItems.contains(item);
+    return item && global.$dataItems.contains(item);
 };
 
 DataManager.isWeapon = function (item) {
-    return item && $dataWeapons.contains(item);
+    return item && global.$dataWeapons.contains(item);
 };
 
 DataManager.isArmor = function (item) {
-    return item && $dataArmors.contains(item);
+    return item && global.$dataArmors.contains(item);
 };
 
 DataManager.createGameObjects = function () {
-    $gameTemp = new Game_Temp();
-    $gameSystem = new Game_System();
-    $gameScreen = new Game_Screen();
-    $gameTimer = new Game_Timer();
-    $gameMessage = new Game_Message();
-    $gameSwitches = new Game_Switches();
-    $gameVariables = new Game_Variables();
-    $gameSelfSwitches = new Game_SelfSwitches();
-    $gameActors = new Game_Actors();
-    $gameParty = new Game_Party();
-    $gameTroop = new Game_Troop();
-    $gameMap = new Game_Map();
-    $gamePlayer = new Game_Player();
+    global.$gameTemp = new Game_Temp();
+    global.$gameSystem = new Game_System();
+    global.$gameScreen = new Game_Screen();
+    global.$gameTimer = new Game_Timer();
+    global.$gameMessage = new Game_Message();
+    global.$gameSwitches = new Game_Switches();
+    global.$gameVariables = new Game_Variables();
+    global.$gameSelfSwitches = new Game_SelfSwitches();
+    global.$gameActors = new Game_Actors();
+    global.$gameParty = new Game_Party();
+    global.$gameTroop = new Game_Troop();
+    global.$gameMap = new Game_Map();
+    global.$gamePlayer = new Game_Player();
 };
 
 DataManager.setupNewGame = function () {
     this.createGameObjects();
     this.selectSavefileForNewGame();
-    $gameParty.setupStartingMembers();
-    $gamePlayer.reserveTransfer($dataSystem.startMapId, $dataSystem.startX, $dataSystem.startY);
+    global.$gameParty.setupStartingMembers();
+    global.$gamePlayer.reserveTransfer(
+        global.$dataSystem.startMapId,
+        global.$dataSystem.startX,
+        global.$dataSystem.startY
+    );
     Graphics.frameCount = 0;
     SceneManager.resetFrameCount();
 };
 
 DataManager.setupBattleTest = function () {
     this.createGameObjects();
-    $gameParty.setupBattleTest();
-    BattleManager.setup($dataSystem.testTroopId, true, false);
+    global.$gameParty.setupBattleTest();
+    BattleManager.setup(global.$dataSystem.testTroopId, true, false);
     BattleManager.setBattleTest(true);
     BattleManager.playBattleBgm();
 };
@@ -237,9 +239,9 @@ DataManager.setupBattleTest = function () {
 DataManager.setupEventTest = function () {
     this.createGameObjects();
     this.selectSavefileForNewGame();
-    $gameParty.setupStartingMembers();
-    $gamePlayer.reserveTransfer(-1, 8, 6);
-    $gamePlayer.setTransparent(false);
+    global.$gameParty.setupStartingMembers();
+    global.$gamePlayer.reserveTransfer(-1, 8, 6);
+    global.$gamePlayer.setTransparent(false);
 };
 
 DataManager.loadGlobalInfo = function () {
@@ -278,7 +280,7 @@ DataManager.isThisGameFile = function (savefileId) {
             return true;
         } else {
             var savefile = globalInfo[savefileId];
-            return savefile.globalId === this._globalId && savefile.title === $dataSystem.gameTitle;
+            return savefile.globalId === this._globalId && savefile.title === global.$dataSystem.gameTitle;
         }
     } else {
         return false;
@@ -426,41 +428,41 @@ DataManager.selectSavefileForNewGame = function () {
 DataManager.makeSavefileInfo = function () {
     var info = {};
     info.globalId = this._globalId;
-    info.title = $dataSystem.gameTitle;
-    info.characters = $gameParty.charactersForSavefile();
-    info.faces = $gameParty.facesForSavefile();
-    info.playtime = $gameSystem.playtimeText();
+    info.title = global.$dataSystem.gameTitle;
+    info.characters = global.$gameParty.charactersForSavefile();
+    info.faces = global.$gameParty.facesForSavefile();
+    info.playtime = global.$gameSystem.playtimeText();
     info.timestamp = Date.now();
     return info;
 };
 
 DataManager.makeSaveContents = function () {
-    // A save data does not contain $gameTemp, $gameMessage, and $gameTroop.
+    // A save data does not contain global.$gameTemp, global.$gameMessage, and global.$gameTroop.
     var contents = {};
-    contents.system = $gameSystem;
-    contents.screen = $gameScreen;
-    contents.timer = $gameTimer;
-    contents.switches = $gameSwitches;
-    contents.variables = $gameVariables;
-    contents.selfSwitches = $gameSelfSwitches;
-    contents.actors = $gameActors;
-    contents.party = $gameParty;
-    contents.map = $gameMap;
-    contents.player = $gamePlayer;
+    contents.system = global.$gameSystem;
+    contents.screen = global.$gameScreen;
+    contents.timer = global.$gameTimer;
+    contents.switches = global.$gameSwitches;
+    contents.variables = global.$gameVariables;
+    contents.selfSwitches = global.$gameSelfSwitches;
+    contents.actors = global.$gameActors;
+    contents.party = global.$gameParty;
+    contents.map = global.$gameMap;
+    contents.player = global.$gamePlayer;
     return contents;
 };
 
 DataManager.extractSaveContents = function (contents) {
-    $gameSystem = contents.system;
-    $gameScreen = contents.screen;
-    $gameTimer = contents.timer;
-    $gameSwitches = contents.switches;
-    $gameVariables = contents.variables;
-    $gameSelfSwitches = contents.selfSwitches;
-    $gameActors = contents.actors;
-    $gameParty = contents.party;
-    $gameMap = contents.map;
-    $gamePlayer = contents.player;
+    global.$gameSystem = contents.system;
+    global.$gameScreen = contents.screen;
+    global.$gameTimer = contents.timer;
+    global.$gameSwitches = contents.switches;
+    global.$gameVariables = contents.variables;
+    global.$gameSelfSwitches = contents.selfSwitches;
+    global.$gameActors = contents.actors;
+    global.$gameParty = contents.party;
+    global.$gameMap = contents.map;
+    global.$gamePlayer = contents.player;
 };
 
 DataManager.setAutoSaveFileId = function (autoSaveFileId) {
@@ -472,8 +474,8 @@ DataManager.isAutoSaveFileId = function (saveFileId) {
 };
 
 DataManager.autoSaveGame = function () {
-    if (this._autoSaveFileId !== 0 && !this.isEventTest() && $gameSystem.isSaveEnabled()) {
-        $gameSystem.onBeforeSave();
+    if (this._autoSaveFileId !== 0 && !this.isEventTest() && global.$gameSystem.isSaveEnabled()) {
+        global.$gameSystem.onBeforeSave();
         if (this.saveGame(this._autoSaveFileId)) {
             StorageManager.cleanBackup(this._autoSaveFileId);
         }

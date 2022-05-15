@@ -77,11 +77,11 @@ Scene_Boot.prototype.start = function () {
 };
 
 Scene_Boot.prototype.updateDocumentTitle = function () {
-    document.title = $dataSystem.gameTitle;
+    document.title = global.$dataSystem.gameTitle;
 };
 
 Scene_Boot.prototype.checkPlayerLocation = function () {
-    if ($dataSystem.startMapId === 0) {
+    if (global.$dataSystem.startMapId === 0) {
         throw new Error("Player's starting position is not set");
     }
 };

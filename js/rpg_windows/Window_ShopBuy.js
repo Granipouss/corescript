@@ -45,7 +45,7 @@ Window_ShopBuy.prototype.price = function (item) {
 };
 
 Window_ShopBuy.prototype.isEnabled = function (item) {
-    return item && this.price(item) <= this._money && !$gameParty.hasMaxItems(item);
+    return item && this.price(item) <= this._money && !global.$gameParty.hasMaxItems(item);
 };
 
 Window_ShopBuy.prototype.refresh = function () {
@@ -61,13 +61,13 @@ Window_ShopBuy.prototype.makeItemList = function () {
         var item = null;
         switch (goods[0]) {
             case 0:
-                item = $dataItems[goods[1]];
+                item = global.$dataItems[goods[1]];
                 break;
             case 1:
-                item = $dataWeapons[goods[1]];
+                item = global.$dataWeapons[goods[1]];
                 break;
             case 2:
-                item = $dataArmors[goods[1]];
+                item = global.$dataArmors[goods[1]];
                 break;
         }
         if (item) {

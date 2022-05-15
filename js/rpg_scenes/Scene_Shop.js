@@ -209,13 +209,13 @@ Scene_Shop.prototype.onNumberCancel = function () {
 };
 
 Scene_Shop.prototype.doBuy = function (number) {
-    $gameParty.loseGold(number * this.buyingPrice());
-    $gameParty.gainItem(this._item, number);
+    global.$gameParty.loseGold(number * this.buyingPrice());
+    global.$gameParty.gainItem(this._item, number);
 };
 
 Scene_Shop.prototype.doSell = function (number) {
-    $gameParty.gainGold(number * this.sellingPrice());
-    $gameParty.loseItem(this._item, number);
+    global.$gameParty.gainGold(number * this.sellingPrice());
+    global.$gameParty.loseItem(this._item, number);
 };
 
 Scene_Shop.prototype.endNumberInput = function () {
@@ -231,7 +231,7 @@ Scene_Shop.prototype.endNumberInput = function () {
 };
 
 Scene_Shop.prototype.maxBuy = function () {
-    var max = $gameParty.maxItems(this._item) - $gameParty.numItems(this._item);
+    var max = global.$gameParty.maxItems(this._item) - global.$gameParty.numItems(this._item);
     var price = this.buyingPrice();
     if (price > 0) {
         return Math.min(max, Math.floor(this.money() / price));
@@ -241,7 +241,7 @@ Scene_Shop.prototype.maxBuy = function () {
 };
 
 Scene_Shop.prototype.maxSell = function () {
-    return $gameParty.numItems(this._item);
+    return global.$gameParty.numItems(this._item);
 };
 
 Scene_Shop.prototype.money = function () {

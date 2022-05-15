@@ -53,7 +53,7 @@ Game_Party.prototype.members = function () {
 
 Game_Party.prototype.allMembers = function () {
     return this._actors.map(function (id) {
-        return $gameActors.actor(id);
+        return global.$gameActors.actor(id);
     });
 };
 
@@ -84,7 +84,7 @@ Game_Party.prototype.reviveBattleMembers = function () {
 Game_Party.prototype.items = function () {
     var list = [];
     for (var id in this._items) {
-        list.push($dataItems[id]);
+        list.push(global.$dataItems[id]);
     }
     return list;
 };
@@ -92,7 +92,7 @@ Game_Party.prototype.items = function () {
 Game_Party.prototype.weapons = function () {
     var list = [];
     for (var id in this._weapons) {
-        list.push($dataWeapons[id]);
+        list.push(global.$dataWeapons[id]);
     }
     return list;
 };
@@ -100,7 +100,7 @@ Game_Party.prototype.weapons = function () {
 Game_Party.prototype.armors = function () {
     var list = [];
     for (var id in this._armors) {
-        list.push($dataArmors[id]);
+        list.push(global.$dataArmors[id]);
     }
     return list;
 };
@@ -129,8 +129,8 @@ Game_Party.prototype.itemContainer = function (item) {
 
 Game_Party.prototype.setupStartingMembers = function () {
     this._actors = [];
-    $dataSystem.partyMembers.forEach(function (actorId) {
-        if ($gameActors.actor(actorId)) {
+    global.$dataSystem.partyMembers.forEach(function (actorId) {
+        if (global.$gameActors.actor(actorId)) {
             this._actors.push(actorId);
         }
     }, this);
@@ -153,8 +153,8 @@ Game_Party.prototype.setupBattleTest = function () {
 };
 
 Game_Party.prototype.setupBattleTestMembers = function () {
-    $dataSystem.testBattlers.forEach(function (battler) {
-        var actor = $gameActors.actor(battler.actorId);
+    global.$dataSystem.testBattlers.forEach(function (battler) {
+        var actor = global.$gameActors.actor(battler.actorId);
         if (actor) {
             actor.changeLevel(battler.level, false);
             actor.initEquips(battler.equips);
@@ -165,7 +165,7 @@ Game_Party.prototype.setupBattleTestMembers = function () {
 };
 
 Game_Party.prototype.setupBattleTestItems = function () {
-    $dataItems.forEach(function (item) {
+    global.$dataItems.forEach(function (item) {
         if (item && item.name.length > 0) {
             this.gainItem(item, this.maxItems(item));
         }
@@ -184,16 +184,16 @@ Game_Party.prototype.highestLevel = function () {
 Game_Party.prototype.addActor = function (actorId) {
     if (!this._actors.contains(actorId)) {
         this._actors.push(actorId);
-        $gamePlayer.refresh();
-        $gameMap.requestRefresh();
+        global.$gamePlayer.refresh();
+        global.$gameMap.requestRefresh();
     }
 };
 
 Game_Party.prototype.removeActor = function (actorId) {
     if (this._actors.contains(actorId)) {
         this._actors.splice(this._actors.indexOf(actorId), 1);
-        $gamePlayer.refresh();
-        $gameMap.requestRefresh();
+        global.$gamePlayer.refresh();
+        global.$gameMap.requestRefresh();
     }
 };
 
@@ -265,7 +265,7 @@ Game_Party.prototype.gainItem = function (item, amount, includeEquip) {
         if (includeEquip && newNumber < 0) {
             this.discardMembersEquip(item, -newNumber);
         }
-        $gameMap.requestRefresh();
+        global.$gameMap.requestRefresh();
     }
 };
 
@@ -316,7 +316,7 @@ Game_Party.prototype.onPlayerWalk = function () {
 };
 
 Game_Party.prototype.menuActor = function () {
-    var actor = $gameActors.actor(this._menuActorId);
+    var actor = global.$gameActors.actor(this._menuActorId);
     if (!this.members().contains(actor)) {
         actor = this.members()[0];
     }
@@ -348,7 +348,7 @@ Game_Party.prototype.makeMenuActorPrevious = function () {
 };
 
 Game_Party.prototype.targetActor = function () {
-    var actor = $gameActors.actor(this._targetActorId);
+    var actor = global.$gameActors.actor(this._targetActorId);
     if (!this.members().contains(actor)) {
         actor = this.members()[0];
     }
@@ -371,7 +371,7 @@ Game_Party.prototype.swapOrder = function (index1, index2) {
     var temp = this._actors[index1];
     this._actors[index1] = this._actors[index2];
     this._actors[index2] = temp;
-    $gamePlayer.refresh();
+    global.$gamePlayer.refresh();
 };
 
 Game_Party.prototype.charactersForSavefile = function () {

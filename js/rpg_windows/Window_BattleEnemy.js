@@ -63,15 +63,15 @@ Window_BattleEnemy.prototype.show = function () {
 
 Window_BattleEnemy.prototype.hide = function () {
     Window_Selectable.prototype.hide.call(this);
-    $gameTroop.select(null);
+    global.$gameTroop.select(null);
 };
 
 Window_BattleEnemy.prototype.refresh = function () {
-    this._enemies = $gameTroop.aliveMembers();
+    this._enemies = global.$gameTroop.aliveMembers();
     Window_Selectable.prototype.refresh.call(this);
 };
 
 Window_BattleEnemy.prototype.select = function (index) {
     Window_Selectable.prototype.select.call(this, index);
-    $gameTroop.select(this.enemy());
+    global.$gameTroop.select(this.enemy());
 };

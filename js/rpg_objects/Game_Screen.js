@@ -72,7 +72,7 @@ Game_Screen.prototype.picture = function (pictureId) {
 };
 
 Game_Screen.prototype.realPictureId = function (pictureId) {
-    if ($gameParty.inBattle()) {
+    if (global.$gameParty.inBattle()) {
         return pictureId + this.maxPictures();
     } else {
         return pictureId;

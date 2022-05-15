@@ -48,8 +48,8 @@ Scene_Title.prototype.terminate = function () {
 };
 
 Scene_Title.prototype.createBackground = function () {
-    this._backSprite1 = new Sprite(ImageManager.loadTitle1($dataSystem.title1Name));
-    this._backSprite2 = new Sprite(ImageManager.loadTitle2($dataSystem.title2Name));
+    this._backSprite1 = new Sprite(ImageManager.loadTitle1(global.$dataSystem.title1Name));
+    this._backSprite2 = new Sprite(ImageManager.loadTitle2(global.$dataSystem.title2Name));
     this.addChild(this._backSprite1);
     this.addChild(this._backSprite2);
 };
@@ -57,7 +57,7 @@ Scene_Title.prototype.createBackground = function () {
 Scene_Title.prototype.createForeground = function () {
     this._gameTitleSprite = new Sprite(new Bitmap(Graphics.width, Graphics.height));
     this.addChild(this._gameTitleSprite);
-    if ($dataSystem.optDrawTitle) {
+    if (global.$dataSystem.optDrawTitle) {
         this.drawGameTitle();
     }
 };
@@ -66,7 +66,7 @@ Scene_Title.prototype.drawGameTitle = function () {
     var x = 20;
     var y = Graphics.height / 4;
     var maxWidth = Graphics.width - x * 2;
-    var text = $dataSystem.gameTitle;
+    var text = global.$dataSystem.gameTitle;
     this._gameTitleSprite.bitmap.outlineColor = 'black';
     this._gameTitleSprite.bitmap.outlineWidth = 8;
     this._gameTitleSprite.bitmap.fontSize = 72;
@@ -106,7 +106,7 @@ Scene_Title.prototype.commandOptions = function () {
 };
 
 Scene_Title.prototype.playTitleMusic = function () {
-    AudioManager.playBgm($dataSystem.titleBgm);
+    AudioManager.playBgm(global.$dataSystem.titleBgm);
     AudioManager.stopBgs();
     AudioManager.stopMe();
 };

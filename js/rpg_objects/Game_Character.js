@@ -214,10 +214,10 @@ Game_Character.prototype.processMoveCommand = function (command) {
             this.turnAwayFromPlayer();
             break;
         case gc.ROUTE_SWITCH_ON:
-            $gameSwitches.setValue(params[0], true);
+            global.$gameSwitches.setValue(params[0], true);
             break;
         case gc.ROUTE_SWITCH_OFF:
-            $gameSwitches.setValue(params[0], false);
+            global.$gameSwitches.setValue(params[0], false);
             break;
         case gc.ROUTE_CHANGE_SPEED:
             this.setMoveSpeed(params[0]);
@@ -294,11 +294,11 @@ Game_Character.prototype.processMoveCommand = function (command) {
 };
 
 Game_Character.prototype.deltaXFrom = function (x) {
-    return $gameMap.deltaX(this.x, x);
+    return global.$gameMap.deltaX(this.x, x);
 };
 
 Game_Character.prototype.deltaYFrom = function (y) {
-    return $gameMap.deltaY(this.y, y);
+    return global.$gameMap.deltaY(this.y, y);
 };
 
 Game_Character.prototype.moveRandom = function () {
@@ -361,19 +361,19 @@ Game_Character.prototype.turnAwayFromCharacter = function (character) {
 };
 
 Game_Character.prototype.turnTowardPlayer = function () {
-    this.turnTowardCharacter($gamePlayer);
+    this.turnTowardCharacter(global.$gamePlayer);
 };
 
 Game_Character.prototype.turnAwayFromPlayer = function () {
-    this.turnAwayFromCharacter($gamePlayer);
+    this.turnAwayFromCharacter(global.$gamePlayer);
 };
 
 Game_Character.prototype.moveTowardPlayer = function () {
-    this.moveTowardCharacter($gamePlayer);
+    this.moveTowardCharacter(global.$gamePlayer);
 };
 
 Game_Character.prototype.moveAwayFromPlayer = function () {
-    this.moveAwayFromCharacter($gamePlayer);
+    this.moveAwayFromCharacter(global.$gamePlayer);
 };
 
 Game_Character.prototype.moveForward = function () {
@@ -469,7 +469,7 @@ Game_Character.prototype.swap = function (character) {
 
 Game_Character.prototype.findDirectionTo = function (goalX, goalY) {
     var searchLimit = this.searchLimit();
-    var mapWidth = $gameMap.width();
+    var mapWidth = global.$gameMap.width();
     var nodeList = [];
     var openList = [];
     var closedList = [];
@@ -484,7 +484,7 @@ Game_Character.prototype.findDirectionTo = function (goalX, goalY) {
     start.x = this.x;
     start.y = this.y;
     start.g = 0;
-    start.f = $gameMap.distance(start.x, start.y, goalX, goalY);
+    start.f = global.$gameMap.distance(start.x, start.y, goalX, goalY);
     nodeList.push(start);
     openList.push(start.y * mapWidth + start.x);
 
@@ -517,8 +517,8 @@ Game_Character.prototype.findDirectionTo = function (goalX, goalY) {
 
         for (var j = 0; j < 4; j++) {
             var direction = 2 + j * 2;
-            var x2 = $gameMap.roundXWithDirection(x1, direction);
-            var y2 = $gameMap.roundYWithDirection(y1, direction);
+            var x2 = global.$gameMap.roundXWithDirection(x1, direction);
+            var y2 = global.$gameMap.roundYWithDirection(y1, direction);
             var pos2 = y2 * mapWidth + x2;
 
             if (closedList.contains(pos2)) {
@@ -544,7 +544,7 @@ Game_Character.prototype.findDirectionTo = function (goalX, goalY) {
                 neighbor.x = x2;
                 neighbor.y = y2;
                 neighbor.g = g2;
-                neighbor.f = g2 + $gameMap.distance(x2, y2, goalX, goalY);
+                neighbor.f = g2 + global.$gameMap.distance(x2, y2, goalX, goalY);
                 if (!best || neighbor.f - neighbor.g < best.f - best.g) {
                     best = neighbor;
                 }
@@ -557,8 +557,8 @@ Game_Character.prototype.findDirectionTo = function (goalX, goalY) {
         node = node.parent;
     }
 
-    var deltaX1 = $gameMap.deltaX(node.x, start.x);
-    var deltaY1 = $gameMap.deltaY(node.y, start.y);
+    var deltaX1 = global.$gameMap.deltaX(node.x, start.x);
+    var deltaY1 = global.$gameMap.deltaY(node.y, start.y);
     if (deltaY1 > 0) {
         return 2;
     } else if (deltaX1 < 0) {

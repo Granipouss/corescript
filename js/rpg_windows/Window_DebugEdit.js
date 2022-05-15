@@ -45,17 +45,17 @@ Window_DebugEdit.prototype.drawItem = function (index) {
 
 Window_DebugEdit.prototype.itemName = function (dataId) {
     if (this._mode === 'switch') {
-        return $dataSystem.switches[dataId];
+        return global.$dataSystem.switches[dataId];
     } else {
-        return $dataSystem.variables[dataId];
+        return global.$dataSystem.variables[dataId];
     }
 };
 
 Window_DebugEdit.prototype.itemStatus = function (dataId) {
     if (this._mode === 'switch') {
-        return $gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
+        return global.$gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
     } else {
-        return String($gameVariables.value(dataId));
+        return String(global.$gameVariables.value(dataId));
     }
 };
 
@@ -92,14 +92,14 @@ Window_DebugEdit.prototype.updateSwitch = function () {
     if (Input.isRepeated('ok')) {
         var switchId = this.currentId();
         SoundManager.playCursor();
-        $gameSwitches.setValue(switchId, !$gameSwitches.value(switchId));
+        global.$gameSwitches.setValue(switchId, !global.$gameSwitches.value(switchId));
         this.redrawCurrentItem();
     }
 };
 
 Window_DebugEdit.prototype.updateVariable = function () {
     var variableId = this.currentId();
-    var value = $gameVariables.value(variableId);
+    var value = global.$gameVariables.value(variableId);
     if (typeof value === 'number') {
         if (Input.isRepeated('right')) {
             value++;
@@ -113,8 +113,8 @@ Window_DebugEdit.prototype.updateVariable = function () {
         if (Input.isRepeated('pageup')) {
             value -= 10;
         }
-        if ($gameVariables.value(variableId) !== value) {
-            $gameVariables.setValue(variableId, value);
+        if (global.$gameVariables.value(variableId) !== value) {
+            global.$gameVariables.setValue(variableId, value);
             SoundManager.playCursor();
             this.redrawCurrentItem();
         }

@@ -51,7 +51,7 @@ Window_EquipSlot.prototype.drawItem = function (index) {
 
 Window_EquipSlot.prototype.slotName = function (index) {
     var slots = this._actor.equipSlots();
-    return this._actor ? $dataSystem.equipTypes[slots[index]] : '';
+    return this._actor ? global.$dataSystem.equipTypes[slots[index]] : '';
 };
 
 Window_EquipSlot.prototype.isEnabled = function (index) {

@@ -21,8 +21,8 @@ Window_NumberInput.prototype.initialize = function (messageWindow) {
 };
 
 Window_NumberInput.prototype.start = function () {
-    this._maxDigits = $gameMessage.numInputMaxDigits();
-    this._number = $gameVariables.value($gameMessage.numInputVariableId());
+    this._maxDigits = global.$gameMessage.numInputMaxDigits();
+    this._number = global.$gameVariables.value(global.$gameMessage.numInputVariableId());
     this._number = this._number.clamp(0, Math.pow(10, this._maxDigits) - 1);
     this.updatePlacement();
     this.placeButtons();
@@ -185,7 +185,7 @@ Window_NumberInput.prototype.isOkTriggered = function () {
 
 Window_NumberInput.prototype.processOk = function () {
     SoundManager.playOk();
-    $gameVariables.setValue($gameMessage.numInputVariableId(), this._number);
+    global.$gameVariables.setValue(global.$gameMessage.numInputVariableId(), this._number);
     this._messageWindow.terminateMessage();
     this.updateInputData();
     this.deactivate();

@@ -26,7 +26,7 @@ Scene_MenuBase.prototype.actor = function () {
 };
 
 Scene_MenuBase.prototype.updateActor = function () {
-    this._actor = $gameParty.menuActor();
+    this._actor = global.$gameParty.menuActor();
 };
 
 Scene_MenuBase.prototype.createBackground = function () {
@@ -45,13 +45,13 @@ Scene_MenuBase.prototype.createHelpWindow = function () {
 };
 
 Scene_MenuBase.prototype.nextActor = function () {
-    $gameParty.makeMenuActorNext();
+    global.$gameParty.makeMenuActorNext();
     this.updateActor();
     this.onActorChange();
 };
 
 Scene_MenuBase.prototype.previousActor = function () {
-    $gameParty.makeMenuActorPrevious();
+    global.$gameParty.makeMenuActorPrevious();
     this.updateActor();
     this.onActorChange();
 };

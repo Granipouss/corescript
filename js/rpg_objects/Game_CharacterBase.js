@@ -161,9 +161,9 @@ Game_CharacterBase.prototype.reverseDir = function (d) {
 };
 
 Game_CharacterBase.prototype.canPass = function (x, y, d) {
-    var x2 = $gameMap.roundXWithDirection(x, d);
-    var y2 = $gameMap.roundYWithDirection(y, d);
-    if (!$gameMap.isValid(x2, y2)) {
+    var x2 = global.$gameMap.roundXWithDirection(x, d);
+    var y2 = global.$gameMap.roundYWithDirection(y, d);
+    if (!global.$gameMap.isValid(x2, y2)) {
         return false;
     }
     if (this.isThrough() || this.isDebugThrough()) {
@@ -179,8 +179,8 @@ Game_CharacterBase.prototype.canPass = function (x, y, d) {
 };
 
 Game_CharacterBase.prototype.canPassDiagonally = function (x, y, horz, vert) {
-    var x2 = $gameMap.roundXWithDirection(x, horz);
-    var y2 = $gameMap.roundYWithDirection(y, vert);
+    var x2 = global.$gameMap.roundXWithDirection(x, horz);
+    var y2 = global.$gameMap.roundYWithDirection(y, vert);
     if (this.canPass(x, y, vert) && this.canPass(x, y2, horz)) {
         return true;
     }
@@ -191,10 +191,10 @@ Game_CharacterBase.prototype.canPassDiagonally = function (x, y, horz, vert) {
 };
 
 Game_CharacterBase.prototype.isMapPassable = function (x, y, d) {
-    var x2 = $gameMap.roundXWithDirection(x, d);
-    var y2 = $gameMap.roundYWithDirection(y, d);
+    var x2 = global.$gameMap.roundXWithDirection(x, d);
+    var y2 = global.$gameMap.roundYWithDirection(y, d);
     var d2 = this.reverseDir(d);
-    return $gameMap.isPassable(x, y, d) && $gameMap.isPassable(x2, y2, d2);
+    return global.$gameMap.isPassable(x, y, d) && global.$gameMap.isPassable(x2, y2, d2);
 };
 
 Game_CharacterBase.prototype.isCollidedWithCharacters = function (x, y) {
@@ -202,14 +202,14 @@ Game_CharacterBase.prototype.isCollidedWithCharacters = function (x, y) {
 };
 
 Game_CharacterBase.prototype.isCollidedWithEvents = function (x, y) {
-    var events = $gameMap.eventsXyNt(x, y);
+    var events = global.$gameMap.eventsXyNt(x, y);
     return events.some(function (event) {
         return event.isNormalPriority();
     });
 };
 
 Game_CharacterBase.prototype.isCollidedWithVehicles = function (x, y) {
-    return $gameMap.boat().posNt(x, y) || $gameMap.ship().posNt(x, y);
+    return global.$gameMap.boat().posNt(x, y) || global.$gameMap.ship().posNt(x, y);
 };
 
 Game_CharacterBase.prototype.setPosition = function (x, y) {
@@ -257,20 +257,20 @@ Game_CharacterBase.prototype.shiftY = function () {
 };
 
 Game_CharacterBase.prototype.scrolledX = function () {
-    return $gameMap.adjustX(this._realX);
+    return global.$gameMap.adjustX(this._realX);
 };
 
 Game_CharacterBase.prototype.scrolledY = function () {
-    return $gameMap.adjustY(this._realY);
+    return global.$gameMap.adjustY(this._realY);
 };
 
 Game_CharacterBase.prototype.screenX = function () {
-    var tw = $gameMap.tileWidth();
+    var tw = global.$gameMap.tileWidth();
     return Math.round(this.scrolledX() * tw + tw / 2);
 };
 
 Game_CharacterBase.prototype.screenY = function () {
-    var th = $gameMap.tileHeight();
+    var th = global.$gameMap.tileHeight();
     return Math.round(this.scrolledY() * th + th - this.shiftY() - this.jumpHeight());
 };
 
@@ -281,8 +281,8 @@ Game_CharacterBase.prototype.screenZ = function () {
 Game_CharacterBase.prototype.isNearTheScreen = function () {
     var gw = Graphics.width;
     var gh = Graphics.height;
-    var tw = $gameMap.tileWidth();
-    var th = $gameMap.tileHeight();
+    var tw = global.$gameMap.tileWidth();
+    var th = global.$gameMap.tileHeight();
     var px = this.scrolledX() * tw + tw / 2 - gw / 2;
     var py = this.scrolledY() * th + th / 2 - gh / 2;
     return px >= -gw && px <= gw && py >= -gh && py <= gh;
@@ -310,8 +310,8 @@ Game_CharacterBase.prototype.updateJump = function () {
     this._realY = (this._realY * this._jumpCount + this._y) / (this._jumpCount + 1.0);
     this.refreshBushDepth();
     if (this._jumpCount === 0) {
-        this._realX = this._x = $gameMap.roundX(this._x);
-        this._realY = this._y = $gameMap.roundY(this._y);
+        this._realX = this._x = global.$gameMap.roundX(this._x);
+        this._realY = this._y = global.$gameMap.roundY(this._y);
     }
 };
 
@@ -392,19 +392,19 @@ Game_CharacterBase.prototype.refreshBushDepth = function () {
 };
 
 Game_CharacterBase.prototype.isOnLadder = function () {
-    return $gameMap.isLadder(this._x, this._y);
+    return global.$gameMap.isLadder(this._x, this._y);
 };
 
 Game_CharacterBase.prototype.isOnBush = function () {
-    return $gameMap.isBush(this._x, this._y);
+    return global.$gameMap.isBush(this._x, this._y);
 };
 
 Game_CharacterBase.prototype.terrainTag = function () {
-    return $gameMap.terrainTag(this._x, this._y);
+    return global.$gameMap.terrainTag(this._x, this._y);
 };
 
 Game_CharacterBase.prototype.regionId = function () {
-    return $gameMap.regionId(this._x, this._y);
+    return global.$gameMap.regionId(this._x, this._y);
 };
 
 Game_CharacterBase.prototype.increaseSteps = function () {
@@ -442,8 +442,8 @@ Game_CharacterBase.prototype.setTileImage = function (tileId) {
 };
 
 Game_CharacterBase.prototype.checkEventTriggerTouchFront = function (d) {
-    var x2 = $gameMap.roundXWithDirection(this._x, d);
-    var y2 = $gameMap.roundYWithDirection(this._y, d);
+    var x2 = global.$gameMap.roundXWithDirection(this._x, d);
+    var y2 = global.$gameMap.roundYWithDirection(this._y, d);
     this.checkEventTriggerTouch(x2, y2);
 };
 
@@ -463,10 +463,10 @@ Game_CharacterBase.prototype.moveStraight = function (d) {
     this.setMovementSuccess(this.canPass(this._x, this._y, d));
     if (this.isMovementSucceeded()) {
         this.setDirection(d);
-        this._x = $gameMap.roundXWithDirection(this._x, d);
-        this._y = $gameMap.roundYWithDirection(this._y, d);
-        this._realX = $gameMap.xWithDirection(this._x, this.reverseDir(d));
-        this._realY = $gameMap.yWithDirection(this._y, this.reverseDir(d));
+        this._x = global.$gameMap.roundXWithDirection(this._x, d);
+        this._y = global.$gameMap.roundYWithDirection(this._y, d);
+        this._realX = global.$gameMap.xWithDirection(this._x, this.reverseDir(d));
+        this._realY = global.$gameMap.yWithDirection(this._y, this.reverseDir(d));
         this.increaseSteps();
     } else {
         this.setDirection(d);
@@ -477,10 +477,10 @@ Game_CharacterBase.prototype.moveStraight = function (d) {
 Game_CharacterBase.prototype.moveDiagonally = function (horz, vert) {
     this.setMovementSuccess(this.canPassDiagonally(this._x, this._y, horz, vert));
     if (this.isMovementSucceeded()) {
-        this._x = $gameMap.roundXWithDirection(this._x, horz);
-        this._y = $gameMap.roundYWithDirection(this._y, vert);
-        this._realX = $gameMap.xWithDirection(this._x, this.reverseDir(horz));
-        this._realY = $gameMap.yWithDirection(this._y, this.reverseDir(vert));
+        this._x = global.$gameMap.roundXWithDirection(this._x, horz);
+        this._y = global.$gameMap.roundYWithDirection(this._y, vert);
+        this._realX = global.$gameMap.xWithDirection(this._x, this.reverseDir(horz));
+        this._realY = global.$gameMap.yWithDirection(this._y, this.reverseDir(vert));
         this.increaseSteps();
     }
     if (this._direction === this.reverseDir(horz)) {

@@ -77,7 +77,7 @@ Spriteset_Base.prototype.createPictures = function () {
     var y = (Graphics.height - height) / 2;
     this._pictureContainer = new Sprite();
     this._pictureContainer.setFrame(x, y, width, height);
-    for (var i = 1; i <= $gameScreen.maxPictures(); i++) {
+    for (var i = 1; i <= global.$gameScreen.maxPictures(); i++) {
         this._pictureContainer.addChild(new Sprite_Picture(i));
     }
     this.addChild(this._pictureContainer);
@@ -96,14 +96,14 @@ Spriteset_Base.prototype.createScreenSprites = function () {
 };
 
 Spriteset_Base.prototype.updateScreenSprites = function () {
-    var color = $gameScreen.flashColor();
+    var color = global.$gameScreen.flashColor();
     this._flashSprite.setColor(color[0], color[1], color[2]);
     this._flashSprite.opacity = color[3];
-    this._fadeSprite.opacity = 255 - $gameScreen.brightness();
+    this._fadeSprite.opacity = 255 - global.$gameScreen.brightness();
 };
 
 Spriteset_Base.prototype.updateToneChanger = function () {
-    var tone = $gameScreen.tone();
+    var tone = global.$gameScreen.tone();
     if (!this._tone.equals(tone)) {
         this._tone = tone.clone();
         if (Graphics.isWebGL()) {
@@ -132,7 +132,7 @@ Spriteset_Base.prototype.updateCanvasToneChanger = function () {
 };
 
 Spriteset_Base.prototype.updatePosition = function () {
-    var screen = $gameScreen;
+    var screen = global.$gameScreen;
     var scale = screen.zoomScale();
     this.scale.x = scale;
     this.scale.y = scale;

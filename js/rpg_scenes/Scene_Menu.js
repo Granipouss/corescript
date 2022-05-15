@@ -105,10 +105,10 @@ Scene_Menu.prototype.onPersonalCancel = function () {
 
 Scene_Menu.prototype.onFormationOk = function () {
     var index = this._statusWindow.index();
-    // var actor = $gameParty.members()[index];
+    // var actor = global.$gameParty.members()[index];
     var pendingIndex = this._statusWindow.pendingIndex();
     if (pendingIndex >= 0) {
-        $gameParty.swapOrder(index, pendingIndex);
+        global.$gameParty.swapOrder(index, pendingIndex);
         this._statusWindow.setPendingIndex(-1);
         this._statusWindow.redrawItem(index);
     } else {

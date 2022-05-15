@@ -13,7 +13,7 @@ Game_Player.prototype.constructor = Game_Player;
 
 Game_Player.prototype.initialize = function () {
     Game_Character.prototype.initialize.call(this);
-    this.setTransparent($dataSystem.optTransparent);
+    this.setTransparent(global.$dataSystem.optTransparent);
 };
 
 Game_Player.prototype.initMembers = function () {
@@ -46,7 +46,7 @@ Game_Player.prototype.followers = function () {
 };
 
 Game_Player.prototype.refresh = function () {
-    var actor = $gameParty.leader();
+    var actor = global.$gameParty.leader();
     var characterName = actor ? actor.characterName() : '';
     var characterIndex = actor ? actor.characterIndex() : 0;
     this.setImage(characterName, characterIndex);
@@ -88,8 +88,8 @@ Game_Player.prototype.fadeType = function () {
 Game_Player.prototype.performTransfer = function () {
     if (this.isTransferring()) {
         this.setDirection(this._newDirection);
-        if (this._newMapId !== $gameMap.mapId() || this._needsMapReload) {
-            $gameMap.setup(this._newMapId);
+        if (this._newMapId !== global.$gameMap.mapId() || this._needsMapReload) {
+            global.$gameMap.setup(this._newMapId);
             this._needsMapReload = false;
         }
         this.locate(this._newX, this._newY);
@@ -109,7 +109,7 @@ Game_Player.prototype.isMapPassable = function (x, y, d) {
 };
 
 Game_Player.prototype.vehicle = function () {
-    return $gameMap.vehicle(this._vehicleType);
+    return global.$gameMap.vehicle(this._vehicleType);
 };
 
 Game_Player.prototype.isInBoat = function () {
@@ -137,7 +137,7 @@ Game_Player.prototype.isDashing = function () {
 };
 
 Game_Player.prototype.isDebugThrough = function () {
-    return Input.isPressed('control') && $gameTemp.isPlaytest();
+    return Input.isPressed('control') && global.$gameTemp.isPlaytest();
 };
 
 Game_Player.prototype.isCollided = function (x, y) {
@@ -149,15 +149,15 @@ Game_Player.prototype.isCollided = function (x, y) {
 };
 
 Game_Player.prototype.centerX = function () {
-    return (Graphics.width / $gameMap.tileWidth() - 1) / 2.0;
+    return (Graphics.width / global.$gameMap.tileWidth() - 1) / 2.0;
 };
 
 Game_Player.prototype.centerY = function () {
-    return (Graphics.height / $gameMap.tileHeight() - 1) / 2.0;
+    return (Graphics.height / global.$gameMap.tileHeight() - 1) / 2.0;
 };
 
 Game_Player.prototype.center = function (x, y) {
-    return $gameMap.setDisplayPos(x - this.centerX(), y - this.centerY());
+    return global.$gameMap.setDisplayPos(x - this.centerX(), y - this.centerY());
 };
 
 Game_Player.prototype.locate = function (x, y) {
@@ -173,19 +173,19 @@ Game_Player.prototype.locate = function (x, y) {
 Game_Player.prototype.increaseSteps = function () {
     Game_Character.prototype.increaseSteps.call(this);
     if (this.isNormal()) {
-        $gameParty.increaseSteps();
+        global.$gameParty.increaseSteps();
     }
 };
 
 Game_Player.prototype.makeEncounterCount = function () {
-    var n = $gameMap.encounterStep();
+    var n = global.$gameMap.encounterStep();
     this._encounterCount = Math.randomInt(n) + Math.randomInt(n) + 1;
 };
 
 Game_Player.prototype.makeEncounterTroopId = function () {
     var encounterList = [];
     var weightSum = 0;
-    $gameMap.encounterList().forEach(function (encounter) {
+    global.$gameMap.encounterList().forEach(function (encounter) {
         if (this.meetsEncounterConditions(encounter)) {
             encounterList.push(encounter);
             weightSum += encounter.weight;
@@ -208,10 +208,10 @@ Game_Player.prototype.meetsEncounterConditions = function (encounter) {
 };
 
 Game_Player.prototype.executeEncounter = function () {
-    if (!$gameMap.isEventRunning() && this._encounterCount <= 0) {
+    if (!global.$gameMap.isEventRunning() && this._encounterCount <= 0) {
         this.makeEncounterCount();
         var troopId = this.makeEncounterTroopId();
-        if ($dataTroops[troopId]) {
+        if (global.$dataTroops[troopId]) {
             BattleManager.setup(troopId, true, false);
             BattleManager.onEncounter();
             return true;
@@ -224,8 +224,8 @@ Game_Player.prototype.executeEncounter = function () {
 };
 
 Game_Player.prototype.startMapEvent = function (x, y, triggers, normal) {
-    if (!$gameMap.isEventRunning()) {
-        $gameMap.eventsXy(x, y).forEach(function (event) {
+    if (!global.$gameMap.isEventRunning()) {
+        global.$gameMap.eventsXy(x, y).forEach(function (event) {
             if (event.isTriggerIn(triggers) && event.isNormalPriority() === normal) {
                 event.start();
             }
@@ -237,10 +237,10 @@ Game_Player.prototype.moveByInput = function () {
     if (!this.isMoving() && this.canMove()) {
         var direction = this.getInputDirection();
         if (direction > 0) {
-            $gameTemp.clearDestination();
-        } else if ($gameTemp.isDestinationValid()) {
-            var x = $gameTemp.destinationX();
-            var y = $gameTemp.destinationY();
+            global.$gameTemp.clearDestination();
+        } else if (global.$gameTemp.isDestinationValid()) {
+            var x = global.$gameTemp.destinationX();
+            var y = global.$gameTemp.destinationY();
             direction = this.findDirectionTo(x, y);
         }
         if (direction > 0) {
@@ -250,7 +250,7 @@ Game_Player.prototype.moveByInput = function () {
 };
 
 Game_Player.prototype.canMove = function () {
-    if ($gameMap.isEventRunning() || $gameMessage.isBusy()) {
+    if (global.$gameMap.isEventRunning() || global.$gameMessage.isBusy()) {
         return false;
     }
     if (this.isMoveRouteForcing() || this.areFollowersGathering()) {
@@ -294,8 +294,8 @@ Game_Player.prototype.updateDashing = function () {
     if (this.isMoving()) {
         return;
     }
-    if (this.canMove() && !this.isInVehicle() && !$gameMap.isDashDisabled()) {
-        this._dashing = this.isDashButtonPressed() || $gameTemp.isDestinationValid();
+    if (this.canMove() && !this.isInVehicle() && !global.$gameMap.isDashDisabled()) {
+        this._dashing = this.isDashButtonPressed() || global.$gameTemp.isDestinationValid();
     } else {
         this._dashing = false;
     }
@@ -316,16 +316,16 @@ Game_Player.prototype.updateScroll = function (lastScrolledX, lastScrolledY) {
     var x2 = this.scrolledX();
     var y2 = this.scrolledY();
     if (y2 > y1 && y2 > this.centerY()) {
-        $gameMap.scrollDown(y2 - y1);
+        global.$gameMap.scrollDown(y2 - y1);
     }
     if (x2 < x1 && x2 < this.centerX()) {
-        $gameMap.scrollLeft(x1 - x2);
+        global.$gameMap.scrollLeft(x1 - x2);
     }
     if (x2 > x1 && x2 > this.centerX()) {
-        $gameMap.scrollRight(x2 - x1);
+        global.$gameMap.scrollRight(x2 - x1);
     }
     if (y2 < y1 && y2 < this.centerY()) {
-        $gameMap.scrollUp(y1 - y2);
+        global.$gameMap.scrollUp(y1 - y2);
     }
 };
 
@@ -363,11 +363,11 @@ Game_Player.prototype.updateVehicleGetOff = function () {
 };
 
 Game_Player.prototype.updateNonmoving = function (wasMoving) {
-    if (!$gameMap.isEventRunning()) {
+    if (!global.$gameMap.isEventRunning()) {
         if (wasMoving) {
-            $gameParty.onPlayerWalk();
+            global.$gameParty.onPlayerWalk();
             this.checkEventTriggerHere([1, 2]);
-            if ($gameMap.setupStartingEvent()) {
+            if (global.$gameMap.setupStartingEvent()) {
                 return;
             }
         }
@@ -377,7 +377,7 @@ Game_Player.prototype.updateNonmoving = function (wasMoving) {
         if (wasMoving) {
             this.updateEncounterCount();
         } else {
-            $gameTemp.clearDestination();
+            global.$gameTemp.clearDestination();
         }
     }
 };
@@ -400,11 +400,11 @@ Game_Player.prototype.triggerButtonAction = function () {
             return true;
         }
         this.checkEventTriggerHere([0]);
-        if ($gameMap.setupStartingEvent()) {
+        if (global.$gameMap.setupStartingEvent()) {
             return true;
         }
         this.checkEventTriggerThere([0, 1, 2]);
-        if ($gameMap.setupStartingEvent()) {
+        if (global.$gameMap.setupStartingEvent()) {
             return true;
         }
     }
@@ -412,16 +412,16 @@ Game_Player.prototype.triggerButtonAction = function () {
 };
 
 Game_Player.prototype.triggerTouchAction = function () {
-    if ($gameTemp.isDestinationValid()) {
+    if (global.$gameTemp.isDestinationValid()) {
         var direction = this.direction();
         var x1 = this.x;
         var y1 = this.y;
-        var x2 = $gameMap.roundXWithDirection(x1, direction);
-        var y2 = $gameMap.roundYWithDirection(y1, direction);
-        var x3 = $gameMap.roundXWithDirection(x2, direction);
-        var y3 = $gameMap.roundYWithDirection(y2, direction);
-        var destX = $gameTemp.destinationX();
-        var destY = $gameTemp.destinationY();
+        var x2 = global.$gameMap.roundXWithDirection(x1, direction);
+        var y2 = global.$gameMap.roundYWithDirection(y1, direction);
+        var x3 = global.$gameMap.roundXWithDirection(x2, direction);
+        var y3 = global.$gameMap.roundYWithDirection(y2, direction);
+        var destX = global.$gameTemp.destinationX();
+        var destY = global.$gameTemp.destinationY();
         if (destX === x1 && destY === y1) {
             return this.triggerTouchActionD1(x1, y1);
         } else if (destX === x2 && destY === y2) {
@@ -434,17 +434,17 @@ Game_Player.prototype.triggerTouchAction = function () {
 };
 
 Game_Player.prototype.triggerTouchActionD1 = function (x1, y1) {
-    if ($gameMap.airship().pos(x1, y1)) {
+    if (global.$gameMap.airship().pos(x1, y1)) {
         if (TouchInput.isTriggered() && this.getOnOffVehicle()) {
             return true;
         }
     }
     this.checkEventTriggerHere([0]);
-    return $gameMap.setupStartingEvent();
+    return global.$gameMap.setupStartingEvent();
 };
 
 Game_Player.prototype.triggerTouchActionD2 = function (x2, y2) {
-    if ($gameMap.boat().pos(x2, y2) || $gameMap.ship().pos(x2, y2)) {
+    if (global.$gameMap.boat().pos(x2, y2) || global.$gameMap.ship().pos(x2, y2)) {
         if (TouchInput.isTriggered() && this.getOnVehicle()) {
             return true;
         }
@@ -455,14 +455,14 @@ Game_Player.prototype.triggerTouchActionD2 = function (x2, y2) {
         }
     }
     this.checkEventTriggerThere([0, 1, 2]);
-    return $gameMap.setupStartingEvent();
+    return global.$gameMap.setupStartingEvent();
 };
 
 Game_Player.prototype.triggerTouchActionD3 = function (x2, y2) {
-    if ($gameMap.isCounter(x2, y2)) {
+    if (global.$gameMap.isCounter(x2, y2)) {
         this.checkEventTriggerThere([0, 1, 2]);
     }
-    return $gameMap.setupStartingEvent();
+    return global.$gameMap.setupStartingEvent();
 };
 
 Game_Player.prototype.updateEncounterCount = function () {
@@ -473,8 +473,8 @@ Game_Player.prototype.updateEncounterCount = function () {
 
 Game_Player.prototype.canEncounter = function () {
     return (
-        !$gameParty.hasEncounterNone() &&
-        $gameSystem.isEncounterEnabled() &&
+        !global.$gameParty.hasEncounterNone() &&
+        global.$gameSystem.isEncounterEnabled() &&
         !this.isInAirship() &&
         !this.isMoveRouteForcing() &&
         !this.isDebugThrough()
@@ -482,8 +482,8 @@ Game_Player.prototype.canEncounter = function () {
 };
 
 Game_Player.prototype.encounterProgressValue = function () {
-    var value = $gameMap.isBush(this.x, this.y) ? 2 : 1;
-    if ($gameParty.hasEncounterHalf()) {
+    var value = global.$gameMap.isBush(this.x, this.y) ? 2 : 1;
+    if (global.$gameParty.hasEncounterHalf()) {
         value *= 0.5;
     }
     if (this.isInShip()) {
@@ -503,12 +503,12 @@ Game_Player.prototype.checkEventTriggerThere = function (triggers) {
         var direction = this.direction();
         var x1 = this.x;
         var y1 = this.y;
-        var x2 = $gameMap.roundXWithDirection(x1, direction);
-        var y2 = $gameMap.roundYWithDirection(y1, direction);
+        var x2 = global.$gameMap.roundXWithDirection(x1, direction);
+        var y2 = global.$gameMap.roundYWithDirection(y1, direction);
         this.startMapEvent(x2, y2, triggers, true);
-        if (!$gameMap.isAnyEventStarting() && $gameMap.isCounter(x2, y2)) {
-            var x3 = $gameMap.roundXWithDirection(x2, direction);
-            var y3 = $gameMap.roundYWithDirection(y2, direction);
+        if (!global.$gameMap.isAnyEventStarting() && global.$gameMap.isCounter(x2, y2)) {
+            var x3 = global.$gameMap.roundXWithDirection(x2, direction);
+            var y3 = global.$gameMap.roundYWithDirection(y2, direction);
             this.startMapEvent(x3, y3, triggers, true);
         }
     }
@@ -536,13 +536,13 @@ Game_Player.prototype.getOnVehicle = function () {
     var direction = this.direction();
     var x1 = this.x;
     var y1 = this.y;
-    var x2 = $gameMap.roundXWithDirection(x1, direction);
-    var y2 = $gameMap.roundYWithDirection(y1, direction);
-    if ($gameMap.airship().pos(x1, y1)) {
+    var x2 = global.$gameMap.roundXWithDirection(x1, direction);
+    var y2 = global.$gameMap.roundYWithDirection(y1, direction);
+    if (global.$gameMap.airship().pos(x1, y1)) {
         this._vehicleType = 'airship';
-    } else if ($gameMap.ship().pos(x2, y2)) {
+    } else if (global.$gameMap.ship().pos(x2, y2)) {
         this._vehicleType = 'ship';
-    } else if ($gameMap.boat().pos(x2, y2)) {
+    } else if (global.$gameMap.boat().pos(x2, y2)) {
         this._vehicleType = 'boat';
     }
     if (this.isInVehicle()) {
@@ -582,7 +582,7 @@ Game_Player.prototype.forceMoveForward = function () {
 };
 
 Game_Player.prototype.isOnDamageFloor = function () {
-    return $gameMap.isDamageFloor(this.x, this.y) && !this.isInAirship();
+    return global.$gameMap.isDamageFloor(this.x, this.y) && !this.isInAirship();
 };
 
 Game_Player.prototype.moveStraight = function (d) {

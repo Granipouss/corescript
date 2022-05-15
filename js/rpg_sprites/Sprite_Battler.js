@@ -125,7 +125,7 @@ Sprite_Battler.prototype.updateSelectionEffect = function () {
 Sprite_Battler.prototype.setupAnimation = function () {
     while (this._battler.isAnimationRequested()) {
         var data = this._battler.shiftAnimation();
-        var animation = $dataAnimations[data.animationId];
+        var animation = global.$dataAnimations[data.animationId];
         var mirror = data.mirror;
         var delay = animation.position === 3 ? 0 : data.delay;
         this.startAnimation(animation, mirror, delay);

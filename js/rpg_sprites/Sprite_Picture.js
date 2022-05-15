@@ -19,7 +19,7 @@ Sprite_Picture.prototype.initialize = function (pictureId) {
 };
 
 Sprite_Picture.prototype.picture = function () {
-    return $gameScreen.picture(this._pictureId);
+    return global.$gameScreen.picture(this._pictureId);
 };
 
 Sprite_Picture.prototype.update = function () {

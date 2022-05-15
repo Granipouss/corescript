@@ -54,23 +54,23 @@ Spriteset_Map.prototype.createTilemap = function () {
     } else {
         this._tilemap = new Tilemap();
     }
-    this._tilemap.tileWidth = $gameMap.tileWidth();
-    this._tilemap.tileHeight = $gameMap.tileHeight();
-    this._tilemap.setData($gameMap.width(), $gameMap.height(), $gameMap.data());
-    this._tilemap.horizontalWrap = $gameMap.isLoopHorizontal();
-    this._tilemap.verticalWrap = $gameMap.isLoopVertical();
+    this._tilemap.tileWidth = global.$gameMap.tileWidth();
+    this._tilemap.tileHeight = global.$gameMap.tileHeight();
+    this._tilemap.setData(global.$gameMap.width(), global.$gameMap.height(), global.$gameMap.data());
+    this._tilemap.horizontalWrap = global.$gameMap.isLoopHorizontal();
+    this._tilemap.verticalWrap = global.$gameMap.isLoopVertical();
     this.loadTileset();
     this._baseSprite.addChild(this._tilemap);
 };
 
 Spriteset_Map.prototype.loadTileset = function () {
-    this._tileset = $gameMap.tileset();
+    this._tileset = global.$gameMap.tileset();
     if (this._tileset) {
         var tilesetNames = this._tileset.tilesetNames;
         for (var i = 0; i < tilesetNames.length; i++) {
             this._tilemap.bitmaps[i] = ImageManager.loadTileset(tilesetNames[i]);
         }
-        var newTilesetFlags = $gameMap.tilesetFlags();
+        var newTilesetFlags = global.$gameMap.tilesetFlags();
         this._tilemap.refreshTileset();
         if (!this._tilemap.flags.equals(newTilesetFlags)) {
             this._tilemap.refresh();
@@ -81,16 +81,16 @@ Spriteset_Map.prototype.loadTileset = function () {
 
 Spriteset_Map.prototype.createCharacters = function () {
     this._characterSprites = [];
-    $gameMap.events().forEach(function (event) {
+    global.$gameMap.events().forEach(function (event) {
         this._characterSprites.push(new Sprite_Character(event));
     }, this);
-    $gameMap.vehicles().forEach(function (vehicle) {
+    global.$gameMap.vehicles().forEach(function (vehicle) {
         this._characterSprites.push(new Sprite_Character(vehicle));
     }, this);
-    $gamePlayer.followers().reverseEach(function (follower) {
+    global.$gamePlayer.followers().reverseEach(function (follower) {
         this._characterSprites.push(new Sprite_Character(follower));
     }, this);
-    this._characterSprites.push(new Sprite_Character($gamePlayer));
+    this._characterSprites.push(new Sprite_Character(global.$gamePlayer));
     for (var i = 0; i < this._characterSprites.length; i++) {
         this._tilemap.addChild(this._characterSprites[i]);
     }
@@ -117,7 +117,7 @@ Spriteset_Map.prototype.createWeather = function () {
 };
 
 Spriteset_Map.prototype.updateTileset = function () {
-    if (this._tileset !== $gameMap.tileset()) {
+    if (this._tileset !== global.$gameMap.tileset()) {
         this.loadTileset();
     }
 };
@@ -135,8 +135,8 @@ Spriteset_Map.prototype._canvasReAddParallax = function () {
 };
 
 Spriteset_Map.prototype.updateParallax = function () {
-    if (this._parallaxName !== $gameMap.parallaxName()) {
-        this._parallaxName = $gameMap.parallaxName();
+    if (this._parallaxName !== global.$gameMap.parallaxName()) {
+        this._parallaxName = global.$gameMap.parallaxName();
 
         if (this._parallax.bitmap && Graphics.isWebGL() != true) {
             this._canvasReAddParallax();
@@ -145,26 +145,26 @@ Spriteset_Map.prototype.updateParallax = function () {
         }
     }
     if (this._parallax.bitmap) {
-        this._parallax.origin.x = $gameMap.parallaxOx();
-        this._parallax.origin.y = $gameMap.parallaxOy();
+        this._parallax.origin.x = global.$gameMap.parallaxOx();
+        this._parallax.origin.y = global.$gameMap.parallaxOy();
     }
 };
 
 Spriteset_Map.prototype.updateTilemap = function () {
-    this._tilemap.origin.x = $gameMap.displayX() * $gameMap.tileWidth();
-    this._tilemap.origin.y = $gameMap.displayY() * $gameMap.tileHeight();
+    this._tilemap.origin.x = global.$gameMap.displayX() * global.$gameMap.tileWidth();
+    this._tilemap.origin.y = global.$gameMap.displayY() * global.$gameMap.tileHeight();
 };
 
 Spriteset_Map.prototype.updateShadow = function () {
-    var airship = $gameMap.airship();
+    var airship = global.$gameMap.airship();
     this._shadowSprite.x = airship.shadowX();
     this._shadowSprite.y = airship.shadowY();
     this._shadowSprite.opacity = airship.shadowOpacity();
 };
 
 Spriteset_Map.prototype.updateWeather = function () {
-    this._weather.type = $gameScreen.weatherType();
-    this._weather.power = $gameScreen.weatherPower();
-    this._weather.origin.x = $gameMap.displayX() * $gameMap.tileWidth();
-    this._weather.origin.y = $gameMap.displayY() * $gameMap.tileHeight();
+    this._weather.type = global.$gameScreen.weatherType();
+    this._weather.power = global.$gameScreen.weatherPower();
+    this._weather.origin.x = global.$gameMap.displayX() * global.$gameMap.tileWidth();
+    this._weather.origin.y = global.$gameMap.displayY() * global.$gameMap.tileHeight();
 };

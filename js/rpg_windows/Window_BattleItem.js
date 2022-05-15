@@ -16,7 +16,7 @@ Window_BattleItem.prototype.initialize = function (x, y, width, height) {
 };
 
 Window_BattleItem.prototype.includes = function (item) {
-    return $gameParty.canUse(item);
+    return global.$gameParty.canUse(item);
 };
 
 Window_BattleItem.prototype.show = function () {

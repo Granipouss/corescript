@@ -32,7 +32,7 @@ Scene_Save.prototype.onSavefileOk = function () {
         return;
     }
     Scene_File.prototype.onSavefileOk.call(this);
-    $gameSystem.onBeforeSave();
+    global.$gameSystem.onBeforeSave();
     if (DataManager.saveGame(this.savefileId())) {
         this.onSaveSuccess();
     } else {

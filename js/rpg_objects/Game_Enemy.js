@@ -36,15 +36,15 @@ Game_Enemy.prototype.isEnemy = function () {
 };
 
 Game_Enemy.prototype.friendsUnit = function () {
-    return $gameTroop;
+    return global.$gameTroop;
 };
 
 Game_Enemy.prototype.opponentsUnit = function () {
-    return $gameParty;
+    return global.$gameParty;
 };
 
 Game_Enemy.prototype.index = function () {
-    return $gameTroop.members().indexOf(this);
+    return global.$gameTroop.members().indexOf(this);
 };
 
 Game_Enemy.prototype.isBattleMember = function () {
@@ -56,7 +56,7 @@ Game_Enemy.prototype.enemyId = function () {
 };
 
 Game_Enemy.prototype.enemy = function () {
-    return $dataEnemies[this._enemyId];
+    return global.$dataEnemies[this._enemyId];
 };
 
 Game_Enemy.prototype.traitObjects = function () {
@@ -89,16 +89,16 @@ Game_Enemy.prototype.makeDropItems = function () {
 };
 
 Game_Enemy.prototype.dropItemRate = function () {
-    return $gameParty.hasDropItemDouble() ? 2 : 1;
+    return global.$gameParty.hasDropItemDouble() ? 2 : 1;
 };
 
 Game_Enemy.prototype.itemObject = function (kind, dataId) {
     if (kind === 1) {
-        return $dataItems[dataId];
+        return global.$dataItems[dataId];
     } else if (kind === 2) {
-        return $dataWeapons[dataId];
+        return global.$dataWeapons[dataId];
     } else if (kind === 3) {
-        return $dataArmors[dataId];
+        return global.$dataArmors[dataId];
     } else {
         return null;
     }
@@ -215,7 +215,7 @@ Game_Enemy.prototype.meetsCondition = function (action) {
 };
 
 Game_Enemy.prototype.meetsTurnCondition = function (param1, param2) {
-    var n = $gameTroop.turnCount();
+    var n = global.$gameTroop.turnCount();
     if (param2 === 0) {
         return n === param1;
     } else {
@@ -236,15 +236,15 @@ Game_Enemy.prototype.meetsStateCondition = function (param) {
 };
 
 Game_Enemy.prototype.meetsPartyLevelCondition = function (param) {
-    return $gameParty.highestLevel() >= param;
+    return global.$gameParty.highestLevel() >= param;
 };
 
 Game_Enemy.prototype.meetsSwitchCondition = function (param) {
-    return $gameSwitches.value(param);
+    return global.$gameSwitches.value(param);
 };
 
 Game_Enemy.prototype.isActionValid = function (action) {
-    return this.meetsCondition(action) && this.canUse($dataSkills[action.skillId]);
+    return this.meetsCondition(action) && this.canUse(global.$dataSkills[action.skillId]);
 };
 
 Game_Enemy.prototype.selectAction = function (actionList, ratingZero) {

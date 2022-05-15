@@ -25,14 +25,14 @@ Window_BattleActor.prototype.show = function () {
 
 Window_BattleActor.prototype.hide = function () {
     Window_BattleStatus.prototype.hide.call(this);
-    $gameParty.select(null);
+    global.$gameParty.select(null);
 };
 
 Window_BattleActor.prototype.select = function (index) {
     Window_BattleStatus.prototype.select.call(this, index);
-    $gameParty.select(this.actor());
+    global.$gameParty.select(this.actor());
 };
 
 Window_BattleActor.prototype.actor = function () {
-    return $gameParty.members()[this.index()];
+    return global.$gameParty.members()[this.index()];
 };

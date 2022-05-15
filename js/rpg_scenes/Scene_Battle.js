@@ -28,8 +28,8 @@ Scene_Battle.prototype.start = function () {
 
 Scene_Battle.prototype.update = function () {
     var active = this.isActive();
-    $gameTimer.update(active);
-    $gameScreen.update();
+    global.$gameTimer.update(active);
+    global.$gameScreen.update();
     this.updateStatusWindow();
     this.updateWindowPositions();
     if (active && !this.isBusy()) {
@@ -82,8 +82,8 @@ Scene_Battle.prototype.stop = function () {
 
 Scene_Battle.prototype.terminate = function () {
     Scene_Base.prototype.terminate.call(this);
-    $gameParty.onBattleEnd();
-    $gameTroop.onBattleEnd();
+    global.$gameParty.onBattleEnd();
+    global.$gameTroop.onBattleEnd();
     AudioManager.stopMe();
 
     ImageManager.clearRequest();
@@ -94,7 +94,7 @@ Scene_Battle.prototype.needsSlowFadeOut = function () {
 };
 
 Scene_Battle.prototype.updateStatusWindow = function () {
-    if ($gameMessage.isBusy()) {
+    if (global.$gameMessage.isBusy()) {
         this._statusWindow.close();
         this._partyCommandWindow.close();
         this._actorCommandWindow.close();
@@ -375,7 +375,7 @@ Scene_Battle.prototype.onItemOk = function () {
     var item = this._itemWindow.item();
     var action = BattleManager.inputtingAction();
     action.setItem(item.id);
-    $gameParty.setLastItem(item);
+    global.$gameParty.setLastItem(item);
     this.onSelectAction();
 };
 

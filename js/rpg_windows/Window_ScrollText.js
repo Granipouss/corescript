@@ -23,18 +23,18 @@ Window_ScrollText.prototype.initialize = function () {
 
 Window_ScrollText.prototype.update = function () {
     Window_Base.prototype.update.call(this);
-    if ($gameMessage.scrollMode()) {
+    if (global.$gameMessage.scrollMode()) {
         if (this._text) {
             this.updateMessage();
         }
-        if (!this._text && $gameMessage.hasText()) {
+        if (!this._text && global.$gameMessage.hasText()) {
             this.startMessage();
         }
     }
 };
 
 Window_ScrollText.prototype.startMessage = function () {
-    this._text = $gameMessage.allText();
+    this._text = global.$gameMessage.allText();
     this.refresh();
     this.show();
 };
@@ -61,7 +61,7 @@ Window_ScrollText.prototype.updateMessage = function () {
 };
 
 Window_ScrollText.prototype.scrollSpeed = function () {
-    var speed = $gameMessage.scrollSpeed() / 2;
+    var speed = global.$gameMessage.scrollSpeed() / 2;
     if (this.isFastForward()) {
         speed *= this.fastForwardRate();
     }
@@ -69,7 +69,7 @@ Window_ScrollText.prototype.scrollSpeed = function () {
 };
 
 Window_ScrollText.prototype.isFastForward = function () {
-    if ($gameMessage.scrollNoFast()) {
+    if (global.$gameMessage.scrollNoFast()) {
         return false;
     } else {
         return Input.isPressed('ok') || Input.isPressed('shift') || TouchInput.isPressed();
@@ -82,6 +82,6 @@ Window_ScrollText.prototype.fastForwardRate = function () {
 
 Window_ScrollText.prototype.terminateMessage = function () {
     this._text = null;
-    $gameMessage.clear();
+    global.$gameMessage.clear();
     this.hide();
 };

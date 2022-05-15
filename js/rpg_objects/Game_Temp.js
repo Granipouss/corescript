@@ -31,7 +31,7 @@ Game_Temp.prototype.isCommonEventReserved = function () {
 };
 
 Game_Temp.prototype.reservedCommonEvent = function () {
-    return $dataCommonEvents[this._commonEventId];
+    return global.$dataCommonEvents[this._commonEventId];
 };
 
 Game_Temp.prototype.reservedCommonEventId = function () {

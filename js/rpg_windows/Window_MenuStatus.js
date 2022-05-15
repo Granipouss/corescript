@@ -28,7 +28,7 @@ Window_MenuStatus.prototype.windowHeight = function () {
 };
 
 Window_MenuStatus.prototype.maxItems = function () {
-    return $gameParty.size();
+    return global.$gameParty.size();
 };
 
 Window_MenuStatus.prototype.itemHeight = function () {
@@ -41,7 +41,7 @@ Window_MenuStatus.prototype.numVisibleRows = function () {
 };
 
 Window_MenuStatus.prototype.loadImages = function () {
-    $gameParty.members().forEach(function (actor) {
+    global.$gameParty.members().forEach(function (actor) {
         ImageManager.reserveFace(actor.faceName());
     }, this);
 };
@@ -63,7 +63,7 @@ Window_MenuStatus.prototype.drawItemBackground = function (index) {
 };
 
 Window_MenuStatus.prototype.drawItemImage = function (index) {
-    var actor = $gameParty.members()[index];
+    var actor = global.$gameParty.members()[index];
     var rect = this.itemRect(index);
     this.changePaintOpacity(actor.isBattleMember());
     this.drawActorFace(actor, rect.x + 1, rect.y + 1, Window_Base._faceWidth, Window_Base._faceHeight);
@@ -71,7 +71,7 @@ Window_MenuStatus.prototype.drawItemImage = function (index) {
 };
 
 Window_MenuStatus.prototype.drawItemStatus = function (index) {
-    var actor = $gameParty.members()[index];
+    var actor = global.$gameParty.members()[index];
     var rect = this.itemRect(index);
     var x = rect.x + 162;
     var y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
@@ -81,12 +81,12 @@ Window_MenuStatus.prototype.drawItemStatus = function (index) {
 
 Window_MenuStatus.prototype.processOk = function () {
     Window_Selectable.prototype.processOk.call(this);
-    $gameParty.setMenuActor($gameParty.members()[this.index()]);
+    global.$gameParty.setMenuActor(global.$gameParty.members()[this.index()]);
 };
 
 Window_MenuStatus.prototype.isCurrentItemEnabled = function () {
     if (this._formationMode) {
-        var actor = $gameParty.members()[this.index()];
+        var actor = global.$gameParty.members()[this.index()];
         return actor && actor.isFormationChangeOk();
     } else {
         return true;
@@ -94,7 +94,7 @@ Window_MenuStatus.prototype.isCurrentItemEnabled = function () {
 };
 
 Window_MenuStatus.prototype.selectLast = function () {
-    this.select($gameParty.menuActor().index() || 0);
+    this.select(global.$gameParty.menuActor().index() || 0);
 };
 
 Window_MenuStatus.prototype.formationMode = function () {

@@ -43,7 +43,7 @@ Scene_Item.prototype.createItemWindow = function () {
 };
 
 Scene_Item.prototype.user = function () {
-    var members = $gameParty.movableMembers();
+    var members = global.$gameParty.movableMembers();
     var bestActor = members[0];
     var bestPha = 0;
     for (var i = 0; i < members.length; i++) {
@@ -61,7 +61,7 @@ Scene_Item.prototype.onCategoryOk = function () {
 };
 
 Scene_Item.prototype.onItemOk = function () {
-    $gameParty.setLastItem(this.item());
+    global.$gameParty.setLastItem(this.item());
     this.determineItem();
 };
 

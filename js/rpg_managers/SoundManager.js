@@ -15,14 +15,14 @@ SoundManager.preloadImportantSounds = function () {
 };
 
 SoundManager.loadSystemSound = function (n) {
-    if ($dataSystem) {
-        AudioManager.loadStaticSe($dataSystem.sounds[n]);
+    if (global.$dataSystem) {
+        AudioManager.loadStaticSe(global.$dataSystem.sounds[n]);
     }
 };
 
 SoundManager.playSystemSound = function (n) {
-    if ($dataSystem) {
-        AudioManager.playStaticSe($dataSystem.sounds[n]);
+    if (global.$dataSystem) {
+        AudioManager.playStaticSe(global.$dataSystem.sounds[n]);
     }
 };
 

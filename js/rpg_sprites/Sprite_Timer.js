@@ -30,8 +30,8 @@ Sprite_Timer.prototype.update = function () {
 };
 
 Sprite_Timer.prototype.updateBitmap = function () {
-    if (this._seconds !== $gameTimer.seconds()) {
-        this._seconds = $gameTimer.seconds();
+    if (this._seconds !== global.$gameTimer.seconds()) {
+        this._seconds = global.$gameTimer.seconds();
         this.redraw();
     }
 };
@@ -56,5 +56,5 @@ Sprite_Timer.prototype.updatePosition = function () {
 };
 
 Sprite_Timer.prototype.updateVisibility = function () {
-    this.visible = $gameTimer.isWorking();
+    this.visible = global.$gameTimer.isWorking();
 };

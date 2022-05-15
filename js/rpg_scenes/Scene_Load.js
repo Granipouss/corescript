@@ -18,7 +18,7 @@ Scene_Load.prototype.initialize = function () {
 Scene_Load.prototype.terminate = function () {
     Scene_File.prototype.terminate.call(this);
     if (this._loadSuccess) {
-        $gameSystem.onAfterLoad();
+        global.$gameSystem.onAfterLoad();
     }
 };
 
@@ -57,8 +57,8 @@ Scene_Load.prototype.onLoadFailure = function () {
 };
 
 Scene_Load.prototype.reloadMapIfUpdated = function () {
-    if ($gameSystem.versionId() !== $dataSystem.versionId) {
-        $gamePlayer.reserveTransfer($gameMap.mapId(), $gamePlayer.x, $gamePlayer.y);
-        $gamePlayer.requestMapReload();
+    if (global.$gameSystem.versionId() !== global.$dataSystem.versionId) {
+        global.$gamePlayer.reserveTransfer(global.$gameMap.mapId(), global.$gamePlayer.x, global.$gamePlayer.y);
+        global.$gamePlayer.requestMapReload();
     }
 };

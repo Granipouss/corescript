@@ -176,7 +176,7 @@ Game_Battler.prototype.addState = function (stateId) {
 Game_Battler.prototype.isStateAddable = function (stateId) {
     return (
         this.isAlive() &&
-        $dataStates[stateId] &&
+        global.$dataStates[stateId] &&
         !this.isStateResist(stateId) &&
         !this._result.isStateRemoved(stateId) &&
         !this.isStateRestrict(stateId)
@@ -184,7 +184,7 @@ Game_Battler.prototype.isStateAddable = function (stateId) {
 };
 
 Game_Battler.prototype.isStateRestrict = function (stateId) {
-    return $dataStates[stateId].removeByRestriction && this.isRestricted();
+    return global.$dataStates[stateId].removeByRestriction && this.isRestricted();
 };
 
 Game_Battler.prototype.onRestrict = function () {
@@ -209,7 +209,7 @@ Game_Battler.prototype.removeState = function (stateId) {
 };
 
 Game_Battler.prototype.escape = function () {
-    if ($gameParty.inBattle()) {
+    if (global.$gameParty.inBattle()) {
         this.hide();
     }
     this.clearActions();
@@ -355,7 +355,7 @@ Game_Battler.prototype.useItem = function (item) {
 };
 
 Game_Battler.prototype.consumeItem = function (item) {
-    $gameParty.consumeItem(item);
+    global.$gameParty.consumeItem(item);
 };
 
 Game_Battler.prototype.gainHp = function (value) {
@@ -400,7 +400,7 @@ Game_Battler.prototype.regenerateHp = function () {
 };
 
 Game_Battler.prototype.maxSlipDamage = function () {
-    return $dataSystem.optSlipDeath ? this.hp : Math.max(this.hp - 1, 0);
+    return global.$dataSystem.optSlipDeath ? this.hp : Math.max(this.hp - 1, 0);
 };
 
 Game_Battler.prototype.regenerateMp = function () {

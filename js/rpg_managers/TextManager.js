@@ -8,19 +8,19 @@ function TextManager() {
 }
 
 TextManager.basic = function (basicId) {
-    return $dataSystem.terms.basic[basicId] || '';
+    return global.$dataSystem.terms.basic[basicId] || '';
 };
 
 TextManager.param = function (paramId) {
-    return $dataSystem.terms.params[paramId] || '';
+    return global.$dataSystem.terms.params[paramId] || '';
 };
 
 TextManager.command = function (commandId) {
-    return $dataSystem.terms.commands[commandId] || '';
+    return global.$dataSystem.terms.commands[commandId] || '';
 };
 
 TextManager.message = function (messageId) {
-    return $dataSystem.terms.messages[messageId] || '';
+    return global.$dataSystem.terms.messages[messageId] || '';
 };
 
 TextManager.getter = function (method, param) {
@@ -34,7 +34,7 @@ TextManager.getter = function (method, param) {
 
 Object.defineProperty(TextManager, 'currencyUnit', {
     get: function () {
-        return $dataSystem.currencyUnit;
+        return global.$dataSystem.currencyUnit;
     },
     configurable: true,
 });

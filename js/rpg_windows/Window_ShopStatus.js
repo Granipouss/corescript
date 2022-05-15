@@ -44,7 +44,7 @@ Window_ShopStatus.prototype.drawPossession = function (x, y) {
     this.changeTextColor(this.systemColor());
     this.drawText(TextManager.possession, x, y, width - possessionWidth);
     this.resetTextColor();
-    this.drawText($gameParty.numItems(this._item), x, y, width, 'right');
+    this.drawText(global.$gameParty.numItems(this._item), x, y, width, 'right');
 };
 
 Window_ShopStatus.prototype.drawEquipInfo = function (x, y) {
@@ -57,7 +57,7 @@ Window_ShopStatus.prototype.drawEquipInfo = function (x, y) {
 Window_ShopStatus.prototype.statusMembers = function () {
     var start = this._pageIndex * this.pageSize();
     var end = start + this.pageSize();
-    return $gameParty.members().slice(start, end);
+    return global.$gameParty.members().slice(start, end);
 };
 
 Window_ShopStatus.prototype.pageSize = function () {
@@ -65,7 +65,7 @@ Window_ShopStatus.prototype.pageSize = function () {
 };
 
 Window_ShopStatus.prototype.maxPages = function () {
-    return Math.floor(($gameParty.size() + this.pageSize() - 1) / this.pageSize());
+    return Math.floor((global.$gameParty.size() + this.pageSize() - 1) / this.pageSize());
 };
 
 Window_ShopStatus.prototype.drawActorEquipInfo = function (x, y, actor) {

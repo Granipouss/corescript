@@ -65,11 +65,11 @@ Window_ItemList.prototype.needsNumber = function () {
 };
 
 Window_ItemList.prototype.isEnabled = function (item) {
-    return $gameParty.canUse(item);
+    return global.$gameParty.canUse(item);
 };
 
 Window_ItemList.prototype.makeItemList = function () {
-    this._data = $gameParty.allItems().filter(function (item) {
+    this._data = global.$gameParty.allItems().filter(function (item) {
         return this.includes(item);
     }, this);
     if (this.includes(null)) {
@@ -78,7 +78,7 @@ Window_ItemList.prototype.makeItemList = function () {
 };
 
 Window_ItemList.prototype.selectLast = function () {
-    var index = this._data.indexOf($gameParty.lastItem());
+    var index = this._data.indexOf(global.$gameParty.lastItem());
     this.select(index >= 0 ? index : 0);
 };
 
@@ -102,7 +102,7 @@ Window_ItemList.prototype.numberWidth = function () {
 Window_ItemList.prototype.drawItemNumber = function (item, x, y, width) {
     if (this.needsNumber()) {
         this.drawText(':', x, y, width - this.textWidth('00'), 'right');
-        this.drawText($gameParty.numItems(item), x, y, width, 'right');
+        this.drawText(global.$gameParty.numItems(item), x, y, width, 'right');
     }
 };
 

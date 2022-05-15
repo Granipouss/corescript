@@ -276,7 +276,7 @@ Scene_Base.prototype.popScene = function () {
  * @memberof Scene_Base
  */
 Scene_Base.prototype.checkGameover = function () {
-    if ($gameParty.isAllDead()) {
+    if (global.$gameParty.isAllDead()) {
         SceneManager.goto(Scene_Gameover);
     }
 };

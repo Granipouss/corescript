@@ -18,7 +18,7 @@ Sprite_Destination.prototype.initialize = function () {
 
 Sprite_Destination.prototype.update = function () {
     Sprite.prototype.update.call(this);
-    if ($gameTemp.isDestinationValid()) {
+    if (global.$gameTemp.isDestinationValid()) {
         this.updatePosition();
         this.updateAnimation();
         this.visible = true;
@@ -29,8 +29,8 @@ Sprite_Destination.prototype.update = function () {
 };
 
 Sprite_Destination.prototype.createBitmap = function () {
-    var tileWidth = $gameMap.tileWidth();
-    var tileHeight = $gameMap.tileHeight();
+    var tileWidth = global.$gameMap.tileWidth();
+    var tileHeight = global.$gameMap.tileHeight();
     this.bitmap = new Bitmap(tileWidth, tileHeight);
     this.bitmap.fillAll('white');
     this.anchor.x = 0.5;
@@ -39,12 +39,12 @@ Sprite_Destination.prototype.createBitmap = function () {
 };
 
 Sprite_Destination.prototype.updatePosition = function () {
-    var tileWidth = $gameMap.tileWidth();
-    var tileHeight = $gameMap.tileHeight();
-    var x = $gameTemp.destinationX();
-    var y = $gameTemp.destinationY();
-    this.x = ($gameMap.adjustX(x) + 0.5) * tileWidth;
-    this.y = ($gameMap.adjustY(y) + 0.5) * tileHeight;
+    var tileWidth = global.$gameMap.tileWidth();
+    var tileHeight = global.$gameMap.tileHeight();
+    var x = global.$gameTemp.destinationX();
+    var y = global.$gameTemp.destinationY();
+    this.x = (global.$gameMap.adjustX(x) + 0.5) * tileWidth;
+    this.y = (global.$gameMap.adjustY(y) + 0.5) * tileHeight;
 };
 
 Sprite_Destination.prototype.updateAnimation = function () {

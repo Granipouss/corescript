@@ -33,9 +33,9 @@ Window_Base.prototype.lineHeight = function () {
 };
 
 Window_Base.prototype.standardFontFace = function () {
-    if ($gameSystem.isChinese()) {
+    if (global.$gameSystem.isChinese()) {
         return 'SimHei, Heiti TC, sans-serif';
-    } else if ($gameSystem.isKorean()) {
+    } else if (global.$gameSystem.isKorean()) {
         return 'Dotum, AppleGothic, sans-serif';
     } else {
         return 'GameFont';
@@ -83,7 +83,7 @@ Window_Base.prototype.fittingHeight = function (numLines) {
 };
 
 Window_Base.prototype.updateTone = function () {
-    var tone = $gameSystem.windowTone();
+    var tone = global.$gameSystem.windowTone();
     this.setTone(tone[0], tone[1], tone[2]);
 };
 
@@ -277,13 +277,13 @@ Window_Base.prototype.convertEscapeCharacters = function (text) {
     text = text.replace(
         /\x1bV\[(\d+)\]/gi,
         function () {
-            return $gameVariables.value(parseInt(arguments[1]));
+            return global.$gameVariables.value(parseInt(arguments[1]));
         }.bind(this)
     );
     text = text.replace(
         /\x1bV\[(\d+)\]/gi,
         function () {
-            return $gameVariables.value(parseInt(arguments[1]));
+            return global.$gameVariables.value(parseInt(arguments[1]));
         }.bind(this)
     );
     text = text.replace(
@@ -303,12 +303,12 @@ Window_Base.prototype.convertEscapeCharacters = function (text) {
 };
 
 Window_Base.prototype.actorName = function (n) {
-    var actor = n >= 1 ? $gameActors.actor(n) : null;
+    var actor = n >= 1 ? global.$gameActors.actor(n) : null;
     return actor ? actor.name() : '';
 };
 
 Window_Base.prototype.partyMemberName = function (n) {
-    var actor = n >= 1 ? $gameParty.members()[n - 1] : null;
+    var actor = n >= 1 ? global.$gameParty.members()[n - 1] : null;
     return actor ? actor.name() : '';
 };
 
@@ -708,7 +708,7 @@ Window_Base.prototype.canvasToLocalY = function (y) {
 };
 
 Window_Base.prototype.reserveFaceImages = function () {
-    $gameParty.members().forEach(function (actor) {
+    global.$gameParty.members().forEach(function (actor) {
         ImageManager.reserveFace(actor.faceName());
     }, this);
 };

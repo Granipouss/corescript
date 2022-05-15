@@ -33,13 +33,13 @@ Game_ActionResult.prototype.clear = function () {
 
 Game_ActionResult.prototype.addedStateObjects = function () {
     return this.addedStates.map(function (id) {
-        return $dataStates[id];
+        return global.$dataStates[id];
     });
 };
 
 Game_ActionResult.prototype.removedStateObjects = function () {
     return this.removedStates.map(function (id) {
-        return $dataStates[id];
+        return global.$dataStates[id];
     });
 };
 

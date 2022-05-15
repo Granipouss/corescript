@@ -52,14 +52,14 @@ Sprite_Character.prototype.isTile = function () {
 };
 
 Sprite_Character.prototype.tilesetBitmap = function (tileId) {
-    var tileset = $gameMap.tileset();
+    var tileset = global.$gameMap.tileset();
     var setNumber = 5 + Math.floor(tileId / 256);
     return ImageManager.loadTileset(tileset.tilesetNames[setNumber]);
 };
 
 Sprite_Character.prototype.updateBitmap = function () {
     if (this.isImageChanged()) {
-        this._tilesetId = $gameMap.tilesetId();
+        this._tilesetId = global.$gameMap.tilesetId();
         this._tileId = this._character.tileId();
         this._characterName = this._character.characterName();
         this._characterIndex = this._character.characterIndex();
@@ -73,7 +73,7 @@ Sprite_Character.prototype.updateBitmap = function () {
 
 Sprite_Character.prototype.isImageChanged = function () {
     return (
-        this._tilesetId !== $gameMap.tilesetId() ||
+        this._tilesetId !== global.$gameMap.tilesetId() ||
         this._tileId !== this._character.tileId() ||
         this._characterName !== this._character.characterName() ||
         this._characterIndex !== this._character.characterIndex()
@@ -149,7 +149,7 @@ Sprite_Character.prototype.characterPatternY = function () {
 
 Sprite_Character.prototype.patternWidth = function () {
     if (this._tileId > 0) {
-        return $gameMap.tileWidth();
+        return global.$gameMap.tileWidth();
     } else if (this._isBigCharacter) {
         return this.bitmap.width / 3;
     } else {
@@ -159,7 +159,7 @@ Sprite_Character.prototype.patternWidth = function () {
 
 Sprite_Character.prototype.patternHeight = function () {
     if (this._tileId > 0) {
-        return $gameMap.tileHeight();
+        return global.$gameMap.tileHeight();
     } else if (this._isBigCharacter) {
         return this.bitmap.height / 4;
     } else {
@@ -225,7 +225,7 @@ Sprite_Character.prototype.updateOther = function () {
 
 Sprite_Character.prototype.setupAnimation = function () {
     if (this._character.animationId() > 0) {
-        var animation = $dataAnimations[this._character.animationId()];
+        var animation = global.$dataAnimations[this._character.animationId()];
         this.startAnimation(animation, false, 0);
         this._character.startAnimation();
     }

@@ -250,7 +250,7 @@ Window_BattleLog.prototype.showEnemyAttackAnimation = function (_subject, _targe
 };
 
 Window_BattleLog.prototype.showNormalAnimation = function (targets, animationId, mirror) {
-    var animation = $dataAnimations[animationId];
+    var animation = global.$dataAnimations[animationId];
     if (animation) {
         var delay = this.animationBaseDelay();
         var nextDelay = this.animationNextDelay();

@@ -11,8 +11,8 @@ BattleManager.setup = function (troopId, canEscape, canLose) {
     this.initMembers();
     this._canEscape = canEscape;
     this._canLose = canLose;
-    $gameTroop.setup(troopId);
-    $gameScreen.onBattleStart();
+    global.$gameTroop.setup(troopId);
+    global.$gameScreen.onBattleStart();
     this.makeEscapeRatio();
 };
 
@@ -71,11 +71,11 @@ BattleManager.onEncounter = function () {
 };
 
 BattleManager.ratePreemptive = function () {
-    return $gameParty.ratePreemptive($gameTroop.agility());
+    return global.$gameParty.ratePreemptive(global.$gameTroop.agility());
 };
 
 BattleManager.rateSurprise = function () {
-    return $gameParty.rateSurprise($gameTroop.agility());
+    return global.$gameParty.rateSurprise(global.$gameTroop.agility());
 };
 
 BattleManager.saveBgmAndBgs = function () {
@@ -84,16 +84,16 @@ BattleManager.saveBgmAndBgs = function () {
 };
 
 BattleManager.playBattleBgm = function () {
-    AudioManager.playBgm($gameSystem.battleBgm());
+    AudioManager.playBgm(global.$gameSystem.battleBgm());
     AudioManager.stopBgs();
 };
 
 BattleManager.playVictoryMe = function () {
-    AudioManager.playMe($gameSystem.victoryMe());
+    AudioManager.playMe(global.$gameSystem.victoryMe());
 };
 
 BattleManager.playDefeatMe = function () {
-    AudioManager.playMe($gameSystem.defeatMe());
+    AudioManager.playMe(global.$gameSystem.defeatMe());
 };
 
 BattleManager.replayBgmAndBgs = function () {
@@ -108,7 +108,7 @@ BattleManager.replayBgmAndBgs = function () {
 };
 
 BattleManager.makeEscapeRatio = function () {
-    this._escapeRatio = (0.5 * $gameParty.agility()) / $gameTroop.agility();
+    this._escapeRatio = (0.5 * global.$gameParty.agility()) / global.$gameTroop.agility();
 };
 
 BattleManager.update = function () {
@@ -149,20 +149,20 @@ BattleManager.updateEvent = function () {
 };
 
 BattleManager.updateEventMain = function () {
-    $gameTroop.updateInterpreter();
-    $gameParty.requestMotionRefresh();
-    if ($gameTroop.isEventRunning() || this.checkBattleEnd()) {
+    global.$gameTroop.updateInterpreter();
+    global.$gameParty.requestMotionRefresh();
+    if (global.$gameTroop.isEventRunning() || this.checkBattleEnd()) {
         return true;
     }
-    $gameTroop.setupBattleEvent();
-    if ($gameTroop.isEventRunning() || SceneManager.isSceneChanging()) {
+    global.$gameTroop.setupBattleEvent();
+    if (global.$gameTroop.isEventRunning() || SceneManager.isSceneChanging()) {
         return true;
     }
     return false;
 };
 
 BattleManager.isBusy = function () {
-    return $gameMessage.isBusy() || this._spriteset.isBusy() || this._logWindow.isBusy();
+    return global.$gameMessage.isBusy() || this._spriteset.isBusy() || this._logWindow.isBusy();
 };
 
 BattleManager.isInputting = function () {
@@ -198,7 +198,7 @@ BattleManager.isEscaped = function () {
 };
 
 BattleManager.actor = function () {
-    return this._actorIndex >= 0 ? $gameParty.members()[this._actorIndex] : null;
+    return this._actorIndex >= 0 ? global.$gameParty.members()[this._actorIndex] : null;
 };
 
 BattleManager.clearActor = function () {
@@ -219,29 +219,29 @@ BattleManager.changeActor = function (newActorIndex, lastActorActionState) {
 
 BattleManager.startBattle = function () {
     this._phase = 'start';
-    $gameSystem.onBattleStart();
-    $gameParty.onBattleStart();
-    $gameTroop.onBattleStart();
+    global.$gameSystem.onBattleStart();
+    global.$gameParty.onBattleStart();
+    global.$gameTroop.onBattleStart();
     this.displayStartMessages();
 };
 
 BattleManager.displayStartMessages = function () {
-    $gameTroop.enemyNames().forEach(function (name) {
-        $gameMessage.add(TextManager.emerge.format(name));
+    global.$gameTroop.enemyNames().forEach(function (name) {
+        global.$gameMessage.add(TextManager.emerge.format(name));
     });
     if (this._preemptive) {
-        $gameMessage.add(TextManager.preemptive.format($gameParty.name()));
+        global.$gameMessage.add(TextManager.preemptive.format(global.$gameParty.name()));
     } else if (this._surprise) {
-        $gameMessage.add(TextManager.surprise.format($gameParty.name()));
+        global.$gameMessage.add(TextManager.surprise.format(global.$gameParty.name()));
     }
 };
 
 BattleManager.startInput = function () {
     this._phase = 'input';
-    $gameParty.makeActions();
-    $gameTroop.makeActions();
+    global.$gameParty.makeActions();
+    global.$gameTroop.makeActions();
     this.clearActor();
-    if (this._surprise || !$gameParty.canInput()) {
+    if (this._surprise || !global.$gameParty.canInput()) {
         this.startTurn();
     }
 };
@@ -256,7 +256,7 @@ BattleManager.selectNextCommand = function () {
         var actor = this.actor();
         if (!actor || !actor.selectNextCommand()) {
             this.changeActor(this._actorIndex + 1, 'waiting');
-            if (this._actorIndex >= $gameParty.size()) {
+            if (this._actorIndex >= global.$gameParty.size()) {
                 this.startTurn();
                 break;
             }
@@ -283,14 +283,14 @@ BattleManager.refreshStatus = function () {
 BattleManager.startTurn = function () {
     this._phase = 'turn';
     this.clearActor();
-    $gameTroop.increaseTurn();
+    global.$gameTroop.increaseTurn();
     this.makeActionOrders();
-    $gameParty.requestMotionRefresh();
+    global.$gameParty.requestMotionRefresh();
     this._logWindow.startTurn();
 };
 
 BattleManager.updateTurn = function () {
-    $gameParty.requestMotionRefresh();
+    global.$gameParty.requestMotionRefresh();
     if (!this._subject) {
         this._subject = this.getNextSubject();
     }
@@ -356,16 +356,16 @@ BattleManager.getNextSubject = function () {
 };
 
 BattleManager.allBattleMembers = function () {
-    return $gameParty.members().concat($gameTroop.members());
+    return global.$gameParty.members().concat(global.$gameTroop.members());
 };
 
 BattleManager.makeActionOrders = function () {
     var battlers = [];
     if (!this._surprise) {
-        battlers = battlers.concat($gameParty.members());
+        battlers = battlers.concat(global.$gameParty.members());
     }
     if (!this._preemptive) {
-        battlers = battlers.concat($gameTroop.members());
+        battlers = battlers.concat(global.$gameTroop.members());
     }
     battlers.forEach(function (battler) {
         battler.makeSpeed();
@@ -483,10 +483,10 @@ BattleManager.checkBattleEnd = function () {
     if (this._phase) {
         if (this.checkAbort()) {
             return true;
-        } else if ($gameParty.isAllDead()) {
+        } else if (global.$gameParty.isAllDead()) {
             this.processDefeat();
             return true;
-        } else if ($gameTroop.isAllDead()) {
+        } else if (global.$gameTroop.isAllDead()) {
             this.processVictory();
             return true;
         }
@@ -495,7 +495,7 @@ BattleManager.checkBattleEnd = function () {
 };
 
 BattleManager.checkAbort = function () {
-    if ($gameParty.isEmpty() || this.isAborting()) {
+    if (global.$gameParty.isEmpty() || this.isAborting()) {
         SoundManager.playEscape();
         this._escaped = true;
         this.processAbort();
@@ -504,8 +504,8 @@ BattleManager.checkAbort = function () {
 };
 
 BattleManager.processVictory = function () {
-    $gameParty.removeBattleStates();
-    $gameParty.performVictory();
+    global.$gameParty.removeBattleStates();
+    global.$gameParty.performVictory();
     this.playVictoryMe();
     this.replayBgmAndBgs();
     this.makeRewards();
@@ -516,7 +516,7 @@ BattleManager.processVictory = function () {
 };
 
 BattleManager.processEscape = function () {
-    $gameParty.performEscape();
+    global.$gameParty.performEscape();
     SoundManager.playEscape();
     var success = this._preemptive ? true : Math.random() < this._escapeRatio;
     if (success) {
@@ -526,14 +526,14 @@ BattleManager.processEscape = function () {
     } else {
         this.displayEscapeFailureMessage();
         this._escapeRatio += 0.1;
-        $gameParty.clearActions();
+        global.$gameParty.clearActions();
         this.startTurn();
     }
     return success;
 };
 
 BattleManager.processAbort = function () {
-    $gameParty.removeBattleStates();
+    global.$gameParty.removeBattleStates();
     this.replayBgmAndBgs();
     this.endBattle(1);
 };
@@ -555,9 +555,9 @@ BattleManager.endBattle = function (result) {
         this._eventCallback(result);
     }
     if (result === 0) {
-        $gameSystem.onBattleWin();
+        global.$gameSystem.onBattleWin();
     } else if (this._escaped) {
-        $gameSystem.onBattleEscape();
+        global.$gameSystem.onBattleEscape();
     }
 };
 
@@ -565,9 +565,9 @@ BattleManager.updateBattleEnd = function () {
     if (this.isBattleTest()) {
         AudioManager.stopBgm();
         SceneManager.exit();
-    } else if (!this._escaped && $gameParty.isAllDead()) {
+    } else if (!this._escaped && global.$gameParty.isAllDead()) {
         if (this._canLose) {
-            $gameParty.reviveBattleMembers();
+            global.$gameParty.reviveBattleMembers();
             SceneManager.pop();
         } else {
             SceneManager.goto(Scene_Gameover);
@@ -580,26 +580,26 @@ BattleManager.updateBattleEnd = function () {
 
 BattleManager.makeRewards = function () {
     this._rewards = {};
-    this._rewards.gold = $gameTroop.goldTotal();
-    this._rewards.exp = $gameTroop.expTotal();
-    this._rewards.items = $gameTroop.makeDropItems();
+    this._rewards.gold = global.$gameTroop.goldTotal();
+    this._rewards.exp = global.$gameTroop.expTotal();
+    this._rewards.items = global.$gameTroop.makeDropItems();
 };
 
 BattleManager.displayVictoryMessage = function () {
-    $gameMessage.add(TextManager.victory.format($gameParty.name()));
+    global.$gameMessage.add(TextManager.victory.format(global.$gameParty.name()));
 };
 
 BattleManager.displayDefeatMessage = function () {
-    $gameMessage.add(TextManager.defeat.format($gameParty.name()));
+    global.$gameMessage.add(TextManager.defeat.format(global.$gameParty.name()));
 };
 
 BattleManager.displayEscapeSuccessMessage = function () {
-    $gameMessage.add(TextManager.escapeStart.format($gameParty.name()));
+    global.$gameMessage.add(TextManager.escapeStart.format(global.$gameParty.name()));
 };
 
 BattleManager.displayEscapeFailureMessage = function () {
-    $gameMessage.add(TextManager.escapeStart.format($gameParty.name()));
-    $gameMessage.add('\\.' + TextManager.escapeFailure);
+    global.$gameMessage.add(TextManager.escapeStart.format(global.$gameParty.name()));
+    global.$gameMessage.add('\\.' + TextManager.escapeFailure);
 };
 
 BattleManager.displayRewards = function () {
@@ -612,23 +612,23 @@ BattleManager.displayExp = function () {
     var exp = this._rewards.exp;
     if (exp > 0) {
         var text = TextManager.obtainExp.format(exp, TextManager.exp);
-        $gameMessage.add('\\.' + text);
+        global.$gameMessage.add('\\.' + text);
     }
 };
 
 BattleManager.displayGold = function () {
     var gold = this._rewards.gold;
     if (gold > 0) {
-        $gameMessage.add('\\.' + TextManager.obtainGold.format(gold));
+        global.$gameMessage.add('\\.' + TextManager.obtainGold.format(gold));
     }
 };
 
 BattleManager.displayDropItems = function () {
     var items = this._rewards.items;
     if (items.length > 0) {
-        $gameMessage.newPage();
+        global.$gameMessage.newPage();
         items.forEach(function (item) {
-            $gameMessage.add(TextManager.obtainItem.format(item.name));
+            global.$gameMessage.add(TextManager.obtainItem.format(item.name));
         });
     }
 };
@@ -641,18 +641,18 @@ BattleManager.gainRewards = function () {
 
 BattleManager.gainExp = function () {
     var exp = this._rewards.exp;
-    $gameParty.allMembers().forEach(function (actor) {
+    global.$gameParty.allMembers().forEach(function (actor) {
         actor.gainExp(exp);
     });
 };
 
 BattleManager.gainGold = function () {
-    $gameParty.gainGold(this._rewards.gold);
+    global.$gameParty.gainGold(this._rewards.gold);
 };
 
 BattleManager.gainDropItems = function () {
     var items = this._rewards.items;
     items.forEach(function (item) {
-        $gameParty.gainItem(item, 1);
+        global.$gameParty.gainItem(item, 1);
     });
 };

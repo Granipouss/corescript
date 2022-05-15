@@ -20,12 +20,12 @@ Game_Switches.prototype.value = function (switchId) {
 };
 
 Game_Switches.prototype.setValue = function (switchId, value) {
-    if (switchId > 0 && switchId < $dataSystem.switches.length) {
+    if (switchId > 0 && switchId < global.$dataSystem.switches.length) {
         this._data[switchId] = value;
         this.onChange();
     }
 };
 
 Game_Switches.prototype.onChange = function () {
-    $gameMap.requestRefresh();
+    global.$gameMap.requestRefresh();
 };

@@ -73,7 +73,7 @@ Window_SkillList.prototype.makeItemList = function () {
 
 Window_SkillList.prototype.selectLast = function () {
     var skill;
-    if ($gameParty.inBattle()) {
+    if (global.$gameParty.inBattle()) {
         skill = this._actor.lastBattleSkill();
     } else {
         skill = this._actor.lastMenuSkill();

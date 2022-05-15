@@ -17,17 +17,17 @@ Window_MenuActor.prototype.initialize = function () {
 
 Window_MenuActor.prototype.processOk = function () {
     if (!this.cursorAll()) {
-        $gameParty.setTargetActor($gameParty.members()[this.index()]);
+        global.$gameParty.setTargetActor(global.$gameParty.members()[this.index()]);
     }
     this.callOkHandler();
 };
 
 Window_MenuActor.prototype.selectLast = function () {
-    this.select($gameParty.targetActor().index() || 0);
+    this.select(global.$gameParty.targetActor().index() || 0);
 };
 
 Window_MenuActor.prototype.selectForItem = function (item) {
-    var actor = $gameParty.menuActor();
+    var actor = global.$gameParty.menuActor();
     var action = new Game_Action(actor);
     action.setItemObject(item);
     this.setCursorFixed(false);

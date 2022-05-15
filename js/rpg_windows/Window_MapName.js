@@ -30,7 +30,7 @@ Window_MapName.prototype.windowHeight = function () {
 
 Window_MapName.prototype.update = function () {
     Window_Base.prototype.update.call(this);
-    if (this._showCount > 0 && $gameMap.isNameDisplayEnabled()) {
+    if (this._showCount > 0 && global.$gameMap.isNameDisplayEnabled()) {
         this.updateFadeIn();
         this._showCount--;
     } else {
@@ -57,10 +57,10 @@ Window_MapName.prototype.close = function () {
 
 Window_MapName.prototype.refresh = function () {
     this.contents.clear();
-    if ($gameMap.displayName()) {
+    if (global.$gameMap.displayName()) {
         var width = this.contentsWidth();
         this.drawBackground(0, 0, width, this.lineHeight());
-        this.drawText($gameMap.displayName(), 0, 0, width, 'center');
+        this.drawText(global.$gameMap.displayName(), 0, 0, width, 'center');
     }
 };
 

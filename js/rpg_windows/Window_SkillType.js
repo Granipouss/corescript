@@ -38,7 +38,7 @@ Window_SkillType.prototype.makeCommandList = function () {
             return a - b;
         });
         skillTypes.forEach(function (stypeId) {
-            var name = $dataSystem.skillTypes[stypeId];
+            var name = global.$dataSystem.skillTypes[stypeId];
             this.addCommand(name, 'skill', true, stypeId);
         }, this);
     }

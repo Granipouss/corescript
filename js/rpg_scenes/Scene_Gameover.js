@@ -45,7 +45,7 @@ Scene_Gameover.prototype.terminate = function () {
 Scene_Gameover.prototype.playGameoverMusic = function () {
     AudioManager.stopBgm();
     AudioManager.stopBgs();
-    AudioManager.playMe($dataSystem.gameoverMe);
+    AudioManager.playMe(global.$dataSystem.gameoverMe);
 };
 
 Scene_Gameover.prototype.createBackground = function () {

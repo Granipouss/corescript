@@ -59,7 +59,7 @@ Sprite_Enemy.prototype.updateBitmap = function () {
 };
 
 Sprite_Enemy.prototype.loadBitmap = function (name, hue) {
-    if ($gameSystem.isSideView()) {
+    if (global.$gameSystem.isSideView()) {
         this.bitmap = ImageManager.loadSvEnemy(name, hue);
     } else {
         this.bitmap = ImageManager.loadEnemy(name, hue);

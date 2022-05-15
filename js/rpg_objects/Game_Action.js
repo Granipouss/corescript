@@ -50,9 +50,9 @@ Game_Action.prototype.setSubject = function (subject) {
 
 Game_Action.prototype.subject = function () {
     if (this._subjectActorId > 0) {
-        return $gameActors.actor(this._subjectActorId);
+        return global.$gameActors.actor(this._subjectActorId);
     } else {
-        return $gameTroop.members()[this._subjectEnemyIndex];
+        return global.$gameTroop.members()[this._subjectEnemyIndex];
     }
 };
 
@@ -81,11 +81,11 @@ Game_Action.prototype.setGuard = function () {
 };
 
 Game_Action.prototype.setSkill = function (skillId) {
-    this._item.setObject($dataSkills[skillId]);
+    this._item.setObject(global.$dataSkills[skillId]);
 };
 
 Game_Action.prototype.setItem = function (itemId) {
-    this._item.setObject($dataItems[itemId]);
+    this._item.setObject(global.$dataItems[itemId]);
 };
 
 Game_Action.prototype.setItemObject = function (object) {
@@ -201,16 +201,16 @@ Game_Action.prototype.isMagical = function () {
 };
 
 Game_Action.prototype.isAttack = function () {
-    return this.item() === $dataSkills[this.subject().attackSkillId()];
+    return this.item() === global.$dataSkills[this.subject().attackSkillId()];
 };
 
 Game_Action.prototype.isGuard = function () {
-    return this.item() === $dataSkills[this.subject().guardSkillId()];
+    return this.item() === global.$dataSkills[this.subject().guardSkillId()];
 };
 
 Game_Action.prototype.isMagicSkill = function () {
     if (this.isSkill()) {
-        return $dataSystem.magicSkills.contains(this.item().stypeId);
+        return global.$dataSystem.magicSkills.contains(this.item().stypeId);
     } else {
         return false;
     }
@@ -387,7 +387,7 @@ Game_Action.prototype.evaluateWithTarget = function (target) {
 Game_Action.prototype.testApply = function (target) {
     return (
         this.isForDeadFriend() === target.isDead() &&
-        ($gameParty.inBattle() ||
+        (global.$gameParty.inBattle() ||
             this.isForOpponent() ||
             (this.isHpRecover() && target.hp < target.mhp) ||
             (this.isMpRecover() && target.mp < target.mmp) ||
@@ -513,7 +513,7 @@ Game_Action.prototype.evalDamageFormula = function (_target) {
         var item = this.item();
         // var a = this.subject();
         // var b = target;
-        // var v = $gameVariables._data;
+        // var v = global.$gameVariables._data;
         var sign = [3, 4].contains(item.damage.type) ? -1 : 1;
         var value = Math.max(eval(item.damage.formula), 0) * sign;
         if (isNaN(value)) value = 0;
@@ -800,7 +800,7 @@ Game_Action.prototype.lukEffectRate = function (target) {
 Game_Action.prototype.applyGlobal = function () {
     this.item().effects.forEach(function (effect) {
         if (effect.code === Game_Action.EFFECT_COMMON_EVENT) {
-            $gameTemp.reserveCommonEvent(effect.dataId);
+            global.$gameTemp.reserveCommonEvent(effect.dataId);
         }
     }, this);
 };

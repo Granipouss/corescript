@@ -37,7 +37,7 @@ Game_Event.prototype.eventId = function () {
 };
 
 Game_Event.prototype.event = function () {
-    return $dataMap.events[this._eventId];
+    return global.$dataMap.events[this._eventId];
 };
 
 Game_Event.prototype.page = function () {
@@ -55,12 +55,12 @@ Game_Event.prototype.isCollidedWithCharacters = function (x, y) {
 };
 
 Game_Event.prototype.isCollidedWithEvents = function (x, y) {
-    var events = $gameMap.eventsXyNt(x, y);
+    var events = global.$gameMap.eventsXyNt(x, y);
     return events.length > 0;
 };
 
 Game_Event.prototype.isCollidedWithPlayerCharacters = function (x, y) {
-    return this.isNormalPriority() && $gamePlayer.isCollided(x, y);
+    return this.isNormalPriority() && global.$gamePlayer.isCollided(x, y);
 };
 
 Game_Event.prototype.lock = function () {
@@ -147,8 +147,8 @@ Game_Event.prototype.moveTypeTowardPlayer = function () {
 };
 
 Game_Event.prototype.isNearThePlayer = function () {
-    var sx = Math.abs(this.deltaXFrom($gamePlayer.x));
-    var sy = Math.abs(this.deltaYFrom($gamePlayer.y));
+    var sx = Math.abs(this.deltaXFrom(global.$gamePlayer.x));
+    var sy = Math.abs(this.deltaYFrom(global.$gamePlayer.y));
     return sx + sy < 20;
 };
 
@@ -205,35 +205,35 @@ Game_Event.prototype.findProperPageIndex = function () {
 Game_Event.prototype.meetsConditions = function (page) {
     var c = page.conditions;
     if (c.switch1Valid) {
-        if (!$gameSwitches.value(c.switch1Id)) {
+        if (!global.$gameSwitches.value(c.switch1Id)) {
             return false;
         }
     }
     if (c.switch2Valid) {
-        if (!$gameSwitches.value(c.switch2Id)) {
+        if (!global.$gameSwitches.value(c.switch2Id)) {
             return false;
         }
     }
     if (c.variableValid) {
-        if ($gameVariables.value(c.variableId) < c.variableValue) {
+        if (global.$gameVariables.value(c.variableId) < c.variableValue) {
             return false;
         }
     }
     if (c.selfSwitchValid) {
         var key = [this._mapId, this._eventId, c.selfSwitchCh];
-        if ($gameSelfSwitches.value(key) !== true) {
+        if (global.$gameSelfSwitches.value(key) !== true) {
             return false;
         }
     }
     if (c.itemValid) {
-        var item = $dataItems[c.itemId];
-        if (!$gameParty.hasItem(item)) {
+        var item = global.$dataItems[c.itemId];
+        if (!global.$gameParty.hasItem(item)) {
             return false;
         }
     }
     if (c.actorValid) {
-        var actor = $gameActors.actor(c.actorId);
-        if (!$gameParty.members().contains(actor)) {
+        var actor = global.$gameActors.actor(c.actorId);
+        if (!global.$gameParty.members().contains(actor)) {
             return false;
         }
     }
@@ -303,8 +303,8 @@ Game_Event.prototype.resetPattern = function () {
 };
 
 Game_Event.prototype.checkEventTriggerTouch = function (x, y) {
-    if (!$gameMap.isEventRunning()) {
-        if (this._trigger === 2 && $gamePlayer.pos(x, y)) {
+    if (!global.$gameMap.isEventRunning()) {
+        if (this._trigger === 2 && global.$gamePlayer.pos(x, y)) {
             if (!this.isJumping() && this.isNormalPriority()) {
                 this.start();
             }

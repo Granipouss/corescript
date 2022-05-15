@@ -21,7 +21,7 @@ Scene_Name.prototype.prepare = function (actorId, maxLength) {
 
 Scene_Name.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
-    this._actor = $gameActors.actor(this._actorId);
+    this._actor = global.$gameActors.actor(this._actorId);
     this.createEditWindow();
     this.createInputWindow();
 };
