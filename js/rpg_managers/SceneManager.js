@@ -48,7 +48,6 @@ SceneManager.initialize = function () {
     this.checkFileAccess();
     this.initAudio();
     this.initInput();
-    this.initNwjs();
     this.checkPluginErrors();
     this.setupErrorHandlers();
 };
@@ -107,19 +106,6 @@ SceneManager.initAudio = function () {
 SceneManager.initInput = function () {
     Input.initialize();
     TouchInput.initialize();
-};
-
-SceneManager.initNwjs = function () {
-    if (Utils.isNwjs()) {
-        var gui = require('nw.gui');
-        var win = gui.Window.get();
-        if (process.platform === 'darwin' && !win.menu) {
-            var menubar = new gui.Menu({ type: 'menubar' });
-            var option = { hideEdit: true, hideWindow: true };
-            menubar.createMacBuiltin('Game', option);
-            win.menu = menubar;
-        }
-    }
 };
 
 SceneManager.checkPluginErrors = function () {
@@ -183,14 +169,7 @@ SceneManager.onKeyDown = function (event) {
     if (!event.ctrlKey && !event.altKey) {
         switch (event.keyCode) {
             case 116: // F5
-                if (Utils.isNwjs()) {
-                    location.reload();
-                }
-                break;
-            case 119: // F8
-                if (Utils.isNwjs() && Utils.isOptionValid('test')) {
-                    require('nw.gui').Window.get().showDevTools();
-                }
+                location.reload();
                 break;
         }
     }

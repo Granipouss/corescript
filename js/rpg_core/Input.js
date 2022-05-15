@@ -16,7 +16,6 @@ function Input() {
  */
 Input.initialize = function () {
     this.clear();
-    this._wrapNwjsAlert();
     this._setupEventHandlers();
 };
 
@@ -243,24 +242,6 @@ Object.defineProperty(Input, 'date', {
     },
     configurable: true,
 });
-
-/**
- * @static
- * @method _wrapNwjsAlert
- * @private
- */
-Input._wrapNwjsAlert = function () {
-    if (Utils.isNwjs()) {
-        var _alert = window.alert;
-        window.alert = function () {
-            var gui = require('nw.gui');
-            var win = gui.Window.get();
-            _alert.apply(this, arguments);
-            win.focus();
-            Input.clear();
-        };
-    }
-};
 
 /**
  * @static
