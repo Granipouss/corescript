@@ -3,7 +3,18 @@
 //
 // The set of sprites on the map screen.
 
-function Spriteset_Map() {
+import { Graphics } from '../rpg_core/Graphics';
+import { ShaderTilemap } from '../rpg_core/ShaderTilemap';
+import { Sprite } from '../rpg_core/Sprite';
+import { Tilemap } from '../rpg_core/Tilemap';
+import { TilingSprite } from '../rpg_core/TilingSprite';
+import { Weather } from '../rpg_core/Weather';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Spriteset_Base } from './Spriteset_Base';
+import { Sprite_Character } from './Sprite_Character';
+import { Sprite_Destination } from './Sprite_Destination';
+
+export function Spriteset_Map() {
     this.initialize.apply(this, arguments);
 }
 

@@ -6,7 +6,10 @@
  * @extends PIXI.Filter
  * @constructor
  */
-function ToneFilter() {
+
+/* global PIXI */
+
+export function ToneFilter() {
     PIXI.filters.ColorMatrixFilter.call(this);
 }
 

@@ -6,13 +6,21 @@
  * @constructor
  * @param {String} url The url of the audio file
  */
-function WebAudio() {
+
+/* global webkitAudioContext */
+
+import { Decrypter } from './Decrypter';
+import { ResourceHandler } from './ResourceHandler';
+import { Utils } from './Utils';
+
+export function WebAudio() {
     this.initialize.apply(this, arguments);
 }
 
-WebAudio._standAlone = (function (top) {
-    return !top.ResourceHandler;
-})(this);
+// FIXME:
+// WebAudio._standAlone = (function (top) {
+//     return !top.ResourceHandler;
+// })(this);
 
 WebAudio.prototype.initialize = function (url) {
     if (!WebAudio._initialized) {

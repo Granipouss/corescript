@@ -3,7 +3,11 @@
 //
 // The window for selecting a save file on the save and load screens.
 
-function Window_SavefileList() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_SavefileList() {
     this.initialize.apply(this, arguments);
 }
 

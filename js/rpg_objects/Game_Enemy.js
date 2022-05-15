@@ -3,7 +3,10 @@
 //
 // The game object class for an enemy.
 
-function Game_Enemy() {
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Game_Battler } from './Game_Battler';
+
+export function Game_Enemy() {
     this.initialize.apply(this, arguments);
 }
 

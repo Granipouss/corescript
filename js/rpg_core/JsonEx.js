@@ -4,7 +4,7 @@
  *
  * @class JsonEx
  */
-function JsonEx() {
+export function JsonEx() {
     throw new Error('This is a static class');
 }
 

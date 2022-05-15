@@ -3,7 +3,15 @@
 //
 // The superclass of Scene_Item and Scene_Skill.
 
-function Scene_ItemBase() {
+import { Graphics } from '../rpg_core/Graphics';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Game_Action } from '../rpg_objects/Game_Action';
+import { Window_MenuActor } from '../rpg_windows/Window_MenuActor';
+import { Scene_Map } from './Scene_Map';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_ItemBase() {
     this.initialize.apply(this, arguments);
 }
 

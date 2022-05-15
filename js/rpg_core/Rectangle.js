@@ -9,7 +9,10 @@
  * @param {Number} width The width of the rectangle
  * @param {Number} height The height of the rectangle
  */
-function Rectangle() {
+
+/* global PIXI */
+
+export function Rectangle() {
     this.initialize.apply(this, arguments);
 }
 

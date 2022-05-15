@@ -3,7 +3,25 @@
 //
 // The interpreter for running event commands.
 
-function Game_Interpreter() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { JsonEx } from '../rpg_core/JsonEx';
+import { Utils } from '../rpg_core/Utils';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Scene_Battle } from '../rpg_scenes/Scene_Battle';
+import { Scene_Gameover } from '../rpg_scenes/Scene_Gameover';
+import { Scene_Menu } from '../rpg_scenes/Scene_Menu';
+import { Scene_Name } from '../rpg_scenes/Scene_Name';
+import { Scene_Save } from '../rpg_scenes/Scene_Save';
+import { Scene_Shop } from '../rpg_scenes/Scene_Shop';
+import { Scene_Title } from '../rpg_scenes/Scene_Title';
+import { Window_MenuCommand } from '../rpg_windows/Window_MenuCommand';
+import { Game_Character } from './Game_Character';
+
+export function Game_Interpreter() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,10 @@
 //
 // The sprite for displaying state icons.
 
-function Sprite_StateIcon() {
+import { Sprite } from '../rpg_core/Sprite';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+export function Sprite_StateIcon() {
     this.initialize.apply(this, arguments);
 }
 

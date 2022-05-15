@@ -4,7 +4,17 @@
 // The window for displaying battle progress. No frame is displayed, but it is
 // handled as a window for convenience.
 
-function Window_BattleLog() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { Sprite } from '../rpg_core/Sprite';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { DataManager } from '../rpg_managers/DataManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_BattleLog() {
     this.initialize.apply(this, arguments);
 }
 

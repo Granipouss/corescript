@@ -3,7 +3,9 @@
 //
 // The window for selecting an equipment slot on the equipment screen.
 
-function Window_EquipSlot() {
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_EquipSlot() {
     this.initialize.apply(this, arguments);
 }
 

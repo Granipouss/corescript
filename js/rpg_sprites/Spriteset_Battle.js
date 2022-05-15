@@ -3,7 +3,17 @@
 //
 // The set of sprites on the battle screen.
 
-function Spriteset_Battle() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Sprite } from '../rpg_core/Sprite';
+import { TilingSprite } from '../rpg_core/TilingSprite';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Spriteset_Base } from './Spriteset_Base';
+import { Sprite_Actor } from './Sprite_Actor';
+import { Sprite_Enemy } from './Sprite_Enemy';
+
+export function Spriteset_Battle() {
     this.initialize.apply(this, arguments);
 }
 

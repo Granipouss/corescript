@@ -3,7 +3,9 @@
 //
 // The game object class for a battle action.
 
-function Game_Action() {
+import { Game_Item } from './Game_Item';
+
+export function Game_Action() {
     this.initialize.apply(this, arguments);
 }
 

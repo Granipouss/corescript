@@ -3,7 +3,10 @@
 //
 // The sprite for displaying an overlay image for a state.
 
-function Sprite_StateOverlay() {
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Sprite_Base } from './Sprite_Base';
+
+export function Sprite_StateOverlay() {
     this.initialize.apply(this, arguments);
 }
 

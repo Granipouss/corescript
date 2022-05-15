@@ -3,7 +3,21 @@
 //
 // The scene class of the menu screen.
 
-function Scene_Menu() {
+import { Graphics } from '../rpg_core/Graphics';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Window_Gold } from '../rpg_windows/Window_Gold';
+import { Window_MenuCommand } from '../rpg_windows/Window_MenuCommand';
+import { Window_MenuStatus } from '../rpg_windows/Window_MenuStatus';
+import { Scene_Equip } from './Scene_Equip';
+import { Scene_GameEnd } from './Scene_GameEnd';
+import { Scene_Item } from './Scene_Item';
+import { Scene_MenuBase } from './Scene_MenuBase';
+import { Scene_Options } from './Scene_Options';
+import { Scene_Save } from './Scene_Save';
+import { Scene_Skill } from './Scene_Skill';
+import { Scene_Status } from './Scene_Status';
+
+export function Scene_Menu() {
     this.initialize.apply(this, arguments);
 }
 

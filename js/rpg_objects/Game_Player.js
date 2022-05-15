@@ -4,7 +4,16 @@
 // The game object class for the player. It contains event starting
 // determinants and map scrolling functions.
 
-function Game_Player() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { ConfigManager } from '../rpg_managers/ConfigManager';
+import { DataManager } from '../rpg_managers/DataManager';
+import { Game_Character } from './Game_Character';
+import { Game_Followers } from './Game_Followers';
+
+export function Game_Player() {
     this.initialize.apply(this, arguments);
 }
 

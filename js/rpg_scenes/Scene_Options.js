@@ -3,7 +3,11 @@
 //
 // The scene class of the options screen.
 
-function Scene_Options() {
+import { ConfigManager } from '../rpg_managers/ConfigManager';
+import { Window_Options } from '../rpg_windows/Window_Options';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_Options() {
     this.initialize.apply(this, arguments);
 }
 

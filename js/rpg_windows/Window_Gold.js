@@ -3,7 +3,10 @@
 //
 // The window for displaying the party's gold.
 
-function Window_Gold() {
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Base } from './Window_Base';
+
+export function Window_Gold() {
     this.initialize.apply(this, arguments);
 }
 

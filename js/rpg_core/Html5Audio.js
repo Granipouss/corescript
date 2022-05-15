@@ -5,7 +5,10 @@
  * @class Html5Audio
  * @constructor
  */
-function Html5Audio() {
+
+import { Decrypter } from './Decrypter';
+
+export function Html5Audio() {
     throw new Error('This is a static class');
 }
 

@@ -4,7 +4,7 @@
 // The game object class for the state of the message window that displays text
 // or selections, etc.
 
-function Game_Message() {
+export function Game_Message() {
     this.initialize.apply(this, arguments);
 }
 

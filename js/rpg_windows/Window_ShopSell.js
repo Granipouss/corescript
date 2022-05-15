@@ -3,7 +3,9 @@
 //
 // The window for selecting an item to sell on the shop screen.
 
-function Window_ShopSell() {
+import { Window_ItemList } from './Window_ItemList';
+
+export function Window_ShopSell() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,9 @@
 //
 // The static class that plays sound effects defined in the database.
 
-function SoundManager() {
+import { AudioManager } from '../rpg_managers/AudioManager';
+
+export function SoundManager() {
     throw new Error('This is a static class');
 }
 

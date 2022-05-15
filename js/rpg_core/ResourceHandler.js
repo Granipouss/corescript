@@ -4,7 +4,11 @@
  *
  * @class ResourceHandler
  */
-function ResourceHandler() {
+
+import { Graphics } from '../rpg_core/Graphics';
+import { SceneManager } from '../rpg_managers/SceneManager';
+
+export function ResourceHandler() {
     throw new Error('This is a static class');
 }
 

@@ -3,7 +3,14 @@
 //
 // The scene class of the skill screen.
 
-function Scene_Skill() {
+import { Graphics } from '../rpg_core/Graphics';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_SkillList } from '../rpg_windows/Window_SkillList';
+import { Window_SkillStatus } from '../rpg_windows/Window_SkillStatus';
+import { Window_SkillType } from '../rpg_windows/Window_SkillType';
+import { Scene_ItemBase } from './Scene_ItemBase';
+
+export function Scene_Skill() {
     this.initialize.apply(this, arguments);
 }
 

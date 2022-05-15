@@ -4,7 +4,10 @@
  *
  * @class Input
  */
-function Input() {
+
+import { ResourceHandler } from '../rpg_core/ResourceHandler';
+
+export function Input() {
     throw new Error('This is a static class');
 }
 

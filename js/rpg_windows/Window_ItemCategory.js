@@ -3,7 +3,11 @@
 //
 // The window for selecting a category of items on the item and shop screens.
 
-function Window_ItemCategory() {
+import { Graphics } from '../rpg_core/Graphics';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_HorzCommand } from './Window_HorzCommand';
+
+export function Window_ItemCategory() {
     this.initialize.apply(this, arguments);
 }
 

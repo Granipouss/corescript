@@ -3,7 +3,13 @@
 //
 // The scene class of the item screen.
 
-function Scene_Item() {
+import { Graphics } from '../rpg_core/Graphics';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_ItemCategory } from '../rpg_windows/Window_ItemCategory';
+import { Window_ItemList } from '../rpg_windows/Window_ItemList';
+import { Scene_ItemBase } from './Scene_ItemBase';
+
+export function Scene_Item() {
     this.initialize.apply(this, arguments);
 }
 

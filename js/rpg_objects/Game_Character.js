@@ -3,7 +3,10 @@
 //
 // The superclass of Game_Player, Game_Follower, GameVehicle, and Game_Event.
 
-function Game_Character() {
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { Game_CharacterBase } from './Game_CharacterBase';
+
+export function Game_Character() {
     this.initialize.apply(this, arguments);
 }
 

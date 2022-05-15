@@ -6,7 +6,14 @@
  * @constructor
  * @param {Bitmap} bitmap The image for the sprite
  */
-function Sprite() {
+
+/* global PIXI */
+
+import { Graphics } from '../rpg_core/Graphics';
+import { Rectangle } from '../rpg_core/Rectangle';
+import { Utils } from '../rpg_core/Utils';
+
+export function Sprite() {
     this.initialize.apply(this, arguments);
 }
 

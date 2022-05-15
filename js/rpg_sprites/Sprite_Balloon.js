@@ -3,7 +3,10 @@
 //
 // The sprite for displaying a balloon icon.
 
-function Sprite_Balloon() {
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Sprite_Base } from './Sprite_Base';
+
+export function Sprite_Balloon() {
     this.initialize.apply(this, arguments);
 }
 

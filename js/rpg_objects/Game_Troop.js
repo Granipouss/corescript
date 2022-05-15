@@ -3,7 +3,13 @@
 //
 // The game object class for a troop and the battle-related data.
 
-function Game_Troop() {
+import { BattleManager } from '../rpg_managers/BattleManager';
+
+import { Game_Enemy } from '../rpg_objects/Game_Enemy';
+import { Game_Interpreter } from '../rpg_objects/Game_Interpreter';
+import { Game_Unit } from '../rpg_objects/Game_Unit';
+
+export function Game_Troop() {
     this.initialize.apply(this, arguments);
 }
 

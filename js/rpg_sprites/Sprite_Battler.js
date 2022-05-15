@@ -3,7 +3,10 @@
 //
 // The superclass of Sprite_Actor and Sprite_Enemy.
 
-function Sprite_Battler() {
+import { Sprite_Base } from './Sprite_Base';
+import { Sprite_Damage } from './Sprite_Damage';
+
+export function Sprite_Battler() {
     this.initialize.apply(this, arguments);
 }
 

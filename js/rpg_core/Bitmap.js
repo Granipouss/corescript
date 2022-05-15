@@ -7,7 +7,15 @@
  * @param {Number} width The width of the bitmap
  * @param {Number} height The height of the bitmap
  */
-function Bitmap() {
+
+/* global PIXI */
+
+import { Decrypter } from '../rpg_core/Decrypter';
+import { Graphics } from '../rpg_core/Graphics';
+import { Rectangle } from '../rpg_core/Rectangle';
+import { ResourceHandler } from '../rpg_core/ResourceHandler';
+
+export function Bitmap() {
     this.initialize.apply(this, arguments);
 }
 

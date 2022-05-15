@@ -4,7 +4,14 @@
 // The window for displaying number of items in possession and the actor's
 // equipment on the shop screen.
 
-function Window_ShopStatus() {
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { DataManager } from '../rpg_managers/DataManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Base } from './Window_Base';
+
+export function Window_ShopStatus() {
     this.initialize.apply(this, arguments);
 }
 

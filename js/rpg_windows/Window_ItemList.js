@@ -3,7 +3,10 @@
 //
 // The window for selecting an item on the item screen.
 
-function Window_ItemList() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_ItemList() {
     this.initialize.apply(this, arguments);
 }
 

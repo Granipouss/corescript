@@ -3,7 +3,28 @@
 //
 // The scene class of the map screen.
 
-function Scene_Map() {
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { DataManager } from '../rpg_managers/DataManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Spriteset_Map } from '../rpg_sprites/Spriteset_Map';
+import { Window_MapName } from '../rpg_windows/Window_MapName';
+import { Window_MenuCommand } from '../rpg_windows/Window_MenuCommand';
+import { Window_Message } from '../rpg_windows/Window_Message';
+import { Window_ScrollText } from '../rpg_windows/Window_ScrollText';
+import { Scene_Base } from './Scene_Base';
+import { Scene_Battle } from './Scene_Battle';
+import { Scene_Debug } from './Scene_Debug';
+import { Scene_Gameover } from './Scene_Gameover';
+import { Scene_Load } from './Scene_Load';
+import { Scene_Menu } from './Scene_Menu';
+import { Scene_Title } from './Scene_Title';
+
+export function Scene_Map() {
     this.initialize.apply(this, arguments);
 }
 

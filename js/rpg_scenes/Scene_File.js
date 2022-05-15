@@ -3,7 +3,13 @@
 //
 // The superclass of Scene_Save and Scene_Load.
 
-function Scene_File() {
+import { Graphics } from '../rpg_core/Graphics';
+import { DataManager } from '../rpg_managers/DataManager';
+import { Window_Help } from '../rpg_windows/Window_Help';
+import { Window_SavefileList } from '../rpg_windows/Window_SavefileList';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_File() {
     this.initialize.apply(this, arguments);
 }
 

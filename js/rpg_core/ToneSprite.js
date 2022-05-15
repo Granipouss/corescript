@@ -5,7 +5,13 @@
  * @class ToneSprite
  * @constructor
  */
-function ToneSprite() {
+
+/* global PIXI */
+
+import { Graphics } from '../rpg_core/Graphics';
+import { Utils } from '../rpg_core/Utils';
+
+export function ToneSprite() {
     this.initialize.apply(this, arguments);
 }
 

@@ -5,7 +5,10 @@
  * @class Stage
  * @constructor
  */
-function Stage() {
+
+/* global PIXI */
+
+export function Stage() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,15 @@
 //
 // The window used for the event command [Input Number].
 
-function Window_NumberInput() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Sprite_Button } from '../rpg_sprites/Sprite_Button';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_NumberInput() {
     this.initialize.apply(this, arguments);
 }
 

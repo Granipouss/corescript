@@ -2,17 +2,19 @@ module.exports = {
     "ignorePatterns": ["js/libs/*.js"],
     "env": {
         "browser": true,
-        "commonjs": true,
         "es2021": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "globals": {
+        "global": true
     },
     "rules": {
         "no-control-regex": "off",
         "no-prototype-builtins": "off",
-        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-        "no-undef": "off"
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
     }
 }

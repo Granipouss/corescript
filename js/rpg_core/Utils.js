@@ -4,7 +4,10 @@
  *
  * @class Utils
  */
-function Utils() {
+
+/* global nw */
+
+export function Utils() {
     throw new Error('This is a static class');
 }
 

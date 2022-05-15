@@ -3,7 +3,13 @@
 //
 // The scene class of the save screen.
 
-function Scene_Save() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { StorageManager } from '../rpg_managers/StorageManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Scene_File } from './Scene_File';
+
+export function Scene_Save() {
     this.initialize.apply(this, arguments);
 }
 

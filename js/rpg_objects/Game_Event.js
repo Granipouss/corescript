@@ -4,7 +4,10 @@
 // The game object class for an event. It contains functionality for event page
 // switching and running parallel process events.
 
-function Game_Event() {
+import { Game_Character } from './Game_Character';
+import { Game_Interpreter } from './Game_Interpreter';
+
+export function Game_Event() {
     this.initialize.apply(this, arguments);
 }
 

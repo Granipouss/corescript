@@ -3,7 +3,11 @@
 //
 // The window for selecting "Go to Title" on the game end screen.
 
-function Window_GameEnd() {
+import { Graphics } from '../rpg_core/Graphics';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Command } from './Window_Command';
+
+export function Window_GameEnd() {
     this.initialize.apply(this, arguments);
 }
 

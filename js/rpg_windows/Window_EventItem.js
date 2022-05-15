@@ -3,7 +3,11 @@
 //
 // The window used for the event command [Select Item].
 
-function Window_EventItem() {
+import { Graphics } from '../rpg_core/Graphics';
+import { DataManager } from '../rpg_managers/DataManager';
+import { Window_ItemList } from './Window_ItemList';
+
+export function Window_EventItem() {
     this.initialize.apply(this, arguments);
 }
 

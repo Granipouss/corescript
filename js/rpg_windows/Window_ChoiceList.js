@@ -3,7 +3,11 @@
 //
 // The window used for the event command [Show Choices].
 
-function Window_ChoiceList() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { Window_Command } from './Window_Command';
+
+export function Window_ChoiceList() {
     this.initialize.apply(this, arguments);
 }
 

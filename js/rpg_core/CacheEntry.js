@@ -8,7 +8,7 @@
  * @param {string} key, url of the resource
  * @param {string} item - Bitmap, HTML5Audio, WebAudio - whatever you want to store in the cache
  */
-function CacheEntry(cache, key, item) {
+export function CacheEntry(cache, key, item) {
     this.cache = cache;
     this.key = key;
     this.item = item;

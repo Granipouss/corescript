@@ -3,7 +3,10 @@
 //
 // The sprite for displaying a weapon image for attacking.
 
-function Sprite_Weapon() {
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Sprite_Base } from './Sprite_Base';
+
+export function Sprite_Weapon() {
     this.initialize.apply(this, arguments);
 }
 

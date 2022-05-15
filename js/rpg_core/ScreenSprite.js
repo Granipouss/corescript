@@ -5,7 +5,13 @@
  * @class ScreenSprite
  * @constructor
  */
-function ScreenSprite() {
+
+/* global PIXI */
+
+import { Graphics } from '../rpg_core/Graphics';
+import { Utils } from '../rpg_core/Utils';
+
+export function ScreenSprite() {
     this.initialize.apply(this, arguments);
 }
 

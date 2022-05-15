@@ -3,7 +3,10 @@
 //
 // The window for selecting a command on the equipment screen.
 
-function Window_EquipCommand() {
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_HorzCommand } from './Window_HorzCommand';
+
+export function Window_EquipCommand() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,12 @@
 //
 // The window for selecting whether to fight or escape on the battle screen.
 
-function Window_PartyCommand() {
+import { Graphics } from '../rpg_core/Graphics';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Command } from './Window_Command';
+
+export function Window_PartyCommand() {
     this.initialize.apply(this, arguments);
 }
 

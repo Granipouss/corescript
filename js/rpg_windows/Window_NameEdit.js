@@ -3,7 +3,11 @@
 //
 // The window for editing an actor's name on the name input screen.
 
-function Window_NameEdit() {
+import { Graphics } from '../rpg_core/Graphics';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Window_Base } from './Window_Base';
+
+export function Window_NameEdit() {
     this.initialize.apply(this, arguments);
 }
 

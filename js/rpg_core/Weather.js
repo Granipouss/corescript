@@ -5,7 +5,16 @@
  * @class Weather
  * @constructor
  */
-function Weather() {
+
+/* global PIXI */
+
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Graphics } from '../rpg_core/Graphics';
+import { Point } from '../rpg_core/Point';
+import { ScreenSprite } from '../rpg_core/ScreenSprite';
+import { Sprite } from '../rpg_core/Sprite';
+
+export function Weather() {
     this.initialize.apply(this, arguments);
 }
 

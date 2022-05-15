@@ -1,4 +1,4 @@
-function ImageCache() {
+export function ImageCache() {
     this.initialize.apply(this, arguments);
 }
 

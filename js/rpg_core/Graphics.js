@@ -4,7 +4,16 @@
  *
  * @class Graphics
  */
-function Graphics() {
+
+/* global PIXI, FPSMeter, makeVideoPlayableInline */
+
+import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
+import { ResourceHandler } from '../rpg_core/ResourceHandler';
+import { Utils } from '../rpg_core/Utils';
+
+import { SceneManager } from '../rpg_managers/SceneManager';
+
+export function Graphics() {
     throw new Error('This is a static class');
 }
 

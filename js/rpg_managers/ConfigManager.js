@@ -3,7 +3,10 @@
 //
 // The static class that manages the configuration data.
 
-function ConfigManager() {
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { StorageManager } from './StorageManager';
+
+export function ConfigManager() {
     throw new Error('This is a static class');
 }
 

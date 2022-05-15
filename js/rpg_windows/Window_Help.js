@@ -3,7 +3,10 @@
 //
 // The window for displaying the description of the selected item.
 
-function Window_Help() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Window_Base } from './Window_Base';
+
+export function Window_Help() {
     this.initialize.apply(this, arguments);
 }
 

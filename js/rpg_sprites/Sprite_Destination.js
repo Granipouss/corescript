@@ -3,7 +3,11 @@
 //
 // The sprite for displaying the destination place of the touch input.
 
-function Sprite_Destination() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Graphics } from '../rpg_core/Graphics';
+import { Sprite } from '../rpg_core/Sprite';
+
+export function Sprite_Destination() {
     this.initialize.apply(this, arguments);
 }
 

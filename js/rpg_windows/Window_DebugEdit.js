@@ -3,7 +3,11 @@
 //
 // The window for displaying switches and variables on the debug screen.
 
-function Window_DebugEdit() {
+import { Input } from '../rpg_core/Input';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_DebugEdit() {
     this.initialize.apply(this, arguments);
 }
 

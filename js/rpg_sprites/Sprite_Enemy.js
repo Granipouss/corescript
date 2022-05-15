@@ -3,7 +3,13 @@
 //
 // The sprite for displaying an enemy.
 
-function Sprite_Enemy() {
+import { Graphics } from '../rpg_core/Graphics';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Sprite_Battler } from './Sprite_Battler';
+import { Sprite_StateIcon } from './Sprite_StateIcon';
+
+export function Sprite_Enemy() {
     this.initialize.apply(this, arguments);
 }
 

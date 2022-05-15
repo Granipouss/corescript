@@ -3,7 +3,11 @@
 //
 // The window for displaying full status on the status screen.
 
-function Window_Status() {
+import { Graphics } from '../rpg_core/Graphics';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_Status() {
     this.initialize.apply(this, arguments);
 }
 

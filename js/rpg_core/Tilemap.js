@@ -5,7 +5,15 @@
  * @class Tilemap
  * @constructor
  */
-function Tilemap() {
+
+/* global PIXI */
+
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Graphics } from '../rpg_core/Graphics';
+import { Point } from '../rpg_core/Point';
+import { Sprite } from '../rpg_core/Sprite';
+
+export function Tilemap() {
     this.initialize.apply(this, arguments);
 }
 

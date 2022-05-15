@@ -3,7 +3,11 @@
 //
 // The scene class of the name input screen.
 
-function Scene_Name() {
+import { Window_NameEdit } from '../rpg_windows/Window_NameEdit';
+import { Window_NameInput } from '../rpg_windows/Window_NameInput';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_Name() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,7 @@
 //
 // The static class that manages the plugins.
 
-function PluginManager() {
+export function PluginManager() {
     throw new Error('This is a static class');
 }
 

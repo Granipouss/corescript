@@ -3,7 +3,7 @@
 //
 // The static class that handles terms and messages.
 
-function TextManager() {
+export function TextManager() {
     throw new Error('This is a static class');
 }
 

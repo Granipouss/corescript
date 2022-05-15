@@ -5,7 +5,14 @@
  * @class Tilemap
  * @constructor
  */
-function ShaderTilemap() {
+
+/* global PIXI */
+
+import { Tilemap } from '../rpg_core/Tilemap';
+
+import { PluginManager } from '../rpg_managers/PluginManager';
+
+export function ShaderTilemap() {
     Tilemap.apply(this, arguments);
     this.roundPixels = true;
 }

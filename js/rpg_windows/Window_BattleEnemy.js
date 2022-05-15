@@ -3,7 +3,10 @@
 //
 // The window for selecting a target enemy on the battle screen.
 
-function Window_BattleEnemy() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_BattleEnemy() {
     this.initialize.apply(this, arguments);
 }
 

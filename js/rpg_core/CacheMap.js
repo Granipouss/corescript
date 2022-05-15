@@ -3,7 +3,10 @@
  * @param manager
  * @constructor
  */
-function CacheMap(manager) {
+
+import { CacheEntry } from './CacheEntry';
+
+export function CacheMap(manager) {
     this.manager = manager;
     this._inner = {};
     this._lastRemovedEntries = {};

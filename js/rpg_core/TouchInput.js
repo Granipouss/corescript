@@ -4,7 +4,11 @@
  *
  * @class TouchInput
  */
-function TouchInput() {
+
+import { Utils } from '../rpg_core/Utils';
+import { Graphics } from '../rpg_core/Graphics';
+
+export function TouchInput() {
     throw new Error('This is a static class');
 }
 

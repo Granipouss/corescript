@@ -3,7 +3,11 @@
 //
 // The window for selecting text characters on the name input screen.
 
-function Window_NameInput() {
+import { Input } from '../rpg_core/Input';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_NameInput() {
     this.initialize.apply(this, arguments);
 }
 

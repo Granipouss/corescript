@@ -1,5 +1,15 @@
 //=============================================================================
 
+import { Graphics } from '../rpg_core/Graphics';
+import { ScreenSprite } from '../rpg_core/ScreenSprite';
+import { Stage } from '../rpg_core/Stage';
+import { Utils } from '../rpg_core/Utils';
+import { WindowLayer } from '../rpg_core/WindowLayer';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Scene_Gameover } from './Scene_Gameover';
+
 /**
  * The Superclass of all scene within the game.
  *
@@ -7,7 +17,7 @@
  * @constructor
  * @extends Stage
  */
-function Scene_Base() {
+export function Scene_Base() {
     this.initialize.apply(this, arguments);
 }
 

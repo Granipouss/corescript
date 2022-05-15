@@ -4,7 +4,9 @@
 // The game object class for handling skills, items, weapons, and armor. It is
 // required because save data should not include the database object itself.
 
-function Game_Item() {
+import { DataManager } from '../rpg_managers/DataManager';
+
+export function Game_Item() {
     this.initialize.apply(this, arguments);
 }
 

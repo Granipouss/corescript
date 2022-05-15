@@ -3,7 +3,10 @@
 //
 // The window for displaying the status of party members on the battle screen.
 
-function Window_BattleStatus() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_BattleStatus() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,9 @@
 //
 // The window for selecting a target actor on the battle screen.
 
-function Window_BattleActor() {
+import { Window_BattleStatus } from './Window_BattleStatus';
+
+export function Window_BattleActor() {
     this.initialize.apply(this, arguments);
 }
 

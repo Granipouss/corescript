@@ -4,7 +4,9 @@
 // The game object class for a follower. A follower is an allied character,
 // other than the front character, displayed in the party.
 
-function Game_Follower() {
+import { Game_Character } from './Game_Character';
+
+export function Game_Follower() {
     this.initialize.apply(this, arguments);
 }
 

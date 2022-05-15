@@ -3,7 +3,12 @@
 //
 // The sprite for displaying a character.
 
-function Sprite_Character() {
+import { Sprite } from '../rpg_core/Sprite';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Sprite_Balloon } from './Sprite_Balloon';
+import { Sprite_Base } from './Sprite_Base';
+
+export function Sprite_Character() {
     this.initialize.apply(this, arguments);
 }
 

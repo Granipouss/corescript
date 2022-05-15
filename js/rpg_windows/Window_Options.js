@@ -3,7 +3,15 @@
 //
 // The window for changing various settings on the options screen.
 
-function Window_Options() {
+import { Graphics } from '../rpg_core/Graphics';
+
+import { ConfigManager } from '../rpg_managers/ConfigManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { TextManager } from '../rpg_managers/TextManager';
+
+import { Window_Command } from './Window_Command';
+
+export function Window_Options() {
     this.initialize.apply(this, arguments);
 }
 

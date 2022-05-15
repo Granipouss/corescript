@@ -3,7 +3,11 @@
 //
 // The window for selecting a target actor on the item and skill screens.
 
-function Window_MenuActor() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { Game_Action } from '../rpg_objects/Game_Action';
+import { Window_MenuStatus } from './Window_MenuStatus';
+
+export function Window_MenuActor() {
     this.initialize.apply(this, arguments);
 }
 

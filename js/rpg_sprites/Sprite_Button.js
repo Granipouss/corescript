@@ -3,7 +3,11 @@
 //
 // The sprite for displaying a button.
 
-function Sprite_Button() {
+import { Rectangle } from '../rpg_core/Rectangle';
+import { Sprite } from '../rpg_core/Sprite';
+import { TouchInput } from '../rpg_core/TouchInput';
+
+export function Sprite_Button() {
     this.initialize.apply(this, arguments);
 }
 

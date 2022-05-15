@@ -6,7 +6,14 @@
  * @constructor
  * @param {Bitmap} bitmap The image for the tiling sprite
  */
-function TilingSprite() {
+
+/* global PIXI */
+
+import { Point } from '../rpg_core/Point';
+import { Rectangle } from '../rpg_core/Rectangle';
+import { Sprite } from '../rpg_core/Sprite';
+
+export function TilingSprite() {
     this.initialize.apply(this, arguments);
 }
 

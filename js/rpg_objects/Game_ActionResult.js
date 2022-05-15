@@ -4,7 +4,7 @@
 // The game object class for a result of a battle action. For convinience, all
 // member variables in this class are public.
 
-function Game_ActionResult() {
+export function Game_ActionResult() {
     this.initialize.apply(this, arguments);
 }
 

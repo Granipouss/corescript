@@ -3,7 +3,13 @@
 //
 // The window class with cursor movement and scroll functions.
 
-function Window_Selectable() {
+import { Input } from '../rpg_core/Input';
+import { Rectangle } from '../rpg_core/Rectangle';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_Base } from './Window_Base';
+
+export function Window_Selectable() {
     this.initialize.apply(this, arguments);
 }
 

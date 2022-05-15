@@ -4,7 +4,12 @@
 // The window for displaying scrolling text. No frame is displayed, but it
 // is handled as a window for convenience.
 
-function Window_ScrollText() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { Window_Base } from './Window_Base';
+
+export function Window_ScrollText() {
     this.initialize.apply(this, arguments);
 }
 

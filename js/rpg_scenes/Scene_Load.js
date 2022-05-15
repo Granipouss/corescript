@@ -3,7 +3,14 @@
 //
 // The scene class of the load screen.
 
-function Scene_Load() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Scene_File } from './Scene_File';
+import { Scene_Map } from './Scene_Map';
+
+export function Scene_Load() {
     this.initialize.apply(this, arguments);
 }
 

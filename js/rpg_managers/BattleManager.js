@@ -3,7 +3,14 @@
 //
 // The static class that manages battle progress.
 
-function BattleManager() {
+import { Game_Action } from '../rpg_objects/Game_Action';
+import { Scene_Gameover } from '../rpg_scenes/Scene_Gameover';
+import { AudioManager } from './AudioManager';
+import { SceneManager } from './SceneManager';
+import { SoundManager } from './SoundManager';
+import { TextManager } from './TextManager';
+
+export function BattleManager() {
     throw new Error('This is a static class');
 }
 

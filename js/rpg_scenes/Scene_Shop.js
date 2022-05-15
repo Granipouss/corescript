@@ -3,7 +3,19 @@
 //
 // The scene class of the shop screen.
 
-function Scene_Shop() {
+import { Graphics } from '../rpg_core/Graphics';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_Base } from '../rpg_windows/Window_Base';
+import { Window_Gold } from '../rpg_windows/Window_Gold';
+import { Window_ItemCategory } from '../rpg_windows/Window_ItemCategory';
+import { Window_ShopBuy } from '../rpg_windows/Window_ShopBuy';
+import { Window_ShopCommand } from '../rpg_windows/Window_ShopCommand';
+import { Window_ShopNumber } from '../rpg_windows/Window_ShopNumber';
+import { Window_ShopSell } from '../rpg_windows/Window_ShopSell';
+import { Window_ShopStatus } from '../rpg_windows/Window_ShopStatus';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_Shop() {
     this.initialize.apply(this, arguments);
 }
 

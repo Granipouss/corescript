@@ -3,7 +3,7 @@
 //
 // The game object class for a picture.
 
-function Game_Picture() {
+export function Game_Picture() {
     this.initialize.apply(this, arguments);
 }
 

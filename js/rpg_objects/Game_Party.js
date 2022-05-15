@@ -4,7 +4,12 @@
 // The game object class for the party. Information such as gold and items is
 // included.
 
-function Game_Party() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Game_Item } from '../rpg_objects/Game_Item';
+import { Game_Unit } from '../rpg_objects/Game_Unit';
+
+export function Game_Party() {
     this.initialize.apply(this, arguments);
 }
 

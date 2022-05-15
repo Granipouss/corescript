@@ -3,7 +3,9 @@
 //
 // The wrapper class for an actor array.
 
-function Game_Actors() {
+import { Game_Actor } from './Game_Actor';
+
+export function Game_Actors() {
     this.initialize.apply(this, arguments);
 }
 

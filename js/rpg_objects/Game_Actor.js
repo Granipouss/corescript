@@ -3,7 +3,16 @@
 //
 // The game object class for an actor.
 
-function Game_Actor() {
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { DataManager } from '../rpg_managers/DataManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Game_Action } from './Game_Action';
+import { Game_Battler } from './Game_Battler';
+import { Game_BattlerBase } from './Game_BattlerBase';
+import { Game_Item } from './Game_Item';
+
+export function Game_Actor() {
     this.initialize.apply(this, arguments);
 }
 

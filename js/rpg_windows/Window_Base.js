@@ -3,7 +3,14 @@
 //
 // The superclass of all windows within the game.
 
-function Window_Base() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Sprite } from '../rpg_core/Sprite';
+import { Window } from '../rpg_core/Window';
+
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { TextManager } from '../rpg_managers/TextManager';
+
+export function Window_Base() {
     this.initialize.apply(this, arguments);
 }
 

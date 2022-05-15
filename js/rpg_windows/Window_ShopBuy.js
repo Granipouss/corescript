@@ -3,7 +3,9 @@
 //
 // The window for selecting an item to buy on the shop screen.
 
-function Window_ShopBuy() {
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_ShopBuy() {
     this.initialize.apply(this, arguments);
 }
 

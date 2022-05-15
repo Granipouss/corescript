@@ -3,7 +3,11 @@
 //
 // The sprite for displaying the timer.
 
-function Sprite_Timer() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Graphics } from '../rpg_core/Graphics';
+import { Sprite } from '../rpg_core/Sprite';
+
+export function Sprite_Timer() {
     this.initialize.apply(this, arguments);
 }
 

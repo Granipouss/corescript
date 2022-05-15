@@ -4,7 +4,15 @@
 // The window for inputting quantity of items to buy or sell on the shop
 // screen.
 
-function Window_ShopNumber() {
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Sprite_Button } from '../rpg_sprites/Sprite_Button';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_ShopNumber() {
     this.initialize.apply(this, arguments);
 }
 

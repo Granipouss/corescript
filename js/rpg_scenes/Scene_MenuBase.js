@@ -3,7 +3,12 @@
 //
 // The superclass of all the menu-type scenes.
 
-function Scene_MenuBase() {
+import { Sprite } from '../rpg_core/Sprite';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Window_Help } from '../rpg_windows/Window_Help';
+import { Scene_Base } from './Scene_Base';
+
+export function Scene_MenuBase() {
     this.initialize.apply(this, arguments);
 }
 

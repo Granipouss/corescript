@@ -5,7 +5,15 @@
  * @class Window
  * @constructor
  */
-function Window() {
+
+/* global PIXI */
+
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Point } from '../rpg_core/Point';
+import { Rectangle } from '../rpg_core/Rectangle';
+import { Sprite } from '../rpg_core/Sprite';
+
+export function Window() {
     this.initialize.apply(this, arguments);
 }
 

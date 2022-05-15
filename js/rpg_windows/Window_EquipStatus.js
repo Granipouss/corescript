@@ -3,7 +3,10 @@
 //
 // The window for displaying parameter changes on the equipment screen.
 
-function Window_EquipStatus() {
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Base } from './Window_Base';
+
+export function Window_EquipStatus() {
     this.initialize.apply(this, arguments);
 }
 

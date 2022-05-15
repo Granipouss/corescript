@@ -3,7 +3,10 @@
 //
 // The scene class of the status screen.
 
-function Scene_Status() {
+import { Window_Status } from '../rpg_windows/Window_Status';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_Status() {
     this.initialize.apply(this, arguments);
 }
 

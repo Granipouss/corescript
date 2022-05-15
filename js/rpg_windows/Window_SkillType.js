@@ -3,7 +3,9 @@
 //
 // The window for selecting a skill type on the skill screen.
 
-function Window_SkillType() {
+import { Window_Command } from './Window_Command';
+
+export function Window_SkillType() {
     this.initialize.apply(this, arguments);
 }
 

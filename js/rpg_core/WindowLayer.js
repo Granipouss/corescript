@@ -5,7 +5,12 @@
  * @class WindowLayer
  * @constructor
  */
-function WindowLayer() {
+
+/* global PIXI */
+
+import { Graphics } from '../rpg_core/Graphics';
+
+export function WindowLayer() {
     this.initialize.apply(this, arguments);
 }
 

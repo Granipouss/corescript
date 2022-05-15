@@ -3,7 +3,13 @@
 //
 // The scene class of the debug screen.
 
-function Scene_Debug() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Window_Base } from '../rpg_windows/Window_Base';
+import { Window_DebugEdit } from '../rpg_windows/Window_DebugEdit';
+import { Window_DebugRange } from '../rpg_windows/Window_DebugRange';
+import { Scene_MenuBase } from './Scene_MenuBase';
+
+export function Scene_Debug() {
     this.initialize.apply(this, arguments);
 }
 

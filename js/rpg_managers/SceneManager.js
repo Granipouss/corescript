@@ -3,7 +3,19 @@
 //
 // The static class that manages scene transitions.
 
-function SceneManager() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Utils } from '../rpg_core/Utils';
+import { Graphics } from '../rpg_core/Graphics';
+import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
+import { WebAudio } from '../rpg_core/WebAudio';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { Input } from '../rpg_core/Input';
+
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { PluginManager } from '../rpg_managers/PluginManager';
+
+export function SceneManager() {
     throw new Error('This is a static class');
 }
 

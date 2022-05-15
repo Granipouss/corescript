@@ -3,7 +3,11 @@
 //
 // The window for selecting a command on the menu screen.
 
-function Window_MenuCommand() {
+import { DataManager } from '../rpg_managers/DataManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Command } from './Window_Command';
+
+export function Window_MenuCommand() {
     this.initialize.apply(this, arguments);
 }
 

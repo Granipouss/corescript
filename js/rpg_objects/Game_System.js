@@ -3,7 +3,11 @@
 //
 // The game object class for the system data.
 
-function Game_System() {
+import { Graphics } from '../rpg_core/Graphics';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+
+export function Game_System() {
     this.initialize.apply(this, arguments);
 }
 

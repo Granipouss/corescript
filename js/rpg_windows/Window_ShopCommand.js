@@ -3,7 +3,10 @@
 //
 // The window for selecting buy/sell on the shop screen.
 
-function Window_ShopCommand() {
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_HorzCommand } from './Window_HorzCommand';
+
+export function Window_ShopCommand() {
     this.initialize.apply(this, arguments);
 }
 

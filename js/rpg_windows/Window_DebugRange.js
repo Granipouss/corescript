@@ -3,7 +3,11 @@
 //
 // The window for selecting a block of switches/variables on the debug screen.
 
-function Window_DebugRange() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_DebugRange() {
     this.initialize.apply(this, arguments);
 }
 

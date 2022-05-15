@@ -3,7 +3,10 @@
 //
 // The game object class for a vehicle.
 
-function Game_Vehicle() {
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { Game_Character } from './Game_Character';
+
+export function Game_Vehicle() {
     this.initialize.apply(this, arguments);
 }
 

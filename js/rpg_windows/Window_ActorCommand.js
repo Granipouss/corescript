@@ -3,7 +3,12 @@
 //
 // The window for selecting an actor's action on the battle screen.
 
-function Window_ActorCommand() {
+import { Graphics } from '../rpg_core/Graphics';
+import { ConfigManager } from '../rpg_managers/ConfigManager';
+import { TextManager } from '../rpg_managers/TextManager';
+import { Window_Command } from './Window_Command';
+
+export function Window_ActorCommand() {
     this.initialize.apply(this, arguments);
 }
 

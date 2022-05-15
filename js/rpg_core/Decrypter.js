@@ -1,4 +1,7 @@
-function Decrypter() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { AudioManager } from '../rpg_managers/AudioManager';
+
+export function Decrypter() {
     throw new Error('This is a static class');
 }
 

@@ -4,7 +4,10 @@
 // The superclass of Game_Character. It handles basic information, such as
 // coordinates and images, shared by all characters.
 
-function Game_CharacterBase() {
+import { Graphics } from '../rpg_core/Graphics';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+export function Game_CharacterBase() {
     this.initialize.apply(this, arguments);
 }
 

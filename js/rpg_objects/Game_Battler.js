@@ -4,7 +4,14 @@
 // The superclass of Game_Actor and Game_Enemy. It contains methods for sprites
 // and actions.
 
-function Game_Battler() {
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { DataManager } from '../rpg_managers/DataManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Game_Action } from './Game_Action';
+import { Game_ActionResult } from './Game_ActionResult';
+import { Game_BattlerBase } from './Game_BattlerBase';
+
+export function Game_Battler() {
     this.initialize.apply(this, arguments);
 }
 

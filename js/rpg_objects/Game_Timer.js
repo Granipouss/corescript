@@ -3,7 +3,9 @@
 //
 // The game object class for the timer.
 
-function Game_Timer() {
+import { BattleManager } from '../rpg_managers/BattleManager';
+
+export function Game_Timer() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,16 @@
 //
 // The superclass of Spriteset_Map and Spriteset_Battle.
 
-function Spriteset_Base() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Rectangle } from '../rpg_core/Rectangle';
+import { ScreenSprite } from '../rpg_core/ScreenSprite';
+import { Sprite } from '../rpg_core/Sprite';
+import { ToneFilter } from '../rpg_core/ToneFilter';
+import { ToneSprite } from '../rpg_core/ToneSprite';
+import { Sprite_Picture } from './Sprite_Picture';
+import { Sprite_Timer } from './Sprite_Timer';
+
+export function Spriteset_Base() {
     this.initialize.apply(this, arguments);
 }
 

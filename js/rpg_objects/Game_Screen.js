@@ -4,7 +4,9 @@
 // The game object class for screen effect data, such as changes in color tone
 // and flashes.
 
-function Game_Screen() {
+import { Game_Picture } from './Game_Picture';
+
+export function Game_Screen() {
     this.initialize.apply(this, arguments);
 }
 

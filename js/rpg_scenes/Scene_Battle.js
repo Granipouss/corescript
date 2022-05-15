@@ -3,7 +3,28 @@
 //
 // The scene class of the battle screen.
 
-function Scene_Battle() {
+import { Graphics } from '../rpg_core/Graphics';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Spriteset_Battle } from '../rpg_sprites/Spriteset_Battle';
+import { Window_ActorCommand } from '../rpg_windows/Window_ActorCommand';
+import { Window_BattleActor } from '../rpg_windows/Window_BattleActor';
+import { Window_BattleEnemy } from '../rpg_windows/Window_BattleEnemy';
+import { Window_BattleItem } from '../rpg_windows/Window_BattleItem';
+import { Window_BattleLog } from '../rpg_windows/Window_BattleLog';
+import { Window_BattleSkill } from '../rpg_windows/Window_BattleSkill';
+import { Window_BattleStatus } from '../rpg_windows/Window_BattleStatus';
+import { Window_Help } from '../rpg_windows/Window_Help';
+import { Window_Message } from '../rpg_windows/Window_Message';
+import { Window_PartyCommand } from '../rpg_windows/Window_PartyCommand';
+import { Window_ScrollText } from '../rpg_windows/Window_ScrollText';
+import { Scene_Base } from './Scene_Base';
+import { Scene_Gameover } from './Scene_Gameover';
+import { Scene_Title } from './Scene_Title';
+
+export function Scene_Battle() {
     this.initialize.apply(this, arguments);
 }
 

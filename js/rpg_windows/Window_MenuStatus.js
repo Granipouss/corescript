@@ -3,7 +3,12 @@
 //
 // The window for displaying party member status on the menu screen.
 
-function Window_MenuStatus() {
+import { Graphics } from '../rpg_core/Graphics';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Window_Base } from './Window_Base';
+import { Window_Selectable } from './Window_Selectable';
+
+export function Window_MenuStatus() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,20 @@
 //
 // The scene class of the title screen.
 
-function Scene_Title() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { Graphics } from '../rpg_core/Graphics';
+import { Sprite } from '../rpg_core/Sprite';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { DataManager } from '../rpg_managers/DataManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Window_TitleCommand } from '../rpg_windows/Window_TitleCommand';
+import { Scene_Base } from './Scene_Base';
+import { Scene_Load } from './Scene_Load';
+import { Scene_Map } from './Scene_Map';
+import { Scene_Options } from './Scene_Options';
+
+export function Scene_Title() {
     this.initialize.apply(this, arguments);
 }
 

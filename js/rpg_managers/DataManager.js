@@ -3,7 +3,34 @@
 //
 // The static class that manages the database and game objects.
 
-function DataManager() {
+import { ResourceHandler } from '../rpg_core/ResourceHandler';
+import { JsonEx } from '../rpg_core/JsonEx';
+import { Utils } from '../rpg_core/Utils';
+import { Decrypter } from '../rpg_core/Decrypter';
+import { Graphics } from '../rpg_core/Graphics';
+
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { BattleManager } from '../rpg_managers/BattleManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+import { Game_Temp } from '../rpg_objects/Game_Temp';
+import { Game_System } from '../rpg_objects/Game_System';
+import { Game_Screen } from '../rpg_objects/Game_Screen';
+import { Game_Timer } from '../rpg_objects/Game_Timer';
+import { Game_Message } from '../rpg_objects/Game_Message';
+import { Game_Switches } from '../rpg_objects/Game_Switches';
+import { Game_Variables } from '../rpg_objects/Game_Variables';
+import { Game_SelfSwitches } from '../rpg_objects/Game_SelfSwitches';
+import { Game_Actors } from '../rpg_objects/Game_Actors';
+import { Game_Party } from '../rpg_objects/Game_Party';
+import { Game_Troop } from '../rpg_objects/Game_Troop';
+import { Game_Map } from '../rpg_objects/Game_Map';
+import { Game_Player } from '../rpg_objects/Game_Player';
+
+import { Scene_Boot } from '../rpg_scenes/Scene_Boot';
+import { StorageManager } from './StorageManager';
+
+export function DataManager() {
     throw new Error('This is a static class');
 }
 

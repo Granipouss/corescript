@@ -3,7 +3,18 @@
 //
 // The window for displaying text messages.
 
-function Window_Message() {
+import { Graphics } from '../rpg_core/Graphics';
+import { Input } from '../rpg_core/Input';
+import { TouchInput } from '../rpg_core/TouchInput';
+import { Utils } from '../rpg_core/Utils';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { Window_Base } from './Window_Base';
+import { Window_ChoiceList } from './Window_ChoiceList';
+import { Window_EventItem } from './Window_EventItem';
+import { Window_Gold } from './Window_Gold';
+import { Window_NumberInput } from './Window_NumberInput';
+
+export function Window_Message() {
     this.initialize.apply(this, arguments);
 }
 

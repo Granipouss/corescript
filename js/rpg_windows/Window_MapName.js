@@ -3,7 +3,9 @@
 //
 // The window for displaying the map name on the map screen.
 
-function Window_MapName() {
+import { Window_Base } from './Window_Base';
+
+export function Window_MapName() {
     this.initialize.apply(this, arguments);
 }
 

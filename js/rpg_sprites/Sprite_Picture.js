@@ -3,7 +3,10 @@
 //
 // The sprite for displaying a picture.
 
-function Sprite_Picture() {
+import { Sprite } from '../rpg_core/Sprite';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+export function Sprite_Picture() {
     this.initialize.apply(this, arguments);
 }
 

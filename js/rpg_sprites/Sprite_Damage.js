@@ -3,7 +3,10 @@
 //
 // The sprite for displaying a popup damage.
 
-function Sprite_Damage() {
+import { Sprite } from '../rpg_core/Sprite';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+export function Sprite_Damage() {
     this.initialize.apply(this, arguments);
 }
 

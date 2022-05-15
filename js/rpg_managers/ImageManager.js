@@ -3,7 +3,13 @@
 //
 // The static class that loads images, creates bitmap objects and retains them.
 
-function ImageManager() {
+import { Bitmap } from '../rpg_core/Bitmap';
+import { CacheMap } from '../rpg_core/CacheMap';
+import { ImageCache } from '../rpg_core/ImageCache';
+import { RequestQueue } from '../rpg_core/RequestQueue';
+import { Utils } from '../rpg_core/Utils';
+
+export function ImageManager() {
     throw new Error('This is a static class');
 }
 

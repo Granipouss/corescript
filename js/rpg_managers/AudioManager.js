@@ -3,7 +3,13 @@
 //
 // The static class that handles BGM, BGS, ME and SE.
 
-function AudioManager() {
+import { Decrypter } from '../rpg_core/Decrypter';
+import { Graphics } from '../rpg_core/Graphics';
+import { Html5Audio } from '../rpg_core/Html5Audio';
+import { Utils } from '../rpg_core/Utils';
+import { WebAudio } from '../rpg_core/WebAudio';
+
+export function AudioManager() {
     throw new Error('This is a static class');
 }
 

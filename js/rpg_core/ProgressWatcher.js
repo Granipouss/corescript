@@ -1,4 +1,7 @@
-function ProgressWatcher() {
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+export function ProgressWatcher() {
     throw new Error('This is a static class');
 }
 

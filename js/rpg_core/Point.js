@@ -7,7 +7,10 @@
  * @param {Number} x The x coordinate
  * @param {Number} y The y coordinate
  */
-function Point() {
+
+/* global PIXI */
+
+export function Point() {
     this.initialize.apply(this, arguments);
 }
 

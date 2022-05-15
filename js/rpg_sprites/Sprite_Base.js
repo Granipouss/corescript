@@ -3,7 +3,10 @@
 //
 // The sprite class with a feature which displays animations.
 
-function Sprite_Base() {
+import { Sprite } from '../rpg_core/Sprite';
+import { Sprite_Animation } from './Sprite_Animation';
+
+export function Sprite_Base() {
     this.initialize.apply(this, arguments);
 }
 

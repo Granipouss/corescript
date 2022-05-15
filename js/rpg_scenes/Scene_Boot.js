@@ -3,7 +3,21 @@
 //
 // The scene class for initializing the entire game.
 
-function Scene_Boot() {
+import { Graphics } from '../rpg_core/Graphics';
+
+import { ConfigManager } from '../rpg_managers/ConfigManager';
+import { DataManager } from '../rpg_managers/DataManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_TitleCommand } from '../rpg_windows/Window_TitleCommand';
+
+import { Scene_Base } from './Scene_Base';
+import { Scene_Battle } from './Scene_Battle';
+import { Scene_Map } from './Scene_Map';
+import { Scene_Title } from './Scene_Title';
+
+export function Scene_Boot() {
     this.initialize.apply(this, arguments);
 }
 

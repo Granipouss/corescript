@@ -3,7 +3,12 @@
 //
 // The scene class of the game end screen.
 
-function Scene_GameEnd() {
+import { SceneManager } from '../rpg_managers/SceneManager';
+import { Window_GameEnd } from '../rpg_windows/Window_GameEnd';
+import { Scene_MenuBase } from './Scene_MenuBase';
+import { Scene_Title } from './Scene_Title';
+
+export function Scene_GameEnd() {
     this.initialize.apply(this, arguments);
 }
 

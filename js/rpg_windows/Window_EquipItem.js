@@ -3,7 +3,10 @@
 //
 // The window for selecting an equipment item on the equipment screen.
 
-function Window_EquipItem() {
+import { JsonEx } from '../rpg_core/JsonEx';
+import { Window_ItemList } from './Window_ItemList';
+
+export function Window_EquipItem() {
     this.initialize.apply(this, arguments);
 }
 

@@ -3,7 +3,12 @@
 //
 // The sprite for displaying an animation.
 
-function Sprite_Animation() {
+import { ScreenSprite } from '../rpg_core/ScreenSprite';
+import { Sprite } from '../rpg_core/Sprite';
+import { AudioManager } from '../rpg_managers/AudioManager';
+import { ImageManager } from '../rpg_managers/ImageManager';
+
+export function Sprite_Animation() {
     this.initialize.apply(this, arguments);
 }
 
