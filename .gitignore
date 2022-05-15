@@ -58,3 +58,4 @@ corescript.zip
 package-lock.json
 
 template/**/*
+out
