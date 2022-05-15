@@ -25,7 +25,9 @@
     "unittest": "node ./tests/test-save.js",
     "start": "http-server ./game/",
     "package": "run-s build copy-all crc zip",
-    "crc": "node healthcheck/generate_crc.js"
+    "crc": "node healthcheck/generate_crc.js",
+    "format": "npx prettier --write ./js",
+    "lint": "npx eslint ./js"
   },
   "author": "rpgtkoolmv team",
   "license": "MIT",
@@ -34,8 +36,10 @@
     "concat-with-sourcemaps": "^1.0.4",
     "cpx": "^1.5.0",
     "crc-32": "^1.0.2",
+    "eslint": "^8.15.0",
     "http-server": "^0.9.0",
     "node-watch": "^0.4.1",
-    "npm-run-all": "^4.0.0"
+    "npm-run-all": "^4.0.0",
+    "prettier": "2.6.2"
   }
 }
