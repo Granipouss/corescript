@@ -122,12 +122,12 @@ ImageManager.isReady = function () {
 };
 
 ImageManager.isObjectCharacter = function (filename) {
-    var sign = filename.match(/^[\!\$]+/);
+    var sign = filename.match(/^[!$]+/);
     return sign && sign[0].contains('!');
 };
 
 ImageManager.isBigCharacter = function (filename) {
-    var sign = filename.match(/^[\!\$]+/);
+    var sign = filename.match(/^[!$]+/);
     return sign && sign[0].contains('$');
 };
 

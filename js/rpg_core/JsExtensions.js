@@ -5,9 +5,9 @@
  *
  * @class JsExtensions
  */
-function JsExtensions() {
-    throw new Error('This is not a class');
-}
+// function JsExtensions() {
+//     throw new Error('This is not a class');
+// }
 
 /**
  * Returns a number whose value is limited to the given range.

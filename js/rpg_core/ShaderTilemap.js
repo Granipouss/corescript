@@ -111,13 +111,13 @@ ShaderTilemap.prototype.updateTransform = function () {
  * @private
  */
 ShaderTilemap.prototype._createLayers = function () {
-    var width = this._width;
-    var height = this._height;
-    var margin = this._margin;
-    var tileCols = Math.ceil(width / this._tileWidth) + 1;
-    var tileRows = Math.ceil(height / this._tileHeight) + 1;
-    var layerWidth = (this._layerWidth = tileCols * this._tileWidth);
-    var layerHeight = (this._layerHeight = tileRows * this._tileHeight);
+    // var width = this._width;
+    // var height = this._height;
+    // var margin = this._margin;
+    // var tileCols = Math.ceil(width / this._tileWidth) + 1;
+    // var tileRows = Math.ceil(height / this._tileHeight) + 1;
+    // var layerWidth = (this._layerWidth = tileCols * this._tileWidth);
+    // var layerHeight = (this._layerHeight = tileRows * this._tileHeight);
     this._needsRepaint = true;
 
     if (!this.lowerZLayer) {

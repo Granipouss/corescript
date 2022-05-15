@@ -508,7 +508,7 @@ Game_Battler.prototype.performActionStart = function (action) {
     }
 };
 
-Game_Battler.prototype.performAction = function (action) {};
+Game_Battler.prototype.performAction = function (_action) {};
 
 Game_Battler.prototype.performActionEnd = function () {
     this.setActionState('done');
@@ -540,6 +540,6 @@ Game_Battler.prototype.performReflection = function () {
     SoundManager.playReflection();
 };
 
-Game_Battler.prototype.performSubstitute = function (target) {};
+Game_Battler.prototype.performSubstitute = function (_target) {};
 
 Game_Battler.prototype.performCollapse = function () {};

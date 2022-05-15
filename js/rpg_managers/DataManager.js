@@ -7,6 +7,7 @@ function DataManager() {
     throw new Error('This is a static class');
 }
 
+/* eslint-disable no-unused-vars */
 var $dataActors = null;
 var $dataClasses = null;
 var $dataSkills = null;
@@ -36,6 +37,7 @@ var $gameTroop = null;
 var $gameMap = null;
 var $gamePlayer = null;
 var $testEvent = null;
+/* eslint-enable no-unused-vars */
 
 DataManager._globalId = 'RPGMV';
 DataManager._lastAccessedId = 1;
@@ -348,7 +350,9 @@ DataManager.saveGame = function (savefileId) {
         try {
             StorageManager.remove(savefileId);
             StorageManager.restoreBackup(savefileId);
-        } catch (e2) {}
+        } catch (e2) {
+            // ...
+        }
         return false;
     }
 };

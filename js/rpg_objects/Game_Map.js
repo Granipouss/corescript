@@ -90,7 +90,7 @@ Game_Map.prototype.battleback2Name = function () {
     return this._battleback2Name;
 };
 
-Game_Map.prototype.requestRefresh = function (mapId) {
+Game_Map.prototype.requestRefresh = function (_mapId) {
     this._needsRefresh = true;
 };
 

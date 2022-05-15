@@ -699,13 +699,14 @@ Game_Interpreter.prototype.command122 = function () {
         case 1: // Variable
             value = $gameVariables.value(this._params[4]);
             break;
-        case 2: // Random
+        case 2: {
+            // Random
             value = this._params[5] - this._params[4] + 1;
             for (var i = this._params[0]; i <= this._params[1]; i++) {
                 this.operateVariable(i, this._params[2], this._params[4] + Math.randomInt(value));
             }
             return true;
-            break;
+        }
         case 3: // Game Data
             value = this.gameDataOperand(this._params[4], this._params[5], this._params[6]);
             break;
@@ -719,7 +720,7 @@ Game_Interpreter.prototype.command122 = function () {
             }
             break;
     }
-    for (var i = this._params[0]; i <= this._params[1]; i++) {
+    for (let i = this._params[0]; i <= this._params[1]; i++) {
         this.operateVariable(i, this._params[2], value);
     }
     return true;
@@ -1913,11 +1914,11 @@ Game_Interpreter.prototype.command356 = function () {
     return true;
 };
 
-Game_Interpreter.prototype.pluginCommand = function (command, args) {
+Game_Interpreter.prototype.pluginCommand = function (_command, _args) {
     // to be overridden by plugins
 };
 
-Game_Interpreter.requestImagesByPluginCommand = function (command, args) {};
+Game_Interpreter.requestImagesByPluginCommand = function (_command, _args) {};
 
 Game_Interpreter.requestImagesForCommand = function (command) {
     var params = command.parameters;
@@ -2016,9 +2017,9 @@ Game_Interpreter.requestImagesForCommand = function (command) {
             break;
 
         // Enemy Transform
-        case 336:
+        case 336: {
             var enemy = $dataEnemies[params[1]];
-            var name = enemy.battlerName;
+            let name = enemy.battlerName;
             var hue = enemy.battlerHue;
             if ($gameSystem.isSideView()) {
                 ImageManager.requestSvEnemy(name, hue);
@@ -2026,6 +2027,7 @@ Game_Interpreter.requestImagesForCommand = function (command) {
                 ImageManager.requestEnemy(name, hue);
             }
             break;
+        }
         // Plugin Command
         case 356:
             var args = params[0].split(' ');

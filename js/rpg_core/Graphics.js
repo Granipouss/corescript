@@ -374,7 +374,7 @@ Graphics.printLoadingError = function (url) {
         button.addEventListener('touchstart', function (event) {
             event.stopPropagation();
         });
-        button.addEventListener('click', function (event) {
+        button.addEventListener('click', function (_event) {
             ResourceHandler.retry();
         });
         this._errorPrinter.appendChild(button);
@@ -1402,7 +1402,7 @@ Graphics._onKeyDown = function (event) {
  * @param {TouchEvent} event
  * @private
  */
-Graphics._onTouchEnd = function (event) {
+Graphics._onTouchEnd = function (_event) {
     if (!this._videoUnlocked) {
         this._video.play();
         this._videoUnlocked = true;

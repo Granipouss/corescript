@@ -53,7 +53,7 @@ Html5Audio.initialize = function () {
                 this._audioElement = null;
             }
         }
-        if (!!this._audioElement) this._setupEventHandlers();
+        if (this._audioElement) this._setupEventHandlers();
         this._initialized = true;
     }
     return !!this._audioElement;

@@ -486,7 +486,7 @@ Game_BattlerBase.prototype.traitsSet = function (code) {
     }, []);
 };
 
-Game_BattlerBase.prototype.paramBase = function (paramId) {
+Game_BattlerBase.prototype.paramBase = function (_paramId) {
     return 0;
 };
 
@@ -827,7 +827,7 @@ Game_BattlerBase.prototype.stateOverlayIndex = function () {
     }
 };
 
-Game_BattlerBase.prototype.isSkillWtypeOk = function (skill) {
+Game_BattlerBase.prototype.isSkillWtypeOk = function (_skill) {
     return true;
 };
 

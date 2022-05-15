@@ -298,7 +298,7 @@ Tilemap.prototype._createLayers = function () {
  * @param {Number} startY
  * @private
  */
-Tilemap.prototype._updateLayerPositions = function (startX, startY) {
+Tilemap.prototype._updateLayerPositions = function (_startX, _startY) {
     var m = this._margin;
     var ox = Math.floor(this.origin.x);
     var oy = Math.floor(this.origin.y);
@@ -726,7 +726,7 @@ Tilemap.prototype._isTableTile = function (tileId) {
  * @return {Boolean}
  * @private
  */
-Tilemap.prototype._isOverpassPosition = function (mx, my) {
+Tilemap.prototype._isOverpassPosition = function (_mx, _my) {
     return false;
 };
 

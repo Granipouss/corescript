@@ -886,7 +886,7 @@ Game_Actor.prototype.setLastCommandSymbol = function (symbol) {
 };
 
 Game_Actor.prototype.testEscape = function (item) {
-    return item.effects.some(function (effect, index, ar) {
+    return item.effects.some(function (effect, _index, _ar) {
         return effect && effect.code === Game_Action.EFFECT_SPECIAL;
     });
 };

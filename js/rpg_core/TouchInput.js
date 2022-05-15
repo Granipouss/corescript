@@ -302,7 +302,7 @@ TouchInput._onLeftButtonDown = function (event) {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onMiddleButtonDown = function (event) {};
+TouchInput._onMiddleButtonDown = function (_event) {};
 
 /**
  * @static
@@ -423,7 +423,7 @@ TouchInput._onTouchEnd = function (event) {
  * @param {TouchEvent} event
  * @private
  */
-TouchInput._onTouchCancel = function (event) {
+TouchInput._onTouchCancel = function (_event) {
     this._screenPressed = false;
 };
 

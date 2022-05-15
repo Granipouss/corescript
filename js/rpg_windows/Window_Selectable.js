@@ -546,7 +546,7 @@ Window_Selectable.prototype.drawAllItems = function () {
     }
 };
 
-Window_Selectable.prototype.drawItem = function (index) {};
+Window_Selectable.prototype.drawItem = function (_index) {};
 
 Window_Selectable.prototype.clearItem = function (index) {
     var rect = this.itemRect(index);

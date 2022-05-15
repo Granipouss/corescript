@@ -245,7 +245,7 @@ Window_BattleLog.prototype.showActorAttackAnimation = function (subject, targets
     this.showNormalAnimation(targets, subject.attackAnimationId2(), true);
 };
 
-Window_BattleLog.prototype.showEnemyAttackAnimation = function (subject, targets) {
+Window_BattleLog.prototype.showEnemyAttackAnimation = function (_subject, _targets) {
     SoundManager.playEnemyAttack();
 };
 

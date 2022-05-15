@@ -226,7 +226,7 @@ Game_Party.prototype.numItems = function (item) {
     return container ? container[item.id] || 0 : 0;
 };
 
-Game_Party.prototype.maxItems = function (item) {
+Game_Party.prototype.maxItems = function (_item) {
     return 99;
 };
 

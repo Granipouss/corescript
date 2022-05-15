@@ -97,7 +97,7 @@ Window_Options.prototype.processOk = function () {
     }
 };
 
-Window_Options.prototype.cursorRight = function (wrap) {
+Window_Options.prototype.cursorRight = function (_wrap) {
     var index = this.index();
     var symbol = this.commandSymbol(index);
     var value = this.getConfigValue(symbol);
@@ -110,7 +110,7 @@ Window_Options.prototype.cursorRight = function (wrap) {
     }
 };
 
-Window_Options.prototype.cursorLeft = function (wrap) {
+Window_Options.prototype.cursorLeft = function (_wrap) {
     var index = this.index();
     var symbol = this.commandSymbol(index);
     var value = this.getConfigValue(symbol);

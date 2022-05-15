@@ -50,7 +50,7 @@ Window_EventItem.prototype.includes = function (item) {
     return DataManager.isItem(item) && item.itypeId === itypeId;
 };
 
-Window_EventItem.prototype.isEnabled = function (item) {
+Window_EventItem.prototype.isEnabled = function (_item) {
     return true;
 };
 

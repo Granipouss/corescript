@@ -156,6 +156,7 @@ Utils.isSupportPassiveEvent = function () {
     var options = Object.defineProperty({}, 'passive', {
         get: function () {
             passive = true;
+            return void 0;
         },
     });
     window.addEventListener('test', null, options);

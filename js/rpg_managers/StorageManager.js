@@ -52,8 +52,8 @@ StorageManager.backup = function (savefileId) {
             }
             fs.writeFileSync(filePath, compressed);
         } else {
-            var data = this.loadFromWebStorage(savefileId);
-            var compressed = LZString.compressToBase64(data);
+            // var data = this.loadFromWebStorage(savefileId);
+            // var compressed = LZString.compressToBase64(data);
             var key = this.webStorageKey(savefileId) + 'bak';
             localStorage.setItem(key, compressed);
         }
@@ -72,7 +72,7 @@ StorageManager.cleanBackup = function (savefileId) {
     if (this.backupExists(savefileId)) {
         if (this.isLocalMode()) {
             var fs = require('fs');
-            var dirPath = this.localFileDirectoryPath();
+            // var dirPath = this.localFileDirectoryPath();
             var filePath = this.localFilePath(savefileId);
             fs.unlinkSync(filePath + '.bak');
         } else {
@@ -96,8 +96,8 @@ StorageManager.restoreBackup = function (savefileId) {
             fs.writeFileSync(filePath, compressed);
             fs.unlinkSync(filePath + '.bak');
         } else {
-            var data = this.loadFromWebStorageBackup(savefileId);
-            var compressed = LZString.compressToBase64(data);
+            // var data = this.loadFromWebStorageBackup(savefileId);
+            // var compressed = LZString.compressToBase64(data);
             var key = this.webStorageKey(savefileId);
             localStorage.setItem(key, compressed);
             localStorage.removeItem(key + 'bak');

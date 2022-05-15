@@ -349,7 +349,7 @@ Window_Base.prototype.processNewPage = function (textState) {
 
 Window_Base.prototype.obtainEscapeCode = function (textState) {
     textState.index++;
-    var regExp = /^[\$\.\|\^!><\{\}\\]|^[A-Z]+/i;
+    var regExp = /^[$.|^!><{}\\]|^[A-Z]+/i;
     var arr = regExp.exec(textState.text.slice(textState.index));
     if (arr) {
         textState.index += arr[0].length;
@@ -411,7 +411,7 @@ Window_Base.prototype.calcTextHeight = function (textState, all) {
 
     for (var i = 0; i < maxLines; i++) {
         var maxFontSize = this.contents.fontSize;
-        var regExp = /\x1b[\{\}]/g;
+        var regExp = /\x1b[{}]/g;
         for (;;) {
             var array = regExp.exec(lines[i]);
             if (array) {
@@ -487,11 +487,11 @@ Window_Base.prototype.hpColor = function (actor) {
     }
 };
 
-Window_Base.prototype.mpColor = function (actor) {
+Window_Base.prototype.mpColor = function (_actor) {
     return this.normalColor();
 };
 
-Window_Base.prototype.tpColor = function (actor) {
+Window_Base.prototype.tpColor = function (_actor) {
     return this.normalColor();
 };
 

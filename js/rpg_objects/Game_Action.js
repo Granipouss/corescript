@@ -442,7 +442,7 @@ Game_Action.prototype.itemMrf = function (target) {
     }
 };
 
-Game_Action.prototype.itemHit = function (target) {
+Game_Action.prototype.itemHit = function (_target) {
     if (this.isPhysical()) {
         return this.item().successRate * 0.01 * this.subject().hit;
     } else {
@@ -508,12 +508,12 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
     return value;
 };
 
-Game_Action.prototype.evalDamageFormula = function (target) {
+Game_Action.prototype.evalDamageFormula = function (_target) {
     try {
         var item = this.item();
-        var a = this.subject();
-        var b = target;
-        var v = $gameVariables._data;
+        // var a = this.subject();
+        // var b = target;
+        // var v = $gameVariables._data;
         var sign = [3, 4].contains(item.damage.type) ? -1 : 1;
         var value = Math.max(eval(item.damage.formula), 0) * sign;
         if (isNaN(value)) value = 0;
@@ -782,13 +782,13 @@ Game_Action.prototype.itemEffectLearnSkill = function (target, effect) {
     }
 };
 
-Game_Action.prototype.itemEffectCommonEvent = function (target, effect) {};
+Game_Action.prototype.itemEffectCommonEvent = function (_target, _effect) {};
 
 Game_Action.prototype.makeSuccess = function (target) {
     target.result().success = true;
 };
 
-Game_Action.prototype.applyItemUserEffect = function (target) {
+Game_Action.prototype.applyItemUserEffect = function (_target) {
     var value = Math.floor(this.item().tpGain * this.subject().tcr);
     this.subject().gainSilentTp(value);
 };

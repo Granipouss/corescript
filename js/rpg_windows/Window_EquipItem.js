@@ -42,7 +42,7 @@ Window_EquipItem.prototype.includes = function (item) {
     return this._actor.canEquip(item);
 };
 
-Window_EquipItem.prototype.isEnabled = function (item) {
+Window_EquipItem.prototype.isEnabled = function (_item) {
     return true;
 };
 

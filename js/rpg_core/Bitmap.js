@@ -233,7 +233,6 @@ Bitmap.snap = function (stage) {
             canvas = renderTexture.baseTexture._canvasRenderTarget.canvas;
         }
         context.drawImage(canvas, 0, 0);
-    } else {
     }
     renderTexture.destroy({ destroyBase: true });
     bitmap._setDirty();

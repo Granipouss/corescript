@@ -447,11 +447,11 @@ Game_CharacterBase.prototype.checkEventTriggerTouchFront = function (d) {
     this.checkEventTriggerTouch(x2, y2);
 };
 
-Game_CharacterBase.prototype.checkEventTriggerTouch = function (x, y) {
+Game_CharacterBase.prototype.checkEventTriggerTouch = function (_x, _y) {
     return false;
 };
 
-Game_CharacterBase.prototype.isMovementSucceeded = function (x, y) {
+Game_CharacterBase.prototype.isMovementSucceeded = function (_x, _y) {
     return this._movementSuccess;
 };
 
