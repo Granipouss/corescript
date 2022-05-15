@@ -11,28 +11,28 @@ function SceneManager() {
  * Gets the current time in ms without on iOS Safari.
  * @private
  */
-SceneManager._getTimeInMsWithoutMobileSafari = function() {
+SceneManager._getTimeInMsWithoutMobileSafari = function () {
     return performance.now();
 };
 
-SceneManager._scene             = null;
-SceneManager._nextScene         = null;
-SceneManager._stack             = [];
-SceneManager._stopped           = false;
-SceneManager._sceneStarted      = false;
-SceneManager._exiting           = false;
-SceneManager._previousClass     = null;
-SceneManager._backgroundBitmap  = null;
-SceneManager._screenWidth       = 816;
-SceneManager._screenHeight      = 624;
-SceneManager._boxWidth          = 816;
-SceneManager._boxHeight         = 624;
+SceneManager._scene = null;
+SceneManager._nextScene = null;
+SceneManager._stack = [];
+SceneManager._stopped = false;
+SceneManager._sceneStarted = false;
+SceneManager._exiting = false;
+SceneManager._previousClass = null;
+SceneManager._backgroundBitmap = null;
+SceneManager._screenWidth = 816;
+SceneManager._screenHeight = 624;
+SceneManager._boxWidth = 816;
+SceneManager._boxHeight = 624;
 SceneManager._deltaTime = 1.0 / 60.0;
 if (!Utils.isMobileSafari()) SceneManager._currentTime = SceneManager._getTimeInMsWithoutMobileSafari();
 SceneManager._accumulator = 0.0;
 SceneManager._frameCount = 0;
 
-SceneManager.run = function(sceneClass) {
+SceneManager.run = function (sceneClass) {
     try {
         this.initialize();
         this.goto(sceneClass);
@@ -42,7 +42,7 @@ SceneManager.run = function(sceneClass) {
     }
 };
 
-SceneManager.initialize = function() {
+SceneManager.initialize = function () {
     this.initProgressWatcher();
     this.initGraphics();
     this.checkFileAccess();
@@ -53,11 +53,11 @@ SceneManager.initialize = function() {
     this.setupErrorHandlers();
 };
 
-SceneManager.initProgressWatcher = function(){
+SceneManager.initProgressWatcher = function () {
     ProgressWatcher.initialize();
 };
 
-SceneManager.initGraphics = function() {
+SceneManager.initGraphics = function () {
     var type = this.preferableRendererType();
     Graphics.initialize(this._screenWidth, this._screenHeight, type);
     Graphics.boxWidth = this._boxWidth;
@@ -71,7 +71,7 @@ SceneManager.initGraphics = function() {
     }
 };
 
-SceneManager.preferableRendererType = function() {
+SceneManager.preferableRendererType = function () {
     if (Utils.isOptionValid('canvas')) {
         return 'canvas';
     } else if (Utils.isOptionValid('webgl')) {
@@ -81,35 +81,35 @@ SceneManager.preferableRendererType = function() {
     }
 };
 
-SceneManager.shouldUseCanvasRenderer = function() {
+SceneManager.shouldUseCanvasRenderer = function () {
     return Utils.isMobileDevice();
 };
 
-SceneManager.checkWebGL = function() {
+SceneManager.checkWebGL = function () {
     if (!Graphics.hasWebGL()) {
         throw new Error('Your browser does not support WebGL.');
     }
 };
 
-SceneManager.checkFileAccess = function() {
+SceneManager.checkFileAccess = function () {
     if (!Utils.canReadGameFiles()) {
         throw new Error('Your browser does not allow to read local files.');
     }
 };
 
-SceneManager.initAudio = function() {
+SceneManager.initAudio = function () {
     var noAudio = Utils.isOptionValid('noaudio');
     if (!WebAudio.initialize(noAudio) && !noAudio) {
         throw new Error('Your browser does not support Web Audio API.');
     }
 };
 
-SceneManager.initInput = function() {
+SceneManager.initInput = function () {
     Input.initialize();
     TouchInput.initialize();
 };
 
-SceneManager.initNwjs = function() {
+SceneManager.initNwjs = function () {
     if (Utils.isNwjs()) {
         var gui = require('nw.gui');
         var win = gui.Window.get();
@@ -122,34 +122,34 @@ SceneManager.initNwjs = function() {
     }
 };
 
-SceneManager.checkPluginErrors = function() {
+SceneManager.checkPluginErrors = function () {
     PluginManager.checkErrors();
 };
 
-SceneManager.setupErrorHandlers = function() {
+SceneManager.setupErrorHandlers = function () {
     window.addEventListener('error', this.onError.bind(this));
     document.addEventListener('keydown', this.onKeyDown.bind(this));
 };
 
-SceneManager.frameCount = function() {
+SceneManager.frameCount = function () {
     return this._frameCount;
 };
 
-SceneManager.setFrameCount = function(frameCount) {
+SceneManager.setFrameCount = function (frameCount) {
     this._frameCount = frameCount;
 };
 
-SceneManager.resetFrameCount = function() {
+SceneManager.resetFrameCount = function () {
     this._frameCount = 0;
 };
 
-SceneManager.requestUpdate = function() {
+SceneManager.requestUpdate = function () {
     if (!this._stopped) {
         requestAnimationFrame(this.update.bind(this));
     }
 };
 
-SceneManager.update = function() {
+SceneManager.update = function () {
     try {
         this.tickStart();
         if (Utils.isMobileSafari()) {
@@ -163,11 +163,11 @@ SceneManager.update = function() {
     }
 };
 
-SceneManager.terminate = function() {
+SceneManager.terminate = function () {
     window.close();
 };
 
-SceneManager.onError = function(e) {
+SceneManager.onError = function (e) {
     console.error(e.message);
     if (e.filename || e.lineno) {
         console.error(e.filename, e.lineno);
@@ -175,29 +175,28 @@ SceneManager.onError = function(e) {
             this.stop();
             Graphics.printError('Error', e.message);
             AudioManager.stopAll();
-        } catch (e2) {
-        }
+        } catch (e2) {}
     }
 };
 
-SceneManager.onKeyDown = function(event) {
+SceneManager.onKeyDown = function (event) {
     if (!event.ctrlKey && !event.altKey) {
         switch (event.keyCode) {
-        case 116:   // F5
-            if (Utils.isNwjs()) {
-                location.reload();
-            }
-            break;
-        case 119:   // F8
-            if (Utils.isNwjs() && Utils.isOptionValid('test')) {
-                require('nw.gui').Window.get().showDevTools();
-            }
-            break;
+            case 116: // F5
+                if (Utils.isNwjs()) {
+                    location.reload();
+                }
+                break;
+            case 119: // F8
+                if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+                    require('nw.gui').Window.get().showDevTools();
+                }
+                break;
         }
     }
 };
 
-SceneManager.catchException = function(e) {
+SceneManager.catchException = function (e) {
     if (e instanceof Error) {
         Graphics.printError(e.name, e.message);
         Graphics.printErrorDetail(e);
@@ -209,28 +208,32 @@ SceneManager.catchException = function(e) {
     this.stop();
 };
 
-SceneManager.tickStart = function() {
+SceneManager.tickStart = function () {
     Graphics.tickStart();
 };
 
-SceneManager.tickEnd = function() {
+SceneManager.tickEnd = function () {
     Graphics.tickEnd();
 };
 
-SceneManager.updateInputData = function() {
+SceneManager.updateInputData = function () {
     Input.update();
     TouchInput.update();
 };
 
-SceneManager.updateMain = function() {
+SceneManager.updateMain = function () {
     if (Utils.isMobileSafari()) {
         this.changeScene();
         this.updateScene();
     } else {
         var newTime = this._getTimeInMsWithoutMobileSafari();
-        if (this._currentTime === undefined) { this._currentTime = newTime; }
+        if (this._currentTime === undefined) {
+            this._currentTime = newTime;
+        }
         var fTime = (newTime - this._currentTime) / 1000;
-        if (fTime > 0.25) { fTime = 0.25; }
+        if (fTime > 0.25) {
+            fTime = 0.25;
+        }
         this._currentTime = newTime;
         this._accumulator += fTime;
         while (this._accumulator >= this._deltaTime) {
@@ -244,11 +247,11 @@ SceneManager.updateMain = function() {
     this.requestUpdate();
 };
 
-SceneManager.updateManagers = function() {
+SceneManager.updateManagers = function () {
     ImageManager.update();
 };
 
-SceneManager.changeScene = function() {
+SceneManager.changeScene = function () {
     if (this.isSceneChanging() && !this.isCurrentSceneBusy()) {
         if (this._scene) {
             this._scene.terminate();
@@ -269,7 +272,7 @@ SceneManager.changeScene = function() {
     }
 };
 
-SceneManager.updateScene = function() {
+SceneManager.updateScene = function () {
     if (this._scene) {
         if (!this._sceneStarted && this._scene.isReady()) {
             this._scene.start();
@@ -283,7 +286,7 @@ SceneManager.updateScene = function() {
     }
 };
 
-SceneManager.renderScene = function() {
+SceneManager.renderScene = function () {
     if (this.isCurrentSceneStarted()) {
         Graphics.render(this._scene);
     } else if (this._scene) {
@@ -291,43 +294,43 @@ SceneManager.renderScene = function() {
     }
 };
 
-SceneManager.updateFrameCount = function() {
+SceneManager.updateFrameCount = function () {
     this._frameCount++;
 };
 
-SceneManager.onSceneCreate = function() {
+SceneManager.onSceneCreate = function () {
     Graphics.startLoading();
 };
 
-SceneManager.onSceneStart = function() {
+SceneManager.onSceneStart = function () {
     Graphics.endLoading();
 };
 
-SceneManager.onSceneLoading = function() {
+SceneManager.onSceneLoading = function () {
     Graphics.updateLoading();
 };
 
-SceneManager.isSceneChanging = function() {
+SceneManager.isSceneChanging = function () {
     return this._exiting || !!this._nextScene;
 };
 
-SceneManager.isCurrentSceneBusy = function() {
+SceneManager.isCurrentSceneBusy = function () {
     return this._scene && this._scene.isBusy();
 };
 
-SceneManager.isCurrentSceneStarted = function() {
+SceneManager.isCurrentSceneStarted = function () {
     return this._scene && this._sceneStarted;
 };
 
-SceneManager.isNextScene = function(sceneClass) {
+SceneManager.isNextScene = function (sceneClass) {
     return this._nextScene && this._nextScene.constructor === sceneClass;
 };
 
-SceneManager.isPreviousScene = function(sceneClass) {
+SceneManager.isPreviousScene = function (sceneClass) {
     return this._previousClass === sceneClass;
 };
 
-SceneManager.goto = function(sceneClass) {
+SceneManager.goto = function (sceneClass) {
     if (sceneClass) {
         this._nextScene = new sceneClass();
     }
@@ -336,12 +339,12 @@ SceneManager.goto = function(sceneClass) {
     }
 };
 
-SceneManager.push = function(sceneClass) {
+SceneManager.push = function (sceneClass) {
     this._stack.push(this._scene.constructor);
     this.goto(sceneClass);
 };
 
-SceneManager.pop = function() {
+SceneManager.pop = function () {
     if (this._stack.length > 0) {
         this.goto(this._stack.pop());
     } else {
@@ -349,37 +352,37 @@ SceneManager.pop = function() {
     }
 };
 
-SceneManager.exit = function() {
+SceneManager.exit = function () {
     this.goto(null);
     this._exiting = true;
 };
 
-SceneManager.clearStack = function() {
+SceneManager.clearStack = function () {
     this._stack = [];
 };
 
-SceneManager.stop = function() {
+SceneManager.stop = function () {
     this._stopped = true;
 };
 
-SceneManager.prepareNextScene = function() {
+SceneManager.prepareNextScene = function () {
     this._nextScene.prepare.apply(this._nextScene, arguments);
 };
 
-SceneManager.snap = function() {
+SceneManager.snap = function () {
     return Bitmap.snap(this._scene);
 };
 
-SceneManager.snapForBackground = function() {
+SceneManager.snapForBackground = function () {
     this._backgroundBitmap = this.snap();
     this._backgroundBitmap.blur();
 };
 
-SceneManager.backgroundBitmap = function() {
+SceneManager.backgroundBitmap = function () {
     return this._backgroundBitmap;
 };
 
-SceneManager.resume = function() {
+SceneManager.resume = function () {
     this._stopped = false;
     this.requestUpdate();
     if (!Utils.isMobileSafari()) {

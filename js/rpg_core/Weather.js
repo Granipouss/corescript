@@ -12,7 +12,7 @@ function Weather() {
 Weather.prototype = Object.create(PIXI.Container.prototype);
 Weather.prototype.constructor = Weather;
 
-Weather.prototype.initialize = function() {
+Weather.prototype.initialize = function () {
     PIXI.Container.call(this);
 
     this._width = Graphics.width;
@@ -52,7 +52,7 @@ Weather.prototype.initialize = function() {
  *
  * @method update
  */
-Weather.prototype.update = function() {
+Weather.prototype.update = function () {
     this._updateDimmer();
     this._updateAllSprites();
 };
@@ -61,7 +61,7 @@ Weather.prototype.update = function() {
  * @method _createBitmaps
  * @private
  */
-Weather.prototype._createBitmaps = function() {
+Weather.prototype._createBitmaps = function () {
     this._rainBitmap = new Bitmap(1, 60);
     this._rainBitmap.fillAll('white');
     this._stormBitmap = new Bitmap(2, 100);
@@ -74,7 +74,7 @@ Weather.prototype._createBitmaps = function() {
  * @method _createDimmer
  * @private
  */
-Weather.prototype._createDimmer = function() {
+Weather.prototype._createDimmer = function () {
     this._dimmerSprite = new ScreenSprite();
     this._dimmerSprite.setColor(80, 80, 80);
     this.addChild(this._dimmerSprite);
@@ -84,7 +84,7 @@ Weather.prototype._createDimmer = function() {
  * @method _updateDimmer
  * @private
  */
-Weather.prototype._updateDimmer = function() {
+Weather.prototype._updateDimmer = function () {
     this._dimmerSprite.opacity = Math.floor(this.power * 6);
 };
 
@@ -92,7 +92,7 @@ Weather.prototype._updateDimmer = function() {
  * @method _updateAllSprites
  * @private
  */
-Weather.prototype._updateAllSprites = function() {
+Weather.prototype._updateAllSprites = function () {
     var maxSprites = Math.floor(this.power * 10);
     while (this._sprites.length < maxSprites) {
         this._addSprite();
@@ -100,7 +100,7 @@ Weather.prototype._updateAllSprites = function() {
     while (this._sprites.length > maxSprites) {
         this._removeSprite();
     }
-    this._sprites.forEach(function(sprite) {
+    this._sprites.forEach(function (sprite) {
         this._updateSprite(sprite);
         sprite.x = sprite.ax - this.origin.x;
         sprite.y = sprite.ay - this.origin.y;
@@ -111,7 +111,7 @@ Weather.prototype._updateAllSprites = function() {
  * @method _addSprite
  * @private
  */
-Weather.prototype._addSprite = function() {
+Weather.prototype._addSprite = function () {
     var sprite = new Sprite(this.viewport);
     sprite.opacity = 0;
     this._sprites.push(sprite);
@@ -122,7 +122,7 @@ Weather.prototype._addSprite = function() {
  * @method _removeSprite
  * @private
  */
-Weather.prototype._removeSprite = function() {
+Weather.prototype._removeSprite = function () {
     this.removeChild(this._sprites.pop());
 };
 
@@ -131,17 +131,17 @@ Weather.prototype._removeSprite = function() {
  * @param {Sprite} sprite
  * @private
  */
-Weather.prototype._updateSprite = function(sprite) {
+Weather.prototype._updateSprite = function (sprite) {
     switch (this.type) {
-    case 'rain':
-        this._updateRainSprite(sprite);
-        break;
-    case 'storm':
-        this._updateStormSprite(sprite);
-        break;
-    case 'snow':
-        this._updateSnowSprite(sprite);
-        break;
+        case 'rain':
+            this._updateRainSprite(sprite);
+            break;
+        case 'storm':
+            this._updateStormSprite(sprite);
+            break;
+        case 'snow':
+            this._updateSnowSprite(sprite);
+            break;
     }
     if (sprite.opacity < 40) {
         this._rebornSprite(sprite);
@@ -153,7 +153,7 @@ Weather.prototype._updateSprite = function(sprite) {
  * @param {Sprite} sprite
  * @private
  */
-Weather.prototype._updateRainSprite = function(sprite) {
+Weather.prototype._updateRainSprite = function (sprite) {
     sprite.bitmap = this._rainBitmap;
     sprite.rotation = Math.PI / 16;
     sprite.ax -= 6 * Math.sin(sprite.rotation);
@@ -166,7 +166,7 @@ Weather.prototype._updateRainSprite = function(sprite) {
  * @param {Sprite} sprite
  * @private
  */
-Weather.prototype._updateStormSprite = function(sprite) {
+Weather.prototype._updateStormSprite = function (sprite) {
     sprite.bitmap = this._stormBitmap;
     sprite.rotation = Math.PI / 8;
     sprite.ax -= 8 * Math.sin(sprite.rotation);
@@ -179,7 +179,7 @@ Weather.prototype._updateStormSprite = function(sprite) {
  * @param {Sprite} sprite
  * @private
  */
-Weather.prototype._updateSnowSprite = function(sprite) {
+Weather.prototype._updateSnowSprite = function (sprite) {
     sprite.bitmap = this._snowBitmap;
     sprite.rotation = Math.PI / 16;
     sprite.ax -= 3 * Math.sin(sprite.rotation);
@@ -192,7 +192,7 @@ Weather.prototype._updateSnowSprite = function(sprite) {
  * @param {Sprite} sprite
  * @private
  */
-Weather.prototype._rebornSprite = function(sprite) {
+Weather.prototype._rebornSprite = function (sprite) {
     sprite.ax = Math.randomInt(Graphics.width + 100) - 100 + this.origin.x;
     sprite.ay = Math.randomInt(Graphics.height + 200) - 200 + this.origin.y;
     sprite.opacity = 160 + Math.randomInt(60);

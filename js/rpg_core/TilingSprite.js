@@ -13,7 +13,7 @@ function TilingSprite() {
 TilingSprite.prototype = Object.create(PIXI.extras.PictureTilingSprite.prototype);
 TilingSprite.prototype.constructor = TilingSprite;
 
-TilingSprite.prototype.initialize = function(bitmap) {
+TilingSprite.prototype.initialize = function (bitmap) {
     var texture = new PIXI.Texture(new PIXI.BaseTexture());
 
     PIXI.extras.PictureTilingSprite.call(this, texture);
@@ -42,7 +42,7 @@ TilingSprite.prototype._renderWebGL_PIXI = PIXI.extras.PictureTilingSprite.proto
  * @param {Object} renderer
  * @private
  */
-TilingSprite.prototype._renderCanvas = function(renderer) {
+TilingSprite.prototype._renderCanvas = function (renderer) {
     if (this._bitmap) {
         this._bitmap.touch();
     }
@@ -58,10 +58,10 @@ TilingSprite.prototype._renderCanvas = function(renderer) {
  * @type Bitmap
  */
 Object.defineProperty(TilingSprite.prototype, 'bitmap', {
-    get: function() {
+    get: function () {
         return this._bitmap;
     },
-    set: function(value) {
+    set: function (value) {
         if (this._bitmap !== value) {
             this._bitmap = value;
             if (this._bitmap) {
@@ -71,7 +71,7 @@ Object.defineProperty(TilingSprite.prototype, 'bitmap', {
             }
         }
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -81,13 +81,13 @@ Object.defineProperty(TilingSprite.prototype, 'bitmap', {
  * @type Number
  */
 Object.defineProperty(TilingSprite.prototype, 'opacity', {
-    get: function() {
+    get: function () {
         return this.alpha * 255;
     },
-    set: function(value) {
+    set: function (value) {
         this.alpha = value.clamp(0, 255) / 255;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -95,8 +95,8 @@ Object.defineProperty(TilingSprite.prototype, 'opacity', {
  *
  * @method update
  */
-TilingSprite.prototype.update = function() {
-    this.children.forEach(function(child) {
+TilingSprite.prototype.update = function () {
+    this.children.forEach(function (child) {
         if (child.update) {
             child.update();
         }
@@ -112,7 +112,7 @@ TilingSprite.prototype.update = function() {
  * @param {Number} width The width of the tiling sprite
  * @param {Number} height The height of the tiling sprite
  */
-TilingSprite.prototype.move = function(x, y, width, height) {
+TilingSprite.prototype.move = function (x, y, width, height) {
     this.x = x || 0;
     this.y = y || 0;
     this._width = width || 0;
@@ -128,7 +128,7 @@ TilingSprite.prototype.move = function(x, y, width, height) {
  * @param {Number} width The width of the frame
  * @param {Number} height The height of the frame
  */
-TilingSprite.prototype.setFrame = function(x, y, width, height) {
+TilingSprite.prototype.setFrame = function (x, y, width, height) {
     this._frame.x = x;
     this._frame.y = y;
     this._frame.width = width;
@@ -140,7 +140,7 @@ TilingSprite.prototype.setFrame = function(x, y, width, height) {
  * @method updateTransform
  * @private
  */
-TilingSprite.prototype.updateTransform = function() {
+TilingSprite.prototype.updateTransform = function () {
     this.tilePosition.x = Math.round(-this.origin.x);
     this.tilePosition.y = Math.round(-this.origin.y);
     this.updateTransformTS();
@@ -152,7 +152,7 @@ TilingSprite.prototype.updateTransformTS = PIXI.extras.TilingSprite.prototype.up
  * @method _onBitmapLoad
  * @private
  */
-TilingSprite.prototype._onBitmapLoad = function() {
+TilingSprite.prototype._onBitmapLoad = function () {
     this.texture.baseTexture = this._bitmap.baseTexture;
     this._refresh();
 };
@@ -161,7 +161,7 @@ TilingSprite.prototype._onBitmapLoad = function() {
  * @method _refresh
  * @private
  */
-TilingSprite.prototype._refresh = function() {
+TilingSprite.prototype._refresh = function () {
     var frame = this._frame.clone();
     if (frame.width === 0 && frame.height === 0 && this._bitmap) {
         frame.width = this._bitmap.width;
@@ -172,7 +172,6 @@ TilingSprite.prototype._refresh = function() {
     this.tilingTexture = null;
 };
 
-
 TilingSprite.prototype._speedUpCustomBlendModes = Sprite.prototype._speedUpCustomBlendModes;
 
 /**
@@ -180,7 +179,7 @@ TilingSprite.prototype._speedUpCustomBlendModes = Sprite.prototype._speedUpCusto
  * @param {Object} renderer
  * @private
  */
-TilingSprite.prototype._renderWebGL = function(renderer) {
+TilingSprite.prototype._renderWebGL = function (renderer) {
     if (this._bitmap) {
         this._bitmap.touch();
         this._bitmap.checkDirty();

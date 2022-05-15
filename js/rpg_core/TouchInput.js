@@ -14,7 +14,7 @@ function TouchInput() {
  * @static
  * @method initialize
  */
-TouchInput.initialize = function() {
+TouchInput.initialize = function () {
     this.clear();
     this._setupEventHandlers();
 };
@@ -43,7 +43,7 @@ TouchInput.keyRepeatInterval = 6;
  * @static
  * @method clear
  */
-TouchInput.clear = function() {
+TouchInput.clear = function () {
     this._mousePressed = false;
     this._screenPressed = false;
     this._pressedTime = 0;
@@ -71,7 +71,7 @@ TouchInput.clear = function() {
  * @static
  * @method update
  */
-TouchInput.update = function() {
+TouchInput.update = function () {
     this._triggered = this._events.triggered;
     this._cancelled = this._events.cancelled;
     this._moved = this._events.moved;
@@ -96,7 +96,7 @@ TouchInput.update = function() {
  * @method isPressed
  * @return {Boolean} True if the mouse button or touchscreen is pressed
  */
-TouchInput.isPressed = function() {
+TouchInput.isPressed = function () {
     return this._mousePressed || this._screenPressed;
 };
 
@@ -107,7 +107,7 @@ TouchInput.isPressed = function() {
  * @method isTriggered
  * @return {Boolean} True if the mouse button or touchscreen is triggered
  */
-TouchInput.isTriggered = function() {
+TouchInput.isTriggered = function () {
     return this._triggered;
 };
 
@@ -119,11 +119,12 @@ TouchInput.isTriggered = function() {
  * @method isRepeated
  * @return {Boolean} True if the mouse button or touchscreen is repeated
  */
-TouchInput.isRepeated = function() {
-    return (this.isPressed() &&
-            (this._triggered ||
-             (this._pressedTime >= this.keyRepeatWait &&
-              this._pressedTime % this.keyRepeatInterval === 0)));
+TouchInput.isRepeated = function () {
+    return (
+        this.isPressed() &&
+        (this._triggered ||
+            (this._pressedTime >= this.keyRepeatWait && this._pressedTime % this.keyRepeatInterval === 0))
+    );
 };
 
 /**
@@ -133,7 +134,7 @@ TouchInput.isRepeated = function() {
  * @method isLongPressed
  * @return {Boolean} True if the left mouse button or touchscreen is long-pressed
  */
-TouchInput.isLongPressed = function() {
+TouchInput.isLongPressed = function () {
     return this.isPressed() && this._pressedTime >= this.keyRepeatWait;
 };
 
@@ -144,7 +145,7 @@ TouchInput.isLongPressed = function() {
  * @method isCancelled
  * @return {Boolean} True if the right mouse button is just pressed
  */
-TouchInput.isCancelled = function() {
+TouchInput.isCancelled = function () {
     return this._cancelled;
 };
 
@@ -155,7 +156,7 @@ TouchInput.isCancelled = function() {
  * @method isMoved
  * @return {Boolean} True if the mouse or a finger on the touchscreen is moved
  */
-TouchInput.isMoved = function() {
+TouchInput.isMoved = function () {
     return this._moved;
 };
 
@@ -166,7 +167,7 @@ TouchInput.isMoved = function() {
  * @method isReleased
  * @return {Boolean} True if the mouse button or touchscreen is released
  */
-TouchInput.isReleased = function() {
+TouchInput.isReleased = function () {
     return this._released;
 };
 
@@ -178,10 +179,10 @@ TouchInput.isReleased = function() {
  * @type Number
  */
 Object.defineProperty(TouchInput, 'wheelX', {
-    get: function() {
+    get: function () {
         return this._wheelX;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -192,10 +193,10 @@ Object.defineProperty(TouchInput, 'wheelX', {
  * @type Number
  */
 Object.defineProperty(TouchInput, 'wheelY', {
-    get: function() {
+    get: function () {
         return this._wheelY;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -206,10 +207,10 @@ Object.defineProperty(TouchInput, 'wheelY', {
  * @type Number
  */
 Object.defineProperty(TouchInput, 'x', {
-    get: function() {
+    get: function () {
         return this._x;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -220,10 +221,10 @@ Object.defineProperty(TouchInput, 'x', {
  * @type Number
  */
 Object.defineProperty(TouchInput, 'y', {
-    get: function() {
+    get: function () {
         return this._y;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -234,10 +235,10 @@ Object.defineProperty(TouchInput, 'y', {
  * @type Number
  */
 Object.defineProperty(TouchInput, 'date', {
-    get: function() {
+    get: function () {
         return this._date;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -245,14 +246,18 @@ Object.defineProperty(TouchInput, 'date', {
  * @method _setupEventHandlers
  * @private
  */
-TouchInput._setupEventHandlers = function() {
+TouchInput._setupEventHandlers = function () {
     var isSupportPassive = Utils.isSupportPassiveEvent();
     document.addEventListener('mousedown', this._onMouseDown.bind(this));
     document.addEventListener('mousemove', this._onMouseMove.bind(this));
     document.addEventListener('mouseup', this._onMouseUp.bind(this));
     document.addEventListener('wheel', this._onWheel.bind(this));
-    document.addEventListener('touchstart', this._onTouchStart.bind(this), isSupportPassive ? {passive: false} : false);
-    document.addEventListener('touchmove', this._onTouchMove.bind(this), isSupportPassive ? {passive: false} : false);
+    document.addEventListener(
+        'touchstart',
+        this._onTouchStart.bind(this),
+        isSupportPassive ? { passive: false } : false
+    );
+    document.addEventListener('touchmove', this._onTouchMove.bind(this), isSupportPassive ? { passive: false } : false);
     document.addEventListener('touchend', this._onTouchEnd.bind(this));
     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));
     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
@@ -265,7 +270,7 @@ TouchInput._setupEventHandlers = function() {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onMouseDown = function(event) {
+TouchInput._onMouseDown = function (event) {
     if (event.button === 0) {
         this._onLeftButtonDown(event);
     } else if (event.button === 1) {
@@ -281,7 +286,7 @@ TouchInput._onMouseDown = function(event) {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onLeftButtonDown = function(event) {
+TouchInput._onLeftButtonDown = function (event) {
     var x = Graphics.pageToCanvasX(event.pageX);
     var y = Graphics.pageToCanvasY(event.pageY);
     if (Graphics.isInsideCanvas(x, y)) {
@@ -297,8 +302,7 @@ TouchInput._onLeftButtonDown = function(event) {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onMiddleButtonDown = function(event) {
-};
+TouchInput._onMiddleButtonDown = function (event) {};
 
 /**
  * @static
@@ -306,7 +310,7 @@ TouchInput._onMiddleButtonDown = function(event) {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onRightButtonDown = function(event) {
+TouchInput._onRightButtonDown = function (event) {
     var x = Graphics.pageToCanvasX(event.pageX);
     var y = Graphics.pageToCanvasY(event.pageY);
     if (Graphics.isInsideCanvas(x, y)) {
@@ -320,7 +324,7 @@ TouchInput._onRightButtonDown = function(event) {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onMouseMove = function(event) {
+TouchInput._onMouseMove = function (event) {
     if (this._mousePressed) {
         var x = Graphics.pageToCanvasX(event.pageX);
         var y = Graphics.pageToCanvasY(event.pageY);
@@ -334,7 +338,7 @@ TouchInput._onMouseMove = function(event) {
  * @param {MouseEvent} event
  * @private
  */
-TouchInput._onMouseUp = function(event) {
+TouchInput._onMouseUp = function (event) {
     if (event.button === 0) {
         var x = Graphics.pageToCanvasX(event.pageX);
         var y = Graphics.pageToCanvasY(event.pageY);
@@ -349,7 +353,7 @@ TouchInput._onMouseUp = function(event) {
  * @param {WheelEvent} event
  * @private
  */
-TouchInput._onWheel = function(event) {
+TouchInput._onWheel = function (event) {
     this._events.wheelX += event.deltaX;
     this._events.wheelY += event.deltaY;
     event.preventDefault();
@@ -361,7 +365,7 @@ TouchInput._onWheel = function(event) {
  * @param {TouchEvent} event
  * @private
  */
-TouchInput._onTouchStart = function(event) {
+TouchInput._onTouchStart = function (event) {
     for (var i = 0; i < event.changedTouches.length; i++) {
         var touch = event.changedTouches[i];
         var x = Graphics.pageToCanvasX(touch.pageX);
@@ -388,7 +392,7 @@ TouchInput._onTouchStart = function(event) {
  * @param {TouchEvent} event
  * @private
  */
-TouchInput._onTouchMove = function(event) {
+TouchInput._onTouchMove = function (event) {
     for (var i = 0; i < event.changedTouches.length; i++) {
         var touch = event.changedTouches[i];
         var x = Graphics.pageToCanvasX(touch.pageX);
@@ -403,7 +407,7 @@ TouchInput._onTouchMove = function(event) {
  * @param {TouchEvent} event
  * @private
  */
-TouchInput._onTouchEnd = function(event) {
+TouchInput._onTouchEnd = function (event) {
     for (var i = 0; i < event.changedTouches.length; i++) {
         var touch = event.changedTouches[i];
         var x = Graphics.pageToCanvasX(touch.pageX);
@@ -419,7 +423,7 @@ TouchInput._onTouchEnd = function(event) {
  * @param {TouchEvent} event
  * @private
  */
-TouchInput._onTouchCancel = function(event) {
+TouchInput._onTouchCancel = function (event) {
     this._screenPressed = false;
 };
 
@@ -429,7 +433,7 @@ TouchInput._onTouchCancel = function(event) {
  * @param {PointerEvent} event
  * @private
  */
-TouchInput._onPointerDown = function(event) {
+TouchInput._onPointerDown = function (event) {
     if (event.pointerType === 'touch' && !event.isPrimary) {
         var x = Graphics.pageToCanvasX(event.pageX);
         var y = Graphics.pageToCanvasY(event.pageY);
@@ -446,7 +450,7 @@ TouchInput._onPointerDown = function(event) {
  * @method _onLostFocus
  * @private
  */
-TouchInput._onLostFocus = function() {
+TouchInput._onLostFocus = function () {
     this.clear();
 };
 
@@ -457,7 +461,7 @@ TouchInput._onLostFocus = function() {
  * @param {Number} y
  * @private
  */
-TouchInput._onTrigger = function(x, y) {
+TouchInput._onTrigger = function (x, y) {
     this._events.triggered = true;
     this._x = x;
     this._y = y;
@@ -471,7 +475,7 @@ TouchInput._onTrigger = function(x, y) {
  * @param {Number} y
  * @private
  */
-TouchInput._onCancel = function(x, y) {
+TouchInput._onCancel = function (x, y) {
     this._events.cancelled = true;
     this._x = x;
     this._y = y;
@@ -484,7 +488,7 @@ TouchInput._onCancel = function(x, y) {
  * @param {Number} y
  * @private
  */
-TouchInput._onMove = function(x, y) {
+TouchInput._onMove = function (x, y) {
     this._events.moved = true;
     this._x = x;
     this._y = y;
@@ -497,7 +501,7 @@ TouchInput._onMove = function(x, y) {
  * @param {Number} y
  * @private
  */
-TouchInput._onRelease = function(x, y) {
+TouchInput._onRelease = function (x, y) {
     this._events.released = true;
     this._x = x;
     this._y = y;

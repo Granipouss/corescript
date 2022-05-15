@@ -7,13 +7,13 @@ function PluginManager() {
     throw new Error('This is a static class');
 }
 
-PluginManager._path         = 'js/plugins/';
-PluginManager._scripts      = [];
-PluginManager._errorUrls    = [];
-PluginManager._parameters   = {};
+PluginManager._path = 'js/plugins/';
+PluginManager._scripts = [];
+PluginManager._errorUrls = [];
+PluginManager._parameters = {};
 
-PluginManager.setup = function(plugins) {
-    plugins.forEach(function(plugin) {
+PluginManager.setup = function (plugins) {
+    plugins.forEach(function (plugin) {
         if (plugin.status && !this._scripts.contains(plugin.name)) {
             this.setParameters(plugin.name, plugin.parameters);
             this.loadScript(plugin.name + '.js');
@@ -22,22 +22,22 @@ PluginManager.setup = function(plugins) {
     }, this);
 };
 
-PluginManager.checkErrors = function() {
+PluginManager.checkErrors = function () {
     var url = this._errorUrls.shift();
     if (url) {
         throw new Error('Failed to load: ' + url);
     }
 };
 
-PluginManager.parameters = function(name) {
+PluginManager.parameters = function (name) {
     return this._parameters[name.toLowerCase()] || {};
 };
 
-PluginManager.setParameters = function(name, parameters) {
+PluginManager.setParameters = function (name, parameters) {
     this._parameters[name.toLowerCase()] = parameters;
 };
 
-PluginManager.loadScript = function(name) {
+PluginManager.loadScript = function (name) {
     var url = this._path + name;
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -48,6 +48,6 @@ PluginManager.loadScript = function(name) {
     document.body.appendChild(script);
 };
 
-PluginManager.onError = function(e) {
+PluginManager.onError = function (e) {
     this._errorUrls.push(e.target._url);
 };

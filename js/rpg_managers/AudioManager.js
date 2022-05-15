@@ -7,87 +7,86 @@ function AudioManager() {
     throw new Error('This is a static class');
 }
 
-AudioManager._masterVolume   = 1;   // (min: 0, max: 1)
-AudioManager._bgmVolume      = 100;
-AudioManager._bgsVolume      = 100;
-AudioManager._meVolume       = 100;
-AudioManager._seVolume       = 100;
-AudioManager._currentBgm     = null;
-AudioManager._currentBgs     = null;
-AudioManager._bgmBuffer      = null;
-AudioManager._bgsBuffer      = null;
-AudioManager._meBuffer       = null;
-AudioManager._seBuffers      = [];
-AudioManager._staticBuffers  = [];
+AudioManager._masterVolume = 1; // (min: 0, max: 1)
+AudioManager._bgmVolume = 100;
+AudioManager._bgsVolume = 100;
+AudioManager._meVolume = 100;
+AudioManager._seVolume = 100;
+AudioManager._currentBgm = null;
+AudioManager._currentBgs = null;
+AudioManager._bgmBuffer = null;
+AudioManager._bgsBuffer = null;
+AudioManager._meBuffer = null;
+AudioManager._seBuffers = [];
+AudioManager._staticBuffers = [];
 AudioManager._replayFadeTime = 0.5;
-AudioManager._path           = 'audio/';
-AudioManager._blobUrl        = null;
+AudioManager._path = 'audio/';
+AudioManager._blobUrl = null;
 
 Object.defineProperty(AudioManager, 'masterVolume', {
-    get: function() {
+    get: function () {
         return this._masterVolume;
     },
-    set: function(value) {
+    set: function (value) {
         this._masterVolume = value;
         WebAudio.setMasterVolume(this._masterVolume);
         Graphics.setVideoVolume(this._masterVolume);
     },
-    configurable: true
+    configurable: true,
 });
 
 Object.defineProperty(AudioManager, 'bgmVolume', {
-    get: function() {
+    get: function () {
         return this._bgmVolume;
     },
-    set: function(value) {
+    set: function (value) {
         this._bgmVolume = value;
         this.updateBgmParameters(this._currentBgm);
     },
-    configurable: true
+    configurable: true,
 });
 
 Object.defineProperty(AudioManager, 'bgsVolume', {
-    get: function() {
+    get: function () {
         return this._bgsVolume;
     },
-    set: function(value) {
+    set: function (value) {
         this._bgsVolume = value;
         this.updateBgsParameters(this._currentBgs);
     },
-    configurable: true
+    configurable: true,
 });
 
 Object.defineProperty(AudioManager, 'meVolume', {
-    get: function() {
+    get: function () {
         return this._meVolume;
     },
-    set: function(value) {
+    set: function (value) {
         this._meVolume = value;
         this.updateMeParameters(this._currentMe);
     },
-    configurable: true
+    configurable: true,
 });
 
 Object.defineProperty(AudioManager, 'seVolume', {
-    get: function() {
+    get: function () {
         return this._seVolume;
     },
-    set: function(value) {
+    set: function (value) {
         this._seVolume = value;
     },
-    configurable: true
+    configurable: true,
 });
 
-AudioManager.playBgm = function(bgm, pos) {
+AudioManager.playBgm = function (bgm, pos) {
     if (this.isCurrentBgm(bgm)) {
         this.updateBgmParameters(bgm);
     } else {
         this.stopBgm();
-        if (bgm.name) { 
-            if(Decrypter.hasEncryptedAudio && this.shouldUseHtml5Audio()){
+        if (bgm.name) {
+            if (Decrypter.hasEncryptedAudio && this.shouldUseHtml5Audio()) {
                 this.playEncryptedBgm(bgm, pos);
-            }
-            else {
+            } else {
                 this._bgmBuffer = this.createBuffer('bgm', bgm.name);
                 this.updateBgmParameters(bgm);
                 if (!this._meBuffer) {
@@ -99,14 +98,14 @@ AudioManager.playBgm = function(bgm, pos) {
     this.updateCurrentBgm(bgm, pos);
 };
 
-AudioManager.playEncryptedBgm = function(bgm, pos) {
+AudioManager.playEncryptedBgm = function (bgm, pos) {
     var ext = this.audioFileExt();
     var url = this._path + 'bgm/' + encodeURIComponent(bgm.name) + ext;
     url = Decrypter.extToEncryptExt(url);
     Decrypter.decryptHTML5Audio(url, bgm, pos);
 };
 
-AudioManager.createDecryptBuffer = function(url, bgm, pos){
+AudioManager.createDecryptBuffer = function (url, bgm, pos) {
     this._blobUrl = url;
     this._bgmBuffer = this.createBuffer('bgm', bgm.name);
     this.updateBgmParameters(bgm);
@@ -116,7 +115,7 @@ AudioManager.createDecryptBuffer = function(url, bgm, pos){
     this.updateCurrentBgm(bgm, pos);
 };
 
-AudioManager.replayBgm = function(bgm) {
+AudioManager.replayBgm = function (bgm) {
     if (this.isCurrentBgm(bgm)) {
         this.updateBgmParameters(bgm);
     } else {
@@ -127,26 +126,25 @@ AudioManager.replayBgm = function(bgm) {
     }
 };
 
-AudioManager.isCurrentBgm = function(bgm) {
-    return (this._currentBgm && this._bgmBuffer &&
-            this._currentBgm.name === bgm.name);
+AudioManager.isCurrentBgm = function (bgm) {
+    return this._currentBgm && this._bgmBuffer && this._currentBgm.name === bgm.name;
 };
 
-AudioManager.updateBgmParameters = function(bgm) {
+AudioManager.updateBgmParameters = function (bgm) {
     this.updateBufferParameters(this._bgmBuffer, this._bgmVolume, bgm);
 };
 
-AudioManager.updateCurrentBgm = function(bgm, pos) {
+AudioManager.updateCurrentBgm = function (bgm, pos) {
     this._currentBgm = {
         name: bgm.name,
         volume: bgm.volume,
         pitch: bgm.pitch,
         pan: bgm.pan,
-        pos: pos
+        pos: pos,
     };
 };
 
-AudioManager.stopBgm = function() {
+AudioManager.stopBgm = function () {
     if (this._bgmBuffer) {
         this._bgmBuffer.stop();
         this._bgmBuffer = null;
@@ -154,20 +152,20 @@ AudioManager.stopBgm = function() {
     }
 };
 
-AudioManager.fadeOutBgm = function(duration) {
+AudioManager.fadeOutBgm = function (duration) {
     if (this._bgmBuffer && this._currentBgm) {
         this._bgmBuffer.fadeOut(duration);
         this._currentBgm = null;
     }
 };
 
-AudioManager.fadeInBgm = function(duration) {
+AudioManager.fadeInBgm = function (duration) {
     if (this._bgmBuffer && this._currentBgm) {
         this._bgmBuffer.fadeIn(duration);
     }
 };
 
-AudioManager.playBgs = function(bgs, pos) {
+AudioManager.playBgs = function (bgs, pos) {
     if (this.isCurrentBgs(bgs)) {
         this.updateBgsParameters(bgs);
     } else {
@@ -181,7 +179,7 @@ AudioManager.playBgs = function(bgs, pos) {
     this.updateCurrentBgs(bgs, pos);
 };
 
-AudioManager.replayBgs = function(bgs) {
+AudioManager.replayBgs = function (bgs) {
     if (this.isCurrentBgs(bgs)) {
         this.updateBgsParameters(bgs);
     } else {
@@ -192,26 +190,25 @@ AudioManager.replayBgs = function(bgs) {
     }
 };
 
-AudioManager.isCurrentBgs = function(bgs) {
-    return (this._currentBgs && this._bgsBuffer &&
-            this._currentBgs.name === bgs.name);
+AudioManager.isCurrentBgs = function (bgs) {
+    return this._currentBgs && this._bgsBuffer && this._currentBgs.name === bgs.name;
 };
 
-AudioManager.updateBgsParameters = function(bgs) {
+AudioManager.updateBgsParameters = function (bgs) {
     this.updateBufferParameters(this._bgsBuffer, this._bgsVolume, bgs);
 };
 
-AudioManager.updateCurrentBgs = function(bgs, pos) {
+AudioManager.updateCurrentBgs = function (bgs, pos) {
     this._currentBgs = {
         name: bgs.name,
         volume: bgs.volume,
         pitch: bgs.pitch,
         pan: bgs.pan,
-        pos: pos
+        pos: pos,
     };
 };
 
-AudioManager.stopBgs = function() {
+AudioManager.stopBgs = function () {
     if (this._bgsBuffer) {
         this._bgsBuffer.stop();
         this._bgsBuffer = null;
@@ -219,20 +216,20 @@ AudioManager.stopBgs = function() {
     }
 };
 
-AudioManager.fadeOutBgs = function(duration) {
+AudioManager.fadeOutBgs = function (duration) {
     if (this._bgsBuffer && this._currentBgs) {
         this._bgsBuffer.fadeOut(duration);
         this._currentBgs = null;
     }
 };
 
-AudioManager.fadeInBgs = function(duration) {
+AudioManager.fadeInBgs = function (duration) {
     if (this._bgsBuffer && this._currentBgs) {
         this._bgsBuffer.fadeIn(duration);
     }
 };
 
-AudioManager.playMe = function(me) {
+AudioManager.playMe = function (me) {
     this.stopMe();
     if (me.name) {
         if (this._bgmBuffer && this._currentBgm) {
@@ -246,17 +243,17 @@ AudioManager.playMe = function(me) {
     }
 };
 
-AudioManager.updateMeParameters = function(me) {
+AudioManager.updateMeParameters = function (me) {
     this.updateBufferParameters(this._meBuffer, this._meVolume, me);
 };
 
-AudioManager.fadeOutMe = function(duration) {
+AudioManager.fadeOutMe = function (duration) {
     if (this._meBuffer) {
         this._meBuffer.fadeOut(duration);
     }
 };
 
-AudioManager.stopMe = function() {
+AudioManager.stopMe = function () {
     if (this._meBuffer) {
         this._meBuffer.stop();
         this._meBuffer = null;
@@ -267,9 +264,9 @@ AudioManager.stopMe = function() {
     }
 };
 
-AudioManager.playSe = function(se) {
+AudioManager.playSe = function (se) {
     if (se.name) {
-        this._seBuffers = this._seBuffers.filter(function(audio) {
+        this._seBuffers = this._seBuffers.filter(function (audio) {
             return audio.isPlaying();
         });
         var buffer = this.createBuffer('se', se.name);
@@ -279,18 +276,18 @@ AudioManager.playSe = function(se) {
     }
 };
 
-AudioManager.updateSeParameters = function(buffer, se) {
+AudioManager.updateSeParameters = function (buffer, se) {
     this.updateBufferParameters(buffer, this._seVolume, se);
 };
 
-AudioManager.stopSe = function() {
-    this._seBuffers.forEach(function(buffer) {
+AudioManager.stopSe = function () {
+    this._seBuffers.forEach(function (buffer) {
         buffer.stop();
     });
     this._seBuffers = [];
 };
 
-AudioManager.playStaticSe = function(se) {
+AudioManager.playStaticSe = function (se) {
     if (se.name) {
         this.loadStaticSe(se);
         for (var i = 0; i < this._staticBuffers.length; i++) {
@@ -305,7 +302,7 @@ AudioManager.playStaticSe = function(se) {
     }
 };
 
-AudioManager.loadStaticSe = function(se) {
+AudioManager.loadStaticSe = function (se) {
     if (se.name && !this.isStaticSe(se)) {
         var buffer = this.createBuffer('se', se.name);
         buffer._reservedSeName = se.name;
@@ -316,7 +313,7 @@ AudioManager.loadStaticSe = function(se) {
     }
 };
 
-AudioManager.isStaticSe = function(se) {
+AudioManager.isStaticSe = function (se) {
     for (var i = 0; i < this._staticBuffers.length; i++) {
         var buffer = this._staticBuffers[i];
         if (buffer._reservedSeName === se.name) {
@@ -326,14 +323,14 @@ AudioManager.isStaticSe = function(se) {
     return false;
 };
 
-AudioManager.stopAll = function() {
+AudioManager.stopAll = function () {
     this.stopMe();
     this.stopBgm();
     this.stopBgs();
     this.stopSe();
 };
 
-AudioManager.saveBgm = function() {
+AudioManager.saveBgm = function () {
     if (this._currentBgm) {
         var bgm = this._currentBgm;
         return {
@@ -341,14 +338,14 @@ AudioManager.saveBgm = function() {
             volume: bgm.volume,
             pitch: bgm.pitch,
             pan: bgm.pan,
-            pos: this._bgmBuffer ? this._bgmBuffer.seek() : 0
+            pos: this._bgmBuffer ? this._bgmBuffer.seek() : 0,
         };
     } else {
         return this.makeEmptyAudioObject();
     }
 };
 
-AudioManager.saveBgs = function() {
+AudioManager.saveBgs = function () {
     if (this._currentBgs) {
         var bgs = this._currentBgs;
         return {
@@ -356,22 +353,22 @@ AudioManager.saveBgs = function() {
             volume: bgs.volume,
             pitch: bgs.pitch,
             pan: bgs.pan,
-            pos: this._bgsBuffer ? this._bgsBuffer.seek() : 0
+            pos: this._bgsBuffer ? this._bgsBuffer.seek() : 0,
         };
     } else {
         return this.makeEmptyAudioObject();
     }
 };
 
-AudioManager.makeEmptyAudioObject = function() {
+AudioManager.makeEmptyAudioObject = function () {
     return { name: '', volume: 0, pitch: 0 };
 };
 
-AudioManager.createBuffer = function(folder, name) {
+AudioManager.createBuffer = function (folder, name) {
     var ext = this.audioFileExt();
     var url = this._path + folder + '/' + encodeURIComponent(name) + ext;
     if (this.shouldUseHtml5Audio() && folder === 'bgm') {
-        if(this._blobUrl) Html5Audio.setup(this._blobUrl);
+        if (this._blobUrl) Html5Audio.setup(this._blobUrl);
         else Html5Audio.setup(url);
         return Html5Audio;
     } else {
@@ -381,15 +378,15 @@ AudioManager.createBuffer = function(folder, name) {
     }
 };
 
-AudioManager.updateBufferParameters = function(buffer, configVolume, audio) {
+AudioManager.updateBufferParameters = function (buffer, configVolume, audio) {
     if (buffer && audio) {
-        buffer.volume = configVolume * (audio.volume || 0) / 10000;
+        buffer.volume = (configVolume * (audio.volume || 0)) / 10000;
         buffer.pitch = (audio.pitch || 0) / 100;
         buffer.pan = (audio.pan || 0) / 100;
     }
 };
 
-AudioManager.audioFileExt = function() {
+AudioManager.audioFileExt = function () {
     if (WebAudio.canPlayOgg() && !Utils.isMobileDevice()) {
         return '.ogg';
     } else {
@@ -397,34 +394,38 @@ AudioManager.audioFileExt = function() {
     }
 };
 
-AudioManager.shouldUseHtml5Audio = function() {
+AudioManager.shouldUseHtml5Audio = function () {
     // The only case where we wanted html5audio was android/ no encrypt
     // Atsuma-ru asked to force webaudio there too, so just return false for ALL    // return Utils.isAndroidChrome() && !Decrypter.hasEncryptedAudio;
- return false;
+    return false;
 };
 
-AudioManager.checkErrors = function() {
+AudioManager.checkErrors = function () {
     this.checkWebAudioError(this._bgmBuffer);
     this.checkWebAudioError(this._bgsBuffer);
     this.checkWebAudioError(this._meBuffer);
-    this._seBuffers.forEach(function(buffer) {
-        this.checkWebAudioError(buffer);
-    }.bind(this));
-    this._staticBuffers.forEach(function(buffer) {
-        this.checkWebAudioError(buffer);
-    }.bind(this));
+    this._seBuffers.forEach(
+        function (buffer) {
+            this.checkWebAudioError(buffer);
+        }.bind(this)
+    );
+    this._staticBuffers.forEach(
+        function (buffer) {
+            this.checkWebAudioError(buffer);
+        }.bind(this)
+    );
 };
 
-AudioManager.checkWebAudioError = function(webAudio) {
+AudioManager.checkWebAudioError = function (webAudio) {
     if (webAudio && webAudio.isError()) {
         throw new Error('Failed to load: ' + webAudio.url);
     }
 };
 
-AudioManager.setCreationHook = function(hook){
+AudioManager.setCreationHook = function (hook) {
     this._creationHook = hook;
 };
 
-AudioManager._callCreationHook = function(audio){
-    if(this._creationHook) this._creationHook(audio);
+AudioManager._callCreationHook = function (audio) {
+    if (this._creationHook) this._creationHook(audio);
 };

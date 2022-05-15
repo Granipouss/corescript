@@ -58,8 +58,10 @@ CacheEntry.prototype.setTimeToLive = function (ticks, seconds) {
 
 CacheEntry.prototype.isStillAlive = function () {
     var cache = this.cache;
-    return ((this.ttlTicks == 0) || (this.touchTicks + this.ttlTicks < cache.updateTicks )) &&
-        ((this.ttlSeconds == 0) || (this.touchSeconds + this.ttlSeconds < cache.updateSeconds ));
+    return (
+        (this.ttlTicks == 0 || this.touchTicks + this.ttlTicks < cache.updateTicks) &&
+        (this.ttlSeconds == 0 || this.touchSeconds + this.ttlSeconds < cache.updateSeconds)
+    );
 };
 
 /**

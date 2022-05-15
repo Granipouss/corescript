@@ -25,9 +25,9 @@ PIXI.tilemap.TileRenderer.DO_CLEAR = true;
  * @method _hackRenderer
  * @private
  */
-ShaderTilemap.prototype._hackRenderer = function(renderer) {
+ShaderTilemap.prototype._hackRenderer = function (renderer) {
     var af = this.animationFrame % 4;
-    if (af==3) af = 1;
+    if (af == 3) af = 1;
     renderer.plugins.tilemap.tileAnim[0] = af * this._tileWidth;
     renderer.plugins.tilemap.tileAnim[1] = (this.animationFrame % 3) * this._tileHeight;
     return renderer;
@@ -39,11 +39,10 @@ ShaderTilemap.prototype._hackRenderer = function(renderer) {
  * @method renderCanvas
  * @param {Object} pixi renderer
  */
-ShaderTilemap.prototype.renderCanvas = function(renderer) {
+ShaderTilemap.prototype.renderCanvas = function (renderer) {
     this._hackRenderer(renderer);
     PIXI.Container.prototype.renderCanvas.call(this, renderer);
 };
-
 
 /**
  * PIXI render method
@@ -51,7 +50,7 @@ ShaderTilemap.prototype.renderCanvas = function(renderer) {
  * @method renderWebGL
  * @param {Object} pixi renderer
  */
-ShaderTilemap.prototype.renderWebGL = function(renderer) {
+ShaderTilemap.prototype.renderWebGL = function (renderer) {
     this._hackRenderer(renderer);
     PIXI.Container.prototype.renderWebGL.call(this, renderer);
 };
@@ -61,11 +60,11 @@ ShaderTilemap.prototype.renderWebGL = function(renderer) {
  *
  * @method refresh
  */
-ShaderTilemap.prototype.refresh = function() {
+ShaderTilemap.prototype.refresh = function () {
     if (this._lastBitmapLength !== this.bitmaps.length) {
         this._lastBitmapLength = this.bitmaps.length;
         this.refreshTileset();
-    };
+    }
     this._needsRepaint = true;
 };
 
@@ -74,8 +73,10 @@ ShaderTilemap.prototype.refresh = function() {
  *
  * @method updateBitmaps
  */
-ShaderTilemap.prototype.refreshTileset = function() {
-    var bitmaps = this.bitmaps.map(function(x) { return x._baseTexture ? new PIXI.Texture(x._baseTexture) : x; } );
+ShaderTilemap.prototype.refreshTileset = function () {
+    var bitmaps = this.bitmaps.map(function (x) {
+        return x._baseTexture ? new PIXI.Texture(x._baseTexture) : x;
+    });
     this.lowerLayer.setBitmaps(bitmaps);
     this.upperLayer.setBitmaps(bitmaps);
 };
@@ -84,7 +85,7 @@ ShaderTilemap.prototype.refreshTileset = function() {
  * @method updateTransform
  * @private
  */
-ShaderTilemap.prototype.updateTransform = function() {
+ShaderTilemap.prototype.updateTransform = function () {
     if (this.roundPixels) {
         var ox = Math.floor(this.origin.x);
         var oy = Math.floor(this.origin.y);
@@ -95,8 +96,7 @@ ShaderTilemap.prototype.updateTransform = function() {
     var startX = Math.floor((ox - this._margin) / this._tileWidth);
     var startY = Math.floor((oy - this._margin) / this._tileHeight);
     this._updateLayerPositions(startX, startY);
-    if (this._needsRepaint ||
-        this._lastStartX !== startX || this._lastStartY !== startY) {
+    if (this._needsRepaint || this._lastStartX !== startX || this._lastStartY !== startY) {
         this._lastStartX = startX;
         this._lastStartY = startY;
         this._paintAllTiles(startX, startY);
@@ -110,27 +110,27 @@ ShaderTilemap.prototype.updateTransform = function() {
  * @method _createLayers
  * @private
  */
-ShaderTilemap.prototype._createLayers = function() {
+ShaderTilemap.prototype._createLayers = function () {
     var width = this._width;
     var height = this._height;
     var margin = this._margin;
     var tileCols = Math.ceil(width / this._tileWidth) + 1;
     var tileRows = Math.ceil(height / this._tileHeight) + 1;
-    var layerWidth = this._layerWidth = tileCols * this._tileWidth;
-    var layerHeight = this._layerHeight = tileRows * this._tileHeight;
+    var layerWidth = (this._layerWidth = tileCols * this._tileWidth);
+    var layerHeight = (this._layerHeight = tileRows * this._tileHeight);
     this._needsRepaint = true;
 
     if (!this.lowerZLayer) {
         //@hackerham: create layers only in initialization. Doesn't depend on width/height
-        this.addChild(this.lowerZLayer = new PIXI.tilemap.ZLayer(this, 0));
-        this.addChild(this.upperZLayer = new PIXI.tilemap.ZLayer(this, 4));
+        this.addChild((this.lowerZLayer = new PIXI.tilemap.ZLayer(this, 0)));
+        this.addChild((this.upperZLayer = new PIXI.tilemap.ZLayer(this, 4)));
 
         var parameters = PluginManager.parameters('ShaderTilemap');
         var useSquareShader = Number(parameters.hasOwnProperty('squareShader') ? parameters['squareShader'] : 0);
 
-        this.lowerZLayer.addChild(this.lowerLayer = new PIXI.tilemap.CompositeRectTileLayer(0, [], useSquareShader));
+        this.lowerZLayer.addChild((this.lowerLayer = new PIXI.tilemap.CompositeRectTileLayer(0, [], useSquareShader)));
         this.lowerLayer.shadowColor = new Float32Array([0.0, 0.0, 0.0, 0.5]);
-        this.upperZLayer.addChild(this.upperLayer = new PIXI.tilemap.CompositeRectTileLayer(4, [], useSquareShader));
+        this.upperZLayer.addChild((this.upperLayer = new PIXI.tilemap.CompositeRectTileLayer(4, [], useSquareShader)));
     }
 };
 
@@ -140,7 +140,7 @@ ShaderTilemap.prototype._createLayers = function() {
  * @param {Number} startY
  * @private
  */
-ShaderTilemap.prototype._updateLayerPositions = function(startX, startY) {
+ShaderTilemap.prototype._updateLayerPositions = function (startX, startY) {
     if (this.roundPixels) {
         var ox = Math.floor(this.origin.x);
         var oy = Math.floor(this.origin.y);
@@ -160,7 +160,7 @@ ShaderTilemap.prototype._updateLayerPositions = function(startX, startY) {
  * @param {Number} startY
  * @private
  */
-ShaderTilemap.prototype._paintAllTiles = function(startX, startY) {
+ShaderTilemap.prototype._paintAllTiles = function (startX, startY) {
     this.lowerZLayer.clear();
     this.upperZLayer.clear();
     var tileCols = Math.ceil(this._width / this._tileWidth) + 1;
@@ -180,10 +180,11 @@ ShaderTilemap.prototype._paintAllTiles = function(startX, startY) {
  * @param {Number} y
  * @private
  */
-ShaderTilemap.prototype._paintTiles = function(startX, startY, x, y) {
+ShaderTilemap.prototype._paintTiles = function (startX, startY, x, y) {
     var mx = startX + x;
     var my = startY + y;
-    var dx = x * this._tileWidth, dy = y * this._tileHeight;
+    var dx = x * this._tileWidth,
+        dy = y * this._tileHeight;
     var tileId0 = this._readMapData(mx, my, 0);
     var tileId1 = this._readMapData(mx, my, 1);
     var tileId2 = this._readMapData(mx, my, 2);
@@ -236,7 +237,7 @@ ShaderTilemap.prototype._paintTiles = function(startX, startY, x, y) {
  * @param {Number} dy
  * @private
  */
-ShaderTilemap.prototype._drawTile = function(layer, tileId, dx, dy) {
+ShaderTilemap.prototype._drawTile = function (layer, tileId, dx, dy) {
     if (Tilemap.isVisibleTile(tileId)) {
         if (Tilemap.isAutotile(tileId)) {
             this._drawAutotile(layer, tileId, dx, dy);
@@ -254,7 +255,7 @@ ShaderTilemap.prototype._drawTile = function(layer, tileId, dx, dy) {
  * @param {Number} dy
  * @private
  */
-ShaderTilemap.prototype._drawNormalTile = function(layer, tileId, dx, dy) {
+ShaderTilemap.prototype._drawNormalTile = function (layer, tileId, dx, dy) {
     var setNumber = 0;
 
     if (Tilemap.isTileA5(tileId)) {
@@ -265,8 +266,8 @@ ShaderTilemap.prototype._drawNormalTile = function(layer, tileId, dx, dy) {
 
     var w = this._tileWidth;
     var h = this._tileHeight;
-    var sx = (Math.floor(tileId / 128) % 2 * 8 + tileId % 8) * w;
-    var sy = (Math.floor(tileId % 256 / 8) % 16) * h;
+    var sx = ((Math.floor(tileId / 128) % 2) * 8 + (tileId % 8)) * w;
+    var sy = (Math.floor((tileId % 256) / 8) % 16) * h;
 
     layer.addRect(setNumber, sx, sy, dx, dy, w, h);
 };
@@ -279,7 +280,7 @@ ShaderTilemap.prototype._drawNormalTile = function(layer, tileId, dx, dy) {
  * @param {Number} dy
  * @private
  */
-ShaderTilemap.prototype._drawAutotile = function(layer, tileId, dx, dy) {
+ShaderTilemap.prototype._drawAutotile = function (layer, tileId, dx, dy) {
     var autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
     var kind = Tilemap.getAutotileKind(tileId);
     var shape = Tilemap.getAutotileShape(tileId);
@@ -289,7 +290,8 @@ ShaderTilemap.prototype._drawAutotile = function(layer, tileId, dx, dy) {
     var by = 0;
     var setNumber = 0;
     var isTable = false;
-    var animX = 0, animY = 0;
+    var animX = 0,
+        animY = 0;
 
     if (Tilemap.isTileA1(tileId)) {
         setNumber = 0;
@@ -307,11 +309,10 @@ ShaderTilemap.prototype._drawAutotile = function(layer, tileId, dx, dy) {
             by = 3;
         } else {
             bx = Math.floor(tx / 4) * 8;
-            by = ty * 6 + Math.floor(tx / 2) % 2 * 3;
+            by = ty * 6 + (Math.floor(tx / 2) % 2) * 3;
             if (kind % 2 === 0) {
                 animX = 2;
-            }
-            else {
+            } else {
                 bx += 6;
                 autotileTable = Tilemap.WATERFALL_AUTOTILE_TABLE;
                 animY = 1;
@@ -351,12 +352,12 @@ ShaderTilemap.prototype._drawAutotile = function(layer, tileId, dx, dy) {
             var qsy2 = 3;
             if (qsy === 1) {
                 //qsx2 = [0, 3, 2, 1][qsx];
-                qsx2 = (4-qsx)%4;
+                qsx2 = (4 - qsx) % 4;
             }
             var sx2 = (bx * 2 + qsx2) * w1;
             var sy2 = (by * 2 + qsy2) * h1;
             layer.addRect(setNumber, sx2, sy2, dx1, dy1, w1, h1, animX, animY);
-            layer.addRect(setNumber, sx1, sy1, dx1, dy1+h1/2, w1, h1/2, animX, animY);
+            layer.addRect(setNumber, sx1, sy1, dx1, dy1 + h1 / 2, w1, h1 / 2, animX, animY);
         } else {
             layer.addRect(setNumber, sx1, sy1, dx1, dy1, w1, h1, animX, animY);
         }
@@ -371,7 +372,7 @@ ShaderTilemap.prototype._drawAutotile = function(layer, tileId, dx, dy) {
  * @param {Number} dy
  * @private
  */
-ShaderTilemap.prototype._drawTableEdge = function(layer, tileId, dx, dy) {
+ShaderTilemap.prototype._drawTableEdge = function (layer, tileId, dx, dy) {
     if (Tilemap.isTileA2(tileId)) {
         var autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
         var kind = Tilemap.getAutotileKind(tileId);
@@ -391,7 +392,7 @@ ShaderTilemap.prototype._drawTableEdge = function(layer, tileId, dx, dy) {
             var sy1 = (by * 2 + qsy) * h1 + h1 / 2;
             var dx1 = dx + (i % 2) * w1;
             var dy1 = dy + Math.floor(i / 2) * h1;
-            layer.addRect(setNumber, sx1, sy1, dx1, dy1, w1, h1/2);
+            layer.addRect(setNumber, sx1, sy1, dx1, dy1, w1, h1 / 2);
         }
     }
 };
@@ -403,7 +404,7 @@ ShaderTilemap.prototype._drawTableEdge = function(layer, tileId, dx, dy) {
  * @param {Number} dy
  * @private
  */
-ShaderTilemap.prototype._drawShadow = function(layer, shadowBits, dx, dy) {
+ShaderTilemap.prototype._drawShadow = function (layer, shadowBits, dx, dy) {
     if (shadowBits & 0x0f) {
         var w1 = this._tileWidth / 2;
         var h1 = this._tileHeight / 2;

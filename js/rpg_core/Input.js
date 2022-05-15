@@ -14,7 +14,7 @@ function Input() {
  * @static
  * @method initialize
  */
-Input.initialize = function() {
+Input.initialize = function () {
     this.clear();
     this._wrapNwjsAlert();
     this._setupEventHandlers();
@@ -46,30 +46,30 @@ Input.keyRepeatInterval = 6;
  * @type Object
  */
 Input.keyMapper = {
-    9: 'tab',       // tab
-    13: 'ok',       // enter
-    16: 'shift',    // shift
-    17: 'control',  // control
-    18: 'control',  // alt
-    27: 'escape',   // escape
-    32: 'ok',       // space
-    33: 'pageup',   // pageup
+    9: 'tab', // tab
+    13: 'ok', // enter
+    16: 'shift', // shift
+    17: 'control', // control
+    18: 'control', // alt
+    27: 'escape', // escape
+    32: 'ok', // space
+    33: 'pageup', // pageup
     34: 'pagedown', // pagedown
-    37: 'left',     // left arrow
-    38: 'up',       // up arrow
-    39: 'right',    // right arrow
-    40: 'down',     // down arrow
-    45: 'escape',   // insert
-    81: 'pageup',   // Q
+    37: 'left', // left arrow
+    38: 'up', // up arrow
+    39: 'right', // right arrow
+    40: 'down', // down arrow
+    45: 'escape', // insert
+    81: 'pageup', // Q
     87: 'pagedown', // W
-    88: 'escape',   // X
-    90: 'ok',       // Z
-    96: 'escape',   // numpad 0
-    98: 'down',     // numpad 2
-    100: 'left',    // numpad 4
-    102: 'right',   // numpad 6
-    104: 'up',      // numpad 8
-    120: 'debug'    // F9
+    88: 'escape', // X
+    90: 'ok', // Z
+    96: 'escape', // numpad 0
+    98: 'down', // numpad 2
+    100: 'left', // numpad 4
+    102: 'right', // numpad 6
+    104: 'up', // numpad 8
+    120: 'debug', // F9
 };
 
 /**
@@ -80,16 +80,16 @@ Input.keyMapper = {
  * @type Object
  */
 Input.gamepadMapper = {
-    0: 'ok',        // A
-    1: 'cancel',    // B
-    2: 'shift',     // X
-    3: 'menu',      // Y
-    4: 'pageup',    // LB
-    5: 'pagedown',  // RB
-    12: 'up',       // D-pad up
-    13: 'down',     // D-pad down
-    14: 'left',     // D-pad left
-    15: 'right',    // D-pad right
+    0: 'ok', // A
+    1: 'cancel', // B
+    2: 'shift', // X
+    3: 'menu', // Y
+    4: 'pageup', // LB
+    5: 'pagedown', // RB
+    12: 'up', // D-pad up
+    13: 'down', // D-pad down
+    14: 'left', // D-pad left
+    15: 'right', // D-pad right
 };
 
 /**
@@ -98,7 +98,7 @@ Input.gamepadMapper = {
  * @static
  * @method clear
  */
-Input.clear = function() {
+Input.clear = function () {
     this._currentState = {};
     this._previousState = {};
     this._gamepadStates = [];
@@ -116,7 +116,7 @@ Input.clear = function() {
  * @static
  * @method update
  */
-Input.update = function() {
+Input.update = function () {
     this._pollGamepads();
     if (this._currentState[this._latestButton]) {
         this._pressedTime++;
@@ -142,7 +142,7 @@ Input.update = function() {
  * @param {String} keyName The mapped name of the key
  * @return {Boolean} True if the key is pressed
  */
-Input.isPressed = function(keyName) {
+Input.isPressed = function (keyName) {
     if (this._isEscapeCompatible(keyName) && this.isPressed('escape')) {
         return true;
     } else {
@@ -158,7 +158,7 @@ Input.isPressed = function(keyName) {
  * @param {String} keyName The mapped name of the key
  * @return {Boolean} True if the key is triggered
  */
-Input.isTriggered = function(keyName) {
+Input.isTriggered = function (keyName) {
     if (this._isEscapeCompatible(keyName) && this.isTriggered('escape')) {
         return true;
     } else {
@@ -174,14 +174,15 @@ Input.isTriggered = function(keyName) {
  * @param {String} keyName The mapped name of the key
  * @return {Boolean} True if the key is repeated
  */
-Input.isRepeated = function(keyName) {
+Input.isRepeated = function (keyName) {
     if (this._isEscapeCompatible(keyName) && this.isRepeated('escape')) {
         return true;
     } else {
-        return (this._latestButton === keyName &&
-                (this._pressedTime === 0 ||
-                 (this._pressedTime >= this.keyRepeatWait &&
-                  this._pressedTime % this.keyRepeatInterval === 0)));
+        return (
+            this._latestButton === keyName &&
+            (this._pressedTime === 0 ||
+                (this._pressedTime >= this.keyRepeatWait && this._pressedTime % this.keyRepeatInterval === 0))
+        );
     }
 };
 
@@ -193,12 +194,11 @@ Input.isRepeated = function(keyName) {
  * @param {String} keyName The mapped name of the key
  * @return {Boolean} True if the key is long-pressed
  */
-Input.isLongPressed = function(keyName) {
+Input.isLongPressed = function (keyName) {
     if (this._isEscapeCompatible(keyName) && this.isLongPressed('escape')) {
         return true;
     } else {
-        return (this._latestButton === keyName &&
-                this._pressedTime >= this.keyRepeatWait);
+        return this._latestButton === keyName && this._pressedTime >= this.keyRepeatWait;
     }
 };
 
@@ -210,10 +210,10 @@ Input.isLongPressed = function(keyName) {
  * @type Number
  */
 Object.defineProperty(Input, 'dir4', {
-    get: function() {
+    get: function () {
         return this._dir4;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -224,10 +224,10 @@ Object.defineProperty(Input, 'dir4', {
  * @type Number
  */
 Object.defineProperty(Input, 'dir8', {
-    get: function() {
+    get: function () {
         return this._dir8;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -238,10 +238,10 @@ Object.defineProperty(Input, 'dir8', {
  * @type Number
  */
 Object.defineProperty(Input, 'date', {
-    get: function() {
+    get: function () {
         return this._date;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -249,10 +249,10 @@ Object.defineProperty(Input, 'date', {
  * @method _wrapNwjsAlert
  * @private
  */
-Input._wrapNwjsAlert = function() {
+Input._wrapNwjsAlert = function () {
     if (Utils.isNwjs()) {
         var _alert = window.alert;
-        window.alert = function() {
+        window.alert = function () {
             var gui = require('nw.gui');
             var win = gui.Window.get();
             _alert.apply(this, arguments);
@@ -267,7 +267,7 @@ Input._wrapNwjsAlert = function() {
  * @method _setupEventHandlers
  * @private
  */
-Input._setupEventHandlers = function() {
+Input._setupEventHandlers = function () {
     document.addEventListener('keydown', this._onKeyDown.bind(this));
     document.addEventListener('keyup', this._onKeyUp.bind(this));
     window.addEventListener('blur', this._onLostFocus.bind(this));
@@ -279,11 +279,12 @@ Input._setupEventHandlers = function() {
  * @param {KeyboardEvent} event
  * @private
  */
-Input._onKeyDown = function(event) {
+Input._onKeyDown = function (event) {
     if (this._shouldPreventDefault(event.keyCode)) {
         event.preventDefault();
     }
-    if (event.keyCode === 144) {    // Numlock
+    if (event.keyCode === 144) {
+        // Numlock
         this.clear();
     }
     var buttonName = this.keyMapper[event.keyCode];
@@ -300,16 +301,16 @@ Input._onKeyDown = function(event) {
  * @param {Number} keyCode
  * @private
  */
-Input._shouldPreventDefault = function(keyCode) {
+Input._shouldPreventDefault = function (keyCode) {
     switch (keyCode) {
-    case 8:     // backspace
-    case 33:    // pageup
-    case 34:    // pagedown
-    case 37:    // left arrow
-    case 38:    // up arrow
-    case 39:    // right arrow
-    case 40:    // down arrow
-        return true;
+        case 8: // backspace
+        case 33: // pageup
+        case 34: // pagedown
+        case 37: // left arrow
+        case 38: // up arrow
+        case 39: // right arrow
+        case 40: // down arrow
+            return true;
     }
     return false;
 };
@@ -320,12 +321,13 @@ Input._shouldPreventDefault = function(keyCode) {
  * @param {KeyboardEvent} event
  * @private
  */
-Input._onKeyUp = function(event) {
+Input._onKeyUp = function (event) {
     var buttonName = this.keyMapper[event.keyCode];
     if (buttonName) {
         this._currentState[buttonName] = false;
     }
-    if (event.keyCode === 0) {  // For QtWebEngine on OS X
+    if (event.keyCode === 0) {
+        // For QtWebEngine on OS X
         this.clear();
     }
 };
@@ -335,7 +337,7 @@ Input._onKeyUp = function(event) {
  * @method _onLostFocus
  * @private
  */
-Input._onLostFocus = function() {
+Input._onLostFocus = function () {
     this.clear();
 };
 
@@ -344,7 +346,7 @@ Input._onLostFocus = function() {
  * @method _pollGamepads
  * @private
  */
-Input._pollGamepads = function() {
+Input._pollGamepads = function () {
     if (navigator.getGamepads) {
         var gamepads = navigator.getGamepads();
         if (gamepads) {
@@ -365,7 +367,7 @@ Input._pollGamepads = function() {
  * @param {Number} index
  * @private
  */
-Input._updateGamepadState = function(gamepad) {
+Input._updateGamepadState = function (gamepad) {
     var lastState = this._gamepadStates[gamepad.index] || [];
     var newState = [];
     var buttons = gamepad.buttons;
@@ -379,14 +381,14 @@ Input._updateGamepadState = function(gamepad) {
         newState[i] = buttons[i].pressed;
     }
     if (axes[1] < -threshold) {
-        newState[12] = true;    // up
+        newState[12] = true; // up
     } else if (axes[1] > threshold) {
-        newState[13] = true;    // down
+        newState[13] = true; // down
     }
     if (axes[0] < -threshold) {
-        newState[14] = true;    // left
+        newState[14] = true; // left
     } else if (axes[0] > threshold) {
-        newState[15] = true;    // right
+        newState[15] = true; // right
     }
     for (var j = 0; j < newState.length; j++) {
         if (newState[j] !== lastState[j]) {
@@ -404,7 +406,7 @@ Input._updateGamepadState = function(gamepad) {
  * @method _updateDirection
  * @private
  */
-Input._updateDirection = function() {
+Input._updateDirection = function () {
     var x = this._signX();
     var y = this._signY();
 
@@ -430,7 +432,7 @@ Input._updateDirection = function() {
  * @method _signX
  * @private
  */
-Input._signX = function() {
+Input._signX = function () {
     var x = 0;
 
     if (this.isPressed('left')) {
@@ -447,7 +449,7 @@ Input._signX = function() {
  * @method _signY
  * @private
  */
-Input._signY = function() {
+Input._signY = function () {
     var y = 0;
 
     if (this.isPressed('up')) {
@@ -467,9 +469,9 @@ Input._signY = function() {
  * @return {Number}
  * @private
  */
-Input._makeNumpadDirection = function(x, y) {
+Input._makeNumpadDirection = function (x, y) {
     if (x !== 0 || y !== 0) {
-        return  5 - y * 3 + x;
+        return 5 - y * 3 + x;
     }
     return 0;
 };
@@ -481,6 +483,6 @@ Input._makeNumpadDirection = function(x, y) {
  * @return {Boolean}
  * @private
  */
-Input._isEscapeCompatible = function(keyName) {
+Input._isEscapeCompatible = function (keyName) {
     return keyName === 'cancel' || keyName === 'menu';
 };

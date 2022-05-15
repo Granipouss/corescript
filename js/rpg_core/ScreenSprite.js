@@ -39,13 +39,15 @@ Object.defineProperty(ScreenSprite.prototype, 'opacity', {
     set: function (value) {
         this.alpha = value.clamp(0, 255) / 255;
     },
-    configurable: true
+    configurable: true,
 });
 
 ScreenSprite.YEPWarned = false;
 ScreenSprite.warnYep = function () {
     if (!ScreenSprite.YEPWarned) {
-        console.log("Deprecation warning. Please update YEP_CoreEngine. ScreenSprite is not a sprite, it has graphics inside.");
+        console.log(
+            'Deprecation warning. Please update YEP_CoreEngine. ScreenSprite is not a sprite, it has graphics inside.'
+        );
         ScreenSprite.YEPWarned = true;
     }
 };
@@ -55,12 +57,12 @@ Object.defineProperty(ScreenSprite.prototype, 'anchor', {
         ScreenSprite.warnYep();
         this.scale.x = 1;
         this.scale.y = 1;
-        return {x: 0, y: 0};
+        return { x: 0, y: 0 };
     },
     set: function (value) {
         this.alpha = value.clamp(0, 255) / 255;
     },
-    configurable: true
+    configurable: true,
 });
 
 Object.defineProperty(ScreenSprite.prototype, 'blendMode', {
@@ -70,7 +72,7 @@ Object.defineProperty(ScreenSprite.prototype, 'blendMode', {
     set: function (value) {
         this._graphics.blendMode = value;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**

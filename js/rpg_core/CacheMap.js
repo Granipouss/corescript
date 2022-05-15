@@ -59,7 +59,7 @@ CacheMap.prototype.setItem = function (key, item) {
     return new CacheEntry(this, key, item).allocate();
 };
 
-CacheMap.prototype.update = function(ticks, delta) {
+CacheMap.prototype.update = function (ticks, delta) {
     this.updateTicks += ticks;
     this.updateSeconds += delta;
     if (this.updateSeconds >= this.delayCheckTTL + this.lastCheckTTL) {

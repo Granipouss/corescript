@@ -12,7 +12,7 @@ function WindowLayer() {
 WindowLayer.prototype = Object.create(PIXI.Container.prototype);
 WindowLayer.prototype.constructor = WindowLayer;
 
-WindowLayer.prototype.initialize = function() {
+WindowLayer.prototype.initialize = function () {
     PIXI.Container.call(this);
     this._width = 0;
     this._height = 0;
@@ -33,9 +33,9 @@ WindowLayer.prototype.initialize = function() {
     this.on('removed', this.onRemoveAsAChild);
 };
 
-WindowLayer.prototype.onRemoveAsAChild = function() {
+WindowLayer.prototype.onRemoveAsAChild = function () {
     this.removeChildren();
-}
+};
 
 WindowLayer.voidFilter = new PIXI.filters.VoidFilter();
 
@@ -46,13 +46,13 @@ WindowLayer.voidFilter = new PIXI.filters.VoidFilter();
  * @type Number
  */
 Object.defineProperty(WindowLayer.prototype, 'width', {
-    get: function() {
+    get: function () {
         return this._width;
     },
-    set: function(value) {
+    set: function (value) {
         this._width = value;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -62,13 +62,13 @@ Object.defineProperty(WindowLayer.prototype, 'width', {
  * @type Number
  */
 Object.defineProperty(WindowLayer.prototype, 'height', {
-    get: function() {
+    get: function () {
         return this._height;
     },
-    set: function(value) {
+    set: function (value) {
         this._height = value;
     },
-    configurable: true
+    configurable: true,
 });
 
 /**
@@ -80,7 +80,7 @@ Object.defineProperty(WindowLayer.prototype, 'height', {
  * @param {Number} width The width of the window layer
  * @param {Number} height The height of the window layer
  */
-WindowLayer.prototype.move = function(x, y, width, height) {
+WindowLayer.prototype.move = function (x, y, width, height) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -92,8 +92,8 @@ WindowLayer.prototype.move = function(x, y, width, height) {
  *
  * @method update
  */
-WindowLayer.prototype.update = function() {
-    this.children.forEach(function(child) {
+WindowLayer.prototype.update = function () {
+    this.children.forEach(function (child) {
         if (child.update) {
             child.update();
         }
@@ -105,7 +105,7 @@ WindowLayer.prototype.update = function() {
  * @param {Object} renderSession
  * @private
  */
-WindowLayer.prototype.renderCanvas = function(renderer) {
+WindowLayer.prototype.renderCanvas = function (renderer) {
     if (!this.visible || !this.renderable) {
         return;
     }
@@ -160,11 +160,11 @@ WindowLayer.prototype.renderCanvas = function(renderer) {
  * @param {Window} window
  * @private
  */
-WindowLayer.prototype._canvasClearWindowRect = function(renderSession, window) {
+WindowLayer.prototype._canvasClearWindowRect = function (renderSession, window) {
     var rx = this.x + window.x;
-    var ry = this.y + window.y + window.height / 2 * (1 - window._openness / 255);
+    var ry = this.y + window.y + (window.height / 2) * (1 - window._openness / 255);
     var rw = window.width;
-    var rh = window.height * window._openness / 255;
+    var rh = (window.height * window._openness) / 255;
     renderSession.context.clearRect(rx, ry, rw, rh);
 };
 
@@ -173,12 +173,12 @@ WindowLayer.prototype._canvasClearWindowRect = function(renderSession, window) {
  * @param {Object} renderSession
  * @private
  */
-WindowLayer.prototype.renderWebGL = function(renderer) {
+WindowLayer.prototype.renderWebGL = function (renderer) {
     if (!this.visible || !this.renderable) {
         return;
     }
 
-    if (this.children.length==0) {
+    if (this.children.length == 0) {
         return;
     }
 
@@ -190,8 +190,8 @@ WindowLayer.prototype.renderWebGL = function(renderer) {
     var shift = new PIXI.Point();
     var rt = renderer._activeRenderTarget;
     var projectionMatrix = rt.projectionMatrix;
-    shift.x = Math.round((projectionMatrix.tx + 1) / 2 * rt.sourceFrame.width);
-    shift.y = Math.round((projectionMatrix.ty + 1) / 2 * rt.sourceFrame.height);
+    shift.x = Math.round(((projectionMatrix.tx + 1) / 2) * rt.sourceFrame.width);
+    shift.y = Math.round(((projectionMatrix.ty + 1) / 2) * rt.sourceFrame.height);
 
     for (var i = 0; i < this.children.length; i++) {
         var child = this.children[i];
@@ -222,14 +222,14 @@ WindowLayer.prototype.renderWebGL = function(renderer) {
  * @param {Window} window
  * @private
  */
-WindowLayer.prototype._maskWindow = function(window, shift) {
+WindowLayer.prototype._maskWindow = function (window, shift) {
     this._windowMask._currentBounds = null;
     this._windowMask.boundsDirty = true;
     var rect = this._windowRect;
     rect.x = this.x + shift.x + window.x;
-    rect.y = this.y + shift.y + window.y + window.height / 2 * (1 - window._openness / 255);
+    rect.y = this.y + shift.y + window.y + (window.height / 2) * (1 - window._openness / 255);
     rect.width = window.width;
-    rect.height = window.height * window._openness / 255;
+    rect.height = (window.height * window._openness) / 255;
 };
 
 // The important members from Pixi.js
