@@ -3,9 +3,12 @@
 //
 // The static class that manages storage for saving game data.
 
-/* global LZString, process, require */
+/* global LZString, process */
 
 import { Utils } from '../rpg_core/Utils';
+
+// FIXME:
+const require = () => void 0;
 
 export function StorageManager() {
     throw new Error('This is a static class');
