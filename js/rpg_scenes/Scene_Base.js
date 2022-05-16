@@ -20,7 +20,6 @@ export class Scene_Base extends Stage {
      */
     constructor() {
         super();
-        super.initialize();
 
         this._active = false;
         this._fadeSign = 0;
