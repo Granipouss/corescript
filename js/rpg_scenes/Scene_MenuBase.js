@@ -1,64 +1,53 @@
-//-----------------------------------------------------------------------------
-// Scene_MenuBase
-//
-// The superclass of all the menu-type scenes.
-
 import { Sprite } from '../rpg_core/Sprite';
 import { SceneManager } from '../rpg_managers/SceneManager';
 import { Window_Help } from '../rpg_windows/Window_Help';
 import { Scene_Base } from './Scene_Base';
 
-export function Scene_MenuBase() {
-    this.initialize.apply(this, arguments);
+/**
+ * The superclass of all the menu-type scenes.
+ */
+export class Scene_MenuBase extends Scene_Base {
+    create() {
+        super.create();
+        this.createBackground();
+        this.updateActor();
+        this.createWindowLayer();
+    }
+
+    actor() {
+        return this._actor;
+    }
+
+    updateActor() {
+        this._actor = global.$gameParty.menuActor();
+    }
+
+    createBackground() {
+        this._backgroundSprite = new Sprite();
+        this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
+        this.addChild(this._backgroundSprite);
+    }
+
+    setBackgroundOpacity(opacity) {
+        this._backgroundSprite.opacity = opacity;
+    }
+
+    createHelpWindow() {
+        this._helpWindow = new Window_Help();
+        this.addWindow(this._helpWindow);
+    }
+
+    nextActor() {
+        global.$gameParty.makeMenuActorNext();
+        this.updateActor();
+        this.onActorChange();
+    }
+
+    previousActor() {
+        global.$gameParty.makeMenuActorPrevious();
+        this.updateActor();
+        this.onActorChange();
+    }
+
+    onActorChange() {}
 }
-
-Scene_MenuBase.prototype = Object.create(Scene_Base.prototype);
-Scene_MenuBase.prototype.constructor = Scene_MenuBase;
-
-Scene_MenuBase.prototype.initialize = function () {
-    Scene_Base.prototype.initialize.call(this);
-};
-
-Scene_MenuBase.prototype.create = function () {
-    Scene_Base.prototype.create.call(this);
-    this.createBackground();
-    this.updateActor();
-    this.createWindowLayer();
-};
-
-Scene_MenuBase.prototype.actor = function () {
-    return this._actor;
-};
-
-Scene_MenuBase.prototype.updateActor = function () {
-    this._actor = global.$gameParty.menuActor();
-};
-
-Scene_MenuBase.prototype.createBackground = function () {
-    this._backgroundSprite = new Sprite();
-    this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
-    this.addChild(this._backgroundSprite);
-};
-
-Scene_MenuBase.prototype.setBackgroundOpacity = function (opacity) {
-    this._backgroundSprite.opacity = opacity;
-};
-
-Scene_MenuBase.prototype.createHelpWindow = function () {
-    this._helpWindow = new Window_Help();
-    this.addWindow(this._helpWindow);
-};
-
-Scene_MenuBase.prototype.nextActor = function () {
-    global.$gameParty.makeMenuActorNext();
-    this.updateActor();
-    this.onActorChange();
-};
-
-Scene_MenuBase.prototype.previousActor = function () {
-    global.$gameParty.makeMenuActorPrevious();
-    this.updateActor();
-    this.onActorChange();
-};
-
-Scene_MenuBase.prototype.onActorChange = function () {};

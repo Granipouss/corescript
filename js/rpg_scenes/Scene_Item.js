@@ -1,86 +1,75 @@
-//-----------------------------------------------------------------------------
-// Scene_Item
-//
-// The scene class of the item screen.
-
 import { Graphics } from '../rpg_core/Graphics';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_ItemCategory } from '../rpg_windows/Window_ItemCategory';
 import { Window_ItemList } from '../rpg_windows/Window_ItemList';
 import { Scene_ItemBase } from './Scene_ItemBase';
 
-export function Scene_Item() {
-    this.initialize.apply(this, arguments);
-}
-
-Scene_Item.prototype = Object.create(Scene_ItemBase.prototype);
-Scene_Item.prototype.constructor = Scene_Item;
-
-Scene_Item.prototype.initialize = function () {
-    Scene_ItemBase.prototype.initialize.call(this);
-};
-
-Scene_Item.prototype.create = function () {
-    Scene_ItemBase.prototype.create.call(this);
-    this.createHelpWindow();
-    this.createCategoryWindow();
-    this.createItemWindow();
-    this.createActorWindow();
-};
-
-Scene_Item.prototype.createCategoryWindow = function () {
-    this._categoryWindow = new Window_ItemCategory();
-    this._categoryWindow.setHelpWindow(this._helpWindow);
-    this._categoryWindow.y = this._helpWindow.height;
-    this._categoryWindow.setHandler('ok', this.onCategoryOk.bind(this));
-    this._categoryWindow.setHandler('cancel', this.popScene.bind(this));
-    this.addWindow(this._categoryWindow);
-};
-
-Scene_Item.prototype.createItemWindow = function () {
-    var wy = this._categoryWindow.y + this._categoryWindow.height;
-    var wh = Graphics.boxHeight - wy;
-    this._itemWindow = new Window_ItemList(0, wy, Graphics.boxWidth, wh);
-    this._itemWindow.setHelpWindow(this._helpWindow);
-    this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
-    this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
-    this.addWindow(this._itemWindow);
-    this._categoryWindow.setItemWindow(this._itemWindow);
-};
-
-Scene_Item.prototype.user = function () {
-    var members = global.$gameParty.movableMembers();
-    var bestActor = members[0];
-    var bestPha = 0;
-    for (var i = 0; i < members.length; i++) {
-        if (members[i].pha > bestPha) {
-            bestPha = members[i].pha;
-            bestActor = members[i];
-        }
+/**
+ * The scene class of the item screen.
+ */
+export class Scene_Item extends Scene_ItemBase {
+    create() {
+        super.create();
+        this.createHelpWindow();
+        this.createCategoryWindow();
+        this.createItemWindow();
+        this.createActorWindow();
     }
-    return bestActor;
-};
 
-Scene_Item.prototype.onCategoryOk = function () {
-    this._itemWindow.activate();
-    this._itemWindow.selectLast();
-};
+    createCategoryWindow() {
+        this._categoryWindow = new Window_ItemCategory();
+        this._categoryWindow.setHelpWindow(this._helpWindow);
+        this._categoryWindow.y = this._helpWindow.height;
+        this._categoryWindow.setHandler('ok', this.onCategoryOk.bind(this));
+        this._categoryWindow.setHandler('cancel', this.popScene.bind(this));
+        this.addWindow(this._categoryWindow);
+    }
 
-Scene_Item.prototype.onItemOk = function () {
-    global.$gameParty.setLastItem(this.item());
-    this.determineItem();
-};
+    createItemWindow() {
+        var wy = this._categoryWindow.y + this._categoryWindow.height;
+        var wh = Graphics.boxHeight - wy;
+        this._itemWindow = new Window_ItemList(0, wy, Graphics.boxWidth, wh);
+        this._itemWindow.setHelpWindow(this._helpWindow);
+        this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
+        this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
+        this.addWindow(this._itemWindow);
+        this._categoryWindow.setItemWindow(this._itemWindow);
+    }
 
-Scene_Item.prototype.onItemCancel = function () {
-    this._itemWindow.deselect();
-    this._categoryWindow.activate();
-};
+    user() {
+        var members = global.$gameParty.movableMembers();
+        var bestActor = members[0];
+        var bestPha = 0;
+        for (var i = 0; i < members.length; i++) {
+            if (members[i].pha > bestPha) {
+                bestPha = members[i].pha;
+                bestActor = members[i];
+            }
+        }
+        return bestActor;
+    }
 
-Scene_Item.prototype.playSeForItem = function () {
-    SoundManager.playUseItem();
-};
+    onCategoryOk() {
+        this._itemWindow.activate();
+        this._itemWindow.selectLast();
+    }
 
-Scene_Item.prototype.useItem = function () {
-    Scene_ItemBase.prototype.useItem.call(this);
-    this._itemWindow.redrawCurrentItem();
-};
+    onItemOk() {
+        global.$gameParty.setLastItem(this.item());
+        this.determineItem();
+    }
+
+    onItemCancel() {
+        this._itemWindow.deselect();
+        this._categoryWindow.activate();
+    }
+
+    playSeForItem() {
+        SoundManager.playUseItem();
+    }
+
+    useItem() {
+        super.useItem();
+        this._itemWindow.redrawCurrentItem();
+    }
+}
