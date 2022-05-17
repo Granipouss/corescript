@@ -1,31 +1,27 @@
-//-----------------------------------------------------------------------------
-// Game_Switches
-//
-// The game object class for switches.
-
-export function Game_Switches() {
-    this.initialize.apply(this, arguments);
-}
-
-Game_Switches.prototype.initialize = function () {
-    this.clear();
-};
-
-Game_Switches.prototype.clear = function () {
-    this._data = [];
-};
-
-Game_Switches.prototype.value = function (switchId) {
-    return !!this._data[switchId];
-};
-
-Game_Switches.prototype.setValue = function (switchId, value) {
-    if (switchId > 0 && switchId < global.$dataSystem.switches.length) {
-        this._data[switchId] = value;
-        this.onChange();
+/**
+ * The game object class for switches.
+ */
+export class Game_Switches {
+    constructor() {
+        this.clear();
     }
-};
 
-Game_Switches.prototype.onChange = function () {
-    global.$gameMap.requestRefresh();
-};
+    clear() {
+        this._data = [];
+    }
+
+    value(switchId) {
+        return !!this._data[switchId];
+    }
+
+    setValue(switchId, value) {
+        if (switchId > 0 && switchId < global.$dataSystem.switches.length) {
+            this._data[switchId] = value;
+            this.onChange();
+        }
+    }
+
+    onChange() {
+        global.$gameMap.requestRefresh();
+    }
+}

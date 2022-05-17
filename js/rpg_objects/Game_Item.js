@@ -1,85 +1,81 @@
-//-----------------------------------------------------------------------------
-// Game_Item
-//
-// The game object class for handling skills, items, weapons, and armor. It is
-// required because save data should not include the database object itself.
-
 import { DataManager } from '../rpg_managers/DataManager';
 
-export function Game_Item() {
-    this.initialize.apply(this, arguments);
-}
-
-Game_Item.prototype.initialize = function (item) {
-    this._dataClass = '';
-    this._itemId = 0;
-    if (item) {
-        this.setObject(item);
-    }
-};
-
-Game_Item.prototype.isSkill = function () {
-    return this._dataClass === 'skill';
-};
-
-Game_Item.prototype.isItem = function () {
-    return this._dataClass === 'item';
-};
-
-Game_Item.prototype.isUsableItem = function () {
-    return this.isSkill() || this.isItem();
-};
-
-Game_Item.prototype.isWeapon = function () {
-    return this._dataClass === 'weapon';
-};
-
-Game_Item.prototype.isArmor = function () {
-    return this._dataClass === 'armor';
-};
-
-Game_Item.prototype.isEquipItem = function () {
-    return this.isWeapon() || this.isArmor();
-};
-
-Game_Item.prototype.isNull = function () {
-    return this._dataClass === '';
-};
-
-Game_Item.prototype.itemId = function () {
-    return this._itemId;
-};
-
-Game_Item.prototype.object = function () {
-    if (this.isSkill()) {
-        return global.$dataSkills[this._itemId];
-    } else if (this.isItem()) {
-        return global.$dataItems[this._itemId];
-    } else if (this.isWeapon()) {
-        return global.$dataWeapons[this._itemId];
-    } else if (this.isArmor()) {
-        return global.$dataArmors[this._itemId];
-    } else {
-        return null;
-    }
-};
-
-Game_Item.prototype.setObject = function (item) {
-    if (DataManager.isSkill(item)) {
-        this._dataClass = 'skill';
-    } else if (DataManager.isItem(item)) {
-        this._dataClass = 'item';
-    } else if (DataManager.isWeapon(item)) {
-        this._dataClass = 'weapon';
-    } else if (DataManager.isArmor(item)) {
-        this._dataClass = 'armor';
-    } else {
+/**
+ * The game object class for handling skills, items, weapons, and armor. It is
+ * required because save data should not include the database object itself.
+ */
+export class Game_Item {
+    constructor(item) {
         this._dataClass = '';
+        this._itemId = 0;
+        if (item) {
+            this.setObject(item);
+        }
     }
-    this._itemId = item ? item.id : 0;
-};
 
-Game_Item.prototype.setEquip = function (isWeapon, itemId) {
-    this._dataClass = isWeapon ? 'weapon' : 'armor';
-    this._itemId = itemId;
-};
+    isSkill() {
+        return this._dataClass === 'skill';
+    }
+
+    isItem() {
+        return this._dataClass === 'item';
+    }
+
+    isUsableItem() {
+        return this.isSkill() || this.isItem();
+    }
+
+    isWeapon() {
+        return this._dataClass === 'weapon';
+    }
+
+    isArmor() {
+        return this._dataClass === 'armor';
+    }
+
+    isEquipItem() {
+        return this.isWeapon() || this.isArmor();
+    }
+
+    isNull() {
+        return this._dataClass === '';
+    }
+
+    itemId() {
+        return this._itemId;
+    }
+
+    object() {
+        if (this.isSkill()) {
+            return global.$dataSkills[this._itemId];
+        } else if (this.isItem()) {
+            return global.$dataItems[this._itemId];
+        } else if (this.isWeapon()) {
+            return global.$dataWeapons[this._itemId];
+        } else if (this.isArmor()) {
+            return global.$dataArmors[this._itemId];
+        } else {
+            return null;
+        }
+    }
+
+    setObject(item) {
+        if (DataManager.isSkill(item)) {
+            this._dataClass = 'skill';
+        } else if (DataManager.isItem(item)) {
+            this._dataClass = 'item';
+        } else if (DataManager.isWeapon(item)) {
+            this._dataClass = 'weapon';
+        } else if (DataManager.isArmor(item)) {
+            this._dataClass = 'armor';
+        } else {
+            this._dataClass = '';
+        }
+        this._itemId = item ? item.id : 0;
+    }
+
+    setEquip(isWeapon, itemId) {
+        this._dataClass = isWeapon ? 'weapon' : 'armor';
+        this._itemId = itemId;
+    }
+}

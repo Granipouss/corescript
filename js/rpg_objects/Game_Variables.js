@@ -1,34 +1,30 @@
-//-----------------------------------------------------------------------------
-// Game_Variables
-//
-// The game object class for variables.
-
-export function Game_Variables() {
-    this.initialize.apply(this, arguments);
-}
-
-Game_Variables.prototype.initialize = function () {
-    this.clear();
-};
-
-Game_Variables.prototype.clear = function () {
-    this._data = [];
-};
-
-Game_Variables.prototype.value = function (variableId) {
-    return this._data[variableId] || 0;
-};
-
-Game_Variables.prototype.setValue = function (variableId, value) {
-    if (variableId > 0 && variableId < global.$dataSystem.variables.length) {
-        if (typeof value === 'number') {
-            value = Math.floor(value);
-        }
-        this._data[variableId] = value;
-        this.onChange();
+/**
+ * The game object class for variables.
+ */
+export class Game_Variables {
+    constructor() {
+        this.clear();
     }
-};
 
-Game_Variables.prototype.onChange = function () {
-    global.$gameMap.requestRefresh();
-};
+    clear() {
+        this._data = [];
+    }
+
+    value(variableId) {
+        return this._data[variableId] || 0;
+    }
+
+    setValue(variableId, value) {
+        if (variableId > 0 && variableId < global.$dataSystem.variables.length) {
+            if (typeof value === 'number') {
+                value = Math.floor(value);
+            }
+            this._data[variableId] = value;
+            this.onChange();
+        }
+    }
+
+    onChange() {
+        global.$gameMap.requestRefresh();
+    }
+}

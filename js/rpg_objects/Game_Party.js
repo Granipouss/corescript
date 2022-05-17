@@ -1,462 +1,455 @@
-//-----------------------------------------------------------------------------
-// Game_Party
-//
-// The game object class for the party. Information such as gold and items is
-// included.
-
 import { DataManager } from '../rpg_managers/DataManager';
 import { TextManager } from '../rpg_managers/TextManager';
 import { Game_Item } from '../rpg_objects/Game_Item';
 import { Game_Unit } from '../rpg_objects/Game_Unit';
 
-export function Game_Party() {
-    this.initialize.apply(this, arguments);
-}
+/**
+ * The game object class for the party. Information such as gold and items is
+ * included.
+ */
+export class Game_Party extends Game_Unit {
+    static ABILITY_ENCOUNTER_HALF = 0;
+    static ABILITY_ENCOUNTER_NONE = 1;
+    static ABILITY_CANCEL_SURPRISE = 2;
+    static ABILITY_RAISE_PREEMPTIVE = 3;
+    static ABILITY_GOLD_DOUBLE = 4;
+    static ABILITY_DROP_ITEM_DOUBLE = 5;
 
-Game_Party.prototype = Object.create(Game_Unit.prototype);
-Game_Party.prototype.constructor = Game_Party;
+    constructor() {
+        super();
+        this._gold = 0;
+        this._steps = 0;
+        this._lastItem = new Game_Item();
+        this._menuActorId = 0;
+        this._targetActorId = 0;
+        this._actors = [];
+        this.initAllItems();
+    }
 
-Game_Party.ABILITY_ENCOUNTER_HALF = 0;
-Game_Party.ABILITY_ENCOUNTER_NONE = 1;
-Game_Party.ABILITY_CANCEL_SURPRISE = 2;
-Game_Party.ABILITY_RAISE_PREEMPTIVE = 3;
-Game_Party.ABILITY_GOLD_DOUBLE = 4;
-Game_Party.ABILITY_DROP_ITEM_DOUBLE = 5;
+    initAllItems() {
+        this._items = {};
+        this._weapons = {};
+        this._armors = {};
+    }
 
-Game_Party.prototype.initialize = function () {
-    Game_Unit.prototype.initialize.call(this);
-    this._gold = 0;
-    this._steps = 0;
-    this._lastItem = new Game_Item();
-    this._menuActorId = 0;
-    this._targetActorId = 0;
-    this._actors = [];
-    this.initAllItems();
-};
+    exists() {
+        return this._actors.length > 0;
+    }
 
-Game_Party.prototype.initAllItems = function () {
-    this._items = {};
-    this._weapons = {};
-    this._armors = {};
-};
+    size() {
+        return this.members().length;
+    }
 
-Game_Party.prototype.exists = function () {
-    return this._actors.length > 0;
-};
+    isEmpty() {
+        return this.size() === 0;
+    }
 
-Game_Party.prototype.size = function () {
-    return this.members().length;
-};
+    members() {
+        return this.inBattle() ? this.battleMembers() : this.allMembers();
+    }
 
-Game_Party.prototype.isEmpty = function () {
-    return this.size() === 0;
-};
-
-Game_Party.prototype.members = function () {
-    return this.inBattle() ? this.battleMembers() : this.allMembers();
-};
-
-Game_Party.prototype.allMembers = function () {
-    return this._actors.map(function (id) {
-        return global.$gameActors.actor(id);
-    });
-};
-
-Game_Party.prototype.battleMembers = function () {
-    return this.allMembers()
-        .slice(0, this.maxBattleMembers())
-        .filter(function (actor) {
-            return actor.isAppeared();
+    allMembers() {
+        return this._actors.map(function (id) {
+            return global.$gameActors.actor(id);
         });
-};
+    }
 
-Game_Party.prototype.maxBattleMembers = function () {
-    return 4;
-};
+    battleMembers() {
+        return this.allMembers()
+            .slice(0, this.maxBattleMembers())
+            .filter(function (actor) {
+                return actor.isAppeared();
+            });
+    }
 
-Game_Party.prototype.leader = function () {
-    return this.battleMembers()[0];
-};
+    maxBattleMembers() {
+        return 4;
+    }
 
-Game_Party.prototype.reviveBattleMembers = function () {
-    this.battleMembers().forEach(function (actor) {
-        if (actor.isDead()) {
-            actor.setHp(1);
+    leader() {
+        return this.battleMembers()[0];
+    }
+
+    reviveBattleMembers() {
+        this.battleMembers().forEach(function (actor) {
+            if (actor.isDead()) {
+                actor.setHp(1);
+            }
+        });
+    }
+
+    items() {
+        var list = [];
+        for (var id in this._items) {
+            list.push(global.$dataItems[id]);
         }
-    });
-};
-
-Game_Party.prototype.items = function () {
-    var list = [];
-    for (var id in this._items) {
-        list.push(global.$dataItems[id]);
+        return list;
     }
-    return list;
-};
 
-Game_Party.prototype.weapons = function () {
-    var list = [];
-    for (var id in this._weapons) {
-        list.push(global.$dataWeapons[id]);
+    weapons() {
+        var list = [];
+        for (var id in this._weapons) {
+            list.push(global.$dataWeapons[id]);
+        }
+        return list;
     }
-    return list;
-};
 
-Game_Party.prototype.armors = function () {
-    var list = [];
-    for (var id in this._armors) {
-        list.push(global.$dataArmors[id]);
+    armors() {
+        var list = [];
+        for (var id in this._armors) {
+            list.push(global.$dataArmors[id]);
+        }
+        return list;
     }
-    return list;
-};
 
-Game_Party.prototype.equipItems = function () {
-    return this.weapons().concat(this.armors());
-};
-
-Game_Party.prototype.allItems = function () {
-    return this.items().concat(this.equipItems());
-};
-
-Game_Party.prototype.itemContainer = function (item) {
-    if (!item) {
-        return null;
-    } else if (DataManager.isItem(item)) {
-        return this._items;
-    } else if (DataManager.isWeapon(item)) {
-        return this._weapons;
-    } else if (DataManager.isArmor(item)) {
-        return this._armors;
-    } else {
-        return null;
+    equipItems() {
+        return this.weapons().concat(this.armors());
     }
-};
 
-Game_Party.prototype.setupStartingMembers = function () {
-    this._actors = [];
-    global.$dataSystem.partyMembers.forEach(function (actorId) {
-        if (global.$gameActors.actor(actorId)) {
+    allItems() {
+        return this.items().concat(this.equipItems());
+    }
+
+    itemContainer(item) {
+        if (!item) {
+            return null;
+        } else if (DataManager.isItem(item)) {
+            return this._items;
+        } else if (DataManager.isWeapon(item)) {
+            return this._weapons;
+        } else if (DataManager.isArmor(item)) {
+            return this._armors;
+        } else {
+            return null;
+        }
+    }
+
+    setupStartingMembers() {
+        this._actors = [];
+        global.$dataSystem.partyMembers.forEach(function (actorId) {
+            if (global.$gameActors.actor(actorId)) {
+                this._actors.push(actorId);
+            }
+        }, this);
+    }
+
+    name() {
+        var numBattleMembers = this.battleMembers().length;
+        if (numBattleMembers === 0) {
+            return '';
+        } else if (numBattleMembers === 1) {
+            return this.leader().name();
+        } else {
+            return TextManager.partyName.format(this.leader().name());
+        }
+    }
+
+    setupBattleTest() {
+        this.setupBattleTestMembers();
+        this.setupBattleTestItems();
+    }
+
+    setupBattleTestMembers() {
+        global.$dataSystem.testBattlers.forEach(function (battler) {
+            var actor = global.$gameActors.actor(battler.actorId);
+            if (actor) {
+                actor.changeLevel(battler.level, false);
+                actor.initEquips(battler.equips);
+                actor.recoverAll();
+                this.addActor(battler.actorId);
+            }
+        }, this);
+    }
+
+    setupBattleTestItems() {
+        global.$dataItems.forEach(function (item) {
+            if (item && item.name.length > 0) {
+                this.gainItem(item, this.maxItems(item));
+            }
+        }, this);
+    }
+
+    highestLevel() {
+        return Math.max.apply(
+            null,
+            this.members().map(function (actor) {
+                return actor.level;
+            })
+        );
+    }
+
+    addActor(actorId) {
+        if (!this._actors.contains(actorId)) {
             this._actors.push(actorId);
+            global.$gamePlayer.refresh();
+            global.$gameMap.requestRefresh();
         }
-    }, this);
-};
-
-Game_Party.prototype.name = function () {
-    var numBattleMembers = this.battleMembers().length;
-    if (numBattleMembers === 0) {
-        return '';
-    } else if (numBattleMembers === 1) {
-        return this.leader().name();
-    } else {
-        return TextManager.partyName.format(this.leader().name());
     }
-};
 
-Game_Party.prototype.setupBattleTest = function () {
-    this.setupBattleTestMembers();
-    this.setupBattleTestItems();
-};
-
-Game_Party.prototype.setupBattleTestMembers = function () {
-    global.$dataSystem.testBattlers.forEach(function (battler) {
-        var actor = global.$gameActors.actor(battler.actorId);
-        if (actor) {
-            actor.changeLevel(battler.level, false);
-            actor.initEquips(battler.equips);
-            actor.recoverAll();
-            this.addActor(battler.actorId);
+    removeActor(actorId) {
+        if (this._actors.contains(actorId)) {
+            this._actors.splice(this._actors.indexOf(actorId), 1);
+            global.$gamePlayer.refresh();
+            global.$gameMap.requestRefresh();
         }
-    }, this);
-};
+    }
 
-Game_Party.prototype.setupBattleTestItems = function () {
-    global.$dataItems.forEach(function (item) {
-        if (item && item.name.length > 0) {
-            this.gainItem(item, this.maxItems(item));
+    gold() {
+        return this._gold;
+    }
+
+    gainGold(amount) {
+        this._gold = (this._gold + amount).clamp(0, this.maxGold());
+    }
+
+    loseGold(amount) {
+        this.gainGold(-amount);
+    }
+
+    maxGold() {
+        return 99999999;
+    }
+
+    steps() {
+        return this._steps;
+    }
+
+    increaseSteps() {
+        this._steps++;
+    }
+
+    numItems(item) {
+        var container = this.itemContainer(item);
+        return container ? container[item.id] || 0 : 0;
+    }
+
+    maxItems(_item) {
+        return 99;
+    }
+
+    hasMaxItems(item) {
+        return this.numItems(item) >= this.maxItems(item);
+    }
+
+    hasItem(item, includeEquip) {
+        if (includeEquip === undefined) {
+            includeEquip = false;
         }
-    }, this);
-};
+        if (this.numItems(item) > 0) {
+            return true;
+        } else if (includeEquip && this.isAnyMemberEquipped(item)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-Game_Party.prototype.highestLevel = function () {
-    return Math.max.apply(
-        null,
-        this.members().map(function (actor) {
-            return actor.level;
-        })
-    );
-};
+    isAnyMemberEquipped(item) {
+        return this.members().some(function (actor) {
+            return actor.equips().contains(item);
+        });
+    }
 
-Game_Party.prototype.addActor = function (actorId) {
-    if (!this._actors.contains(actorId)) {
-        this._actors.push(actorId);
+    gainItem(item, amount, includeEquip) {
+        var container = this.itemContainer(item);
+        if (container) {
+            var lastNumber = this.numItems(item);
+            var newNumber = lastNumber + amount;
+            container[item.id] = newNumber.clamp(0, this.maxItems(item));
+            if (container[item.id] === 0) {
+                delete container[item.id];
+            }
+            if (includeEquip && newNumber < 0) {
+                this.discardMembersEquip(item, -newNumber);
+            }
+            global.$gameMap.requestRefresh();
+        }
+    }
+
+    discardMembersEquip(item, amount) {
+        var n = amount;
+        this.members().forEach(function (actor) {
+            while (n > 0 && actor.isEquipped(item)) {
+                actor.discardEquip(item);
+                n--;
+            }
+        });
+    }
+
+    loseItem(item, amount, includeEquip) {
+        this.gainItem(item, -amount, includeEquip);
+    }
+
+    consumeItem(item) {
+        if (DataManager.isItem(item) && item.consumable) {
+            this.loseItem(item, 1);
+        }
+    }
+
+    canUse(item) {
+        return this.members().some(function (actor) {
+            return actor.canUse(item);
+        });
+    }
+
+    canInput() {
+        return this.members().some(function (actor) {
+            return actor.canInput();
+        });
+    }
+
+    isAllDead() {
+        if (super.isAllDead()) {
+            return this.inBattle() || !this.isEmpty();
+        } else {
+            return false;
+        }
+    }
+
+    onPlayerWalk() {
+        this.members().forEach(function (actor) {
+            return actor.onPlayerWalk();
+        });
+    }
+
+    menuActor() {
+        var actor = global.$gameActors.actor(this._menuActorId);
+        if (!this.members().contains(actor)) {
+            actor = this.members()[0];
+        }
+        return actor;
+    }
+
+    setMenuActor(actor) {
+        this._menuActorId = actor.actorId();
+    }
+
+    makeMenuActorNext() {
+        var index = this.members().indexOf(this.menuActor());
+        if (index >= 0) {
+            index = (index + 1) % this.members().length;
+            this.setMenuActor(this.members()[index]);
+        } else {
+            this.setMenuActor(this.members()[0]);
+        }
+    }
+
+    makeMenuActorPrevious() {
+        var index = this.members().indexOf(this.menuActor());
+        if (index >= 0) {
+            index = (index + this.members().length - 1) % this.members().length;
+            this.setMenuActor(this.members()[index]);
+        } else {
+            this.setMenuActor(this.members()[0]);
+        }
+    }
+
+    targetActor() {
+        var actor = global.$gameActors.actor(this._targetActorId);
+        if (!this.members().contains(actor)) {
+            actor = this.members()[0];
+        }
+        return actor;
+    }
+
+    setTargetActor(actor) {
+        this._targetActorId = actor.actorId();
+    }
+
+    lastItem() {
+        return this._lastItem.object();
+    }
+
+    setLastItem(item) {
+        this._lastItem.setObject(item);
+    }
+
+    swapOrder(index1, index2) {
+        var temp = this._actors[index1];
+        this._actors[index1] = this._actors[index2];
+        this._actors[index2] = temp;
         global.$gamePlayer.refresh();
-        global.$gameMap.requestRefresh();
     }
-};
 
-Game_Party.prototype.removeActor = function (actorId) {
-    if (this._actors.contains(actorId)) {
-        this._actors.splice(this._actors.indexOf(actorId), 1);
-        global.$gamePlayer.refresh();
-        global.$gameMap.requestRefresh();
+    charactersForSavefile() {
+        return this.battleMembers().map(function (actor) {
+            return [actor.characterName(), actor.characterIndex()];
+        });
     }
-};
 
-Game_Party.prototype.gold = function () {
-    return this._gold;
-};
-
-Game_Party.prototype.gainGold = function (amount) {
-    this._gold = (this._gold + amount).clamp(0, this.maxGold());
-};
-
-Game_Party.prototype.loseGold = function (amount) {
-    this.gainGold(-amount);
-};
-
-Game_Party.prototype.maxGold = function () {
-    return 99999999;
-};
-
-Game_Party.prototype.steps = function () {
-    return this._steps;
-};
-
-Game_Party.prototype.increaseSteps = function () {
-    this._steps++;
-};
-
-Game_Party.prototype.numItems = function (item) {
-    var container = this.itemContainer(item);
-    return container ? container[item.id] || 0 : 0;
-};
-
-Game_Party.prototype.maxItems = function (_item) {
-    return 99;
-};
-
-Game_Party.prototype.hasMaxItems = function (item) {
-    return this.numItems(item) >= this.maxItems(item);
-};
-
-Game_Party.prototype.hasItem = function (item, includeEquip) {
-    if (includeEquip === undefined) {
-        includeEquip = false;
+    facesForSavefile() {
+        return this.battleMembers().map(function (actor) {
+            return [actor.faceName(), actor.faceIndex()];
+        });
     }
-    if (this.numItems(item) > 0) {
-        return true;
-    } else if (includeEquip && this.isAnyMemberEquipped(item)) {
-        return true;
-    } else {
-        return false;
+
+    partyAbility(abilityId) {
+        return this.battleMembers().some(function (actor) {
+            return actor.partyAbility(abilityId);
+        });
     }
-};
 
-Game_Party.prototype.isAnyMemberEquipped = function (item) {
-    return this.members().some(function (actor) {
-        return actor.equips().contains(item);
-    });
-};
+    hasEncounterHalf() {
+        return this.partyAbility(Game_Party.ABILITY_ENCOUNTER_HALF);
+    }
 
-Game_Party.prototype.gainItem = function (item, amount, includeEquip) {
-    var container = this.itemContainer(item);
-    if (container) {
-        var lastNumber = this.numItems(item);
-        var newNumber = lastNumber + amount;
-        container[item.id] = newNumber.clamp(0, this.maxItems(item));
-        if (container[item.id] === 0) {
-            delete container[item.id];
+    hasEncounterNone() {
+        return this.partyAbility(Game_Party.ABILITY_ENCOUNTER_NONE);
+    }
+
+    hasCancelSurprise() {
+        return this.partyAbility(Game_Party.ABILITY_CANCEL_SURPRISE);
+    }
+
+    hasRaisePreemptive() {
+        return this.partyAbility(Game_Party.ABILITY_RAISE_PREEMPTIVE);
+    }
+
+    hasGoldDouble() {
+        return this.partyAbility(Game_Party.ABILITY_GOLD_DOUBLE);
+    }
+
+    hasDropItemDouble() {
+        return this.partyAbility(Game_Party.ABILITY_DROP_ITEM_DOUBLE);
+    }
+
+    ratePreemptive(troopAgi) {
+        var rate = this.agility() >= troopAgi ? 0.05 : 0.03;
+        if (this.hasRaisePreemptive()) {
+            rate *= 4;
         }
-        if (includeEquip && newNumber < 0) {
-            this.discardMembersEquip(item, -newNumber);
+        return rate;
+    }
+
+    rateSurprise(troopAgi) {
+        var rate = this.agility() >= troopAgi ? 0.03 : 0.05;
+        if (this.hasCancelSurprise()) {
+            rate = 0;
         }
-        global.$gameMap.requestRefresh();
+        return rate;
     }
-};
 
-Game_Party.prototype.discardMembersEquip = function (item, amount) {
-    var n = amount;
-    this.members().forEach(function (actor) {
-        while (n > 0 && actor.isEquipped(item)) {
-            actor.discardEquip(item);
-            n--;
-        }
-    });
-};
-
-Game_Party.prototype.loseItem = function (item, amount, includeEquip) {
-    this.gainItem(item, -amount, includeEquip);
-};
-
-Game_Party.prototype.consumeItem = function (item) {
-    if (DataManager.isItem(item) && item.consumable) {
-        this.loseItem(item, 1);
+    performVictory() {
+        this.members().forEach(function (actor) {
+            actor.performVictory();
+        });
     }
-};
 
-Game_Party.prototype.canUse = function (item) {
-    return this.members().some(function (actor) {
-        return actor.canUse(item);
-    });
-};
-
-Game_Party.prototype.canInput = function () {
-    return this.members().some(function (actor) {
-        return actor.canInput();
-    });
-};
-
-Game_Party.prototype.isAllDead = function () {
-    if (Game_Unit.prototype.isAllDead.call(this)) {
-        return this.inBattle() || !this.isEmpty();
-    } else {
-        return false;
+    performEscape() {
+        this.members().forEach(function (actor) {
+            actor.performEscape();
+        });
     }
-};
 
-Game_Party.prototype.onPlayerWalk = function () {
-    this.members().forEach(function (actor) {
-        return actor.onPlayerWalk();
-    });
-};
-
-Game_Party.prototype.menuActor = function () {
-    var actor = global.$gameActors.actor(this._menuActorId);
-    if (!this.members().contains(actor)) {
-        actor = this.members()[0];
+    removeBattleStates() {
+        this.members().forEach(function (actor) {
+            actor.removeBattleStates();
+        });
     }
-    return actor;
-};
 
-Game_Party.prototype.setMenuActor = function (actor) {
-    this._menuActorId = actor.actorId();
-};
-
-Game_Party.prototype.makeMenuActorNext = function () {
-    var index = this.members().indexOf(this.menuActor());
-    if (index >= 0) {
-        index = (index + 1) % this.members().length;
-        this.setMenuActor(this.members()[index]);
-    } else {
-        this.setMenuActor(this.members()[0]);
+    requestMotionRefresh() {
+        this.members().forEach(function (actor) {
+            actor.requestMotionRefresh();
+        });
     }
-};
-
-Game_Party.prototype.makeMenuActorPrevious = function () {
-    var index = this.members().indexOf(this.menuActor());
-    if (index >= 0) {
-        index = (index + this.members().length - 1) % this.members().length;
-        this.setMenuActor(this.members()[index]);
-    } else {
-        this.setMenuActor(this.members()[0]);
-    }
-};
-
-Game_Party.prototype.targetActor = function () {
-    var actor = global.$gameActors.actor(this._targetActorId);
-    if (!this.members().contains(actor)) {
-        actor = this.members()[0];
-    }
-    return actor;
-};
-
-Game_Party.prototype.setTargetActor = function (actor) {
-    this._targetActorId = actor.actorId();
-};
-
-Game_Party.prototype.lastItem = function () {
-    return this._lastItem.object();
-};
-
-Game_Party.prototype.setLastItem = function (item) {
-    this._lastItem.setObject(item);
-};
-
-Game_Party.prototype.swapOrder = function (index1, index2) {
-    var temp = this._actors[index1];
-    this._actors[index1] = this._actors[index2];
-    this._actors[index2] = temp;
-    global.$gamePlayer.refresh();
-};
-
-Game_Party.prototype.charactersForSavefile = function () {
-    return this.battleMembers().map(function (actor) {
-        return [actor.characterName(), actor.characterIndex()];
-    });
-};
-
-Game_Party.prototype.facesForSavefile = function () {
-    return this.battleMembers().map(function (actor) {
-        return [actor.faceName(), actor.faceIndex()];
-    });
-};
-
-Game_Party.prototype.partyAbility = function (abilityId) {
-    return this.battleMembers().some(function (actor) {
-        return actor.partyAbility(abilityId);
-    });
-};
-
-Game_Party.prototype.hasEncounterHalf = function () {
-    return this.partyAbility(Game_Party.ABILITY_ENCOUNTER_HALF);
-};
-
-Game_Party.prototype.hasEncounterNone = function () {
-    return this.partyAbility(Game_Party.ABILITY_ENCOUNTER_NONE);
-};
-
-Game_Party.prototype.hasCancelSurprise = function () {
-    return this.partyAbility(Game_Party.ABILITY_CANCEL_SURPRISE);
-};
-
-Game_Party.prototype.hasRaisePreemptive = function () {
-    return this.partyAbility(Game_Party.ABILITY_RAISE_PREEMPTIVE);
-};
-
-Game_Party.prototype.hasGoldDouble = function () {
-    return this.partyAbility(Game_Party.ABILITY_GOLD_DOUBLE);
-};
-
-Game_Party.prototype.hasDropItemDouble = function () {
-    return this.partyAbility(Game_Party.ABILITY_DROP_ITEM_DOUBLE);
-};
-
-Game_Party.prototype.ratePreemptive = function (troopAgi) {
-    var rate = this.agility() >= troopAgi ? 0.05 : 0.03;
-    if (this.hasRaisePreemptive()) {
-        rate *= 4;
-    }
-    return rate;
-};
-
-Game_Party.prototype.rateSurprise = function (troopAgi) {
-    var rate = this.agility() >= troopAgi ? 0.03 : 0.05;
-    if (this.hasCancelSurprise()) {
-        rate = 0;
-    }
-    return rate;
-};
-
-Game_Party.prototype.performVictory = function () {
-    this.members().forEach(function (actor) {
-        actor.performVictory();
-    });
-};
-
-Game_Party.prototype.performEscape = function () {
-    this.members().forEach(function (actor) {
-        actor.performEscape();
-    });
-};
-
-Game_Party.prototype.removeBattleStates = function () {
-    this.members().forEach(function (actor) {
-        actor.removeBattleStates();
-    });
-};
-
-Game_Party.prototype.requestMotionRefresh = function () {
-    this.members().forEach(function (actor) {
-        actor.requestMotionRefresh();
-    });
-};
+}
