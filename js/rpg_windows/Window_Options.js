@@ -1,8 +1,3 @@
-//-----------------------------------------------------------------------------
-// Window_Options
-//
-// The window for changing various settings on the options screen.
-
 import { Graphics } from '../rpg_core/Graphics';
 
 import { ConfigManager } from '../rpg_managers/ConfigManager';
@@ -11,143 +6,141 @@ import { TextManager } from '../rpg_managers/TextManager';
 
 import { Window_Command } from './Window_Command';
 
-export function Window_Options() {
-    this.initialize.apply(this, arguments);
-}
-
-Window_Options.prototype = Object.create(Window_Command.prototype);
-Window_Options.prototype.constructor = Window_Options;
-
-Window_Options.prototype.initialize = function () {
-    Window_Command.prototype.initialize.call(this, 0, 0);
-    this.updatePlacement();
-};
-
-Window_Options.prototype.windowWidth = function () {
-    return 400;
-};
-
-Window_Options.prototype.windowHeight = function () {
-    return this.fittingHeight(Math.min(this.numVisibleRows(), 12));
-};
-
-Window_Options.prototype.updatePlacement = function () {
-    this.x = (Graphics.boxWidth - this.width) / 2;
-    this.y = (Graphics.boxHeight - this.height) / 2;
-};
-
-Window_Options.prototype.makeCommandList = function () {
-    this.addGeneralOptions();
-    this.addVolumeOptions();
-};
-
-Window_Options.prototype.addGeneralOptions = function () {
-    this.addCommand(TextManager.alwaysDash, 'alwaysDash');
-    this.addCommand(TextManager.commandRemember, 'commandRemember');
-};
-
-Window_Options.prototype.addVolumeOptions = function () {
-    this.addCommand(TextManager.bgmVolume, 'bgmVolume');
-    this.addCommand(TextManager.bgsVolume, 'bgsVolume');
-    this.addCommand(TextManager.meVolume, 'meVolume');
-    this.addCommand(TextManager.seVolume, 'seVolume');
-};
-
-Window_Options.prototype.drawItem = function (index) {
-    var rect = this.itemRectForText(index);
-    var statusWidth = this.statusWidth();
-    var titleWidth = rect.width - statusWidth;
-    this.resetTextColor();
-    this.changePaintOpacity(this.isCommandEnabled(index));
-    this.drawText(this.commandName(index), rect.x, rect.y, titleWidth, 'left');
-    this.drawText(this.statusText(index), rect.x + titleWidth, rect.y, statusWidth, 'right');
-};
-
-Window_Options.prototype.statusWidth = function () {
-    return 120;
-};
-
-Window_Options.prototype.statusText = function (index) {
-    var symbol = this.commandSymbol(index);
-    var value = this.getConfigValue(symbol);
-    if (this.isVolumeSymbol(symbol)) {
-        return this.volumeStatusText(value);
-    } else {
-        return this.booleanStatusText(value);
+/**
+ * The window for changing various settings on the options screen.
+ */
+export class Window_Options extends Window_Command {
+    initialize() {
+        super.initialize(0, 0);
+        this.updatePlacement();
     }
-};
 
-Window_Options.prototype.isVolumeSymbol = function (symbol) {
-    return symbol.contains('Volume');
-};
+    windowWidth() {
+        return 400;
+    }
 
-Window_Options.prototype.booleanStatusText = function (value) {
-    return value ? 'ON' : 'OFF';
-};
+    windowHeight() {
+        return this.fittingHeight(Math.min(this.numVisibleRows(), 12));
+    }
 
-Window_Options.prototype.volumeStatusText = function (value) {
-    return value + '%';
-};
+    updatePlacement() {
+        this.x = (Graphics.boxWidth - this.width) / 2;
+        this.y = (Graphics.boxHeight - this.height) / 2;
+    }
 
-Window_Options.prototype.processOk = function () {
-    var index = this.index();
-    var symbol = this.commandSymbol(index);
-    var value = this.getConfigValue(symbol);
-    if (this.isVolumeSymbol(symbol)) {
-        value += this.volumeOffset();
-        if (value > 100) {
-            value = 0;
+    makeCommandList() {
+        this.addGeneralOptions();
+        this.addVolumeOptions();
+    }
+
+    addGeneralOptions() {
+        this.addCommand(TextManager.alwaysDash, 'alwaysDash');
+        this.addCommand(TextManager.commandRemember, 'commandRemember');
+    }
+
+    addVolumeOptions() {
+        this.addCommand(TextManager.bgmVolume, 'bgmVolume');
+        this.addCommand(TextManager.bgsVolume, 'bgsVolume');
+        this.addCommand(TextManager.meVolume, 'meVolume');
+        this.addCommand(TextManager.seVolume, 'seVolume');
+    }
+
+    drawItem(index) {
+        var rect = this.itemRectForText(index);
+        var statusWidth = this.statusWidth();
+        var titleWidth = rect.width - statusWidth;
+        this.resetTextColor();
+        this.changePaintOpacity(this.isCommandEnabled(index));
+        this.drawText(this.commandName(index), rect.x, rect.y, titleWidth, 'left');
+        this.drawText(this.statusText(index), rect.x + titleWidth, rect.y, statusWidth, 'right');
+    }
+
+    statusWidth() {
+        return 120;
+    }
+
+    statusText(index) {
+        var symbol = this.commandSymbol(index);
+        var value = this.getConfigValue(symbol);
+        if (this.isVolumeSymbol(symbol)) {
+            return this.volumeStatusText(value);
+        } else {
+            return this.booleanStatusText(value);
         }
-        value = value.clamp(0, 100);
-        this.changeValue(symbol, value);
-    } else {
-        this.changeValue(symbol, !value);
     }
-};
 
-Window_Options.prototype.cursorRight = function (_wrap) {
-    var index = this.index();
-    var symbol = this.commandSymbol(index);
-    var value = this.getConfigValue(symbol);
-    if (this.isVolumeSymbol(symbol)) {
-        value += this.volumeOffset();
-        value = value.clamp(0, 100);
-        this.changeValue(symbol, value);
-    } else {
-        this.changeValue(symbol, true);
+    isVolumeSymbol(symbol) {
+        return symbol.contains('Volume');
     }
-};
 
-Window_Options.prototype.cursorLeft = function (_wrap) {
-    var index = this.index();
-    var symbol = this.commandSymbol(index);
-    var value = this.getConfigValue(symbol);
-    if (this.isVolumeSymbol(symbol)) {
-        value -= this.volumeOffset();
-        value = value.clamp(0, 100);
-        this.changeValue(symbol, value);
-    } else {
-        this.changeValue(symbol, false);
+    booleanStatusText(value) {
+        return value ? 'ON' : 'OFF';
     }
-};
 
-Window_Options.prototype.volumeOffset = function () {
-    return 20;
-};
-
-Window_Options.prototype.changeValue = function (symbol, value) {
-    var lastValue = this.getConfigValue(symbol);
-    if (lastValue !== value) {
-        this.setConfigValue(symbol, value);
-        this.redrawItem(this.findSymbol(symbol));
-        SoundManager.playCursor();
+    volumeStatusText(value) {
+        return value + '%';
     }
-};
 
-Window_Options.prototype.getConfigValue = function (symbol) {
-    return ConfigManager[symbol];
-};
+    processOk() {
+        var index = this.index();
+        var symbol = this.commandSymbol(index);
+        var value = this.getConfigValue(symbol);
+        if (this.isVolumeSymbol(symbol)) {
+            value += this.volumeOffset();
+            if (value > 100) {
+                value = 0;
+            }
+            value = value.clamp(0, 100);
+            this.changeValue(symbol, value);
+        } else {
+            this.changeValue(symbol, !value);
+        }
+    }
 
-Window_Options.prototype.setConfigValue = function (symbol, volume) {
-    ConfigManager[symbol] = volume;
-};
+    cursorRight(_wrap) {
+        var index = this.index();
+        var symbol = this.commandSymbol(index);
+        var value = this.getConfigValue(symbol);
+        if (this.isVolumeSymbol(symbol)) {
+            value += this.volumeOffset();
+            value = value.clamp(0, 100);
+            this.changeValue(symbol, value);
+        } else {
+            this.changeValue(symbol, true);
+        }
+    }
+
+    cursorLeft(_wrap) {
+        var index = this.index();
+        var symbol = this.commandSymbol(index);
+        var value = this.getConfigValue(symbol);
+        if (this.isVolumeSymbol(symbol)) {
+            value -= this.volumeOffset();
+            value = value.clamp(0, 100);
+            this.changeValue(symbol, value);
+        } else {
+            this.changeValue(symbol, false);
+        }
+    }
+
+    volumeOffset() {
+        return 20;
+    }
+
+    changeValue(symbol, value) {
+        var lastValue = this.getConfigValue(symbol);
+        if (lastValue !== value) {
+            this.setConfigValue(symbol, value);
+            this.redrawItem(this.findSymbol(symbol));
+            SoundManager.playCursor();
+        }
+    }
+
+    getConfigValue(symbol) {
+        return ConfigManager[symbol];
+    }
+
+    setConfigValue(symbol, volume) {
+        ConfigManager[symbol] = volume;
+    }
+}

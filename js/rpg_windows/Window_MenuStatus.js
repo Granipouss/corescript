@@ -1,122 +1,115 @@
-//-----------------------------------------------------------------------------
-// Window_MenuStatus
-//
-// The window for displaying party member status on the menu screen.
-
 import { Graphics } from '../rpg_core/Graphics';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { Window_Base } from './Window_Base';
 import { Window_Selectable } from './Window_Selectable';
 
-export function Window_MenuStatus() {
-    this.initialize.apply(this, arguments);
-}
+/**
+ * The window for displaying party member status on the menu screen.
+ */
+export class Window_MenuStatus extends Window_Selectable {
+    initialize(x, y) {
+        var width = this.windowWidth();
+        var height = this.windowHeight();
+        super.initialize(x, y, width, height);
+        this._formationMode = false;
+        this._pendingIndex = -1;
+        this.refresh();
+    }
 
-Window_MenuStatus.prototype = Object.create(Window_Selectable.prototype);
-Window_MenuStatus.prototype.constructor = Window_MenuStatus;
+    windowWidth() {
+        return Graphics.boxWidth - 240;
+    }
 
-Window_MenuStatus.prototype.initialize = function (x, y) {
-    var width = this.windowWidth();
-    var height = this.windowHeight();
-    Window_Selectable.prototype.initialize.call(this, x, y, width, height);
-    this._formationMode = false;
-    this._pendingIndex = -1;
-    this.refresh();
-};
+    windowHeight() {
+        return Graphics.boxHeight;
+    }
 
-Window_MenuStatus.prototype.windowWidth = function () {
-    return Graphics.boxWidth - 240;
-};
+    maxItems() {
+        return global.$gameParty.size();
+    }
 
-Window_MenuStatus.prototype.windowHeight = function () {
-    return Graphics.boxHeight;
-};
+    itemHeight() {
+        var clientHeight = this.height - this.padding * 2;
+        return Math.floor(clientHeight / this.numVisibleRows());
+    }
 
-Window_MenuStatus.prototype.maxItems = function () {
-    return global.$gameParty.size();
-};
+    numVisibleRows() {
+        return 4;
+    }
 
-Window_MenuStatus.prototype.itemHeight = function () {
-    var clientHeight = this.height - this.padding * 2;
-    return Math.floor(clientHeight / this.numVisibleRows());
-};
+    loadImages() {
+        global.$gameParty.members().forEach(function (actor) {
+            ImageManager.reserveFace(actor.faceName());
+        }, this);
+    }
 
-Window_MenuStatus.prototype.numVisibleRows = function () {
-    return 4;
-};
+    drawItem(index) {
+        this.drawItemBackground(index);
+        this.drawItemImage(index);
+        this.drawItemStatus(index);
+    }
 
-Window_MenuStatus.prototype.loadImages = function () {
-    global.$gameParty.members().forEach(function (actor) {
-        ImageManager.reserveFace(actor.faceName());
-    }, this);
-};
+    drawItemBackground(index) {
+        if (index === this._pendingIndex) {
+            var rect = this.itemRect(index);
+            var color = this.pendingColor();
+            this.changePaintOpacity(false);
+            this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
+            this.changePaintOpacity(true);
+        }
+    }
 
-Window_MenuStatus.prototype.drawItem = function (index) {
-    this.drawItemBackground(index);
-    this.drawItemImage(index);
-    this.drawItemStatus(index);
-};
-
-Window_MenuStatus.prototype.drawItemBackground = function (index) {
-    if (index === this._pendingIndex) {
+    drawItemImage(index) {
+        var actor = global.$gameParty.members()[index];
         var rect = this.itemRect(index);
-        var color = this.pendingColor();
-        this.changePaintOpacity(false);
-        this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
+        this.changePaintOpacity(actor.isBattleMember());
+        this.drawActorFace(actor, rect.x + 1, rect.y + 1, Window_Base._faceWidth, Window_Base._faceHeight);
         this.changePaintOpacity(true);
     }
-};
 
-Window_MenuStatus.prototype.drawItemImage = function (index) {
-    var actor = global.$gameParty.members()[index];
-    var rect = this.itemRect(index);
-    this.changePaintOpacity(actor.isBattleMember());
-    this.drawActorFace(actor, rect.x + 1, rect.y + 1, Window_Base._faceWidth, Window_Base._faceHeight);
-    this.changePaintOpacity(true);
-};
-
-Window_MenuStatus.prototype.drawItemStatus = function (index) {
-    var actor = global.$gameParty.members()[index];
-    var rect = this.itemRect(index);
-    var x = rect.x + 162;
-    var y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
-    var width = rect.width - x - this.textPadding();
-    this.drawActorSimpleStatus(actor, x, y, width);
-};
-
-Window_MenuStatus.prototype.processOk = function () {
-    Window_Selectable.prototype.processOk.call(this);
-    global.$gameParty.setMenuActor(global.$gameParty.members()[this.index()]);
-};
-
-Window_MenuStatus.prototype.isCurrentItemEnabled = function () {
-    if (this._formationMode) {
-        var actor = global.$gameParty.members()[this.index()];
-        return actor && actor.isFormationChangeOk();
-    } else {
-        return true;
+    drawItemStatus(index) {
+        var actor = global.$gameParty.members()[index];
+        var rect = this.itemRect(index);
+        var x = rect.x + 162;
+        var y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
+        var width = rect.width - x - this.textPadding();
+        this.drawActorSimpleStatus(actor, x, y, width);
     }
-};
 
-Window_MenuStatus.prototype.selectLast = function () {
-    this.select(global.$gameParty.menuActor().index() || 0);
-};
+    processOk() {
+        super.processOk();
+        global.$gameParty.setMenuActor(global.$gameParty.members()[this.index()]);
+    }
 
-Window_MenuStatus.prototype.formationMode = function () {
-    return this._formationMode;
-};
+    isCurrentItemEnabled() {
+        if (this._formationMode) {
+            var actor = global.$gameParty.members()[this.index()];
+            return actor && actor.isFormationChangeOk();
+        } else {
+            return true;
+        }
+    }
 
-Window_MenuStatus.prototype.setFormationMode = function (formationMode) {
-    this._formationMode = formationMode;
-};
+    selectLast() {
+        this.select(global.$gameParty.menuActor().index() || 0);
+    }
 
-Window_MenuStatus.prototype.pendingIndex = function () {
-    return this._pendingIndex;
-};
+    formationMode() {
+        return this._formationMode;
+    }
 
-Window_MenuStatus.prototype.setPendingIndex = function (index) {
-    var lastPendingIndex = this._pendingIndex;
-    this._pendingIndex = index;
-    this.redrawItem(this._pendingIndex);
-    this.redrawItem(lastPendingIndex);
-};
+    setFormationMode(formationMode) {
+        this._formationMode = formationMode;
+    }
+
+    pendingIndex() {
+        return this._pendingIndex;
+    }
+
+    setPendingIndex(index) {
+        var lastPendingIndex = this._pendingIndex;
+        this._pendingIndex = index;
+        this.redrawItem(this._pendingIndex);
+        this.redrawItem(lastPendingIndex);
+    }
+}

@@ -1,49 +1,42 @@
-//-----------------------------------------------------------------------------
-// Window_Gold
-//
-// The window for displaying the party's gold.
-
 import { TextManager } from '../rpg_managers/TextManager';
 import { Window_Base } from './Window_Base';
 
-export function Window_Gold() {
-    this.initialize.apply(this, arguments);
+/**
+ * The window for displaying the party's gold.
+ */
+export class Window_Gold extends Window_Base {
+    initialize(x, y) {
+        var width = this.windowWidth();
+        var height = this.windowHeight();
+        super.initialize(x, y, width, height);
+        this.refresh();
+    }
+
+    windowWidth() {
+        return 240;
+    }
+
+    windowHeight() {
+        return this.fittingHeight(1);
+    }
+
+    refresh() {
+        var x = this.textPadding();
+        var width = this.contents.width - this.textPadding() * 2;
+        this.contents.clear();
+        this.drawCurrencyValue(this.value(), this.currencyUnit(), x, 0, width);
+    }
+
+    value() {
+        return global.$gameParty.gold();
+    }
+
+    currencyUnit() {
+        return TextManager.currencyUnit;
+    }
+
+    open() {
+        this.refresh();
+        super.open();
+    }
 }
-
-Window_Gold.prototype = Object.create(Window_Base.prototype);
-Window_Gold.prototype.constructor = Window_Gold;
-
-Window_Gold.prototype.initialize = function (x, y) {
-    var width = this.windowWidth();
-    var height = this.windowHeight();
-    Window_Base.prototype.initialize.call(this, x, y, width, height);
-    this.refresh();
-};
-
-Window_Gold.prototype.windowWidth = function () {
-    return 240;
-};
-
-Window_Gold.prototype.windowHeight = function () {
-    return this.fittingHeight(1);
-};
-
-Window_Gold.prototype.refresh = function () {
-    var x = this.textPadding();
-    var width = this.contents.width - this.textPadding() * 2;
-    this.contents.clear();
-    this.drawCurrencyValue(this.value(), this.currencyUnit(), x, 0, width);
-};
-
-Window_Gold.prototype.value = function () {
-    return global.$gameParty.gold();
-};
-
-Window_Gold.prototype.currencyUnit = function () {
-    return TextManager.currencyUnit;
-};
-
-Window_Gold.prototype.open = function () {
-    this.refresh();
-    Window_Base.prototype.open.call(this);
-};

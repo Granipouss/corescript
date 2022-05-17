@@ -1,33 +1,26 @@
-//-----------------------------------------------------------------------------
-// Window_EquipCommand
-//
-// The window for selecting a command on the equipment screen.
-
 import { TextManager } from '../rpg_managers/TextManager';
 import { Window_HorzCommand } from './Window_HorzCommand';
 
-export function Window_EquipCommand() {
-    this.initialize.apply(this, arguments);
+/**
+ * The window for selecting a command on the equipment screen.
+ */
+export class Window_EquipCommand extends Window_HorzCommand {
+    initialize(x, y, width) {
+        this._windowWidth = width;
+        super.initialize(x, y);
+    }
+
+    windowWidth() {
+        return this._windowWidth;
+    }
+
+    maxCols() {
+        return 3;
+    }
+
+    makeCommandList() {
+        this.addCommand(TextManager.equip2, 'equip');
+        this.addCommand(TextManager.optimize, 'optimize');
+        this.addCommand(TextManager.clear, 'clear');
+    }
 }
-
-Window_EquipCommand.prototype = Object.create(Window_HorzCommand.prototype);
-Window_EquipCommand.prototype.constructor = Window_EquipCommand;
-
-Window_EquipCommand.prototype.initialize = function (x, y, width) {
-    this._windowWidth = width;
-    Window_HorzCommand.prototype.initialize.call(this, x, y);
-};
-
-Window_EquipCommand.prototype.windowWidth = function () {
-    return this._windowWidth;
-};
-
-Window_EquipCommand.prototype.maxCols = function () {
-    return 3;
-};
-
-Window_EquipCommand.prototype.makeCommandList = function () {
-    this.addCommand(TextManager.equip2, 'equip');
-    this.addCommand(TextManager.optimize, 'optimize');
-    this.addCommand(TextManager.clear, 'clear');
-};

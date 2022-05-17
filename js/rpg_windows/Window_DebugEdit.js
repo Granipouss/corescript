@@ -1,126 +1,119 @@
-//-----------------------------------------------------------------------------
-// Window_DebugEdit
-//
-// The window for displaying switches and variables on the debug screen.
-
 import { Input } from '../rpg_core/Input';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_Selectable } from './Window_Selectable';
 
-export function Window_DebugEdit() {
-    this.initialize.apply(this, arguments);
-}
-
-Window_DebugEdit.prototype = Object.create(Window_Selectable.prototype);
-Window_DebugEdit.prototype.constructor = Window_DebugEdit;
-
-Window_DebugEdit.prototype.initialize = function (x, y, width) {
-    var height = this.fittingHeight(10);
-    Window_Selectable.prototype.initialize.call(this, x, y, width, height);
-    this._mode = 'switch';
-    this._topId = 1;
-    this.refresh();
-};
-
-Window_DebugEdit.prototype.maxItems = function () {
-    return 10;
-};
-
-Window_DebugEdit.prototype.refresh = function () {
-    this.contents.clear();
-    this.drawAllItems();
-};
-
-Window_DebugEdit.prototype.drawItem = function (index) {
-    var dataId = this._topId + index;
-    var idText = dataId.padZero(4) + ':';
-    var idWidth = this.textWidth(idText);
-    var statusWidth = this.textWidth('-00000000');
-    var name = this.itemName(dataId);
-    var status = this.itemStatus(dataId);
-    var rect = this.itemRectForText(index);
-    this.resetTextColor();
-    this.drawText(idText, rect.x, rect.y, rect.width);
-    rect.x += idWidth;
-    rect.width -= idWidth + statusWidth;
-    this.drawText(name, rect.x, rect.y, rect.width);
-    this.drawText(status, rect.x + rect.width, rect.y, statusWidth, 'right');
-};
-
-Window_DebugEdit.prototype.itemName = function (dataId) {
-    if (this._mode === 'switch') {
-        return global.$dataSystem.switches[dataId];
-    } else {
-        return global.$dataSystem.variables[dataId];
-    }
-};
-
-Window_DebugEdit.prototype.itemStatus = function (dataId) {
-    if (this._mode === 'switch') {
-        return global.$gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
-    } else {
-        return String(global.$gameVariables.value(dataId));
-    }
-};
-
-Window_DebugEdit.prototype.setMode = function (mode) {
-    if (this._mode !== mode) {
-        this._mode = mode;
+/**
+ * The window for displaying switches and variables on the debug screen.
+ */
+export class Window_DebugEdit extends Window_Selectable {
+    initialize(x, y, width) {
+        var height = this.fittingHeight(10);
+        super.initialize(x, y, width, height);
+        this._mode = 'switch';
+        this._topId = 1;
         this.refresh();
     }
-};
 
-Window_DebugEdit.prototype.setTopId = function (id) {
-    if (this._topId !== id) {
-        this._topId = id;
-        this.refresh();
+    maxItems() {
+        return 10;
     }
-};
 
-Window_DebugEdit.prototype.currentId = function () {
-    return this._topId + this.index();
-};
+    refresh() {
+        this.contents.clear();
+        this.drawAllItems();
+    }
 
-Window_DebugEdit.prototype.update = function () {
-    Window_Selectable.prototype.update.call(this);
-    if (this.active) {
+    drawItem(index) {
+        var dataId = this._topId + index;
+        var idText = dataId.padZero(4) + ':';
+        var idWidth = this.textWidth(idText);
+        var statusWidth = this.textWidth('-00000000');
+        var name = this.itemName(dataId);
+        var status = this.itemStatus(dataId);
+        var rect = this.itemRectForText(index);
+        this.resetTextColor();
+        this.drawText(idText, rect.x, rect.y, rect.width);
+        rect.x += idWidth;
+        rect.width -= idWidth + statusWidth;
+        this.drawText(name, rect.x, rect.y, rect.width);
+        this.drawText(status, rect.x + rect.width, rect.y, statusWidth, 'right');
+    }
+
+    itemName(dataId) {
         if (this._mode === 'switch') {
-            this.updateSwitch();
+            return global.$dataSystem.switches[dataId];
         } else {
-            this.updateVariable();
+            return global.$dataSystem.variables[dataId];
         }
     }
-};
 
-Window_DebugEdit.prototype.updateSwitch = function () {
-    if (Input.isRepeated('ok')) {
-        var switchId = this.currentId();
-        SoundManager.playCursor();
-        global.$gameSwitches.setValue(switchId, !global.$gameSwitches.value(switchId));
-        this.redrawCurrentItem();
+    itemStatus(dataId) {
+        if (this._mode === 'switch') {
+            return global.$gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
+        } else {
+            return String(global.$gameVariables.value(dataId));
+        }
     }
-};
 
-Window_DebugEdit.prototype.updateVariable = function () {
-    var variableId = this.currentId();
-    var value = global.$gameVariables.value(variableId);
-    if (typeof value === 'number') {
-        if (Input.isRepeated('right')) {
-            value++;
+    setMode(mode) {
+        if (this._mode !== mode) {
+            this._mode = mode;
+            this.refresh();
         }
-        if (Input.isRepeated('left')) {
-            value--;
+    }
+
+    setTopId(id) {
+        if (this._topId !== id) {
+            this._topId = id;
+            this.refresh();
         }
-        if (Input.isRepeated('pagedown')) {
-            value += 10;
+    }
+
+    currentId() {
+        return this._topId + this.index();
+    }
+
+    update() {
+        super.update();
+        if (this.active) {
+            if (this._mode === 'switch') {
+                this.updateSwitch();
+            } else {
+                this.updateVariable();
+            }
         }
-        if (Input.isRepeated('pageup')) {
-            value -= 10;
-        }
-        if (global.$gameVariables.value(variableId) !== value) {
-            global.$gameVariables.setValue(variableId, value);
+    }
+
+    updateSwitch() {
+        if (Input.isRepeated('ok')) {
+            var switchId = this.currentId();
             SoundManager.playCursor();
+            global.$gameSwitches.setValue(switchId, !global.$gameSwitches.value(switchId));
             this.redrawCurrentItem();
         }
     }
-};
+
+    updateVariable() {
+        var variableId = this.currentId();
+        var value = global.$gameVariables.value(variableId);
+        if (typeof value === 'number') {
+            if (Input.isRepeated('right')) {
+                value++;
+            }
+            if (Input.isRepeated('left')) {
+                value--;
+            }
+            if (Input.isRepeated('pagedown')) {
+                value += 10;
+            }
+            if (Input.isRepeated('pageup')) {
+                value -= 10;
+            }
+            if (global.$gameVariables.value(variableId) !== value) {
+                global.$gameVariables.setValue(variableId, value);
+                SoundManager.playCursor();
+                this.redrawCurrentItem();
+            }
+        }
+    }
+}

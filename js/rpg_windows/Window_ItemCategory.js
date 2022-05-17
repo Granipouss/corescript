@@ -1,45 +1,38 @@
-//-----------------------------------------------------------------------------
-// Window_ItemCategory
-//
-// The window for selecting a category of items on the item and shop screens.
-
 import { Graphics } from '../rpg_core/Graphics';
 import { TextManager } from '../rpg_managers/TextManager';
 import { Window_HorzCommand } from './Window_HorzCommand';
 
-export function Window_ItemCategory() {
-    this.initialize.apply(this, arguments);
-}
-
-Window_ItemCategory.prototype = Object.create(Window_HorzCommand.prototype);
-Window_ItemCategory.prototype.constructor = Window_ItemCategory;
-
-Window_ItemCategory.prototype.initialize = function () {
-    Window_HorzCommand.prototype.initialize.call(this, 0, 0);
-};
-
-Window_ItemCategory.prototype.windowWidth = function () {
-    return Graphics.boxWidth;
-};
-
-Window_ItemCategory.prototype.maxCols = function () {
-    return 4;
-};
-
-Window_ItemCategory.prototype.update = function () {
-    Window_HorzCommand.prototype.update.call(this);
-    if (this._itemWindow) {
-        this._itemWindow.setCategory(this.currentSymbol());
+/**
+ * The window for selecting a category of items on the item and shop screens.
+ */
+export class Window_ItemCategory extends Window_HorzCommand {
+    initialize() {
+        super.initialize(0, 0);
     }
-};
 
-Window_ItemCategory.prototype.makeCommandList = function () {
-    this.addCommand(TextManager.item, 'item');
-    this.addCommand(TextManager.weapon, 'weapon');
-    this.addCommand(TextManager.armor, 'armor');
-    this.addCommand(TextManager.keyItem, 'keyItem');
-};
+    windowWidth() {
+        return Graphics.boxWidth;
+    }
 
-Window_ItemCategory.prototype.setItemWindow = function (itemWindow) {
-    this._itemWindow = itemWindow;
-};
+    maxCols() {
+        return 4;
+    }
+
+    update() {
+        super.update();
+        if (this._itemWindow) {
+            this._itemWindow.setCategory(this.currentSymbol());
+        }
+    }
+
+    makeCommandList() {
+        this.addCommand(TextManager.item, 'item');
+        this.addCommand(TextManager.weapon, 'weapon');
+        this.addCommand(TextManager.armor, 'armor');
+        this.addCommand(TextManager.keyItem, 'keyItem');
+    }
+
+    setItemWindow(itemWindow) {
+        this._itemWindow = itemWindow;
+    }
+}

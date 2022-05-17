@@ -1,41 +1,34 @@
-//-----------------------------------------------------------------------------
-// Window_Help
-//
-// The window for displaying the description of the selected item.
-
 import { Graphics } from '../rpg_core/Graphics';
 import { Window_Base } from './Window_Base';
 
-export function Window_Help() {
-    this.initialize.apply(this, arguments);
-}
-
-Window_Help.prototype = Object.create(Window_Base.prototype);
-Window_Help.prototype.constructor = Window_Help;
-
-Window_Help.prototype.initialize = function (numLines) {
-    var width = Graphics.boxWidth;
-    var height = this.fittingHeight(numLines || 2);
-    Window_Base.prototype.initialize.call(this, 0, 0, width, height);
-    this._text = '';
-};
-
-Window_Help.prototype.setText = function (text) {
-    if (this._text !== text) {
-        this._text = text;
-        this.refresh();
+/**
+ * The window for displaying the description of the selected item.
+ */
+export class Window_Help extends Window_Base {
+    initialize(numLines) {
+        var width = Graphics.boxWidth;
+        var height = this.fittingHeight(numLines || 2);
+        super.initialize(0, 0, width, height);
+        this._text = '';
     }
-};
 
-Window_Help.prototype.clear = function () {
-    this.setText('');
-};
+    setText(text) {
+        if (this._text !== text) {
+            this._text = text;
+            this.refresh();
+        }
+    }
 
-Window_Help.prototype.setItem = function (item) {
-    this.setText(item ? item.description : '');
-};
+    clear() {
+        this.setText('');
+    }
 
-Window_Help.prototype.refresh = function () {
-    this.contents.clear();
-    this.drawTextEx(this._text, this.textPadding(), 0);
-};
+    setItem(item) {
+        this.setText(item ? item.description : '');
+    }
+
+    refresh() {
+        this.contents.clear();
+        this.drawTextEx(this._text, this.textPadding(), 0);
+    }
+}

@@ -1,40 +1,33 @@
-//-----------------------------------------------------------------------------
-// Window_BattleActor
-//
-// The window for selecting a target actor on the battle screen.
-
 import { Window_BattleStatus } from './Window_BattleStatus';
 
-export function Window_BattleActor() {
-    this.initialize.apply(this, arguments);
+/**
+ * The window for selecting a target actor on the battle screen.
+ */
+export class Window_BattleActor extends Window_BattleStatus {
+    initialize(x, y) {
+        super.initialize();
+        this.x = x;
+        this.y = y;
+        this.openness = 255;
+        this.hide();
+    }
+
+    show() {
+        this.select(0);
+        super.show();
+    }
+
+    hide() {
+        super.hide();
+        global.$gameParty.select(null);
+    }
+
+    select(index) {
+        super.select(index);
+        global.$gameParty.select(this.actor());
+    }
+
+    actor() {
+        return global.$gameParty.members()[this.index()];
+    }
 }
-
-Window_BattleActor.prototype = Object.create(Window_BattleStatus.prototype);
-Window_BattleActor.prototype.constructor = Window_BattleActor;
-
-Window_BattleActor.prototype.initialize = function (x, y) {
-    Window_BattleStatus.prototype.initialize.call(this);
-    this.x = x;
-    this.y = y;
-    this.openness = 255;
-    this.hide();
-};
-
-Window_BattleActor.prototype.show = function () {
-    this.select(0);
-    Window_BattleStatus.prototype.show.call(this);
-};
-
-Window_BattleActor.prototype.hide = function () {
-    Window_BattleStatus.prototype.hide.call(this);
-    global.$gameParty.select(null);
-};
-
-Window_BattleActor.prototype.select = function (index) {
-    Window_BattleStatus.prototype.select.call(this, index);
-    global.$gameParty.select(this.actor());
-};
-
-Window_BattleActor.prototype.actor = function () {
-    return global.$gameParty.members()[this.index()];
-};

@@ -1,92 +1,85 @@
-//-----------------------------------------------------------------------------
-// Window_ScrollText
-//
-// The window for displaying scrolling text. No frame is displayed, but it
-// is handled as a window for convenience.
-
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Window_Base } from './Window_Base';
 
-export function Window_ScrollText() {
-    this.initialize.apply(this, arguments);
+/**
+ * The window for displaying scrolling text. No frame is displayed, but it
+ * is handled as a window for convenience.
+ */
+export class Window_ScrollText extends Window_Base {
+    initialize() {
+        var width = Graphics.boxWidth;
+        var height = Graphics.boxHeight;
+        super.initialize(0, 0, width, height);
+        this.opacity = 0;
+        this.hide();
+        this._text = '';
+        this._allTextHeight = 0;
+    }
+
+    update() {
+        super.update();
+        if (global.$gameMessage.scrollMode()) {
+            if (this._text) {
+                this.updateMessage();
+            }
+            if (!this._text && global.$gameMessage.hasText()) {
+                this.startMessage();
+            }
+        }
+    }
+
+    startMessage() {
+        this._text = global.$gameMessage.allText();
+        this.refresh();
+        this.show();
+    }
+
+    refresh() {
+        var textState = { index: 0 };
+        textState.text = this.convertEscapeCharacters(this._text);
+        this.resetFontSettings();
+        this._allTextHeight = this.calcTextHeight(textState, true);
+        this.createContents();
+        this.origin.y = -this.height;
+        this.drawTextEx(this._text, this.textPadding(), 1);
+    }
+
+    contentsHeight() {
+        return Math.max(this._allTextHeight, 1);
+    }
+
+    updateMessage() {
+        this.origin.y += this.scrollSpeed();
+        if (this.origin.y >= this.contents.height) {
+            this.terminateMessage();
+        }
+    }
+
+    scrollSpeed() {
+        var speed = global.$gameMessage.scrollSpeed() / 2;
+        if (this.isFastForward()) {
+            speed *= this.fastForwardRate();
+        }
+        return speed;
+    }
+
+    isFastForward() {
+        if (global.$gameMessage.scrollNoFast()) {
+            return false;
+        } else {
+            return Input.isPressed('ok') || Input.isPressed('shift') || TouchInput.isPressed();
+        }
+    }
+
+    fastForwardRate() {
+        return 3;
+    }
+
+    terminateMessage() {
+        this._text = null;
+        global.$gameMessage.clear();
+        this.hide();
+    }
 }
-
-Window_ScrollText.prototype = Object.create(Window_Base.prototype);
-Window_ScrollText.prototype.constructor = Window_ScrollText;
-
-Window_ScrollText.prototype.initialize = function () {
-    var width = Graphics.boxWidth;
-    var height = Graphics.boxHeight;
-    Window_Base.prototype.initialize.call(this, 0, 0, width, height);
-    this.opacity = 0;
-    this.hide();
-    this._text = '';
-    this._allTextHeight = 0;
-};
-
-Window_ScrollText.prototype.update = function () {
-    Window_Base.prototype.update.call(this);
-    if (global.$gameMessage.scrollMode()) {
-        if (this._text) {
-            this.updateMessage();
-        }
-        if (!this._text && global.$gameMessage.hasText()) {
-            this.startMessage();
-        }
-    }
-};
-
-Window_ScrollText.prototype.startMessage = function () {
-    this._text = global.$gameMessage.allText();
-    this.refresh();
-    this.show();
-};
-
-Window_ScrollText.prototype.refresh = function () {
-    var textState = { index: 0 };
-    textState.text = this.convertEscapeCharacters(this._text);
-    this.resetFontSettings();
-    this._allTextHeight = this.calcTextHeight(textState, true);
-    this.createContents();
-    this.origin.y = -this.height;
-    this.drawTextEx(this._text, this.textPadding(), 1);
-};
-
-Window_ScrollText.prototype.contentsHeight = function () {
-    return Math.max(this._allTextHeight, 1);
-};
-
-Window_ScrollText.prototype.updateMessage = function () {
-    this.origin.y += this.scrollSpeed();
-    if (this.origin.y >= this.contents.height) {
-        this.terminateMessage();
-    }
-};
-
-Window_ScrollText.prototype.scrollSpeed = function () {
-    var speed = global.$gameMessage.scrollSpeed() / 2;
-    if (this.isFastForward()) {
-        speed *= this.fastForwardRate();
-    }
-    return speed;
-};
-
-Window_ScrollText.prototype.isFastForward = function () {
-    if (global.$gameMessage.scrollNoFast()) {
-        return false;
-    } else {
-        return Input.isPressed('ok') || Input.isPressed('shift') || TouchInput.isPressed();
-    }
-};
-
-Window_ScrollText.prototype.fastForwardRate = function () {
-    return 3;
-};
-
-Window_ScrollText.prototype.terminateMessage = function () {
-    this._text = null;
-    global.$gameMessage.clear();
-    this.hide();
-};
