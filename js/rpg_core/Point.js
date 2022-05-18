@@ -1,36 +1,19 @@
-//-----------------------------------------------------------------------------
-/**
- * The point class.
- *
- * @class Point
- * @constructor
- * @param {Number} x The x coordinate
- * @param {Number} y The y coordinate
- */
-
 /* global PIXI */
 
-export function Point() {
-    this.initialize.apply(this, arguments);
+/**
+ * The point class.
+ */
+export class Point extends PIXI.Point {
+    /**
+     * The x coordinate.
+     *
+     * @property x
+     * @type Number
+     */
+    /**
+     * The y coordinate.
+     *
+     * @property y
+     * @type Number
+     */
 }
-
-Point.prototype = Object.create(PIXI.Point.prototype);
-Point.prototype.constructor = Point;
-
-Point.prototype.initialize = function (x, y) {
-    PIXI.Point.call(this, x, y);
-};
-
-/**
- * The x coordinate.
- *
- * @property x
- * @type Number
- */
-
-/**
- * The y coordinate.
- *
- * @property y
- * @type Number
- */
