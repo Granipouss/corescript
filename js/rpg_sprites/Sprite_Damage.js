@@ -7,8 +7,6 @@ import { ImageManager } from '../rpg_managers/ImageManager';
 export class Sprite_Damage extends Sprite {
     constructor() {
         super();
-        super.initialize();
-
         this._duration = 90;
         this._flashColor = [0, 0, 0, 0];
         this._flashDuration = 0;

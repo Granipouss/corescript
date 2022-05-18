@@ -7,8 +7,6 @@ import { ImageManager } from '../rpg_managers/ImageManager';
 export class Sprite_Picture extends Sprite {
     constructor(pictureId) {
         super();
-        super.initialize();
-
         this._pictureId = pictureId;
         this._pictureName = '';
         this._isPicture = true;

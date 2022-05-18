@@ -7,8 +7,6 @@ import { Sprite_Animation } from './Sprite_Animation';
 export class Sprite_Base extends Sprite {
     constructor() {
         super();
-        super.initialize();
-
         this._animationSprites = [];
         this._effectTarget = this;
         this._hiding = false;

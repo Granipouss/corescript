@@ -8,8 +8,6 @@ import { TouchInput } from '../rpg_core/TouchInput';
 export class Sprite_Button extends Sprite {
     constructor() {
         super();
-        super.initialize();
-
         this._touching = false;
         this._coldFrame = null;
         this._hotFrame = null;

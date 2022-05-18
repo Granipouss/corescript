@@ -12,8 +12,6 @@ export class Sprite_Animation extends Sprite {
 
     constructor() {
         super();
-        super.initialize();
-
         this._reduceArtifacts = true;
         this.initMembers();
     }

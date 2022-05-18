@@ -8,8 +8,6 @@ import { Sprite } from '../rpg_core/Sprite';
 export class Sprite_Timer extends Sprite {
     constructor() {
         super();
-        super.initialize();
-
         this._seconds = 0;
         this.createBitmap();
         this.update();

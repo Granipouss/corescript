@@ -8,8 +8,6 @@ import { Sprite } from '../rpg_core/Sprite';
 export class Sprite_Destination extends Sprite {
     constructor() {
         super();
-        super.initialize();
-
         this.createBitmap();
         this._frameCount = 0;
     }

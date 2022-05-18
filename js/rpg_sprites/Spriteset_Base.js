@@ -13,8 +13,6 @@ import { Sprite_Timer } from './Sprite_Timer';
 export class Spriteset_Base extends Sprite {
     constructor() {
         super();
-        super.initialize();
-
         this.setFrame(0, 0, Graphics.width, Graphics.height);
         this._tone = [0, 0, 0, 0];
         this.opaque = true;

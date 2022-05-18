@@ -10,8 +10,6 @@ export class Sprite_StateIcon extends Sprite {
 
     constructor() {
         super();
-        super.initialize();
-
         this.initMembers();
         this.loadBitmap();
     }
