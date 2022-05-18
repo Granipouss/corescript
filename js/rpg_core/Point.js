@@ -1,4 +1,4 @@
-/* global PIXI */
+import * as PIXI from 'pixi.js';
 
 /**
  * The point class.

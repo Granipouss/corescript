@@ -1,4 +1,6 @@
-/* global PIXI, FPSMeter, makeVideoPlayableInline */
+/* global FPSMeter, makeVideoPlayableInline */
+
+import * as PIXI from 'pixi.js';
 
 import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
 import { ResourceHandler } from '../rpg_core/ResourceHandler';
@@ -978,6 +980,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _createRenderer() {
+        // eslint-disable-next-line no-import-assign
         PIXI.dontSayHello = true;
         var width = this._width;
         var height = this._height;

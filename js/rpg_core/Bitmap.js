@@ -1,4 +1,4 @@
-/* global PIXI */
+import * as PIXI from 'pixi.js';
 
 import { Decrypter } from '../rpg_core/Decrypter';
 import { Graphics } from '../rpg_core/Graphics';

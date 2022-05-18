@@ -7,5 +7,8 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'out'),
   },
+  externals: [
+    { "pixi.js": "PIXI" }
+  ],
   devtool: 'eval-source-map',
 };

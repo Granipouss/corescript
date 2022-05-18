@@ -1,4 +1,4 @@
-/* global PIXI */
+import * as PIXI from 'pixi.js';
 
 import { Point } from '../rpg_core/Point';
 import { Rectangle } from '../rpg_core/Rectangle';

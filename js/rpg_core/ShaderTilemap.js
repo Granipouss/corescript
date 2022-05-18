@@ -1,4 +1,4 @@
-/* global PIXI */
+import * as PIXI from 'pixi.js';
 
 import { Tilemap } from '../rpg_core/Tilemap';
 import { PluginManager } from '../rpg_managers/PluginManager';
