@@ -54,7 +54,6 @@ export const SceneManager = new (class SceneManager {
         this.initGraphics();
         this.checkFileAccess();
         this.initAudio();
-        this.initInput();
         this.checkPluginErrors();
         this.setupErrorHandlers();
     }
@@ -108,11 +107,6 @@ export const SceneManager = new (class SceneManager {
         if (!WebAudio.initialize(noAudio) && !noAudio) {
             throw new Error('Your browser does not support Web Audio API.');
         }
-    }
-
-    initInput() {
-        Input.initialize();
-        TouchInput.initialize();
     }
 
     checkPluginErrors() {
