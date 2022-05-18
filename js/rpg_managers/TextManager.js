@@ -1,44 +1,38 @@
-//-----------------------------------------------------------------------------
-// TextManager
-//
-// The static class that handles terms and messages.
+/**
+ * The static class that handles terms and messages.
+ */
+export const TextManager = new (class TextManager {
+    basic(basicId) {
+        return global.$dataSystem.terms.basic[basicId] || '';
+    }
 
-export function TextManager() {
-    throw new Error('This is a static class');
-}
+    param(paramId) {
+        return global.$dataSystem.terms.params[paramId] || '';
+    }
 
-TextManager.basic = function (basicId) {
-    return global.$dataSystem.terms.basic[basicId] || '';
-};
+    command(commandId) {
+        return global.$dataSystem.terms.commands[commandId] || '';
+    }
 
-TextManager.param = function (paramId) {
-    return global.$dataSystem.terms.params[paramId] || '';
-};
+    message(messageId) {
+        return global.$dataSystem.terms.messages[messageId] || '';
+    }
 
-TextManager.command = function (commandId) {
-    return global.$dataSystem.terms.commands[commandId] || '';
-};
+    getter(method, param) {
+        return {
+            get: function () {
+                return this[method](param);
+            },
+            configurable: true,
+        };
+    }
 
-TextManager.message = function (messageId) {
-    return global.$dataSystem.terms.messages[messageId] || '';
-};
-
-TextManager.getter = function (method, param) {
-    return {
-        get: function () {
-            return this[method](param);
-        },
-        configurable: true,
-    };
-};
-
-Object.defineProperty(TextManager, 'currencyUnit', {
-    get: function () {
+    get currencyUnit() {
         return global.$dataSystem.currencyUnit;
-    },
-    configurable: true,
-});
+    }
+})();
 
+// FIXME:
 Object.defineProperties(TextManager, {
     level: TextManager.getter('basic', 0),
     levelA: TextManager.getter('basic', 1),

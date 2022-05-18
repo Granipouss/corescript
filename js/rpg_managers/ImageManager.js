@@ -1,326 +1,322 @@
-//-----------------------------------------------------------------------------
-// ImageManager
-//
-// The static class that loads images, creates bitmap objects and retains them.
-
 import { Bitmap } from '../rpg_core/Bitmap';
 import { CacheMap } from '../rpg_core/CacheMap';
 import { ImageCache } from '../rpg_core/ImageCache';
 import { RequestQueue } from '../rpg_core/RequestQueue';
 import { Utils } from '../rpg_core/Utils';
 
-export function ImageManager() {
-    throw new Error('This is a static class');
-}
+/**
+ * The static class that loads images, creates bitmap objects and retains them.
+ */
+export const ImageManager = new (class ImageManager {
+    cache = new CacheMap(this);
 
-ImageManager.cache = new CacheMap(ImageManager);
+    _imageCache = new ImageCache();
+    _requestQueue = new RequestQueue();
+    _systemReservationId = Utils.generateRuntimeId();
 
-ImageManager._imageCache = new ImageCache();
-ImageManager._requestQueue = new RequestQueue();
-ImageManager._systemReservationId = Utils.generateRuntimeId();
+    _generateCacheKey(path, hue) {
+        return path + ':' + hue;
+    }
 
-ImageManager._generateCacheKey = function (path, hue) {
-    return path + ':' + hue;
-};
+    loadAnimation(filename, hue) {
+        return this.loadBitmap('img/animations/', filename, hue, true);
+    }
 
-ImageManager.loadAnimation = function (filename, hue) {
-    return this.loadBitmap('img/animations/', filename, hue, true);
-};
+    loadBattleback1(filename, hue) {
+        return this.loadBitmap('img/battlebacks1/', filename, hue, true);
+    }
 
-ImageManager.loadBattleback1 = function (filename, hue) {
-    return this.loadBitmap('img/battlebacks1/', filename, hue, true);
-};
+    loadBattleback2(filename, hue) {
+        return this.loadBitmap('img/battlebacks2/', filename, hue, true);
+    }
 
-ImageManager.loadBattleback2 = function (filename, hue) {
-    return this.loadBitmap('img/battlebacks2/', filename, hue, true);
-};
+    loadEnemy(filename, hue) {
+        return this.loadBitmap('img/enemies/', filename, hue, true);
+    }
 
-ImageManager.loadEnemy = function (filename, hue) {
-    return this.loadBitmap('img/enemies/', filename, hue, true);
-};
+    loadCharacter(filename, hue) {
+        return this.loadBitmap('img/characters/', filename, hue, false);
+    }
 
-ImageManager.loadCharacter = function (filename, hue) {
-    return this.loadBitmap('img/characters/', filename, hue, false);
-};
+    loadFace(filename, hue) {
+        return this.loadBitmap('img/faces/', filename, hue, true);
+    }
 
-ImageManager.loadFace = function (filename, hue) {
-    return this.loadBitmap('img/faces/', filename, hue, true);
-};
+    loadParallax(filename, hue) {
+        return this.loadBitmap('img/parallaxes/', filename, hue, true);
+    }
 
-ImageManager.loadParallax = function (filename, hue) {
-    return this.loadBitmap('img/parallaxes/', filename, hue, true);
-};
+    loadPicture(filename, hue) {
+        return this.loadBitmap('img/pictures/', filename, hue, true);
+    }
 
-ImageManager.loadPicture = function (filename, hue) {
-    return this.loadBitmap('img/pictures/', filename, hue, true);
-};
+    loadSvActor(filename, hue) {
+        return this.loadBitmap('img/sv_actors/', filename, hue, false);
+    }
 
-ImageManager.loadSvActor = function (filename, hue) {
-    return this.loadBitmap('img/sv_actors/', filename, hue, false);
-};
+    loadSvEnemy(filename, hue) {
+        return this.loadBitmap('img/sv_enemies/', filename, hue, true);
+    }
 
-ImageManager.loadSvEnemy = function (filename, hue) {
-    return this.loadBitmap('img/sv_enemies/', filename, hue, true);
-};
+    loadSystem(filename, hue) {
+        return this.loadBitmap('img/system/', filename, hue, false);
+    }
 
-ImageManager.loadSystem = function (filename, hue) {
-    return this.loadBitmap('img/system/', filename, hue, false);
-};
+    loadTileset(filename, hue) {
+        return this.loadBitmap('img/tilesets/', filename, hue, false);
+    }
 
-ImageManager.loadTileset = function (filename, hue) {
-    return this.loadBitmap('img/tilesets/', filename, hue, false);
-};
+    loadTitle1(filename, hue) {
+        return this.loadBitmap('img/titles1/', filename, hue, true);
+    }
 
-ImageManager.loadTitle1 = function (filename, hue) {
-    return this.loadBitmap('img/titles1/', filename, hue, true);
-};
+    loadTitle2(filename, hue) {
+        return this.loadBitmap('img/titles2/', filename, hue, true);
+    }
 
-ImageManager.loadTitle2 = function (filename, hue) {
-    return this.loadBitmap('img/titles2/', filename, hue, true);
-};
+    loadBitmap(folder, filename, hue, smooth) {
+        if (filename) {
+            var path = folder + encodeURIComponent(filename) + '.png';
+            var bitmap = this.loadNormalBitmap(path, hue || 0);
+            bitmap.smooth = smooth;
+            return bitmap;
+        } else {
+            return this.loadEmptyBitmap();
+        }
+    }
 
-ImageManager.loadBitmap = function (folder, filename, hue, smooth) {
-    if (filename) {
-        var path = folder + encodeURIComponent(filename) + '.png';
-        var bitmap = this.loadNormalBitmap(path, hue || 0);
-        bitmap.smooth = smooth;
+    loadEmptyBitmap() {
+        var empty = this._imageCache.get('empty');
+        if (!empty) {
+            empty = new Bitmap();
+            this._imageCache.add('empty', empty);
+            this._imageCache.reserve('empty', empty, this._systemReservationId);
+        }
+
+        return empty;
+    }
+
+    loadNormalBitmap(path, hue) {
+        var key = this._generateCacheKey(path, hue);
+        var bitmap = this._imageCache.get(key);
+        if (!bitmap) {
+            bitmap = Bitmap.load(path);
+            this._callCreationHook(bitmap);
+
+            bitmap.addLoadListener(function () {
+                bitmap.rotateHue(hue);
+            });
+            this._imageCache.add(key, bitmap);
+        } else if (!bitmap.isReady()) {
+            bitmap.decode();
+        }
+
         return bitmap;
-    } else {
-        return this.loadEmptyBitmap();
-    }
-};
-
-ImageManager.loadEmptyBitmap = function () {
-    var empty = this._imageCache.get('empty');
-    if (!empty) {
-        empty = new Bitmap();
-        this._imageCache.add('empty', empty);
-        this._imageCache.reserve('empty', empty, this._systemReservationId);
     }
 
-    return empty;
-};
-
-ImageManager.loadNormalBitmap = function (path, hue) {
-    var key = this._generateCacheKey(path, hue);
-    var bitmap = this._imageCache.get(key);
-    if (!bitmap) {
-        bitmap = Bitmap.load(path);
-        this._callCreationHook(bitmap);
-
-        bitmap.addLoadListener(function () {
-            bitmap.rotateHue(hue);
-        });
-        this._imageCache.add(key, bitmap);
-    } else if (!bitmap.isReady()) {
-        bitmap.decode();
+    clear() {
+        this._imageCache = new ImageCache();
     }
 
-    return bitmap;
-};
+    isReady() {
+        return this._imageCache.isReady();
+    }
 
-ImageManager.clear = function () {
-    this._imageCache = new ImageCache();
-};
+    isObjectCharacter(filename) {
+        var sign = filename.match(/^[!$]+/);
+        return sign && sign[0].contains('!');
+    }
 
-ImageManager.isReady = function () {
-    return this._imageCache.isReady();
-};
+    isBigCharacter(filename) {
+        var sign = filename.match(/^[!$]+/);
+        return sign && sign[0].contains('$');
+    }
 
-ImageManager.isObjectCharacter = function (filename) {
-    var sign = filename.match(/^[!$]+/);
-    return sign && sign[0].contains('!');
-};
+    isZeroParallax(filename) {
+        return filename.charAt(0) === '!';
+    }
 
-ImageManager.isBigCharacter = function (filename) {
-    var sign = filename.match(/^[!$]+/);
-    return sign && sign[0].contains('$');
-};
+    reserveAnimation(filename, hue, reservationId) {
+        return this.reserveBitmap('img/animations/', filename, hue, true, reservationId);
+    }
 
-ImageManager.isZeroParallax = function (filename) {
-    return filename.charAt(0) === '!';
-};
+    reserveBattleback1(filename, hue, reservationId) {
+        return this.reserveBitmap('img/battlebacks1/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveAnimation = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/animations/', filename, hue, true, reservationId);
-};
+    reserveBattleback2(filename, hue, reservationId) {
+        return this.reserveBitmap('img/battlebacks2/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveBattleback1 = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/battlebacks1/', filename, hue, true, reservationId);
-};
+    reserveEnemy(filename, hue, reservationId) {
+        return this.reserveBitmap('img/enemies/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveBattleback2 = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/battlebacks2/', filename, hue, true, reservationId);
-};
+    reserveCharacter(filename, hue, reservationId) {
+        return this.reserveBitmap('img/characters/', filename, hue, false, reservationId);
+    }
 
-ImageManager.reserveEnemy = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/enemies/', filename, hue, true, reservationId);
-};
+    reserveFace(filename, hue, reservationId) {
+        return this.reserveBitmap('img/faces/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveCharacter = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/characters/', filename, hue, false, reservationId);
-};
+    reserveParallax(filename, hue, reservationId) {
+        return this.reserveBitmap('img/parallaxes/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveFace = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/faces/', filename, hue, true, reservationId);
-};
+    reservePicture(filename, hue, reservationId) {
+        return this.reserveBitmap('img/pictures/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveParallax = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/parallaxes/', filename, hue, true, reservationId);
-};
+    reserveSvActor(filename, hue, reservationId) {
+        return this.reserveBitmap('img/sv_actors/', filename, hue, false, reservationId);
+    }
 
-ImageManager.reservePicture = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/pictures/', filename, hue, true, reservationId);
-};
+    reserveSvEnemy(filename, hue, reservationId) {
+        return this.reserveBitmap('img/sv_enemies/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveSvActor = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/sv_actors/', filename, hue, false, reservationId);
-};
+    reserveSystem(filename, hue, reservationId) {
+        return this.reserveBitmap('img/system/', filename, hue, false, reservationId || this._systemReservationId);
+    }
 
-ImageManager.reserveSvEnemy = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/sv_enemies/', filename, hue, true, reservationId);
-};
+    reserveTileset(filename, hue, reservationId) {
+        return this.reserveBitmap('img/tilesets/', filename, hue, false, reservationId);
+    }
 
-ImageManager.reserveSystem = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/system/', filename, hue, false, reservationId || this._systemReservationId);
-};
+    reserveTitle1(filename, hue, reservationId) {
+        return this.reserveBitmap('img/titles1/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveTileset = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/tilesets/', filename, hue, false, reservationId);
-};
+    reserveTitle2(filename, hue, reservationId) {
+        return this.reserveBitmap('img/titles2/', filename, hue, true, reservationId);
+    }
 
-ImageManager.reserveTitle1 = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/titles1/', filename, hue, true, reservationId);
-};
+    reserveBitmap(folder, filename, hue, smooth, reservationId) {
+        if (filename) {
+            var path = folder + encodeURIComponent(filename) + '.png';
+            var bitmap = this.reserveNormalBitmap(path, hue || 0, reservationId || this._defaultReservationId);
+            bitmap.smooth = smooth;
+            return bitmap;
+        } else {
+            return this.loadEmptyBitmap();
+        }
+    }
 
-ImageManager.reserveTitle2 = function (filename, hue, reservationId) {
-    return this.reserveBitmap('img/titles2/', filename, hue, true, reservationId);
-};
+    reserveNormalBitmap(path, hue, reservationId) {
+        var bitmap = this.loadNormalBitmap(path, hue);
+        this._imageCache.reserve(this._generateCacheKey(path, hue), bitmap, reservationId);
 
-ImageManager.reserveBitmap = function (folder, filename, hue, smooth, reservationId) {
-    if (filename) {
-        var path = folder + encodeURIComponent(filename) + '.png';
-        var bitmap = this.reserveNormalBitmap(path, hue || 0, reservationId || this._defaultReservationId);
-        bitmap.smooth = smooth;
         return bitmap;
-    } else {
-        return this.loadEmptyBitmap();
     }
-};
 
-ImageManager.reserveNormalBitmap = function (path, hue, reservationId) {
-    var bitmap = this.loadNormalBitmap(path, hue);
-    this._imageCache.reserve(this._generateCacheKey(path, hue), bitmap, reservationId);
+    releaseReservation(reservationId) {
+        this._imageCache.releaseReservation(reservationId);
+    }
 
-    return bitmap;
-};
+    setDefaultReservationId(reservationId) {
+        this._defaultReservationId = reservationId;
+    }
 
-ImageManager.releaseReservation = function (reservationId) {
-    this._imageCache.releaseReservation(reservationId);
-};
+    requestAnimation(filename, hue) {
+        return this.requestBitmap('img/animations/', filename, hue, true);
+    }
 
-ImageManager.setDefaultReservationId = function (reservationId) {
-    this._defaultReservationId = reservationId;
-};
+    requestBattleback1(filename, hue) {
+        return this.requestBitmap('img/battlebacks1/', filename, hue, true);
+    }
 
-ImageManager.requestAnimation = function (filename, hue) {
-    return this.requestBitmap('img/animations/', filename, hue, true);
-};
+    requestBattleback2(filename, hue) {
+        return this.requestBitmap('img/battlebacks2/', filename, hue, true);
+    }
 
-ImageManager.requestBattleback1 = function (filename, hue) {
-    return this.requestBitmap('img/battlebacks1/', filename, hue, true);
-};
+    requestEnemy(filename, hue) {
+        return this.requestBitmap('img/enemies/', filename, hue, true);
+    }
 
-ImageManager.requestBattleback2 = function (filename, hue) {
-    return this.requestBitmap('img/battlebacks2/', filename, hue, true);
-};
+    requestCharacter(filename, hue) {
+        return this.requestBitmap('img/characters/', filename, hue, false);
+    }
 
-ImageManager.requestEnemy = function (filename, hue) {
-    return this.requestBitmap('img/enemies/', filename, hue, true);
-};
+    requestFace(filename, hue) {
+        return this.requestBitmap('img/faces/', filename, hue, true);
+    }
 
-ImageManager.requestCharacter = function (filename, hue) {
-    return this.requestBitmap('img/characters/', filename, hue, false);
-};
+    requestParallax(filename, hue) {
+        return this.requestBitmap('img/parallaxes/', filename, hue, true);
+    }
 
-ImageManager.requestFace = function (filename, hue) {
-    return this.requestBitmap('img/faces/', filename, hue, true);
-};
+    requestPicture(filename, hue) {
+        return this.requestBitmap('img/pictures/', filename, hue, true);
+    }
 
-ImageManager.requestParallax = function (filename, hue) {
-    return this.requestBitmap('img/parallaxes/', filename, hue, true);
-};
+    requestSvActor(filename, hue) {
+        return this.requestBitmap('img/sv_actors/', filename, hue, false);
+    }
 
-ImageManager.requestPicture = function (filename, hue) {
-    return this.requestBitmap('img/pictures/', filename, hue, true);
-};
+    requestSvEnemy(filename, hue) {
+        return this.requestBitmap('img/sv_enemies/', filename, hue, true);
+    }
 
-ImageManager.requestSvActor = function (filename, hue) {
-    return this.requestBitmap('img/sv_actors/', filename, hue, false);
-};
+    requestSystem(filename, hue) {
+        return this.requestBitmap('img/system/', filename, hue, false);
+    }
 
-ImageManager.requestSvEnemy = function (filename, hue) {
-    return this.requestBitmap('img/sv_enemies/', filename, hue, true);
-};
+    requestTileset(filename, hue) {
+        return this.requestBitmap('img/tilesets/', filename, hue, false);
+    }
 
-ImageManager.requestSystem = function (filename, hue) {
-    return this.requestBitmap('img/system/', filename, hue, false);
-};
+    requestTitle1(filename, hue) {
+        return this.requestBitmap('img/titles1/', filename, hue, true);
+    }
 
-ImageManager.requestTileset = function (filename, hue) {
-    return this.requestBitmap('img/tilesets/', filename, hue, false);
-};
+    requestTitle2(filename, hue) {
+        return this.requestBitmap('img/titles2/', filename, hue, true);
+    }
 
-ImageManager.requestTitle1 = function (filename, hue) {
-    return this.requestBitmap('img/titles1/', filename, hue, true);
-};
+    requestBitmap(folder, filename, hue, smooth) {
+        if (filename) {
+            var path = folder + encodeURIComponent(filename) + '.png';
+            var bitmap = this.requestNormalBitmap(path, hue || 0);
+            bitmap.smooth = smooth;
+            return bitmap;
+        } else {
+            return this.loadEmptyBitmap();
+        }
+    }
 
-ImageManager.requestTitle2 = function (filename, hue) {
-    return this.requestBitmap('img/titles2/', filename, hue, true);
-};
+    requestNormalBitmap(path, hue) {
+        var key = this._generateCacheKey(path, hue);
+        var bitmap = this._imageCache.get(key);
+        if (!bitmap) {
+            bitmap = Bitmap.request(path);
+            this._callCreationHook(bitmap);
 
-ImageManager.requestBitmap = function (folder, filename, hue, smooth) {
-    if (filename) {
-        var path = folder + encodeURIComponent(filename) + '.png';
-        var bitmap = this.requestNormalBitmap(path, hue || 0);
-        bitmap.smooth = smooth;
+            bitmap.addLoadListener(function () {
+                bitmap.rotateHue(hue);
+            });
+            this._imageCache.add(key, bitmap);
+            this._requestQueue.enqueue(key, bitmap);
+        } else {
+            this._requestQueue.raisePriority(key);
+        }
+
         return bitmap;
-    } else {
-        return this.loadEmptyBitmap();
-    }
-};
-
-ImageManager.requestNormalBitmap = function (path, hue) {
-    var key = this._generateCacheKey(path, hue);
-    var bitmap = this._imageCache.get(key);
-    if (!bitmap) {
-        bitmap = Bitmap.request(path);
-        this._callCreationHook(bitmap);
-
-        bitmap.addLoadListener(function () {
-            bitmap.rotateHue(hue);
-        });
-        this._imageCache.add(key, bitmap);
-        this._requestQueue.enqueue(key, bitmap);
-    } else {
-        this._requestQueue.raisePriority(key);
     }
 
-    return bitmap;
-};
+    update() {
+        this._requestQueue.update();
+    }
 
-ImageManager.update = function () {
-    this._requestQueue.update();
-};
+    clearRequest() {
+        this._requestQueue.clear();
+    }
 
-ImageManager.clearRequest = function () {
-    this._requestQueue.clear();
-};
+    setCreationHook(hook) {
+        this._creationHook = hook;
+    }
 
-ImageManager.setCreationHook = function (hook) {
-    this._creationHook = hook;
-};
-
-ImageManager._callCreationHook = function (bitmap) {
-    if (this._creationHook) this._creationHook(bitmap);
-};
+    _callCreationHook(bitmap) {
+        if (this._creationHook) this._creationHook(bitmap);
+    }
+})();

@@ -1,125 +1,121 @@
-//-----------------------------------------------------------------------------
-// SoundManager
-//
-// The static class that plays sound effects defined in the database.
-
 import { AudioManager } from '../rpg_managers/AudioManager';
 
-export function SoundManager() {
-    throw new Error('This is a static class');
-}
-
-SoundManager.preloadImportantSounds = function () {
-    this.loadSystemSound(0);
-    this.loadSystemSound(1);
-    this.loadSystemSound(2);
-    this.loadSystemSound(3);
-};
-
-SoundManager.loadSystemSound = function (n) {
-    if (global.$dataSystem) {
-        AudioManager.loadStaticSe(global.$dataSystem.sounds[n]);
+/**
+ * The static class that plays sound effects defined in the database.
+ */
+export const SoundManager = new (class SoundManager {
+    preloadImportantSounds() {
+        this.loadSystemSound(0);
+        this.loadSystemSound(1);
+        this.loadSystemSound(2);
+        this.loadSystemSound(3);
     }
-};
 
-SoundManager.playSystemSound = function (n) {
-    if (global.$dataSystem) {
-        AudioManager.playStaticSe(global.$dataSystem.sounds[n]);
+    loadSystemSound(n) {
+        if (global.$dataSystem) {
+            AudioManager.loadStaticSe(global.$dataSystem.sounds[n]);
+        }
     }
-};
 
-SoundManager.playCursor = function () {
-    this.playSystemSound(0);
-};
+    playSystemSound(n) {
+        if (global.$dataSystem) {
+            AudioManager.playStaticSe(global.$dataSystem.sounds[n]);
+        }
+    }
 
-SoundManager.playOk = function () {
-    this.playSystemSound(1);
-};
+    playCursor() {
+        this.playSystemSound(0);
+    }
 
-SoundManager.playCancel = function () {
-    this.playSystemSound(2);
-};
+    playOk() {
+        this.playSystemSound(1);
+    }
 
-SoundManager.playBuzzer = function () {
-    this.playSystemSound(3);
-};
+    playCancel() {
+        this.playSystemSound(2);
+    }
 
-SoundManager.playEquip = function () {
-    this.playSystemSound(4);
-};
+    playBuzzer() {
+        this.playSystemSound(3);
+    }
 
-SoundManager.playSave = function () {
-    this.playSystemSound(5);
-};
+    playEquip() {
+        this.playSystemSound(4);
+    }
 
-SoundManager.playLoad = function () {
-    this.playSystemSound(6);
-};
+    playSave() {
+        this.playSystemSound(5);
+    }
 
-SoundManager.playBattleStart = function () {
-    this.playSystemSound(7);
-};
+    playLoad() {
+        this.playSystemSound(6);
+    }
 
-SoundManager.playEscape = function () {
-    this.playSystemSound(8);
-};
+    playBattleStart() {
+        this.playSystemSound(7);
+    }
 
-SoundManager.playEnemyAttack = function () {
-    this.playSystemSound(9);
-};
+    playEscape() {
+        this.playSystemSound(8);
+    }
 
-SoundManager.playEnemyDamage = function () {
-    this.playSystemSound(10);
-};
+    playEnemyAttack() {
+        this.playSystemSound(9);
+    }
 
-SoundManager.playEnemyCollapse = function () {
-    this.playSystemSound(11);
-};
+    playEnemyDamage() {
+        this.playSystemSound(10);
+    }
 
-SoundManager.playBossCollapse1 = function () {
-    this.playSystemSound(12);
-};
+    playEnemyCollapse() {
+        this.playSystemSound(11);
+    }
 
-SoundManager.playBossCollapse2 = function () {
-    this.playSystemSound(13);
-};
+    playBossCollapse1() {
+        this.playSystemSound(12);
+    }
 
-SoundManager.playActorDamage = function () {
-    this.playSystemSound(14);
-};
+    playBossCollapse2() {
+        this.playSystemSound(13);
+    }
 
-SoundManager.playActorCollapse = function () {
-    this.playSystemSound(15);
-};
+    playActorDamage() {
+        this.playSystemSound(14);
+    }
 
-SoundManager.playRecovery = function () {
-    this.playSystemSound(16);
-};
+    playActorCollapse() {
+        this.playSystemSound(15);
+    }
 
-SoundManager.playMiss = function () {
-    this.playSystemSound(17);
-};
+    playRecovery() {
+        this.playSystemSound(16);
+    }
 
-SoundManager.playEvasion = function () {
-    this.playSystemSound(18);
-};
+    playMiss() {
+        this.playSystemSound(17);
+    }
 
-SoundManager.playMagicEvasion = function () {
-    this.playSystemSound(19);
-};
+    playEvasion() {
+        this.playSystemSound(18);
+    }
 
-SoundManager.playReflection = function () {
-    this.playSystemSound(20);
-};
+    playMagicEvasion() {
+        this.playSystemSound(19);
+    }
 
-SoundManager.playShop = function () {
-    this.playSystemSound(21);
-};
+    playReflection() {
+        this.playSystemSound(20);
+    }
 
-SoundManager.playUseItem = function () {
-    this.playSystemSound(22);
-};
+    playShop() {
+        this.playSystemSound(21);
+    }
 
-SoundManager.playUseSkill = function () {
-    this.playSystemSound(23);
-};
+    playUseItem() {
+        this.playSystemSound(22);
+    }
+
+    playUseSkill() {
+        this.playSystemSound(23);
+    }
+})();
