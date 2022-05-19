@@ -69,6 +69,8 @@ export class Sprite_Button extends Sprite {
     }
 
     isActive() {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node = this;
         while (node) {
             if (!node.visible) {
@@ -86,6 +88,8 @@ export class Sprite_Button extends Sprite {
     }
 
     canvasToLocalX(x) {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node = this;
         while (node) {
             x -= node.x;
@@ -95,6 +99,8 @@ export class Sprite_Button extends Sprite {
     }
 
     canvasToLocalY(y) {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node = this;
         while (node) {
             y -= node.y;

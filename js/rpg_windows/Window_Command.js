@@ -36,7 +36,9 @@ export class Window_Command extends Window_Selectable {
         this._list = [];
     }
 
-    makeCommandList() {}
+    makeCommandList() {
+        // ...
+    }
 
     addCommand(name, symbol, enabled, ext) {
         if (enabled === undefined) {

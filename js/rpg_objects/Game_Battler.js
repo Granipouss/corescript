@@ -491,13 +491,17 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    performAction(_action) {}
+    performAction(_action) {
+        // ...
+    }
 
     performActionEnd() {
         this.setActionState('done');
     }
 
-    performDamage() {}
+    performDamage() {
+        // ...
+    }
 
     performMiss() {
         SoundManager.playMiss();
@@ -523,7 +527,11 @@ export class Game_Battler extends Game_BattlerBase {
         SoundManager.playReflection();
     }
 
-    performSubstitute(_target) {}
+    performSubstitute(_target) {
+        // ...
+    }
 
-    performCollapse() {}
+    performCollapse() {
+        // ...
+    }
 }

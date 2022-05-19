@@ -65,9 +65,13 @@ export class Sprite_Battler extends Sprite_Base {
         this.updatePosition();
     }
 
-    updateBitmap() {}
+    updateBitmap() {
+        // ...
+    }
 
-    updateFrame() {}
+    updateFrame() {
+        // ...
+    }
 
     updateMove() {
         if (this._movementDuration > 0) {
@@ -167,7 +171,9 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    onMoveEnd() {}
+    onMoveEnd() {
+        // ...
+    }
 
     isEffecting() {
         return false;

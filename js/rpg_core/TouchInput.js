@@ -257,7 +257,9 @@ export const TouchInput = new (class TouchInput {
      * @param {MouseEvent} event
      * @private
      */
-    _onMiddleButtonDown(_event) {}
+    _onMiddleButtonDown(_event) {
+        // ...
+    }
 
     /**
      * @param {MouseEvent} event

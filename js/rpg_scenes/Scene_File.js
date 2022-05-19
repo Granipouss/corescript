@@ -61,5 +61,7 @@ export class Scene_File extends Scene_MenuBase {
         return 0;
     }
 
-    onSavefileOk() {}
+    onSavefileOk() {
+        // ...
+    }
 }

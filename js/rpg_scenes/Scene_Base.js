@@ -57,7 +57,9 @@ export class Scene_Base extends Stage {
      * @instance
      * @memberof Scene_Base
      */
-    create() {}
+    create() {
+        // ...
+    }
 
     /**
      * Returns whether the scene is active or not.
@@ -136,7 +138,9 @@ export class Scene_Base extends Stage {
      * @instance
      * @memberof Scene_Base
      */
-    terminate() {}
+    terminate() {
+        // ...
+    }
 
     /**
      * Create the layer for the windows children

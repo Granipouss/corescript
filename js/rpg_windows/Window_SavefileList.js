@@ -93,5 +93,7 @@ export class Window_SavefileList extends Window_Selectable {
         }
     }
 
-    playOkSound() {}
+    playOkSound() {
+        // ...
+    }
 }

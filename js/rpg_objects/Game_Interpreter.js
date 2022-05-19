@@ -1890,7 +1890,9 @@ export class Game_Interpreter {
         // to be overridden by plugins
     }
 
-    static requestImagesByPluginCommand(_command, _args) {}
+    static requestImagesByPluginCommand(_command, _args) {
+        // ...
+    }
 
     static requestImagesForCommand(command) {
         const params = command.parameters;

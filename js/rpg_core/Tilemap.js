@@ -202,7 +202,9 @@ export class Tilemap extends PIXI.Container {
     /**
      * Forces to refresh the tileset
      */
-    refreshTileset() {}
+    refreshTileset() {
+        // ...
+    }
 
     /**
      * @private

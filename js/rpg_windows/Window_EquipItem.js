@@ -41,7 +41,9 @@ export class Window_EquipItem extends Window_ItemList {
         return true;
     }
 
-    selectLast() {}
+    selectLast() {
+        // ...
+    }
 
     setStatusWindow(statusWindow) {
         this._statusWindow = statusWindow;
@@ -57,5 +59,7 @@ export class Window_EquipItem extends Window_ItemList {
         }
     }
 
-    playOkSound() {}
+    playOkSound() {
+        // ...
+    }
 }

@@ -771,7 +771,9 @@ export class Game_Action {
         }
     }
 
-    itemEffectCommonEvent(_target, _effect) {}
+    itemEffectCommonEvent(_target, _effect) {
+        // ...
+    }
 
     makeSuccess(target) {
         target.result().success = true;

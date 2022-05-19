@@ -57,7 +57,9 @@ export class Window_MenuCommand extends Window_Command {
         }
     }
 
-    addOriginalCommands() {}
+    addOriginalCommands() {
+        // ...
+    }
 
     addOptionsCommand() {
         if (this.needsCommand('options')) {

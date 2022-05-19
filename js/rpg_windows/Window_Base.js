@@ -670,6 +670,8 @@ export class Window_Base extends Window {
     }
 
     canvasToLocalX(x) {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node = this;
         while (node) {
             x -= node.x;
@@ -679,6 +681,8 @@ export class Window_Base extends Window {
     }
 
     canvasToLocalY(y) {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node = this;
         while (node) {
             y -= node.y;

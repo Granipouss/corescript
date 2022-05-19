@@ -49,5 +49,7 @@ export class Scene_MenuBase extends Scene_Base {
         this.onActorChange();
     }
 
-    onActorChange() {}
+    onActorChange() {
+        // ...
+    }
 }

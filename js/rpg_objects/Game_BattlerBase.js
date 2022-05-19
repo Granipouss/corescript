@@ -701,7 +701,9 @@ export class Game_BattlerBase {
         }
     }
 
-    onRestrict() {}
+    onRestrict() {
+        // ...
+    }
 
     mostImportantStateText() {
         const states = this.states();

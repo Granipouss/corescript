@@ -51,11 +51,7 @@ String.prototype.format = function (...args) {
  * @return {String} A string with leading zeros
  */
 String.prototype.padZero = function (length) {
-    let s = this;
-    while (s.length < length) {
-        s = '0' + s;
-    }
-    return s;
+    return this.padStart(length, '0');
 };
 
 /**

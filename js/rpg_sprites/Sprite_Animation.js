@@ -96,6 +96,8 @@ export class Sprite_Animation extends Sprite {
 
     absoluteX() {
         let x = 0;
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let object = this;
         while (object) {
             x += object.x;
@@ -106,6 +108,8 @@ export class Sprite_Animation extends Sprite {
 
     absoluteY() {
         let y = 0;
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let object = this;
         while (object) {
             y += object.y;

@@ -545,7 +545,9 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    drawItem(_index) {}
+    drawItem(_index) {
+        // ...
+    }
 
     clearItem(index) {
         const rect = this.itemRect(index);

@@ -169,7 +169,9 @@ export class Window_ShopNumber extends Window_Selectable {
         return Input.isTriggered('ok');
     }
 
-    playOkSound() {}
+    playOkSound() {
+        // ...
+    }
 
     processNumberChange() {
         if (this.isOpenAndActive()) {

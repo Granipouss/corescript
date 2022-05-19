@@ -28,12 +28,10 @@ export const Decrypter = new (class Decrypter {
         requestFile.responseType = 'arraybuffer';
         requestFile.send();
 
-        // FIXME:
-        const that = this;
-        requestFile.onload = function () {
-            if (this.status < that._xhrOk) {
-                const arrayBuffer = that.decryptArrayBuffer(requestFile.response);
-                bitmap._image.src = that.createBlobUrl(arrayBuffer);
+        requestFile.onload = () => {
+            if (requestFile.status < this._xhrOk) {
+                const arrayBuffer = this.decryptArrayBuffer(requestFile.response);
+                bitmap._image.src = this.createBlobUrl(arrayBuffer);
                 bitmap._image.addEventListener('load', (bitmap._loadListener = Bitmap.prototype._onLoad.bind(bitmap)));
                 bitmap._image.addEventListener(
                     'error',
@@ -57,12 +55,10 @@ export const Decrypter = new (class Decrypter {
         requestFile.responseType = 'arraybuffer';
         requestFile.send();
 
-        // FIXME:
-        const that = this;
-        requestFile.onload = function () {
-            if (this.status < that._xhrOk) {
-                const arrayBuffer = that.decryptArrayBuffer(requestFile.response);
-                const url = that.createBlobUrl(arrayBuffer);
+        requestFile.onload = () => {
+            if (requestFile.status < this._xhrOk) {
+                const arrayBuffer = this.decryptArrayBuffer(requestFile.response);
+                const url = this.createBlobUrl(arrayBuffer);
                 AudioManager.createDecryptBuffer(url, bgm, pos);
             }
         };
