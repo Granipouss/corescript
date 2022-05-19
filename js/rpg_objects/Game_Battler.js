@@ -281,9 +281,7 @@ export class Game_Battler extends Game_BattlerBase {
     }
 
     makeActionTimes() {
-        return this.actionPlusSet().reduce(function (r, p) {
-            return Math.random() < p ? r + 1 : r;
-        }, 1);
+        return this.actionPlusSet().reduce((r, p) => (Math.random() < p ? r + 1 : r), 1);
     }
 
     makeActions() {
@@ -305,9 +303,7 @@ export class Game_Battler extends Game_BattlerBase {
         this._speed =
             Math.min.apply(
                 null,
-                this._actions.map(function (action) {
-                    return action.speed();
-                })
+                this._actions.map((action) => action.speed())
             ) || 0;
     }
 
@@ -481,18 +477,14 @@ export class Game_Battler extends Game_BattlerBase {
 
     isChanting() {
         if (this.isWaiting()) {
-            return this._actions.some(function (action) {
-                return action.isMagicSkill();
-            });
+            return this._actions.some((action) => action.isMagicSkill());
         }
         return false;
     }
 
     isGuardWaiting() {
         if (this.isWaiting()) {
-            return this._actions.some(function (action) {
-                return action.isGuard();
-            });
+            return this._actions.some((action) => action.isGuard());
         }
         return false;
     }

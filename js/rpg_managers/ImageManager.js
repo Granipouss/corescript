@@ -103,7 +103,7 @@ export const ImageManager = new (class ImageManager {
             bitmap = Bitmap.load(path);
             this._callCreationHook(bitmap);
 
-            bitmap.addLoadListener(function () {
+            bitmap.addLoadListener(() => {
                 bitmap.rotateHue(hue);
             });
             this._imageCache.add(key, bitmap);
@@ -292,7 +292,7 @@ export const ImageManager = new (class ImageManager {
             bitmap = Bitmap.request(path);
             this._callCreationHook(bitmap);
 
-            bitmap.addLoadListener(function () {
+            bitmap.addLoadListener(() => {
                 bitmap.rotateHue(hue);
             });
             this._imageCache.add(key, bitmap);

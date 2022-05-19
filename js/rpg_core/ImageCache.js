@@ -41,10 +41,8 @@ export class ImageCache {
         const items = this._items;
 
         Object.keys(items)
-            .map(function (key) {
-                return items[key];
-            })
-            .forEach(function (item) {
+            .map((key) => items[key])
+            .forEach((item) => {
                 if (item.reservationId === reservationId) {
                     delete item.reservationId;
                 }
@@ -56,22 +54,16 @@ export class ImageCache {
         let sizeLeft = ImageCache.limit;
 
         Object.keys(items)
-            .map(function (key) {
-                return items[key];
-            })
-            .sort(function (a, b) {
-                return b.touch - a.touch;
-            })
-            .forEach(
-                function (item) {
-                    if (sizeLeft > 0 || this._mustBeHeld(item)) {
-                        const bitmap = item.bitmap;
-                        sizeLeft -= bitmap.width * bitmap.height;
-                    } else {
-                        delete items[item.key];
-                    }
-                }.bind(this)
-            );
+            .map((key) => items[key])
+            .sort((a, b) => b.touch - a.touch)
+            .forEach((item) => {
+                if (sizeLeft > 0 || this._mustBeHeld(item)) {
+                    const bitmap = item.bitmap;
+                    sizeLeft -= bitmap.width * bitmap.height;
+                } else {
+                    delete items[item.key];
+                }
+            });
     }
 
     _mustBeHeld(item) {
@@ -87,16 +79,14 @@ export class ImageCache {
 
     isReady() {
         const items = this._items;
-        return !Object.keys(items).some(function (key) {
-            return !items[key].bitmap.isRequestOnly() && !items[key].bitmap.isReady();
-        });
+        return !Object.keys(items).some((key) => !items[key].bitmap.isRequestOnly() && !items[key].bitmap.isReady());
     }
 
     getErrorBitmap() {
         const items = this._items;
         let bitmap = null;
         if (
-            Object.keys(items).some(function (key) {
+            Object.keys(items).some((key) => {
                 if (items[key].bitmap.isError()) {
                     bitmap = items[key].bitmap;
                     return true;

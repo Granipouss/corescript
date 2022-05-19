@@ -255,7 +255,7 @@ export class Window_BattleLog extends Window_Selectable {
         if (animation) {
             let delay = this.animationBaseDelay();
             const nextDelay = this.animationNextDelay();
-            targets.forEach(function (target) {
+            targets.forEach((target) => {
                 target.startAnimation(animationId, mirror, delay);
                 delay += nextDelay;
             });

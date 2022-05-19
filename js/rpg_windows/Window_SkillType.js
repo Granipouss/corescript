@@ -28,9 +28,7 @@ export class Window_SkillType extends Window_Command {
     makeCommandList() {
         if (this._actor) {
             const skillTypes = this._actor.addedSkillTypes();
-            skillTypes.sort(function (a, b) {
-                return a - b;
-            });
+            skillTypes.sort((a, b) => a - b);
             skillTypes.forEach(function (stypeId) {
                 const name = global.$dataSystem.skillTypes[stypeId];
                 this.addCommand(name, 'skill', true, stypeId);

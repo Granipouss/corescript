@@ -239,7 +239,7 @@ export class Window extends PIXI.Container {
         if (this.active) {
             this._animationCount++;
         }
-        this.children.forEach(function (child) {
+        this.children.forEach((child) => {
             if (child.update) {
                 child.update();
             }

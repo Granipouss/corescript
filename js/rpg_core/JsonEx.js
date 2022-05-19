@@ -32,7 +32,7 @@ export const JsonEx = new (class JsonEx {
     }
 
     _restoreCircularReference(circulars) {
-        circulars.forEach(function (circular) {
+        circulars.forEach((circular) => {
             const key = circular[0];
             const value = circular[1];
             const content = circular[2];
@@ -58,7 +58,7 @@ export const JsonEx = new (class JsonEx {
     }
 
     _linkCircularReference(contents, circulars, registry) {
-        circulars.forEach(function (circular) {
+        circulars.forEach((circular) => {
             const key = circular[0];
             const value = circular[1];
             const id = circular[2];

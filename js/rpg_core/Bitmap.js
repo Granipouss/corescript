@@ -980,7 +980,7 @@ export class Bitmap {
         if (this._dirty) {
             this._baseTexture.update();
             const baseTexture = this._baseTexture;
-            setTimeout(function () {
+            setTimeout(() => {
                 baseTexture.update();
             }, 0);
             this._dirty = false;

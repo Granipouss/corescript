@@ -71,16 +71,13 @@ export class Game_Enemy extends Game_Battler {
     }
 
     makeDropItems() {
-        return this.enemy().dropItems.reduce(
-            function (r, di) {
-                if (di.kind > 0 && Math.random() * di.denominator < this.dropItemRate()) {
-                    return r.concat(this.itemObject(di.kind, di.dataId));
-                } else {
-                    return r;
-                }
-            }.bind(this),
-            []
-        );
+        return this.enemy().dropItems.reduce((r, di) => {
+            if (di.kind > 0 && Math.random() * di.denominator < this.dropItemRate()) {
+                return r.concat(this.itemObject(di.kind, di.dataId));
+            } else {
+                return r;
+            }
+        }, []);
     }
 
     dropItemRate() {
@@ -243,9 +240,7 @@ export class Game_Enemy extends Game_Battler {
     }
 
     selectAction(actionList, ratingZero) {
-        const sum = actionList.reduce(function (r, a) {
-            return r + a.rating - ratingZero;
-        }, 0);
+        const sum = actionList.reduce((r, a) => r + a.rating - ratingZero, 0);
         if (sum > 0) {
             let value = Math.randomInt(sum);
             for (let i = 0; i < actionList.length; i++) {
@@ -263,14 +258,10 @@ export class Game_Enemy extends Game_Battler {
     selectAllActions(actionList) {
         const ratingMax = Math.max.apply(
             null,
-            actionList.map(function (a) {
-                return a.rating;
-            })
+            actionList.map((a) => a.rating)
         );
         const ratingZero = ratingMax - 3;
-        actionList = actionList.filter(function (a) {
-            return a.rating > ratingZero;
-        });
+        actionList = actionList.filter((a) => a.rating > ratingZero);
         for (let i = 0; i < this.numActions(); i++) {
             this.action(i).setEnemyAction(this.selectAction(actionList, ratingZero));
         }

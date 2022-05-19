@@ -228,7 +228,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     displayStartMessages() {
-        global.$gameTroop.enemyNames().forEach(function (name) {
+        global.$gameTroop.enemyNames().forEach((name) => {
             global.$gameMessage.add(TextManager.emerge.format(name));
         });
         if (this._preemptive) {
@@ -369,12 +369,10 @@ export const BattleManager = new (class BattleManager {
         if (!this._preemptive) {
             battlers = battlers.concat(global.$gameTroop.members());
         }
-        battlers.forEach(function (battler) {
+        battlers.forEach((battler) => {
             battler.makeSpeed();
         });
-        battlers.sort(function (a, b) {
-            return b.speed() - a.speed();
-        });
+        battlers.sort((a, b) => b.speed() - a.speed());
         this._actionBattlers = battlers;
     }
 
@@ -629,7 +627,7 @@ export const BattleManager = new (class BattleManager {
         const items = this._rewards.items;
         if (items.length > 0) {
             global.$gameMessage.newPage();
-            items.forEach(function (item) {
+            items.forEach((item) => {
                 global.$gameMessage.add(TextManager.obtainItem.format(item.name));
             });
         }
@@ -643,7 +641,7 @@ export const BattleManager = new (class BattleManager {
 
     gainExp() {
         const exp = this._rewards.exp;
-        global.$gameParty.allMembers().forEach(function (actor) {
+        global.$gameParty.allMembers().forEach((actor) => {
             actor.gainExp(exp);
         });
     }
@@ -654,7 +652,7 @@ export const BattleManager = new (class BattleManager {
 
     gainDropItems() {
         const items = this._rewards.items;
-        items.forEach(function (item) {
+        items.forEach((item) => {
             global.$gameParty.gainItem(item, 1);
         });
     }

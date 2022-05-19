@@ -40,9 +40,7 @@ export class Game_Followers {
     }
 
     refresh() {
-        this.forEach(function (follower) {
-            return follower.refresh();
-        }, this);
+        this.forEach((follower) => follower.refresh(), this);
     }
 
     update() {
@@ -54,7 +52,7 @@ export class Game_Followers {
                 this._gathering = false;
             }
         }
-        this.forEach(function (follower) {
+        this.forEach((follower) => {
             follower.update();
         }, this);
     }
@@ -78,7 +76,7 @@ export class Game_Followers {
     }
 
     synchronize(x, y, d) {
-        this.forEach(function (follower) {
+        this.forEach((follower) => {
             follower.locate(x, y);
             follower.setDirection(d);
         }, this);
@@ -93,26 +91,21 @@ export class Game_Followers {
     }
 
     visibleFollowers() {
-        return this._data.filter(function (follower) {
-            return follower.isVisible();
-        }, this);
+        return this._data.filter((follower) => follower.isVisible(), this);
     }
 
     areMoving() {
-        return this.visibleFollowers().some(function (follower) {
-            return follower.isMoving();
-        }, this);
+        return this.visibleFollowers().some((follower) => follower.isMoving(), this);
     }
 
     areGathered() {
-        return this.visibleFollowers().every(function (follower) {
-            return !follower.isMoving() && follower.pos(global.$gamePlayer.x, global.$gamePlayer.y);
-        }, this);
+        return this.visibleFollowers().every(
+            (follower) => !follower.isMoving() && follower.pos(global.$gamePlayer.x, global.$gamePlayer.y),
+            this
+        );
     }
 
     isSomeoneCollided(x, y) {
-        return this.visibleFollowers().some(function (follower) {
-            return follower.pos(x, y);
-        }, this);
+        return this.visibleFollowers().some((follower) => follower.pos(x, y), this);
     }
 }

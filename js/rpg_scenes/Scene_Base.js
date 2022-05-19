@@ -248,7 +248,7 @@ export class Scene_Base extends Stage {
      * @memberof Scene_Base
      */
     updateChildren() {
-        this.children.forEach(function (child) {
+        this.children.forEach((child) => {
             if (child.update) {
                 child.update();
             }

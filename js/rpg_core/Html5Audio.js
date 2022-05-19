@@ -226,17 +226,15 @@ export const Html5Audio = new (class Html5Audio {
             this._startPlaying(loop, offset);
         } else if (this._audioElement) {
             this._autoPlay = true;
-            this.addLoadListener(
-                function () {
-                    if (this._autoPlay) {
-                        this.play(loop, offset);
-                        if (this._gainTweenInterval) {
-                            clearInterval(this._gainTweenInterval);
-                            this._gainTweenInterval = null;
-                        }
+            this.addLoadListener(() => {
+                if (this._autoPlay) {
+                    this.play(loop, offset);
+                    if (this._gainTweenInterval) {
+                        clearInterval(this._gainTweenInterval);
+                        this._gainTweenInterval = null;
                     }
-                }.bind(this)
-            );
+                }
+            });
             if (!this._isLoading) this._load(this._url);
         }
     }
@@ -267,11 +265,9 @@ export const Html5Audio = new (class Html5Audio {
                 this._startGainTween(duration);
             }
         } else if (this._autoPlay) {
-            this.addLoadListener(
-                function () {
-                    this.fadeIn(duration);
-                }.bind(this)
-            );
+            this.addLoadListener(() => {
+                this.fadeIn(duration);
+            });
         }
     }
 

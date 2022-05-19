@@ -195,9 +195,7 @@ export class Game_CharacterBase {
 
     isCollidedWithEvents(x, y) {
         const events = global.$gameMap.eventsXyNt(x, y);
-        return events.some(function (event) {
-            return event.isNormalPriority();
-        });
+        return events.some((event) => event.isNormalPriority());
     }
 
     isCollidedWithVehicles(x, y) {

@@ -62,9 +62,7 @@ export class ShaderTilemap extends Tilemap {
      * Call after you update tileset
      */
     refreshTileset() {
-        const bitmaps = this.bitmaps.map(function (x) {
-            return x._baseTexture ? new PIXI.Texture(x._baseTexture) : x;
-        });
+        const bitmaps = this.bitmaps.map((x) => (x._baseTexture ? new PIXI.Texture(x._baseTexture) : x));
         this.lowerLayer.setBitmaps(bitmaps);
         this.upperLayer.setBitmaps(bitmaps);
     }
@@ -170,7 +168,8 @@ export class ShaderTilemap extends Tilemap {
     _paintTiles(startX, startY, x, y) {
         const mx = startX + x;
         const my = startY + y;
-        const dx = x * this._tileWidth, dy = y * this._tileHeight;
+        const dx = x * this._tileWidth,
+            dy = y * this._tileHeight;
         const tileId0 = this._readMapData(mx, my, 0);
         const tileId1 = this._readMapData(mx, my, 1);
         const tileId2 = this._readMapData(mx, my, 2);
@@ -273,7 +272,8 @@ export class ShaderTilemap extends Tilemap {
         let by = 0;
         let setNumber = 0;
         let isTable = false;
-        let animX = 0, animY = 0;
+        let animX = 0,
+            animY = 0;
 
         if (Tilemap.isTileA1(tileId)) {
             setNumber = 0;

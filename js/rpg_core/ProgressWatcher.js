@@ -11,22 +11,18 @@ export const ProgressWatcher = new (class ProgressWatcher {
 
     _bitmapListener(bitmap) {
         this._countLoading++;
-        bitmap.addLoadListener(
-            function () {
-                this._countLoaded++;
-                this._progressListener(this._countLoaded, this._countLoading);
-            }.bind(this)
-        );
+        bitmap.addLoadListener(() => {
+            this._countLoaded++;
+            this._progressListener(this._countLoaded, this._countLoading);
+        });
     }
 
     _audioListener(audio) {
         this._countLoading++;
-        audio.addLoadListener(
-            function () {
-                this._countLoaded++;
-                this._progressListener(this._countLoaded, this._countLoading);
-            }.bind(this)
-        );
+        audio.addLoadListener(() => {
+            this._countLoaded++;
+            this._progressListener(this._countLoaded, this._countLoading);
+        });
     }
 
     setProgressListener(progressListener) {

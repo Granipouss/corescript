@@ -41,9 +41,7 @@ Number.prototype.mod = function (n) {
  */
 String.prototype.format = function () {
     const args = arguments;
-    return this.replace(/%([0-9]+)/g, function (s, n) {
-        return args[Number(n) - 1];
-    });
+    return this.replace(/%([0-9]+)/g, (s, n) => args[Number(n) - 1]);
 };
 
 /**

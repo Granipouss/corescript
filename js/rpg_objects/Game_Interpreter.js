@@ -377,11 +377,9 @@ export class Game_Interpreter {
         global.$gameMessage.setChoices(choices, defaultType, cancelType);
         global.$gameMessage.setChoiceBackground(background);
         global.$gameMessage.setChoicePositionType(positionType);
-        global.$gameMessage.setChoiceCallback(
-            function (n) {
-                this._branch[this._indent] = n;
-            }.bind(this)
-        );
+        global.$gameMessage.setChoiceCallback((n) => {
+            this._branch[this._indent] = n;
+        });
     }
 
     // When [**]
@@ -1397,9 +1395,7 @@ export class Game_Interpreter {
             .map(function (tilesetName) {
                 return ImageManager.reserveTileset(tilesetName, 0, this._imageReservationId);
             }, this)
-            .every(function (bitmap) {
-                return bitmap.isReady();
-            });
+            .every((bitmap) => bitmap.isReady());
 
         if (allReady) {
             global.$gameMap.changeTileset(this._params[0]);
@@ -1479,11 +1475,9 @@ export class Game_Interpreter {
             }
             if (global.$dataTroops[troopId]) {
                 BattleManager.setup(troopId, this._params[2], this._params[3]);
-                BattleManager.setEventCallback(
-                    function (n) {
-                        this._branch[this._indent] = n;
-                    }.bind(this)
-                );
+                BattleManager.setEventCallback((n) => {
+                    this._branch[this._indent] = n;
+                });
                 global.$gamePlayer.makeEncounterCount();
                 SceneManager.push(Scene_Battle);
             }
@@ -1543,127 +1537,91 @@ export class Game_Interpreter {
     // Change HP
     command311() {
         const value = this.operateValue(this._params[2], this._params[3], this._params[4]);
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                this.changeHp(actor, value, this._params[5]);
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            this.changeHp(actor, value, this._params[5]);
+        });
         return true;
     }
 
     // Change MP
     command312() {
         const value = this.operateValue(this._params[2], this._params[3], this._params[4]);
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                actor.gainMp(value);
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            actor.gainMp(value);
+        });
         return true;
     }
 
     // Change TP
     command326() {
         const value = this.operateValue(this._params[2], this._params[3], this._params[4]);
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                actor.gainTp(value);
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            actor.gainTp(value);
+        });
         return true;
     }
 
     // Change State
     command313() {
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                const alreadyDead = actor.isDead();
-                if (this._params[2] === 0) {
-                    actor.addState(this._params[3]);
-                } else {
-                    actor.removeState(this._params[3]);
-                }
-                if (actor.isDead() && !alreadyDead) {
-                    actor.performCollapse();
-                }
-                actor.clearResult();
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            const alreadyDead = actor.isDead();
+            if (this._params[2] === 0) {
+                actor.addState(this._params[3]);
+            } else {
+                actor.removeState(this._params[3]);
+            }
+            if (actor.isDead() && !alreadyDead) {
+                actor.performCollapse();
+            }
+            actor.clearResult();
+        });
         return true;
     }
 
     // Recover All
     command314() {
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                actor.recoverAll();
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            actor.recoverAll();
+        });
         return true;
     }
 
     // Change EXP
     command315() {
         const value = this.operateValue(this._params[2], this._params[3], this._params[4]);
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                actor.changeExp(actor.currentExp() + value, this._params[5]);
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            actor.changeExp(actor.currentExp() + value, this._params[5]);
+        });
         return true;
     }
 
     // Change Level
     command316() {
         const value = this.operateValue(this._params[2], this._params[3], this._params[4]);
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                actor.changeLevel(actor.level + value, this._params[5]);
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            actor.changeLevel(actor.level + value, this._params[5]);
+        });
         return true;
     }
 
     // Change Parameter
     command317() {
         const value = this.operateValue(this._params[3], this._params[4], this._params[5]);
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                actor.addParam(this._params[2], value);
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            actor.addParam(this._params[2], value);
+        });
         return true;
     }
 
     // Change Skill
     command318() {
-        this.iterateActorEx(
-            this._params[0],
-            this._params[1],
-            function (actor) {
-                if (this._params[2] === 0) {
-                    actor.learnSkill(this._params[3]);
-                } else {
-                    actor.forgetSkill(this._params[3]);
-                }
-            }.bind(this)
-        );
+        this.iterateActorEx(this._params[0], this._params[1], (actor) => {
+            if (this._params[2] === 0) {
+                actor.learnSkill(this._params[3]);
+            } else {
+                actor.forgetSkill(this._params[3]);
+            }
+        });
         return true;
     }
 
@@ -1736,131 +1694,100 @@ export class Game_Interpreter {
     // Change Enemy HP
     command331() {
         const value = this.operateValue(this._params[1], this._params[2], this._params[3]);
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                this.changeHp(enemy, value, this._params[4]);
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            this.changeHp(enemy, value, this._params[4]);
+        });
         return true;
     }
 
     // Change Enemy MP
     command332() {
         const value = this.operateValue(this._params[1], this._params[2], this._params[3]);
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                enemy.gainMp(value);
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            enemy.gainMp(value);
+        });
         return true;
     }
 
     // Change Enemy TP
     command342() {
         const value = this.operateValue(this._params[1], this._params[2], this._params[3]);
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                enemy.gainTp(value);
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            enemy.gainTp(value);
+        });
         return true;
     }
 
     // Change Enemy State
     command333() {
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                const alreadyDead = enemy.isDead();
-                if (this._params[1] === 0) {
-                    enemy.addState(this._params[2]);
-                } else {
-                    enemy.removeState(this._params[2]);
-                }
-                if (enemy.isDead() && !alreadyDead) {
-                    enemy.performCollapse();
-                }
-                enemy.clearResult();
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            const alreadyDead = enemy.isDead();
+            if (this._params[1] === 0) {
+                enemy.addState(this._params[2]);
+            } else {
+                enemy.removeState(this._params[2]);
+            }
+            if (enemy.isDead() && !alreadyDead) {
+                enemy.performCollapse();
+            }
+            enemy.clearResult();
+        });
         return true;
     }
 
     // Enemy Recover All
     command334() {
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                enemy.recoverAll();
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            enemy.recoverAll();
+        });
         return true;
     }
 
     // Enemy Appear
     command335() {
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                enemy.appear();
-                global.$gameTroop.makeUniqueNames();
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            enemy.appear();
+            global.$gameTroop.makeUniqueNames();
+        });
         return true;
     }
 
     // Enemy Transform
     command336() {
-        this.iterateEnemyIndex(
-            this._params[0],
-            function (enemy) {
-                enemy.transform(this._params[1]);
-                global.$gameTroop.makeUniqueNames();
-            }.bind(this)
-        );
+        this.iterateEnemyIndex(this._params[0], (enemy) => {
+            enemy.transform(this._params[1]);
+            global.$gameTroop.makeUniqueNames();
+        });
         return true;
     }
 
     // Show Battle Animation
     command337() {
         if (this._params[2] == true) {
-            this.iterateEnemyIndex(
-                -1,
-                function (enemy) {
-                    if (enemy.isAlive()) {
-                        enemy.startAnimation(this._params[1], false, 0);
-                    }
-                }.bind(this)
-            );
+            this.iterateEnemyIndex(-1, (enemy) => {
+                if (enemy.isAlive()) {
+                    enemy.startAnimation(this._params[1], false, 0);
+                }
+            });
         } else {
-            this.iterateEnemyIndex(
-                this._params[0],
-                function (enemy) {
-                    if (enemy.isAlive()) {
-                        enemy.startAnimation(this._params[1], false, 0);
-                    }
-                }.bind(this)
-            );
+            this.iterateEnemyIndex(this._params[0], (enemy) => {
+                if (enemy.isAlive()) {
+                    enemy.startAnimation(this._params[1], false, 0);
+                }
+            });
         }
         return true;
     }
 
     // Force Action
     command339() {
-        this.iterateBattler(
-            this._params[0],
-            this._params[1],
-            function (battler) {
-                if (!battler.isDeathStateAffected()) {
-                    battler.forceAction(this._params[2], this._params[3]);
-                    BattleManager.forceAction(battler);
-                    this.setWaitMode('action');
-                }
-            }.bind(this)
-        );
+        this.iterateBattler(this._params[0], this._params[1], (battler) => {
+            if (!battler.isDeathStateAffected()) {
+                battler.forceAction(this._params[2], this._params[3]);
+                BattleManager.forceAction(battler);
+                this.setWaitMode('action');
+            }
+        });
         return true;
     }
 
@@ -1959,7 +1886,7 @@ export class Game_Interpreter {
             // Set Movement Route
             case 205:
                 if (params[1]) {
-                    params[1].list.forEach(function (command) {
+                    params[1].list.forEach((command) => {
                         const params = command.parameters;
                         if (command.code === Game_Character.ROUTE_CHANGE_IMAGE) {
                             ImageManager.requestCharacter(params[0]);
@@ -1985,7 +1912,7 @@ export class Game_Interpreter {
             // Change Player Followers
             case 216:
                 if (params[0] === 0) {
-                    global.$gamePlayer.followers().forEach(function (follower) {
+                    global.$gamePlayer.followers().forEach((follower) => {
                         const name = follower.characterName();
                         ImageManager.requestCharacter(name);
                     });
@@ -2000,7 +1927,7 @@ export class Game_Interpreter {
             // Change Tileset
             case 282:
                 const tileset = global.$dataTilesets[params[0]];
-                tileset.tilesetNames.forEach(function (tilesetName) {
+                tileset.tilesetNames.forEach((tilesetName) => {
                     ImageManager.requestTileset(tilesetName);
                 });
                 break;

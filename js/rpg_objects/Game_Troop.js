@@ -143,7 +143,7 @@ export class Game_Troop extends Game_Unit {
 
     enemyNames() {
         const names = [];
-        this.members().forEach(function (enemy) {
+        this.members().forEach((enemy) => {
             const name = enemy.originalName();
             if (enemy.isAlive() && !names.contains(name)) {
                 names.push(name);
@@ -229,17 +229,11 @@ export class Game_Troop extends Game_Unit {
     }
 
     expTotal() {
-        return this.deadMembers().reduce(function (r, enemy) {
-            return r + enemy.exp();
-        }, 0);
+        return this.deadMembers().reduce((r, enemy) => r + enemy.exp(), 0);
     }
 
     goldTotal() {
-        return (
-            this.deadMembers().reduce(function (r, enemy) {
-                return r + enemy.gold();
-            }, 0) * this.goldRate()
-        );
+        return this.deadMembers().reduce((r, enemy) => r + enemy.gold(), 0) * this.goldRate();
     }
 
     goldRate() {
@@ -247,8 +241,6 @@ export class Game_Troop extends Game_Unit {
     }
 
     makeDropItems() {
-        return this.deadMembers().reduce(function (r, enemy) {
-            return r.concat(enemy.makeDropItems());
-        }, []);
+        return this.deadMembers().reduce((r, enemy) => r.concat(enemy.makeDropItems()), []);
     }
 }

@@ -226,7 +226,7 @@ export class Game_Player extends Game_Character {
 
     startMapEvent(x, y, triggers, normal) {
         if (!global.$gameMap.isEventRunning()) {
-            global.$gameMap.eventsXy(x, y).forEach(function (event) {
+            global.$gameMap.eventsXy(x, y).forEach((event) => {
                 if (event.isTriggerIn(triggers) && event.isNormalPriority() === normal) {
                     event.start();
                 }

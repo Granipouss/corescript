@@ -25,7 +25,7 @@ export const ResourceHandler = new (class ResourceHandler {
                         Graphics.printLoadingError(url);
                         SceneManager.stop();
                     }
-                    reloaders.push(function () {
+                    reloaders.push(() => {
                         retryCount = 0;
                         retryMethod();
                     });
@@ -42,7 +42,7 @@ export const ResourceHandler = new (class ResourceHandler {
         if (this._reloaders.length > 0) {
             Graphics.eraseLoadingError();
             SceneManager.resume();
-            this._reloaders.forEach(function (reloader) {
+            this._reloaders.forEach((reloader) => {
                 reloader();
             });
             this._reloaders.length = 0;

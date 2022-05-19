@@ -38,7 +38,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     loadImages() {
-        global.$gameParty.members().forEach(function (actor) {
+        global.$gameParty.members().forEach((actor) => {
             ImageManager.reserveFace(actor.faceName());
         }, this);
     }

@@ -210,21 +210,15 @@ export class Game_Actor extends Game_Battler {
     }
 
     equips() {
-        return this._equips.map(function (item) {
-            return item.object();
-        });
+        return this._equips.map((item) => item.object());
     }
 
     weapons() {
-        return this.equips().filter(function (item) {
-            return item && DataManager.isWeapon(item);
-        });
+        return this.equips().filter((item) => item && DataManager.isWeapon(item));
     }
 
     armors() {
-        return this.equips().filter(function (item) {
-            return item && DataManager.isArmor(item);
-        });
+        return this.equips().filter((item) => item && DataManager.isArmor(item));
     }
 
     hasWeapon(weapon) {
@@ -343,9 +337,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     calcEquipItemPerformance(item) {
-        return item.params.reduce(function (a, b) {
-            return a + b;
-        });
+        return item.params.reduce((a, b) => a + b);
     }
 
     isSkillWtypeOk(skill) {
@@ -363,9 +355,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     isWtypeEquipped(wtypeId) {
-        return this.weapons().some(function (weapon) {
-            return weapon.wtypeId === wtypeId;
-        });
+        return this.weapons().some((weapon) => weapon.wtypeId === wtypeId);
     }
 
     refresh() {
@@ -407,7 +397,7 @@ export class Game_Actor extends Game_Battler {
 
     skills() {
         const list = [];
-        this._skills.concat(this.addedSkills()).forEach(function (id) {
+        this._skills.concat(this.addedSkills()).forEach((id) => {
             if (!list.contains(global.$dataSkills[id])) {
                 list.push(global.$dataSkills[id]);
             }
@@ -535,7 +525,7 @@ export class Game_Actor extends Game_Battler {
         const text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
         global.$gameMessage.newPage();
         global.$gameMessage.add(text);
-        newSkills.forEach(function (skill) {
+        newSkills.forEach((skill) => {
             global.$gameMessage.add(TextManager.obtainSkill.format(skill.name));
         });
     }
@@ -565,9 +555,7 @@ export class Game_Actor extends Game_Battler {
     learnSkill(skillId) {
         if (!this.isLearnedSkill(skillId)) {
             this._skills.push(skillId);
-            this._skills.sort(function (a, b) {
-                return a - b;
-            });
+            this._skills.sort((a, b) => a - b);
         }
     }
 
@@ -887,9 +875,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     testEscape(item) {
-        return item.effects.some(function (effect, _index, _ar) {
-            return effect && effect.code === Game_Action.EFFECT_SPECIAL;
-        });
+        return item.effects.some((effect, _index, _ar) => effect && effect.code === Game_Action.EFFECT_SPECIAL);
     }
 
     meetsUsableItemConditions(item) {

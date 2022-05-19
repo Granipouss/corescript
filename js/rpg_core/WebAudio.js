@@ -21,13 +21,9 @@ export class WebAudio {
         this.clear();
 
         if (!WebAudio._standAlone) {
-            this._loader = ResourceHandler.createLoader(
-                url,
-                this._load.bind(this, url),
-                function () {
-                    this._hasError = true;
-                }.bind(this)
-            );
+            this._loader = ResourceHandler.createLoader(url, this._load.bind(this, url), () => {
+                this._hasError = true;
+            });
         }
         this._load(url);
         this._url = url;
@@ -155,7 +151,7 @@ export class WebAudio {
         const resumeHandler = function () {
             const context = WebAudio._context;
             if (context && context.state === 'suspended' && typeof context.resume === 'function') {
-                context.resume().then(function () {
+                context.resume().then(() => {
                     WebAudio._onTouchStart();
                 });
             } else {
@@ -385,13 +381,11 @@ export class WebAudio {
             this._startPlaying(loop, offset);
         } else if (WebAudio._context) {
             this._autoPlay = true;
-            this.addLoadListener(
-                function () {
-                    if (this._autoPlay) {
-                        this.play(loop, offset);
-                    }
-                }.bind(this)
-            );
+            this.addLoadListener(() => {
+                if (this._autoPlay) {
+                    this.play(loop, offset);
+                }
+            });
         }
     }
 
@@ -427,11 +421,9 @@ export class WebAudio {
                 gain.linearRampToValueAtTime(this._volume, currentTime + duration);
             }
         } else if (this._autoPlay) {
-            this.addLoadListener(
-                function () {
-                    this.fadeIn(duration);
-                }.bind(this)
-            );
+            this.addLoadListener(() => {
+                this.fadeIn(duration);
+            });
         }
     }
 
@@ -501,16 +493,16 @@ export class WebAudio {
             if (Decrypter.hasEncryptedAudio) url = Decrypter.extToEncryptExt(url);
             xhr.open('GET', url);
             xhr.responseType = 'arraybuffer';
-            xhr.onload = function () {
+            xhr.onload = () => {
                 if (xhr.status < 400) {
                     this._onXhrLoad(xhr);
                 }
-            }.bind(this);
+            };
             xhr.onerror =
                 this._loader ||
-                function () {
+                (() => {
                     this._hasError = true;
-                }.bind(this);
+                });
             xhr.send();
         }
     }
@@ -524,21 +516,18 @@ export class WebAudio {
         let array = xhr.response;
         if (Decrypter.hasEncryptedAudio) array = Decrypter.decryptArrayBuffer(array);
         this._readLoopComments(new Uint8Array(array));
-        WebAudio._context.decodeAudioData(
-            array,
-            function (buffer) {
-                this._buffer = buffer;
-                this._totalTime = buffer.duration;
-                if (this._loopLength > 0 && this._sampleRate > 0) {
-                    this._loopStart /= this._sampleRate;
-                    this._loopLength /= this._sampleRate;
-                } else {
-                    this._loopStart = 0;
-                    this._loopLength = this._totalTime;
-                }
-                this._onLoad();
-            }.bind(this)
-        );
+        WebAudio._context.decodeAudioData(array, (buffer) => {
+            this._buffer = buffer;
+            this._totalTime = buffer.duration;
+            if (this._loopLength > 0 && this._sampleRate > 0) {
+                this._loopStart /= this._sampleRate;
+                this._loopLength /= this._sampleRate;
+            } else {
+                this._loopStart = 0;
+                this._loopLength = this._totalTime;
+            }
+            this._onLoad();
+        });
     }
 
     /**
@@ -608,12 +597,9 @@ export class WebAudio {
         if (this._sourceNode && !this._sourceNode.loop) {
             const endTime = this._startTime + this._totalTime / this._pitch;
             const delay = endTime - WebAudio._context.currentTime;
-            this._endTimer = setTimeout(
-                function () {
-                    this.stop();
-                }.bind(this),
-                delay * 1000
-            );
+            this._endTimer = setTimeout(() => {
+                this.stop();
+            }, delay * 1000);
         }
     }
 

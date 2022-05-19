@@ -252,9 +252,7 @@ export const AudioManager = new (class AudioManager {
 
     playSe(se) {
         if (se.name) {
-            this._seBuffers = this._seBuffers.filter(function (audio) {
-                return audio.isPlaying();
-            });
+            this._seBuffers = this._seBuffers.filter((audio) => audio.isPlaying());
             const buffer = this.createBuffer('se', se.name);
             this.updateSeParameters(buffer, se);
             buffer.play(false);
@@ -267,7 +265,7 @@ export const AudioManager = new (class AudioManager {
     }
 
     stopSe() {
-        this._seBuffers.forEach(function (buffer) {
+        this._seBuffers.forEach((buffer) => {
             buffer.stop();
         });
         this._seBuffers = [];
@@ -390,16 +388,12 @@ export const AudioManager = new (class AudioManager {
         this.checkWebAudioError(this._bgmBuffer);
         this.checkWebAudioError(this._bgsBuffer);
         this.checkWebAudioError(this._meBuffer);
-        this._seBuffers.forEach(
-            function (buffer) {
-                this.checkWebAudioError(buffer);
-            }.bind(this)
-        );
-        this._staticBuffers.forEach(
-            function (buffer) {
-                this.checkWebAudioError(buffer);
-            }.bind(this)
-        );
+        this._seBuffers.forEach((buffer) => {
+            this.checkWebAudioError(buffer);
+        });
+        this._staticBuffers.forEach((buffer) => {
+            this.checkWebAudioError(buffer);
+        });
     }
 
     checkWebAudioError(webAudio) {

@@ -27,15 +27,11 @@ export class Game_ActionResult {
     }
 
     addedStateObjects() {
-        return this.addedStates.map(function (id) {
-            return global.$dataStates[id];
-        });
+        return this.addedStates.map((id) => global.$dataStates[id]);
     }
 
     removedStateObjects() {
-        return this.removedStates.map(function (id) {
-            return global.$dataStates[id];
-        });
+        return this.removedStates.map((id) => global.$dataStates[id]);
     }
 
     isStatusAffected() {

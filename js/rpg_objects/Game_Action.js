@@ -532,9 +532,7 @@ export class Game_Action {
         if (elements.length > 0) {
             return Math.max.apply(
                 null,
-                elements.map(function (elementId) {
-                    return target.elementRate(elementId);
-                }, this)
+                elements.map((elementId) => target.elementRate(elementId), this)
             );
         } else {
             return 1;
@@ -698,19 +696,16 @@ export class Game_Action {
     itemEffectAddAttackState(target, effect) {
         this.subject()
             .attackStates()
-            .forEach(
-                function (stateId) {
-                    let chance = effect.value1;
-                    chance *= target.stateRate(stateId);
-                    chance *= this.subject().attackStatesRate(stateId);
-                    chance *= this.lukEffectRate(target);
-                    if (Math.random() < chance) {
-                        target.addState(stateId);
-                        this.makeSuccess(target);
-                    }
-                }.bind(this),
-                target
-            );
+            .forEach((stateId) => {
+                let chance = effect.value1;
+                chance *= target.stateRate(stateId);
+                chance *= this.subject().attackStatesRate(stateId);
+                chance *= this.lukEffectRate(target);
+                if (Math.random() < chance) {
+                    target.addState(stateId);
+                    this.makeSuccess(target);
+                }
+            }, target);
     }
 
     itemEffectAddNormalState(target, effect) {
@@ -795,7 +790,7 @@ export class Game_Action {
     }
 
     applyGlobal() {
-        this.item().effects.forEach(function (effect) {
+        this.item().effects.forEach((effect) => {
             if (effect.code === Game_Action.EFFECT_COMMON_EVENT) {
                 global.$gameTemp.reserveCommonEvent(effect.dataId);
             }

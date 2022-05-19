@@ -110,7 +110,7 @@ export class Sprite extends PIXI.Sprite {
      * @method update
      */
     update() {
-        this.children.forEach(function (child) {
+        this.children.forEach((child) => {
             if (child.update) {
                 child.update();
             }
@@ -412,7 +412,7 @@ export class Sprite extends PIXI.Sprite {
                 const stage = renderer._lastObjectRendered;
                 const f = stage._filters;
                 if (!f || !f[0]) {
-                    setTimeout(function () {
+                    setTimeout(() => {
                         const f = stage._filters;
                         if (!f || !f[0]) {
                             stage.filters = [Sprite.voidFilter];

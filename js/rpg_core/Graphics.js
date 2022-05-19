@@ -336,10 +336,10 @@ export const Graphics = new (class Graphics {
             button.style.fontSize = '24px';
             button.style.color = '#ffffff';
             button.style.backgroundColor = '#000000';
-            button.addEventListener('touchstart', function (event) {
+            button.addEventListener('touchstart', (event) => {
                 event.stopPropagation();
             });
-            button.addEventListener('click', function (_event) {
+            button.addEventListener('click', (_event) => {
                 ResourceHandler.retry();
             });
             this._errorPrinter.appendChild(button);

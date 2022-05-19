@@ -266,7 +266,7 @@ export class Game_Screen {
     }
 
     updatePictures() {
-        this._pictures.forEach(function (picture) {
+        this._pictures.forEach((picture) => {
             if (picture) {
                 picture.update();
             }

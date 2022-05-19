@@ -84,7 +84,7 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
      * @method update
      */
     update() {
-        this.children.forEach(function (child) {
+        this.children.forEach((child) => {
             if (child.update) {
                 child.update();
             }

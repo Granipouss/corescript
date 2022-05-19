@@ -179,7 +179,7 @@ export class Tilemap extends PIXI.Container {
     update() {
         this.animationCount++;
         this.animationFrame = Math.floor(this.animationCount / 30);
-        this.children.forEach(function (child) {
+        this.children.forEach((child) => {
             if (child.update) {
                 child.update();
             }

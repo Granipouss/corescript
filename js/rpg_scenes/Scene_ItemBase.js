@@ -105,15 +105,13 @@ export class Scene_ItemBase extends Scene_MenuBase {
 
     isItemEffectsValid() {
         const action = this.action();
-        return this.itemTargetActors().some(function (target) {
-            return action.testApply(target);
-        }, this);
+        return this.itemTargetActors().some((target) => action.testApply(target), this);
     }
 
     applyItem() {
         const action = this.action();
         const targets = this.itemTargetActors();
-        targets.forEach(function (battler) {
+        targets.forEach((battler) => {
             const repeats = action.numRepeats();
             for (let i = 0; i < repeats; i++) {
                 action.apply(battler);

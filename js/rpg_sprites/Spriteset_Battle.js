@@ -272,21 +272,15 @@ export class Spriteset_Battle extends Spriteset_Base {
     }
 
     isAnimationPlaying() {
-        return this.battlerSprites().some(function (sprite) {
-            return sprite.isAnimationPlaying();
-        });
+        return this.battlerSprites().some((sprite) => sprite.isAnimationPlaying());
     }
 
     isEffecting() {
-        return this.battlerSprites().some(function (sprite) {
-            return sprite.isEffecting();
-        });
+        return this.battlerSprites().some((sprite) => sprite.isEffecting());
     }
 
     isAnyoneMoving() {
-        return this.battlerSprites().some(function (sprite) {
-            return sprite.isMoving();
-        });
+        return this.battlerSprites().some((sprite) => sprite.isMoving());
     }
 
     isBusy() {

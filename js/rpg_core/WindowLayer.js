@@ -82,7 +82,7 @@ export class WindowLayer extends PIXI.Container {
      * @method update
      */
     update() {
-        this.children.forEach(function (child) {
+        this.children.forEach((child) => {
             if (child.update) {
                 child.update();
             }

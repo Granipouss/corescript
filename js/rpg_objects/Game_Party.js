@@ -49,17 +49,13 @@ export class Game_Party extends Game_Unit {
     }
 
     allMembers() {
-        return this._actors.map(function (id) {
-            return global.$gameActors.actor(id);
-        });
+        return this._actors.map((id) => global.$gameActors.actor(id));
     }
 
     battleMembers() {
         return this.allMembers()
             .slice(0, this.maxBattleMembers())
-            .filter(function (actor) {
-                return actor.isAppeared();
-            });
+            .filter((actor) => actor.isAppeared());
     }
 
     maxBattleMembers() {
@@ -71,7 +67,7 @@ export class Game_Party extends Game_Unit {
     }
 
     reviveBattleMembers() {
-        this.battleMembers().forEach(function (actor) {
+        this.battleMembers().forEach((actor) => {
             if (actor.isDead()) {
                 actor.setHp(1);
             }
@@ -172,9 +168,7 @@ export class Game_Party extends Game_Unit {
     highestLevel() {
         return Math.max.apply(
             null,
-            this.members().map(function (actor) {
-                return actor.level;
-            })
+            this.members().map((actor) => actor.level)
         );
     }
 
@@ -245,9 +239,7 @@ export class Game_Party extends Game_Unit {
     }
 
     isAnyMemberEquipped(item) {
-        return this.members().some(function (actor) {
-            return actor.equips().contains(item);
-        });
+        return this.members().some((actor) => actor.equips().contains(item));
     }
 
     gainItem(item, amount, includeEquip) {
@@ -268,7 +260,7 @@ export class Game_Party extends Game_Unit {
 
     discardMembersEquip(item, amount) {
         let n = amount;
-        this.members().forEach(function (actor) {
+        this.members().forEach((actor) => {
             while (n > 0 && actor.isEquipped(item)) {
                 actor.discardEquip(item);
                 n--;
@@ -287,15 +279,11 @@ export class Game_Party extends Game_Unit {
     }
 
     canUse(item) {
-        return this.members().some(function (actor) {
-            return actor.canUse(item);
-        });
+        return this.members().some((actor) => actor.canUse(item));
     }
 
     canInput() {
-        return this.members().some(function (actor) {
-            return actor.canInput();
-        });
+        return this.members().some((actor) => actor.canInput());
     }
 
     isAllDead() {
@@ -307,9 +295,7 @@ export class Game_Party extends Game_Unit {
     }
 
     onPlayerWalk() {
-        this.members().forEach(function (actor) {
-            return actor.onPlayerWalk();
-        });
+        this.members().forEach((actor) => actor.onPlayerWalk());
     }
 
     menuActor() {
@@ -372,21 +358,15 @@ export class Game_Party extends Game_Unit {
     }
 
     charactersForSavefile() {
-        return this.battleMembers().map(function (actor) {
-            return [actor.characterName(), actor.characterIndex()];
-        });
+        return this.battleMembers().map((actor) => [actor.characterName(), actor.characterIndex()]);
     }
 
     facesForSavefile() {
-        return this.battleMembers().map(function (actor) {
-            return [actor.faceName(), actor.faceIndex()];
-        });
+        return this.battleMembers().map((actor) => [actor.faceName(), actor.faceIndex()]);
     }
 
     partyAbility(abilityId) {
-        return this.battleMembers().some(function (actor) {
-            return actor.partyAbility(abilityId);
-        });
+        return this.battleMembers().some((actor) => actor.partyAbility(abilityId));
     }
 
     hasEncounterHalf() {
@@ -430,25 +410,25 @@ export class Game_Party extends Game_Unit {
     }
 
     performVictory() {
-        this.members().forEach(function (actor) {
+        this.members().forEach((actor) => {
             actor.performVictory();
         });
     }
 
     performEscape() {
-        this.members().forEach(function (actor) {
+        this.members().forEach((actor) => {
             actor.performEscape();
         });
     }
 
     removeBattleStates() {
-        this.members().forEach(function (actor) {
+        this.members().forEach((actor) => {
             actor.removeBattleStates();
         });
     }
 
     requestMotionRefresh() {
-        this.members().forEach(function (actor) {
+        this.members().forEach((actor) => {
             actor.requestMotionRefresh();
         });
     }

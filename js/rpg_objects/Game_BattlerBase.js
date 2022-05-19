@@ -333,19 +333,13 @@ export class Game_BattlerBase {
     }
 
     states() {
-        return this._states.map(function (id) {
-            return global.$dataStates[id];
-        });
+        return this._states.map((id) => global.$dataStates[id]);
     }
 
     stateIcons() {
         return this.states()
-            .map(function (state) {
-                return state.iconIndex;
-            })
-            .filter(function (iconIndex) {
-                return iconIndex > 0;
-            });
+            .map((state) => state.iconIndex)
+            .filter((iconIndex) => iconIndex > 0);
     }
 
     buffIcons() {
@@ -378,45 +372,31 @@ export class Game_BattlerBase {
     }
 
     allTraits() {
-        return this.traitObjects().reduce(function (r, obj) {
-            return r.concat(obj.traits);
-        }, []);
+        return this.traitObjects().reduce((r, obj) => r.concat(obj.traits), []);
     }
 
     traits(code) {
-        return this.allTraits().filter(function (trait) {
-            return trait.code === code;
-        });
+        return this.allTraits().filter((trait) => trait.code === code);
     }
 
     traitsWithId(code, id) {
-        return this.allTraits().filter(function (trait) {
-            return trait.code === code && trait.dataId === id;
-        });
+        return this.allTraits().filter((trait) => trait.code === code && trait.dataId === id);
     }
 
     traitsPi(code, id) {
-        return this.traitsWithId(code, id).reduce(function (r, trait) {
-            return r * trait.value;
-        }, 1);
+        return this.traitsWithId(code, id).reduce((r, trait) => r * trait.value, 1);
     }
 
     traitsSum(code, id) {
-        return this.traitsWithId(code, id).reduce(function (r, trait) {
-            return r + trait.value;
-        }, 0);
+        return this.traitsWithId(code, id).reduce((r, trait) => r + trait.value, 0);
     }
 
     traitsSumAll(code) {
-        return this.traits(code).reduce(function (r, trait) {
-            return r + trait.value;
-        }, 0);
+        return this.traits(code).reduce((r, trait) => r + trait.value, 0);
     }
 
     traitsSet(code) {
-        return this.traits(code).reduce(function (r, trait) {
-            return r.concat(trait.dataId);
-        }, []);
+        return this.traits(code).reduce((r, trait) => r.concat(trait.dataId), []);
     }
 
     paramBase(_paramId) {
@@ -551,15 +531,11 @@ export class Game_BattlerBase {
     }
 
     actionPlusSet() {
-        return this.traits(Game_BattlerBase.TRAIT_ACTION_PLUS).map(function (trait) {
-            return trait.value;
-        });
+        return this.traits(Game_BattlerBase.TRAIT_ACTION_PLUS).map((trait) => trait.value);
     }
 
     specialFlag(flagId) {
-        return this.traits(Game_BattlerBase.TRAIT_SPECIAL_FLAG).some(function (trait) {
-            return trait.dataId === flagId;
-        });
+        return this.traits(Game_BattlerBase.TRAIT_SPECIAL_FLAG).some((trait) => trait.dataId === flagId);
     }
 
     collapseType() {
@@ -568,9 +544,7 @@ export class Game_BattlerBase {
     }
 
     partyAbility(abilityId) {
-        return this.traits(Game_BattlerBase.TRAIT_PARTY_ABILITY).some(function (trait) {
-            return trait.dataId === abilityId;
-        });
+        return this.traits(Game_BattlerBase.TRAIT_PARTY_ABILITY).some((trait) => trait.dataId === abilityId);
     }
 
     isAutoBattle() {
@@ -697,7 +671,7 @@ export class Game_BattlerBase {
     }
 
     sortStates() {
-        this._states.sort(function (a, b) {
+        this._states.sort((a, b) => {
             const p1 = global.$dataStates[a].priority;
             const p2 = global.$dataStates[b].priority;
             if (p1 !== p2) {
@@ -711,9 +685,7 @@ export class Game_BattlerBase {
         return Math.max.apply(
             null,
             this.states()
-                .map(function (state) {
-                    return state.restriction;
-                })
+                .map((state) => state.restriction)
                 .concat(0)
         );
     }

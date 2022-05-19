@@ -15,27 +15,19 @@ export class Game_Unit {
     }
 
     aliveMembers() {
-        return this.members().filter(function (member) {
-            return member.isAlive();
-        });
+        return this.members().filter((member) => member.isAlive());
     }
 
     deadMembers() {
-        return this.members().filter(function (member) {
-            return member.isDead();
-        });
+        return this.members().filter((member) => member.isDead());
     }
 
     movableMembers() {
-        return this.members().filter(function (member) {
-            return member.canMove();
-        });
+        return this.members().filter((member) => member.canMove());
     }
 
     clearActions() {
-        return this.members().forEach(function (member) {
-            return member.clearActions();
-        });
+        return this.members().forEach((member) => member.clearActions());
     }
 
     agility() {
@@ -43,22 +35,18 @@ export class Game_Unit {
         if (members.length === 0) {
             return 1;
         }
-        const sum = members.reduce(function (r, member) {
-            return r + member.agi;
-        }, 0);
+        const sum = members.reduce((r, member) => r + member.agi, 0);
         return sum / members.length;
     }
 
     tgrSum() {
-        return this.aliveMembers().reduce(function (r, member) {
-            return r + member.tgr;
-        }, 0);
+        return this.aliveMembers().reduce((r, member) => r + member.tgr, 0);
     }
 
     randomTarget() {
         let tgrRand = Math.random() * this.tgrSum();
         let target = null;
-        this.aliveMembers().forEach(function (member) {
+        this.aliveMembers().forEach((member) => {
             tgrRand -= member.tgr;
             if (tgrRand <= 0 && !target) {
                 target = member;
@@ -92,13 +80,13 @@ export class Game_Unit {
     }
 
     clearResults() {
-        this.members().forEach(function (member) {
+        this.members().forEach((member) => {
             member.clearResult();
         });
     }
 
     onBattleStart() {
-        this.members().forEach(function (member) {
+        this.members().forEach((member) => {
             member.onBattleStart();
         });
         this._inBattle = true;
@@ -106,19 +94,19 @@ export class Game_Unit {
 
     onBattleEnd() {
         this._inBattle = false;
-        this.members().forEach(function (member) {
+        this.members().forEach((member) => {
             member.onBattleEnd();
         });
     }
 
     makeActions() {
-        this.members().forEach(function (member) {
+        this.members().forEach((member) => {
             member.makeActions();
         });
     }
 
     select(activeMember) {
-        this.members().forEach(function (member) {
+        this.members().forEach((member) => {
             if (member === activeMember) {
                 member.select();
             } else {

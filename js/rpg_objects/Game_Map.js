@@ -117,7 +117,7 @@ export class Game_Map {
     }
 
     refereshVehicles() {
-        this._vehicles.forEach(function (vehicle) {
+        this._vehicles.forEach((vehicle) => {
             vehicle.refresh();
         });
     }
@@ -157,16 +157,12 @@ export class Game_Map {
                 this._events[i] = new Game_Event(this._mapId, i);
             }
         }
-        this._commonEvents = this.parallelCommonEvents().map(function (commonEvent) {
-            return new Game_CommonEvent(commonEvent.id);
-        });
+        this._commonEvents = this.parallelCommonEvents().map((commonEvent) => new Game_CommonEvent(commonEvent.id));
         this.refreshTileEvents();
     }
 
     events() {
-        return this._events.filter(function (event) {
-            return !!event;
-        });
+        return this._events.filter((event) => !!event);
     }
 
     event(eventId) {
@@ -178,9 +174,7 @@ export class Game_Map {
     }
 
     parallelCommonEvents() {
-        return global.$dataCommonEvents.filter(function (commonEvent) {
-            return commonEvent && commonEvent.trigger === 2;
-        });
+        return global.$dataCommonEvents.filter((commonEvent) => commonEvent && commonEvent.trigger === 2);
     }
 
     setupScroll() {
@@ -412,10 +406,10 @@ export class Game_Map {
     }
 
     refresh() {
-        this.events().forEach(function (event) {
+        this.events().forEach((event) => {
             event.refresh();
         });
-        this._commonEvents.forEach(function (event) {
+        this._commonEvents.forEach((event) => {
             event.refresh();
         });
         this.refreshTileEvents();
@@ -423,27 +417,19 @@ export class Game_Map {
     }
 
     refreshTileEvents() {
-        this.tileEvents = this.events().filter(function (event) {
-            return event.isTile();
-        });
+        this.tileEvents = this.events().filter((event) => event.isTile());
     }
 
     eventsXy(x, y) {
-        return this.events().filter(function (event) {
-            return event.pos(x, y);
-        });
+        return this.events().filter((event) => event.pos(x, y));
     }
 
     eventsXyNt(x, y) {
-        return this.events().filter(function (event) {
-            return event.posNt(x, y);
-        });
+        return this.events().filter((event) => event.posNt(x, y));
     }
 
     tileEventsXy(x, y) {
-        return this.tileEvents.filter(function (event) {
-            return event.posNt(x, y);
-        });
+        return this.tileEvents.filter((event) => event.posNt(x, y));
     }
 
     eventIdXy(x, y) {
@@ -544,9 +530,7 @@ export class Game_Map {
     }
 
     allTiles(x, y) {
-        const tiles = this.tileEventsXy(x, y).map(function (event) {
-            return event.tileId();
-        });
+        const tiles = this.tileEventsXy(x, y).map((event) => event.tileId());
         return tiles.concat(this.layeredTiles(x, y));
     }
 
@@ -573,9 +557,7 @@ export class Game_Map {
 
     checkLayeredTilesFlags(x, y, bit) {
         const flags = this.tilesetFlags();
-        return this.layeredTiles(x, y).some(function (tileId) {
-            return (flags[tileId] & bit) !== 0;
-        });
+        return this.layeredTiles(x, y).some((tileId) => flags[tileId] & (bit !== 0));
     }
 
     isLadder(x, y) {
@@ -668,16 +650,16 @@ export class Game_Map {
     }
 
     updateEvents() {
-        this.events().forEach(function (event) {
+        this.events().forEach((event) => {
             event.update();
         });
-        this._commonEvents.forEach(function (event) {
+        this._commonEvents.forEach((event) => {
             event.update();
         });
     }
 
     updateVehicles() {
-        this._vehicles.forEach(function (vehicle) {
+        this._vehicles.forEach((vehicle) => {
             vehicle.update();
         });
     }
@@ -795,8 +777,6 @@ export class Game_Map {
     }
 
     isAnyEventStarting() {
-        return this.events().some(function (event) {
-            return event.isStarting();
-        });
+        return this.events().some((event) => event.isStarting());
     }
 }
