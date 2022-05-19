@@ -454,10 +454,13 @@ export class Game_Interpreter {
     command111() {
         let result = false;
         switch (this._params[0]) {
-            case 0: // Switch
+            // Switch
+            case 0: {
                 result = global.$gameSwitches.value(this._params[1]) === (this._params[2] === 0);
                 break;
-            case 1: // Variable
+            }
+            // Variable
+            case 1: {
                 const value1 = global.$gameVariables.value(this._params[1]);
                 let value2;
                 if (this._params[2] === 0) {
@@ -486,13 +489,17 @@ export class Game_Interpreter {
                         break;
                 }
                 break;
-            case 2: // Self Switch
+            }
+            // Self Switch
+            case 2: {
                 if (this._eventId > 0) {
                     const key = [this._mapId, this._eventId, this._params[1]];
                     result = global.$gameSelfSwitches.value(key) === (this._params[2] === 0);
                 }
                 break;
-            case 3: // Timer
+            }
+            // Timer
+            case 3: {
                 if (global.$gameTimer.isWorking()) {
                     if (this._params[2] === 0) {
                         result = global.$gameTimer.seconds() >= this._params[1];
@@ -501,7 +508,9 @@ export class Game_Interpreter {
                     }
                 }
                 break;
-            case 4: // Actor
+            }
+            // Actor
+            case 4: {
                 const actor = global.$gameActors.actor(this._params[1]);
                 if (actor) {
                     const n = this._params[3];
@@ -530,7 +539,9 @@ export class Game_Interpreter {
                     }
                 }
                 break;
-            case 5: // Enemy
+            }
+            // Enemy
+            case 5: {
                 const enemy = global.$gameTroop.members()[this._params[1]];
                 if (enemy) {
                     switch (this._params[2]) {
@@ -543,13 +554,17 @@ export class Game_Interpreter {
                     }
                 }
                 break;
-            case 6: // Character
+            }
+            // Character
+            case 6: {
                 const character = this.character(this._params[1]);
                 if (character) {
                     result = character.direction() === this._params[2];
                 }
                 break;
-            case 7: // Gold
+            }
+            // Gold
+            case 7: {
                 switch (this._params[2]) {
                     case 0: // Greater than or equal to
                         result = global.$gameParty.gold() >= this._params[1];
@@ -562,6 +577,7 @@ export class Game_Interpreter {
                         break;
                 }
                 break;
+            }
             case 8: // Item
                 result = global.$gameParty.hasItem(global.$dataItems[this._params[1]]);
                 break;
@@ -745,7 +761,8 @@ export class Game_Interpreter {
                 return global.$gameParty.numItems(global.$dataWeapons[param1]);
             case 2: // Armor
                 return global.$gameParty.numItems(global.$dataArmors[param1]);
-            case 3: // Actor
+            // Actor
+            case 3: {
                 var actor = global.$gameActors.actor(param1);
                 if (actor) {
                     switch (param2) {
@@ -764,7 +781,9 @@ export class Game_Interpreter {
                     }
                 }
                 break;
-            case 4: // Enemy
+            }
+            // Enemy
+            case 4: {
                 const enemy = global.$gameTroop.members()[param1];
                 if (enemy) {
                     switch (param2) {
@@ -779,7 +798,9 @@ export class Game_Interpreter {
                     }
                 }
                 break;
-            case 5: // Character
+            }
+            // Character
+            case 5: {
                 const character = this.character(param1);
                 if (character) {
                     switch (param2) {
@@ -796,10 +817,14 @@ export class Game_Interpreter {
                     }
                 }
                 break;
-            case 6: // Party
+            }
+            // Party
+            case 6: {
                 actor = global.$gameParty.members()[param1];
                 return actor ? actor.actorId() : 0;
-            case 7: // Other
+            }
+            // Other
+            case 7: {
                 switch (param1) {
                     case 0: // Map ID
                         return global.$gameMap.mapId();
@@ -823,6 +848,7 @@ export class Game_Interpreter {
                         return global.$gameSystem.escapeCount();
                 }
                 break;
+            }
         }
         return 0;
     }
@@ -1875,13 +1901,14 @@ export class Game_Interpreter {
                 break;
 
             // Change Party Member
-            case 129:
+            case 129: {
                 const actor = global.$gameActors.actor(params[0]);
                 if (actor && params[1] === 0) {
                     var name = actor.characterName();
                     ImageManager.requestCharacter(name);
                 }
                 break;
+            }
 
             // Set Movement Route
             case 205:
@@ -1925,12 +1952,13 @@ export class Game_Interpreter {
                 break;
 
             // Change Tileset
-            case 282:
+            case 282: {
                 const tileset = global.$dataTilesets[params[0]];
                 tileset.tilesetNames.forEach((tilesetName) => {
                     ImageManager.requestTileset(tilesetName);
                 });
                 break;
+            }
 
             // Change Battle Back
             case 283:
@@ -1955,12 +1983,13 @@ export class Game_Interpreter {
                 break;
 
             // Change Vehicle Image
-            case 323:
+            case 323: {
                 const vehicle = global.$gameMap.vehicle(params[0]);
                 if (vehicle) {
                     ImageManager.requestCharacter(params[1]);
                 }
                 break;
+            }
 
             // Enemy Transform
             case 336: {
@@ -1975,11 +2004,12 @@ export class Game_Interpreter {
                 break;
             }
             // Plugin Command
-            case 356:
+            case 356: {
                 const args = params[0].split(' ');
                 const commandName = args.shift();
                 Game_Interpreter.requestImagesByPluginCommand(commandName, args);
                 break;
+            }
         }
     }
 
