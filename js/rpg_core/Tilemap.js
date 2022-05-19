@@ -165,7 +165,7 @@ export class Tilemap extends PIXI.Container {
      * @return {Boolean} True if the tilemap is ready
      */
     isReady() {
-        for (var i = 0; i < this.bitmaps.length; i++) {
+        for (let i = 0; i < this.bitmaps.length; i++) {
             if (this.bitmaps[i] && !this.bitmaps[i].isReady()) {
                 return false;
             }
@@ -184,7 +184,7 @@ export class Tilemap extends PIXI.Container {
                 child.update();
             }
         });
-        for (var i = 0; i < this.bitmaps.length; i++) {
+        for (let i = 0; i < this.bitmaps.length; i++) {
             if (this.bitmaps[i]) {
                 this.bitmaps[i].touch();
             }
@@ -208,10 +208,10 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     updateTransform() {
-        var ox = Math.floor(this.origin.x);
-        var oy = Math.floor(this.origin.y);
-        var startX = Math.floor((ox - this._margin) / this._tileWidth);
-        var startY = Math.floor((oy - this._margin) / this._tileHeight);
+        const ox = Math.floor(this.origin.x);
+        const oy = Math.floor(this.origin.y);
+        const startX = Math.floor((ox - this._margin) / this._tileWidth);
+        const startY = Math.floor((oy - this._margin) / this._tileHeight);
         this._updateLayerPositions(startX, startY);
         if (
             this._needsRepaint ||
@@ -234,13 +234,13 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _createLayers() {
-        var width = this._width;
-        var height = this._height;
-        var margin = this._margin;
-        var tileCols = Math.ceil(width / this._tileWidth) + 1;
-        var tileRows = Math.ceil(height / this._tileHeight) + 1;
-        var layerWidth = tileCols * this._tileWidth;
-        var layerHeight = tileRows * this._tileHeight;
+        const width = this._width;
+        const height = this._height;
+        const margin = this._margin;
+        const tileCols = Math.ceil(width / this._tileWidth) + 1;
+        const tileRows = Math.ceil(height / this._tileHeight) + 1;
+        const layerWidth = tileCols * this._tileWidth;
+        const layerHeight = tileRows * this._tileHeight;
         this._lowerBitmap = new Bitmap(layerWidth, layerHeight);
         this._upperBitmap = new Bitmap(layerWidth, layerHeight);
         this._layerWidth = layerWidth;
@@ -268,7 +268,7 @@ export class Tilemap extends PIXI.Container {
         this._upperLayer.move(-margin, -margin, width, height);
         this._upperLayer.z = 4;
 
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             this._lowerLayer.addChild(new Sprite(this._lowerBitmap));
             this._upperLayer.addChild(new Sprite(this._upperBitmap));
         }
@@ -283,18 +283,18 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _updateLayerPositions(_startX, _startY) {
-        var m = this._margin;
-        var ox = Math.floor(this.origin.x);
-        var oy = Math.floor(this.origin.y);
-        var x2 = (ox - m).mod(this._layerWidth);
-        var y2 = (oy - m).mod(this._layerHeight);
-        var w1 = this._layerWidth - x2;
-        var h1 = this._layerHeight - y2;
-        var w2 = this._width - w1;
-        var h2 = this._height - h1;
+        const m = this._margin;
+        const ox = Math.floor(this.origin.x);
+        const oy = Math.floor(this.origin.y);
+        const x2 = (ox - m).mod(this._layerWidth);
+        const y2 = (oy - m).mod(this._layerHeight);
+        const w1 = this._layerWidth - x2;
+        const h1 = this._layerHeight - y2;
+        const w2 = this._width - w1;
+        const h2 = this._height - h1;
 
-        for (var i = 0; i < 2; i++) {
-            var children;
+        for (let i = 0; i < 2; i++) {
+            let children;
             if (i === 0) {
                 children = this._lowerLayer.children;
             } else {
@@ -317,10 +317,10 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _paintAllTiles(startX, startY) {
-        var tileCols = Math.ceil(this._width / this._tileWidth) + 1;
-        var tileRows = Math.ceil(this._height / this._tileHeight) + 1;
-        for (var y = 0; y < tileRows; y++) {
-            for (var x = 0; x < tileCols; x++) {
+        const tileCols = Math.ceil(this._width / this._tileWidth) + 1;
+        const tileRows = Math.ceil(this._height / this._tileHeight) + 1;
+        for (let y = 0; y < tileRows; y++) {
+            for (let x = 0; x < tileCols; x++) {
                 this._paintTiles(startX, startY, x, y);
             }
         }
@@ -334,21 +334,21 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _paintTiles(startX, startY, x, y) {
-        var tableEdgeVirtualId = 10000;
-        var mx = startX + x;
-        var my = startY + y;
-        var dx = (mx * this._tileWidth).mod(this._layerWidth);
-        var dy = (my * this._tileHeight).mod(this._layerHeight);
-        var lx = dx / this._tileWidth;
-        var ly = dy / this._tileHeight;
-        var tileId0 = this._readMapData(mx, my, 0);
-        var tileId1 = this._readMapData(mx, my, 1);
-        var tileId2 = this._readMapData(mx, my, 2);
-        var tileId3 = this._readMapData(mx, my, 3);
-        var shadowBits = this._readMapData(mx, my, 4);
-        var upperTileId1 = this._readMapData(mx, my - 1, 1);
-        var lowerTiles = [];
-        var upperTiles = [];
+        const tableEdgeVirtualId = 10000;
+        const mx = startX + x;
+        const my = startY + y;
+        const dx = (mx * this._tileWidth).mod(this._layerWidth);
+        const dy = (my * this._tileHeight).mod(this._layerHeight);
+        const lx = dx / this._tileWidth;
+        const ly = dy / this._tileHeight;
+        const tileId0 = this._readMapData(mx, my, 0);
+        const tileId1 = this._readMapData(mx, my, 1);
+        const tileId2 = this._readMapData(mx, my, 2);
+        const tileId3 = this._readMapData(mx, my, 3);
+        const shadowBits = this._readMapData(mx, my, 4);
+        const upperTileId1 = this._readMapData(mx, my - 1, 1);
+        const lowerTiles = [];
+        const upperTiles = [];
 
         if (this._isHigherTile(tileId0)) {
             upperTiles.push(tileId0);
@@ -385,11 +385,11 @@ export class Tilemap extends PIXI.Container {
             }
         }
 
-        var lastLowerTiles = this._readLastTiles(0, lx, ly);
+        const lastLowerTiles = this._readLastTiles(0, lx, ly);
         if (!lowerTiles.equals(lastLowerTiles) || (Tilemap.isTileA1(tileId0) && this._frameUpdated)) {
             this._lowerBitmap.clearRect(dx, dy, this._tileWidth, this._tileHeight);
-            for (var i = 0; i < lowerTiles.length; i++) {
-                var lowerTileId = lowerTiles[i];
+            for (let i = 0; i < lowerTiles.length; i++) {
+                const lowerTileId = lowerTiles[i];
                 if (lowerTileId < 0) {
                     this._drawShadow(this._lowerBitmap, shadowBits, dx, dy);
                 } else if (lowerTileId >= tableEdgeVirtualId) {
@@ -401,10 +401,10 @@ export class Tilemap extends PIXI.Container {
             this._writeLastTiles(0, lx, ly, lowerTiles);
         }
 
-        var lastUpperTiles = this._readLastTiles(1, lx, ly);
+        const lastUpperTiles = this._readLastTiles(1, lx, ly);
         if (!upperTiles.equals(lastUpperTiles)) {
             this._upperBitmap.clearRect(dx, dy, this._tileWidth, this._tileHeight);
-            for (var j = 0; j < upperTiles.length; j++) {
+            for (let j = 0; j < upperTiles.length; j++) {
                 this._drawTile(this._upperBitmap, upperTiles[j], dx, dy);
             }
             this._writeLastTiles(1, lx, ly, upperTiles);
@@ -418,11 +418,11 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _readLastTiles(i, x, y) {
-        var array1 = this._lastTiles[i];
+        const array1 = this._lastTiles[i];
         if (array1) {
-            var array2 = array1[y];
+            const array2 = array1[y];
             if (array2) {
-                var tiles = array2[x];
+                const tiles = array2[x];
                 if (tiles) {
                     return tiles;
                 }
@@ -438,11 +438,11 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _writeLastTiles(i, x, y, tiles) {
-        var array1 = this._lastTiles[i];
+        let array1 = this._lastTiles[i];
         if (!array1) {
             array1 = this._lastTiles[i] = [];
         }
-        var array2 = array1[y];
+        let array2 = array1[y];
         if (!array2) {
             array2 = array1[y] = [];
         }
@@ -473,7 +473,7 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _drawNormalTile(bitmap, tileId, dx, dy) {
-        var setNumber = 0;
+        let setNumber = 0;
 
         if (Tilemap.isTileA5(tileId)) {
             setNumber = 4;
@@ -481,12 +481,12 @@ export class Tilemap extends PIXI.Container {
             setNumber = 5 + Math.floor(tileId / 256);
         }
 
-        var w = this._tileWidth;
-        var h = this._tileHeight;
-        var sx = ((Math.floor(tileId / 128) % 2) * 8 + (tileId % 8)) * w;
-        var sy = (Math.floor((tileId % 256) / 8) % 16) * h;
+        const w = this._tileWidth;
+        const h = this._tileHeight;
+        const sx = ((Math.floor(tileId / 128) % 2) * 8 + (tileId % 8)) * w;
+        const sy = (Math.floor((tileId % 256) / 8) % 16) * h;
 
-        var source = this.bitmaps[setNumber];
+        const source = this.bitmaps[setNumber];
         if (source) {
             bitmap.bltImage(source, sx, sy, w, h, dx, dy, w, h);
         }
@@ -500,18 +500,18 @@ export class Tilemap extends PIXI.Container {
      * @private
      */
     _drawAutotile(bitmap, tileId, dx, dy) {
-        var autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
-        var kind = Tilemap.getAutotileKind(tileId);
-        var shape = Tilemap.getAutotileShape(tileId);
-        var tx = kind % 8;
-        var ty = Math.floor(kind / 8);
-        var bx = 0;
-        var by = 0;
-        var setNumber = 0;
-        var isTable = false;
+        let autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
+        const kind = Tilemap.getAutotileKind(tileId);
+        const shape = Tilemap.getAutotileShape(tileId);
+        const tx = kind % 8;
+        const ty = Math.floor(kind / 8);
+        let bx = 0;
+        let by = 0;
+        let setNumber = 0;
+        let isTable = false;
 
         if (Tilemap.isTileA1(tileId)) {
-            var waterSurfaceIndex = [0, 1, 2, 1][this.animationFrame % 4];
+            const waterSurfaceIndex = [0, 1, 2, 1][this.animationFrame % 4];
             setNumber = 0;
             if (kind === 0) {
                 bx = waterSurfaceIndex * 2;
@@ -555,27 +555,27 @@ export class Tilemap extends PIXI.Container {
             }
         }
 
-        var table = autotileTable[shape];
-        var source = this.bitmaps[setNumber];
+        const table = autotileTable[shape];
+        const source = this.bitmaps[setNumber];
 
         if (table && source) {
-            var w1 = this._tileWidth / 2;
-            var h1 = this._tileHeight / 2;
-            for (var i = 0; i < 4; i++) {
-                var qsx = table[i][0];
-                var qsy = table[i][1];
-                var sx1 = (bx * 2 + qsx) * w1;
-                var sy1 = (by * 2 + qsy) * h1;
-                var dx1 = dx + (i % 2) * w1;
-                var dy1 = dy + Math.floor(i / 2) * h1;
+            const w1 = this._tileWidth / 2;
+            const h1 = this._tileHeight / 2;
+            for (let i = 0; i < 4; i++) {
+                const qsx = table[i][0];
+                const qsy = table[i][1];
+                const sx1 = (bx * 2 + qsx) * w1;
+                const sy1 = (by * 2 + qsy) * h1;
+                const dx1 = dx + (i % 2) * w1;
+                let dy1 = dy + Math.floor(i / 2) * h1;
                 if (isTable && (qsy === 1 || qsy === 5)) {
-                    var qsx2 = qsx;
-                    var qsy2 = 3;
+                    let qsx2 = qsx;
+                    const qsy2 = 3;
                     if (qsy === 1) {
                         qsx2 = [0, 3, 2, 1][qsx];
                     }
-                    var sx2 = (bx * 2 + qsx2) * w1;
-                    var sy2 = (by * 2 + qsy2) * h1;
+                    const sx2 = (bx * 2 + qsx2) * w1;
+                    const sy2 = (by * 2 + qsy2) * h1;
                     bitmap.bltImage(source, sx2, sy2, w1, h1, dx1, dy1, w1, h1);
                     dy1 += h1 / 2;
                     bitmap.bltImage(source, sx1, sy1, w1, h1 / 2, dx1, dy1, w1, h1 / 2);
@@ -595,27 +595,27 @@ export class Tilemap extends PIXI.Container {
      */
     _drawTableEdge(bitmap, tileId, dx, dy) {
         if (Tilemap.isTileA2(tileId)) {
-            var autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
-            var kind = Tilemap.getAutotileKind(tileId);
-            var shape = Tilemap.getAutotileShape(tileId);
-            var tx = kind % 8;
-            var ty = Math.floor(kind / 8);
-            var setNumber = 1;
-            var bx = tx * 2;
-            var by = (ty - 2) * 3;
-            var table = autotileTable[shape];
+            const autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
+            const kind = Tilemap.getAutotileKind(tileId);
+            const shape = Tilemap.getAutotileShape(tileId);
+            const tx = kind % 8;
+            const ty = Math.floor(kind / 8);
+            const setNumber = 1;
+            const bx = tx * 2;
+            const by = (ty - 2) * 3;
+            const table = autotileTable[shape];
 
             if (table) {
-                var source = this.bitmaps[setNumber];
-                var w1 = this._tileWidth / 2;
-                var h1 = this._tileHeight / 2;
-                for (var i = 0; i < 2; i++) {
-                    var qsx = table[2 + i][0];
-                    var qsy = table[2 + i][1];
-                    var sx1 = (bx * 2 + qsx) * w1;
-                    var sy1 = (by * 2 + qsy) * h1 + h1 / 2;
-                    var dx1 = dx + (i % 2) * w1;
-                    var dy1 = dy + Math.floor(i / 2) * h1;
+                const source = this.bitmaps[setNumber];
+                const w1 = this._tileWidth / 2;
+                const h1 = this._tileHeight / 2;
+                for (let i = 0; i < 2; i++) {
+                    const qsx = table[2 + i][0];
+                    const qsy = table[2 + i][1];
+                    const sx1 = (bx * 2 + qsx) * w1;
+                    const sy1 = (by * 2 + qsy) * h1 + h1 / 2;
+                    const dx1 = dx + (i % 2) * w1;
+                    const dy1 = dy + Math.floor(i / 2) * h1;
                     bitmap.bltImage(source, sx1, sy1, w1, h1 / 2, dx1, dy1, w1, h1 / 2);
                 }
             }
@@ -631,13 +631,13 @@ export class Tilemap extends PIXI.Container {
      */
     _drawShadow(bitmap, shadowBits, dx, dy) {
         if (shadowBits & 0x0f) {
-            var w1 = this._tileWidth / 2;
-            var h1 = this._tileHeight / 2;
-            var color = 'rgba(0,0,0,0.5)';
-            for (var i = 0; i < 4; i++) {
+            const w1 = this._tileWidth / 2;
+            const h1 = this._tileHeight / 2;
+            const color = 'rgba(0,0,0,0.5)';
+            for (let i = 0; i < 4; i++) {
                 if (shadowBits & (1 << i)) {
-                    var dx1 = dx + (i % 2) * w1;
-                    var dy1 = dy + Math.floor(i / 2) * h1;
+                    const dx1 = dx + (i % 2) * w1;
+                    const dy1 = dy + Math.floor(i / 2) * h1;
                     bitmap.fillRect(dx1, dy1, w1, h1, color);
                 }
             }
@@ -653,8 +653,8 @@ export class Tilemap extends PIXI.Container {
      */
     _readMapData(x, y, z) {
         if (this._mapData) {
-            var width = this._mapWidth;
-            var height = this._mapHeight;
+            const width = this._mapWidth;
+            const height = this._mapHeight;
             if (this.horizontalWrap) {
                 x = x.mod(width);
             }

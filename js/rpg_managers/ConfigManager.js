@@ -37,8 +37,8 @@ export const ConfigManager = new (class ConfigManager {
     }
 
     load() {
-        var json;
-        var config = {};
+        let json;
+        let config = {};
         try {
             json = StorageManager.load(-1);
         } catch (e) {
@@ -55,7 +55,7 @@ export const ConfigManager = new (class ConfigManager {
     }
 
     makeData() {
-        var config = {};
+        const config = {};
         config.alwaysDash = this.alwaysDash;
         config.commandRemember = this.commandRemember;
         config.bgmVolume = this.bgmVolume;
@@ -79,7 +79,7 @@ export const ConfigManager = new (class ConfigManager {
     }
 
     readVolume(config, name) {
-        var value = config[name];
+        const value = config[name];
         if (value !== undefined) {
             return Number(value).clamp(0, 100);
         } else {

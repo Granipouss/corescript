@@ -36,7 +36,7 @@ export class Scene_Battle extends Scene_Base {
     }
 
     update() {
-        var active = this.isActive();
+        const active = this.isActive();
         global.$gameTimer.update(active);
         global.$gameScreen.update();
         this.updateStatusWindow();
@@ -113,7 +113,7 @@ export class Scene_Battle extends Scene_Base {
     }
 
     updateWindowPositions() {
-        var statusX = 0;
+        let statusX = 0;
         if (BattleManager.isInputting()) {
             statusX = this._partyCommandWindow.width;
         } else {
@@ -197,8 +197,8 @@ export class Scene_Battle extends Scene_Base {
     }
 
     createSkillWindow() {
-        var wy = this._helpWindow.y + this._helpWindow.height;
-        var wh = this._statusWindow.y - wy;
+        const wy = this._helpWindow.y + this._helpWindow.height;
+        const wh = this._statusWindow.y - wy;
         this._skillWindow = new Window_BattleSkill(0, wy, Graphics.boxWidth, wh);
         this._skillWindow.setHelpWindow(this._helpWindow);
         this._skillWindow.setHandler('ok', this.onSkillOk.bind(this));
@@ -207,8 +207,8 @@ export class Scene_Battle extends Scene_Base {
     }
 
     createItemWindow() {
-        var wy = this._helpWindow.y + this._helpWindow.height;
-        var wh = this._statusWindow.y - wy;
+        const wy = this._helpWindow.y + this._helpWindow.height;
+        const wh = this._statusWindow.y - wy;
         this._itemWindow = new Window_BattleItem(0, wy, Graphics.boxWidth, wh);
         this._itemWindow.setHelpWindow(this._helpWindow);
         this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
@@ -312,7 +312,7 @@ export class Scene_Battle extends Scene_Base {
     }
 
     onActorOk() {
-        var action = BattleManager.inputtingAction();
+        const action = BattleManager.inputtingAction();
         action.setTarget(this._actorWindow.index());
         this._actorWindow.hide();
         this._skillWindow.hide();
@@ -342,7 +342,7 @@ export class Scene_Battle extends Scene_Base {
     }
 
     onEnemyOk() {
-        var action = BattleManager.inputtingAction();
+        const action = BattleManager.inputtingAction();
         action.setTarget(this._enemyWindow.enemyIndex());
         this._enemyWindow.hide();
         this._skillWindow.hide();
@@ -368,8 +368,8 @@ export class Scene_Battle extends Scene_Base {
     }
 
     onSkillOk() {
-        var skill = this._skillWindow.item();
-        var action = BattleManager.inputtingAction();
+        const skill = this._skillWindow.item();
+        const action = BattleManager.inputtingAction();
         action.setSkill(skill.id);
         BattleManager.actor().setLastBattleSkill(skill);
         this.onSelectAction();
@@ -381,8 +381,8 @@ export class Scene_Battle extends Scene_Base {
     }
 
     onItemOk() {
-        var item = this._itemWindow.item();
-        var action = BattleManager.inputtingAction();
+        const item = this._itemWindow.item();
+        const action = BattleManager.inputtingAction();
         action.setItem(item.id);
         global.$gameParty.setLastItem(item);
         this.onSelectAction();
@@ -394,7 +394,7 @@ export class Scene_Battle extends Scene_Base {
     }
 
     onSelectAction() {
-        var action = BattleManager.inputtingAction();
+        const action = BattleManager.inputtingAction();
         this._skillWindow.hide();
         this._itemWindow.hide();
         if (!action.needsSelection()) {

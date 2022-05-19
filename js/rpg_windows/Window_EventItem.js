@@ -8,8 +8,8 @@ import { Window_ItemList } from './Window_ItemList';
 export class Window_EventItem extends Window_ItemList {
     initialize(messageWindow) {
         this._messageWindow = messageWindow;
-        var width = Graphics.boxWidth;
-        var height = this.windowHeight();
+        const width = Graphics.boxWidth;
+        const height = this.windowHeight();
         super.initialize(0, 0, width, height);
         this.openness = 0;
         this.deactivate();
@@ -42,7 +42,7 @@ export class Window_EventItem extends Window_ItemList {
     }
 
     includes(item) {
-        var itypeId = global.$gameMessage.itemChoiceItypeId();
+        const itypeId = global.$gameMessage.itemChoiceItypeId();
         return DataManager.isItem(item) && item.itypeId === itypeId;
     }
 
@@ -51,8 +51,8 @@ export class Window_EventItem extends Window_ItemList {
     }
 
     onOk() {
-        var item = this.item();
-        var itemId = item ? item.id : 0;
+        const item = this.item();
+        const itemId = item ? item.id : 0;
         global.$gameVariables.setValue(global.$gameMessage.itemChoiceVariableId(), itemId);
         this._messageWindow.terminateMessage();
         this.close();

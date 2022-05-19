@@ -560,9 +560,9 @@ export class Window_NameInput extends Window_Selectable {
     ];
 
     initialize(editWindow) {
-        var x = editWindow.x;
-        var y = editWindow.y + editWindow.height + 8;
-        var width = editWindow.width;
+        const x = editWindow.x;
+        const y = editWindow.y + editWindow.height + 8;
+        const width = editWindow.width;
         var height = this.windowHeight();
         super.initialize(x, y, width, height);
         this._editWindow = editWindow;
@@ -617,11 +617,11 @@ export class Window_NameInput extends Window_Selectable {
     }
 
     refresh() {
-        var table = this.table();
+        const table = this.table();
         this.contents.clear();
         this.resetTextColor();
-        for (var i = 0; i < 90; i++) {
-            var rect = this.itemRect(i);
+        for (let i = 0; i < 90; i++) {
+            const rect = this.itemRect(i);
             rect.x += 3;
             rect.width -= 6;
             this.drawText(table[this._page][i], rect.x, rect.y, rect.width, 'center');
@@ -629,7 +629,7 @@ export class Window_NameInput extends Window_Selectable {
     }
 
     updateCursor() {
-        var rect = this.itemRect(this._index);
+        const rect = this.itemRect(this._index);
         this.setCursorRect(rect.x, rect.y, rect.width, rect.height);
     }
 
@@ -676,7 +676,7 @@ export class Window_NameInput extends Window_Selectable {
     }
 
     processCursorMove() {
-        var lastPage = this._page;
+        const lastPage = this._page;
         super.processCursorMove();
         this.updateCursor();
         if (this._page !== lastPage) {

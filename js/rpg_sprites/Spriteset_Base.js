@@ -57,9 +57,9 @@ export class Spriteset_Base extends Sprite {
     }
 
     createWebGLToneChanger() {
-        var margin = 48;
-        var width = Graphics.width + margin * 2;
-        var height = Graphics.height + margin * 2;
+        const margin = 48;
+        const width = Graphics.width + margin * 2;
+        const height = Graphics.height + margin * 2;
         this._toneFilter = new ToneFilter();
         this._toneFilter.enabled = false;
         this._baseSprite.filters = [this._toneFilter];
@@ -72,13 +72,13 @@ export class Spriteset_Base extends Sprite {
     }
 
     createPictures() {
-        var width = Graphics.boxWidth;
-        var height = Graphics.boxHeight;
-        var x = (Graphics.width - width) / 2;
-        var y = (Graphics.height - height) / 2;
+        const width = Graphics.boxWidth;
+        const height = Graphics.boxHeight;
+        const x = (Graphics.width - width) / 2;
+        const y = (Graphics.height - height) / 2;
         this._pictureContainer = new Sprite();
         this._pictureContainer.setFrame(x, y, width, height);
-        for (var i = 1; i <= global.$gameScreen.maxPictures(); i++) {
+        for (let i = 1; i <= global.$gameScreen.maxPictures(); i++) {
             this._pictureContainer.addChild(new Sprite_Picture(i));
         }
         this.addChild(this._pictureContainer);
@@ -97,14 +97,14 @@ export class Spriteset_Base extends Sprite {
     }
 
     updateScreenSprites() {
-        var color = global.$gameScreen.flashColor();
+        const color = global.$gameScreen.flashColor();
         this._flashSprite.setColor(color[0], color[1], color[2]);
         this._flashSprite.opacity = color[3];
         this._fadeSprite.opacity = 255 - global.$gameScreen.brightness();
     }
 
     updateToneChanger() {
-        var tone = global.$gameScreen.tone();
+        const tone = global.$gameScreen.tone();
         if (!this._tone.equals(tone)) {
             this._tone = tone.clone();
             if (Graphics.isWebGL()) {
@@ -116,7 +116,7 @@ export class Spriteset_Base extends Sprite {
     }
 
     updateWebGLToneChanger() {
-        var tone = this._tone;
+        const tone = this._tone;
         this._toneFilter.reset();
         if (tone[0] || tone[1] || tone[2] || tone[3]) {
             this._toneFilter.enabled = true;
@@ -128,13 +128,13 @@ export class Spriteset_Base extends Sprite {
     }
 
     updateCanvasToneChanger() {
-        var tone = this._tone;
+        const tone = this._tone;
         this._toneSprite.setTone(tone[0], tone[1], tone[2], tone[3]);
     }
 
     updatePosition() {
-        var screen = global.$gameScreen;
-        var scale = screen.zoomScale();
+        const screen = global.$gameScreen;
+        const scale = screen.zoomScale();
         this.scale.x = scale;
         this.scale.y = scale;
         this.x = Math.round(-screen.zoomX() * (scale - 1));

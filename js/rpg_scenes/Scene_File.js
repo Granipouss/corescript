@@ -31,9 +31,9 @@ export class Scene_File extends Scene_MenuBase {
     }
 
     createListWindow() {
-        var x = 0;
-        var y = this._helpWindow.height;
-        var width = Graphics.boxWidth;
+        const x = 0;
+        const y = this._helpWindow.height;
+        const width = Graphics.boxWidth;
         var height = Graphics.boxHeight - y;
         this._listWindow = new Window_SavefileList(x, y, width, height);
         this._listWindow.setHandler('ok', this.onSavefileOk.bind(this));

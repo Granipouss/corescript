@@ -7,10 +7,10 @@ import { Window_Base } from './Window_Base';
  */
 export class Window_NameEdit extends Window_Base {
     initialize(actor, maxLength) {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
-        var x = (Graphics.boxWidth - width) / 2;
-        var y = (Graphics.boxHeight - (height + this.fittingHeight(9) + 8)) / 2;
+        const width = this.windowWidth();
+        const height = this.windowHeight();
+        const x = (Graphics.boxWidth - width) / 2;
+        const y = (Graphics.boxHeight - (height + this.fittingHeight(9) + 8)) / 2;
         super.initialize(x, y, width, height);
         this._actor = actor;
         this._name = actor.name().slice(0, this._maxLength);
@@ -68,13 +68,13 @@ export class Window_NameEdit extends Window_Base {
     }
 
     charWidth() {
-        var text = global.$gameSystem.isJapanese() ? '\uff21' : 'A';
+        const text = global.$gameSystem.isJapanese() ? '\uff21' : 'A';
         return this.textWidth(text);
     }
 
     left() {
-        var nameCenter = (this.contentsWidth() + this.faceWidth()) / 2;
-        var nameWidth = (this._maxLength + 1) * this.charWidth();
+        const nameCenter = (this.contentsWidth() + this.faceWidth()) / 2;
+        const nameWidth = (this._maxLength + 1) * this.charWidth();
         return Math.min(nameCenter - nameWidth / 2, this.contentsWidth() - nameWidth);
     }
 
@@ -88,7 +88,7 @@ export class Window_NameEdit extends Window_Base {
     }
 
     underlineRect(index) {
-        var rect = this.itemRect(index);
+        const rect = this.itemRect(index);
         rect.x++;
         rect.y += rect.height - 4;
         rect.width -= 2;
@@ -101,15 +101,15 @@ export class Window_NameEdit extends Window_Base {
     }
 
     drawUnderline(index) {
-        var rect = this.underlineRect(index);
-        var color = this.underlineColor();
+        const rect = this.underlineRect(index);
+        const color = this.underlineColor();
         this.contents.paintOpacity = 48;
         this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
         this.contents.paintOpacity = 255;
     }
 
     drawChar(index) {
-        var rect = this.itemRect(index);
+        const rect = this.itemRect(index);
         this.resetTextColor();
         this.drawText(this._name[index] || '', rect.x, rect.y);
     }
@@ -117,13 +117,13 @@ export class Window_NameEdit extends Window_Base {
     refresh() {
         this.contents.clear();
         this.drawActorFace(this._actor, 0, 0);
-        for (var i = 0; i < this._maxLength; i++) {
+        for (let i = 0; i < this._maxLength; i++) {
             this.drawUnderline(i);
         }
-        for (var j = 0; j < this._name.length; j++) {
+        for (let j = 0; j < this._name.length; j++) {
             this.drawChar(j);
         }
-        var rect = this.itemRect(this._index);
+        const rect = this.itemRect(this._index);
         this.setCursorRect(rect.x, rect.y, rect.width, rect.height);
     }
 }

@@ -153,15 +153,15 @@ export const Graphics = new (class Graphics {
      */
     render(stage) {
         if (this._skipCount <= 0) {
-            var startTime = Date.now();
+            const startTime = Date.now();
             if (stage) {
                 this._renderer.render(stage);
                 if (this._renderer.gl && this._renderer.gl.flush) {
                     this._renderer.gl.flush();
                 }
             }
-            var endTime = Date.now();
-            var elapsed = endTime - startTime;
+            const endTime = Date.now();
+            const elapsed = endTime - startTime;
             this._skipCount = Math.min(Math.floor(elapsed / 15), this._maxSkip);
             this._rendered = true;
         } else {
@@ -187,7 +187,7 @@ export const Graphics = new (class Graphics {
      */
     hasWebGL() {
         try {
-            var canvas = document.createElement('canvas');
+            const canvas = document.createElement('canvas');
             return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
         } catch (e) {
             return false;
@@ -284,7 +284,7 @@ export const Graphics = new (class Graphics {
     }
 
     _updateProgressCount(countLoaded, countLoading) {
-        var progressValue;
+        let progressValue;
         if (countLoading !== 0) {
             progressValue = (countLoaded / countLoading) * 100;
         } else {
@@ -331,7 +331,7 @@ export const Graphics = new (class Graphics {
             this._errorPrinter.style.msUserSelect = 'text';
             this._errorPrinter.style.mozUserSelect = 'text';
             this._errorPrinter.oncontextmenu = null; // enable context menu
-            var button = document.createElement('button');
+            const button = document.createElement('button');
             button.innerHTML = 'Retry';
             button.style.fontSize = '24px';
             button.style.color = '#ffffff';
@@ -396,10 +396,10 @@ export const Graphics = new (class Graphics {
      */
     printErrorDetail(error) {
         if (this._errorPrinter && this._showErrorDetail) {
-            var eventInfo = this._formatEventInfo(error);
-            var eventCommandInfo = this._formatEventCommandInfo(error);
-            var info = eventCommandInfo ? eventInfo + ', ' + eventCommandInfo : eventInfo;
-            var stack = this._formatStackTrace(error);
+            const eventInfo = this._formatEventInfo(error);
+            const eventCommandInfo = this._formatEventCommandInfo(error);
+            const info = eventCommandInfo ? eventInfo + ', ' + eventCommandInfo : eventInfo;
+            const stack = this._formatStackTrace(error);
             this._makeErrorDetail(info, stack);
         }
     }
@@ -445,9 +445,9 @@ export const Graphics = new (class Graphics {
      * @param {String} url The url of the font file
      */
     loadFont(name, url) {
-        var style = document.createElement('style');
-        var head = document.getElementsByTagName('head');
-        var rule = '@font-face { font-family: "' + name + '"; src: url("' + url + '"); }';
+        const style = document.createElement('style');
+        const head = document.getElementsByTagName('head');
+        const rule = '@font-face { font-family: "' + name + '"; src: url("' + url + '"); }';
         style.type = 'text/css';
         head.item(0).appendChild(style);
         style.sheet.insertRule(rule, 0);
@@ -471,9 +471,9 @@ export const Graphics = new (class Graphics {
             if (!this._hiddenCanvas) {
                 this._hiddenCanvas = document.createElement('canvas');
             }
-            var context = this._hiddenCanvas.getContext('2d');
-            var text = 'abcdefghijklmnopqrstuvwxyz';
-            var width1, width2;
+            const context = this._hiddenCanvas.getContext('2d');
+            const text = 'abcdefghijklmnopqrstuvwxyz';
+            let width1, width2;
             context.font = '40px ' + name + ', sans-serif';
             width1 = context.measureText(text).width;
             context.font = '40px sans-serif';
@@ -549,7 +549,7 @@ export const Graphics = new (class Graphics {
      */
     pageToCanvasX(x) {
         if (this._canvas) {
-            var left = this._canvas.offsetLeft;
+            const left = this._canvas.offsetLeft;
             return Math.round((x - left) / this._realScale);
         } else {
             return 0;
@@ -565,7 +565,7 @@ export const Graphics = new (class Graphics {
      */
     pageToCanvasY(y) {
         if (this._canvas) {
-            var top = this._canvas.offsetTop;
+            const top = this._canvas.offsetTop;
             return Math.round((y - top) / this._realScale);
         } else {
             return 0;
@@ -699,8 +699,8 @@ export const Graphics = new (class Graphics {
      */
     _updateRealScale() {
         if (this._stretchEnabled) {
-            var h = window.innerWidth / this._width;
-            var v = window.innerHeight / this._height;
+            let h = window.innerWidth / this._width;
+            let v = window.innerHeight / this._height;
             if (h >= 1 && h - 0.01 <= 1) h = 1;
             if (v >= 1 && v - 0.01 <= 1) v = 1;
             this._realScale = Math.min(h, v);
@@ -737,7 +737,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _testCanvasBlendModes() {
-        var canvas, context, imageData1, imageData2;
+        let canvas, context, imageData1, imageData2;
         canvas = document.createElement('canvas');
         canvas.width = 1;
         canvas.height = 1;
@@ -764,8 +764,8 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _modifyExistingElements() {
-        var elements = document.getElementsByTagName('*');
-        for (var i = 0; i < elements.length; i++) {
+        const elements = document.getElementsByTagName('*');
+        for (let i = 0; i < elements.length; i++) {
             if (elements[i].style.zIndex > 0) {
                 elements[i].style.zIndex = 0;
             }
@@ -805,8 +805,8 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _makeErrorMessage() {
-        var mainMessage = document.createElement('div');
-        var style = mainMessage.style;
+        const mainMessage = document.createElement('div');
+        const style = mainMessage.style;
         style.color = 'white';
         style.textAlign = 'left';
         style.fontSize = '18px';
@@ -818,8 +818,8 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _makeErrorDetail(info, stack) {
-        var detail = document.createElement('div');
-        var style = detail.style;
+        const detail = document.createElement('div');
+        const style = detail.style;
         style.color = 'white';
         style.textAlign = 'left';
         style.fontSize = '18px';
@@ -955,7 +955,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _clearUpperCanvas() {
-        var context = this._upperCanvas.getContext('2d');
+        const context = this._upperCanvas.getContext('2d');
         context.clearRect(0, 0, this._width, this._height);
     }
 
@@ -965,10 +965,10 @@ export const Graphics = new (class Graphics {
     _paintUpperCanvas() {
         this._clearUpperCanvas();
         if (this._loadingImage && this._loadingCount >= 20) {
-            var context = this._upperCanvas.getContext('2d');
-            var dx = (this._width - this._loadingImage.width) / 2;
-            var dy = (this._height - this._loadingImage.height) / 2;
-            var alpha = ((this._loadingCount - 20) / 30).clamp(0, 1);
+            const context = this._upperCanvas.getContext('2d');
+            const dx = (this._width - this._loadingImage.width) / 2;
+            const dy = (this._height - this._loadingImage.height) / 2;
+            const alpha = ((this._loadingCount - 20) / 30).clamp(0, 1);
             context.save();
             context.globalAlpha = alpha;
             context.drawImage(this._loadingImage, dx, dy);
@@ -982,9 +982,9 @@ export const Graphics = new (class Graphics {
     _createRenderer() {
         // eslint-disable-next-line no-import-assign
         PIXI.dontSayHello = true;
-        var width = this._width;
-        var height = this._height;
-        var options = { view: this._canvas };
+        const width = this._width;
+        const height = this._height;
+        const options = { view: this._canvas };
         try {
             switch (this._rendererType) {
                 case 'canvas':
@@ -1017,7 +1017,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _createFPSMeter() {
-        var options = {
+        const options = {
             graph: 1,
             decimals: 0,
             theme: 'transparent',
@@ -1031,7 +1031,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _createModeBox() {
-        var box = document.createElement('div');
+        const box = document.createElement('div');
         box.id = 'modeTextBack';
         box.style.position = 'absolute';
         box.style.left = '5px';
@@ -1042,7 +1042,7 @@ export const Graphics = new (class Graphics {
         box.style.zIndex = 9;
         box.style.opacity = 0;
 
-        var text = document.createElement('div');
+        const text = document.createElement('div');
         text.id = 'modeText';
         text.style.position = 'absolute';
         text.style.left = '0px';
@@ -1073,8 +1073,8 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _createFontLoader(name) {
-        var div = document.createElement('div');
-        var text = document.createTextNode('.');
+        const div = document.createElement('div');
+        const text = document.createTextNode('.');
         div.style.fontFamily = name;
         div.style.fontSize = '0px';
         div.style.color = 'transparent';
@@ -1093,8 +1093,8 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _centerElement(element) {
-        var width = element.width * this._realScale;
-        var height = element.height * this._realScale;
+        const width = element.width * this._realScale;
+        const height = element.height * this._realScale;
         element.style.position = 'absolute';
         element.style.margin = 'auto';
         element.style.top = 0;
@@ -1109,7 +1109,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _disableTextSelection() {
-        var body = document.body;
+        const body = document.body;
         body.style.userSelect = 'none';
         body.style.webkitUserSelect = 'none';
         body.style.msUserSelect = 'none';
@@ -1120,11 +1120,11 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _disableContextMenu() {
-        var elements = document.body.getElementsByTagName('*');
-        var oncontextmenu = function () {
+        const elements = document.body.getElementsByTagName('*');
+        const oncontextmenu = function () {
             return false;
         };
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             elements[i].oncontextmenu = oncontextmenu;
         }
     }
@@ -1289,7 +1289,7 @@ export const Graphics = new (class Graphics {
      * @private
      */
     _requestFullScreen() {
-        var element = document.body;
+        const element = document.body;
         if (element.requestFullscreen) {
             element.requestFullscreen();
         } else if (element.mozRequestFullScreen) {

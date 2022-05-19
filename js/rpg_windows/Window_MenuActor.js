@@ -23,8 +23,8 @@ export class Window_MenuActor extends Window_MenuStatus {
     }
 
     selectForItem(item) {
-        var actor = global.$gameParty.menuActor();
-        var action = new Game_Action(actor);
+        const actor = global.$gameParty.menuActor();
+        const action = new Game_Action(actor);
         action.setItemObject(item);
         this.setCursorFixed(false);
         this.setCursorAll(false);

@@ -39,7 +39,7 @@ export class ToneFilter extends PIXI.filters.ColorMatrixFilter {
         b = (b || 0).clamp(-255, 255) / 255;
 
         if (r !== 0 || g !== 0 || b !== 0) {
-            var matrix = [1, 0, 0, r, 0, 0, 1, 0, g, 0, 0, 0, 1, b, 0, 0, 0, 0, 1, 0];
+            const matrix = [1, 0, 0, r, 0, 0, 1, 0, g, 0, 0, 0, 1, b, 0, 0, 0, 0, 1, 0];
 
             this._loadMatrix(matrix, true);
         }

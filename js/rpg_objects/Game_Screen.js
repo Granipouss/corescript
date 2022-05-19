@@ -64,7 +64,7 @@ export class Game_Screen {
     }
 
     picture(pictureId) {
-        var realPictureId = this.realPictureId(pictureId);
+        const realPictureId = this.realPictureId(pictureId);
         return this._pictures[realPictureId];
     }
 
@@ -194,7 +194,7 @@ export class Game_Screen {
 
     updateFadeOut() {
         if (this._fadeOutDuration > 0) {
-            var d = this._fadeOutDuration;
+            const d = this._fadeOutDuration;
             this._brightness = (this._brightness * (d - 1)) / d;
             this._fadeOutDuration--;
         }
@@ -202,7 +202,7 @@ export class Game_Screen {
 
     updateFadeIn() {
         if (this._fadeInDuration > 0) {
-            var d = this._fadeInDuration;
+            const d = this._fadeInDuration;
             this._brightness = (this._brightness * (d - 1) + 255) / d;
             this._fadeInDuration--;
         }
@@ -210,8 +210,8 @@ export class Game_Screen {
 
     updateTone() {
         if (this._toneDuration > 0) {
-            var d = this._toneDuration;
-            for (var i = 0; i < 4; i++) {
+            const d = this._toneDuration;
+            for (let i = 0; i < 4; i++) {
                 this._tone[i] = (this._tone[i] * (d - 1) + this._toneTarget[i]) / d;
             }
             this._toneDuration--;
@@ -220,7 +220,7 @@ export class Game_Screen {
 
     updateFlash() {
         if (this._flashDuration > 0) {
-            var d = this._flashDuration;
+            const d = this._flashDuration;
             this._flashColor[3] *= (d - 1) / d;
             this._flashDuration--;
         }
@@ -228,7 +228,7 @@ export class Game_Screen {
 
     updateShake() {
         if (this._shakeDuration > 0 || this._shake !== 0) {
-            var delta = (this._shakePower * this._shakeSpeed * this._shakeDirection) / 10;
+            const delta = (this._shakePower * this._shakeSpeed * this._shakeDirection) / 10;
             if (this._shakeDuration <= 1 && this._shake * (this._shake + delta) < 0) {
                 this._shake = 0;
             } else {
@@ -246,8 +246,8 @@ export class Game_Screen {
 
     updateZoom() {
         if (this._zoomDuration > 0) {
-            var d = this._zoomDuration;
-            var t = this._zoomScaleTarget;
+            const d = this._zoomDuration;
+            const t = this._zoomScaleTarget;
             this._zoomScale = (this._zoomScale * (d - 1) + t) / d;
             this._zoomDuration--;
         }
@@ -255,8 +255,8 @@ export class Game_Screen {
 
     updateWeather() {
         if (this._weatherDuration > 0) {
-            var d = this._weatherDuration;
-            var t = this._weatherPowerTarget;
+            const d = this._weatherDuration;
+            const t = this._weatherPowerTarget;
             this._weatherPower = (this._weatherPower * (d - 1) + t) / d;
             this._weatherDuration--;
             if (this._weatherDuration === 0 && this._weatherPowerTarget === 0) {
@@ -278,35 +278,35 @@ export class Game_Screen {
     }
 
     showPicture(pictureId, name, origin, x, y, scaleX, scaleY, opacity, blendMode) {
-        var realPictureId = this.realPictureId(pictureId);
-        var picture = new Game_Picture();
+        const realPictureId = this.realPictureId(pictureId);
+        const picture = new Game_Picture();
         picture.show(name, origin, x, y, scaleX, scaleY, opacity, blendMode);
         this._pictures[realPictureId] = picture;
     }
 
     movePicture(pictureId, origin, x, y, scaleX, scaleY, opacity, blendMode, duration) {
-        var picture = this.picture(pictureId);
+        const picture = this.picture(pictureId);
         if (picture) {
             picture.move(origin, x, y, scaleX, scaleY, opacity, blendMode, duration);
         }
     }
 
     rotatePicture(pictureId, speed) {
-        var picture = this.picture(pictureId);
+        const picture = this.picture(pictureId);
         if (picture) {
             picture.rotate(speed);
         }
     }
 
     tintPicture(pictureId, tone, duration) {
-        var picture = this.picture(pictureId);
+        const picture = this.picture(pictureId);
         if (picture) {
             picture.tint(tone, duration);
         }
     }
 
     erasePicture(pictureId) {
-        var realPictureId = this.realPictureId(pictureId);
+        const realPictureId = this.realPictureId(pictureId);
         this._pictures[realPictureId] = null;
     }
 }

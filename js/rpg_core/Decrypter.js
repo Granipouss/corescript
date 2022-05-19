@@ -14,7 +14,7 @@ export const Decrypter = new (class Decrypter {
     REMAIN = '0000000000';
 
     checkImgIgnore(url) {
-        for (var cnt = 0; cnt < this._ignoreList.length; cnt++) {
+        for (let cnt = 0; cnt < this._ignoreList.length; cnt++) {
             if (url === this._ignoreList[cnt]) return true;
         }
         return false;
@@ -23,16 +23,16 @@ export const Decrypter = new (class Decrypter {
     decryptImg(url, bitmap) {
         url = this.extToEncryptExt(url);
 
-        var requestFile = new XMLHttpRequest();
+        const requestFile = new XMLHttpRequest();
         requestFile.open('GET', url);
         requestFile.responseType = 'arraybuffer';
         requestFile.send();
 
         // FIXME:
-        var that = this;
+        const that = this;
         requestFile.onload = function () {
             if (this.status < that._xhrOk) {
-                var arrayBuffer = that.decryptArrayBuffer(requestFile.response);
+                const arrayBuffer = that.decryptArrayBuffer(requestFile.response);
                 bitmap._image.src = that.createBlobUrl(arrayBuffer);
                 bitmap._image.addEventListener('load', (bitmap._loadListener = Bitmap.prototype._onLoad.bind(bitmap)));
                 bitmap._image.addEventListener(
@@ -52,17 +52,17 @@ export const Decrypter = new (class Decrypter {
     }
 
     decryptHTML5Audio(url, bgm, pos) {
-        var requestFile = new XMLHttpRequest();
+        const requestFile = new XMLHttpRequest();
         requestFile.open('GET', url);
         requestFile.responseType = 'arraybuffer';
         requestFile.send();
 
         // FIXME:
-        var that = this;
+        const that = this;
         requestFile.onload = function () {
             if (this.status < that._xhrOk) {
-                var arrayBuffer = that.decryptArrayBuffer(requestFile.response);
-                var url = that.createBlobUrl(arrayBuffer);
+                const arrayBuffer = that.decryptArrayBuffer(requestFile.response);
+                const url = that.createBlobUrl(arrayBuffer);
                 AudioManager.createDecryptBuffer(url, bgm, pos);
             }
         };
@@ -74,11 +74,11 @@ export const Decrypter = new (class Decrypter {
 
     decryptArrayBuffer(arrayBuffer) {
         if (!arrayBuffer) return null;
-        var header = new Uint8Array(arrayBuffer, 0, this._headerlength);
+        const header = new Uint8Array(arrayBuffer, 0, this._headerlength);
 
-        var i;
-        var ref = this.SIGNATURE + this.VER + this.REMAIN;
-        var refBytes = new Uint8Array(16);
+        let i;
+        const ref = this.SIGNATURE + this.VER + this.REMAIN;
+        const refBytes = new Uint8Array(16);
         for (i = 0; i < this._headerlength; i++) {
             refBytes[i] = parseInt('0x' + ref.substr(i * 2, 2), 16);
         }
@@ -89,10 +89,10 @@ export const Decrypter = new (class Decrypter {
         }
 
         arrayBuffer = this.cutArrayHeader(arrayBuffer, this._headerlength);
-        var view = new DataView(arrayBuffer);
+        const view = new DataView(arrayBuffer);
         this.readEncryptionkey();
         if (arrayBuffer) {
-            var byteArray = new Uint8Array(arrayBuffer);
+            const byteArray = new Uint8Array(arrayBuffer);
             for (i = 0; i < this._headerlength; i++) {
                 byteArray[i] = byteArray[i] ^ parseInt(this._encryptionKey[i], 16);
                 view.setUint8(i, byteArray[i]);
@@ -103,13 +103,13 @@ export const Decrypter = new (class Decrypter {
     }
 
     createBlobUrl(arrayBuffer) {
-        var blob = new Blob([arrayBuffer]);
+        const blob = new Blob([arrayBuffer]);
         return window.URL.createObjectURL(blob);
     }
 
     extToEncryptExt(url) {
-        var ext = url.split('.').pop();
-        var encryptedExt = ext;
+        const ext = url.split('.').pop();
+        let encryptedExt = ext;
 
         if (ext === 'ogg') encryptedExt = '.rpgmvo';
         else if (ext === 'm4a') encryptedExt = '.rpgmvm';

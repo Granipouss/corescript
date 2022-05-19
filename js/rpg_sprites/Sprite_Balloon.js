@@ -41,10 +41,10 @@ export class Sprite_Balloon extends Sprite_Base {
     }
 
     updateFrame() {
-        var w = 48;
-        var h = 48;
-        var sx = this.frameIndex() * w;
-        var sy = (this._balloonId - 1) * h;
+        const w = 48;
+        const h = 48;
+        const sx = this.frameIndex() * w;
+        const sy = (this._balloonId - 1) * h;
         this.setFrame(sx, sy, w, h);
     }
 
@@ -57,7 +57,7 @@ export class Sprite_Balloon extends Sprite_Base {
     }
 
     frameIndex() {
-        var index = (this._duration - this.waitTime()) / this.speed();
+        const index = (this._duration - this.waitTime()) / this.speed();
         return 7 - Math.max(Math.floor(index), 0);
     }
 

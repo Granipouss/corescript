@@ -17,7 +17,7 @@ export class ImageCache {
 
     get(key) {
         if (this._items[key]) {
-            var item = this._items[key];
+            const item = this._items[key];
             item.touch = Date.now();
             return item.bitmap;
         }
@@ -38,7 +38,7 @@ export class ImageCache {
     }
 
     releaseReservation(reservationId) {
-        var items = this._items;
+        const items = this._items;
 
         Object.keys(items)
             .map(function (key) {
@@ -52,8 +52,8 @@ export class ImageCache {
     }
 
     _truncateCache() {
-        var items = this._items;
-        var sizeLeft = ImageCache.limit;
+        const items = this._items;
+        let sizeLeft = ImageCache.limit;
 
         Object.keys(items)
             .map(function (key) {
@@ -65,7 +65,7 @@ export class ImageCache {
             .forEach(
                 function (item) {
                     if (sizeLeft > 0 || this._mustBeHeld(item)) {
-                        var bitmap = item.bitmap;
+                        const bitmap = item.bitmap;
                         sizeLeft -= bitmap.width * bitmap.height;
                     } else {
                         delete items[item.key];
@@ -86,15 +86,15 @@ export class ImageCache {
     }
 
     isReady() {
-        var items = this._items;
+        const items = this._items;
         return !Object.keys(items).some(function (key) {
             return !items[key].bitmap.isRequestOnly() && !items[key].bitmap.isReady();
         });
     }
 
     getErrorBitmap() {
-        var items = this._items;
-        var bitmap = null;
+        const items = this._items;
+        let bitmap = null;
         if (
             Object.keys(items).some(function (key) {
                 if (items[key].bitmap.isError()) {

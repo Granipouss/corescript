@@ -85,8 +85,8 @@ export const AudioManager = new (class AudioManager {
     }
 
     playEncryptedBgm(bgm, pos) {
-        var ext = this.audioFileExt();
-        var url = this._path + 'bgm/' + encodeURIComponent(bgm.name) + ext;
+        const ext = this.audioFileExt();
+        let url = this._path + 'bgm/' + encodeURIComponent(bgm.name) + ext;
         url = Decrypter.extToEncryptExt(url);
         Decrypter.decryptHTML5Audio(url, bgm, pos);
     }
@@ -255,7 +255,7 @@ export const AudioManager = new (class AudioManager {
             this._seBuffers = this._seBuffers.filter(function (audio) {
                 return audio.isPlaying();
             });
-            var buffer = this.createBuffer('se', se.name);
+            const buffer = this.createBuffer('se', se.name);
             this.updateSeParameters(buffer, se);
             buffer.play(false);
             this._seBuffers.push(buffer);
@@ -276,8 +276,8 @@ export const AudioManager = new (class AudioManager {
     playStaticSe(se) {
         if (se.name) {
             this.loadStaticSe(se);
-            for (var i = 0; i < this._staticBuffers.length; i++) {
-                var buffer = this._staticBuffers[i];
+            for (let i = 0; i < this._staticBuffers.length; i++) {
+                const buffer = this._staticBuffers[i];
                 if (buffer._reservedSeName === se.name) {
                     buffer.stop();
                     this.updateSeParameters(buffer, se);
@@ -290,7 +290,7 @@ export const AudioManager = new (class AudioManager {
 
     loadStaticSe(se) {
         if (se.name && !this.isStaticSe(se)) {
-            var buffer = this.createBuffer('se', se.name);
+            const buffer = this.createBuffer('se', se.name);
             buffer._reservedSeName = se.name;
             this._staticBuffers.push(buffer);
             if (this.shouldUseHtml5Audio()) {
@@ -300,8 +300,8 @@ export const AudioManager = new (class AudioManager {
     }
 
     isStaticSe(se) {
-        for (var i = 0; i < this._staticBuffers.length; i++) {
-            var buffer = this._staticBuffers[i];
+        for (let i = 0; i < this._staticBuffers.length; i++) {
+            const buffer = this._staticBuffers[i];
             if (buffer._reservedSeName === se.name) {
                 return true;
             }
@@ -318,7 +318,7 @@ export const AudioManager = new (class AudioManager {
 
     saveBgm() {
         if (this._currentBgm) {
-            var bgm = this._currentBgm;
+            const bgm = this._currentBgm;
             return {
                 name: bgm.name,
                 volume: bgm.volume,
@@ -333,7 +333,7 @@ export const AudioManager = new (class AudioManager {
 
     saveBgs() {
         if (this._currentBgs) {
-            var bgs = this._currentBgs;
+            const bgs = this._currentBgs;
             return {
                 name: bgs.name,
                 volume: bgs.volume,
@@ -351,14 +351,14 @@ export const AudioManager = new (class AudioManager {
     }
 
     createBuffer(folder, name) {
-        var ext = this.audioFileExt();
-        var url = this._path + folder + '/' + encodeURIComponent(name) + ext;
+        const ext = this.audioFileExt();
+        const url = this._path + folder + '/' + encodeURIComponent(name) + ext;
         if (this.shouldUseHtml5Audio() && folder === 'bgm') {
             if (this._blobUrl) Html5Audio.setup(this._blobUrl);
             else Html5Audio.setup(url);
             return Html5Audio;
         } else {
-            var audio = new WebAudio(url);
+            const audio = new WebAudio(url);
             this._callCreationHook(audio);
             return audio;
         }

@@ -7,8 +7,8 @@ import { Window_Selectable } from './Window_Selectable';
 export class Window_BattleEnemy extends Window_Selectable {
     initialize(x, y) {
         this._enemies = [];
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this.refresh();
         this.hide();
@@ -39,14 +39,14 @@ export class Window_BattleEnemy extends Window_Selectable {
     }
 
     enemyIndex() {
-        var enemy = this.enemy();
+        const enemy = this.enemy();
         return enemy ? enemy.index() : -1;
     }
 
     drawItem(index) {
         this.resetTextColor();
-        var name = this._enemies[index].name();
-        var rect = this.itemRectForText(index);
+        const name = this._enemies[index].name();
+        const rect = this.itemRectForText(index);
         this.drawText(name, rect.x, rect.y, rect.width);
     }
 

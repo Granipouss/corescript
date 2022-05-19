@@ -39,11 +39,11 @@ export class Game_Unit {
     }
 
     agility() {
-        var members = this.members();
+        const members = this.members();
         if (members.length === 0) {
             return 1;
         }
-        var sum = members.reduce(function (r, member) {
+        const sum = members.reduce(function (r, member) {
             return r + member.agi;
         }, 0);
         return sum / members.length;
@@ -56,8 +56,8 @@ export class Game_Unit {
     }
 
     randomTarget() {
-        var tgrRand = Math.random() * this.tgrSum();
-        var target = null;
+        let tgrRand = Math.random() * this.tgrSum();
+        let target = null;
         this.aliveMembers().forEach(function (member) {
             tgrRand -= member.tgr;
             if (tgrRand <= 0 && !target) {
@@ -68,7 +68,7 @@ export class Game_Unit {
     }
 
     randomDeadTarget() {
-        var members = this.deadMembers();
+        const members = this.deadMembers();
         if (members.length === 0) {
             return null;
         }
@@ -79,7 +79,7 @@ export class Game_Unit {
         if (index < 0) {
             index = 0;
         }
-        var member = this.members()[index];
+        const member = this.members()[index];
         return member && member.isAlive() ? member : this.aliveMembers()[0];
     }
 
@@ -87,7 +87,7 @@ export class Game_Unit {
         if (index < 0) {
             index = 0;
         }
-        var member = this.members()[index];
+        const member = this.members()[index];
         return member && member.isDead() ? member : this.deadMembers()[0];
     }
 
@@ -132,8 +132,8 @@ export class Game_Unit {
     }
 
     substituteBattler() {
-        var members = this.members();
-        for (var i = 0; i < members.length; i++) {
+        const members = this.members();
+        for (let i = 0; i < members.length; i++) {
             if (members[i].isSubstitute()) {
                 return members[i];
             }

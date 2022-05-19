@@ -7,7 +7,7 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_DebugEdit extends Window_Selectable {
     initialize(x, y, width) {
-        var height = this.fittingHeight(10);
+        const height = this.fittingHeight(10);
         super.initialize(x, y, width, height);
         this._mode = 'switch';
         this._topId = 1;
@@ -24,13 +24,13 @@ export class Window_DebugEdit extends Window_Selectable {
     }
 
     drawItem(index) {
-        var dataId = this._topId + index;
-        var idText = dataId.padZero(4) + ':';
-        var idWidth = this.textWidth(idText);
-        var statusWidth = this.textWidth('-00000000');
-        var name = this.itemName(dataId);
-        var status = this.itemStatus(dataId);
-        var rect = this.itemRectForText(index);
+        const dataId = this._topId + index;
+        const idText = dataId.padZero(4) + ':';
+        const idWidth = this.textWidth(idText);
+        const statusWidth = this.textWidth('-00000000');
+        const name = this.itemName(dataId);
+        const status = this.itemStatus(dataId);
+        const rect = this.itemRectForText(index);
         this.resetTextColor();
         this.drawText(idText, rect.x, rect.y, rect.width);
         rect.x += idWidth;
@@ -86,7 +86,7 @@ export class Window_DebugEdit extends Window_Selectable {
 
     updateSwitch() {
         if (Input.isRepeated('ok')) {
-            var switchId = this.currentId();
+            const switchId = this.currentId();
             SoundManager.playCursor();
             global.$gameSwitches.setValue(switchId, !global.$gameSwitches.value(switchId));
             this.redrawCurrentItem();
@@ -94,8 +94,8 @@ export class Window_DebugEdit extends Window_Selectable {
     }
 
     updateVariable() {
-        var variableId = this.currentId();
-        var value = global.$gameVariables.value(variableId);
+        const variableId = this.currentId();
+        let value = global.$gameVariables.value(variableId);
         if (typeof value === 'number') {
             if (Input.isRepeated('right')) {
                 value++;

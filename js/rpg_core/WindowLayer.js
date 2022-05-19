@@ -106,7 +106,7 @@ export class WindowLayer extends PIXI.Container {
         this._tempCanvas.width = Graphics.width;
         this._tempCanvas.height = Graphics.height;
 
-        var realCanvasContext = renderer.context;
+        const realCanvasContext = renderer.context;
         var context = this._tempCanvas.getContext('2d');
 
         context.save();
@@ -118,8 +118,8 @@ export class WindowLayer extends PIXI.Container {
 
         renderer.context = context;
 
-        for (var i = 0; i < this.children.length; i++) {
-            var child = this.children[i];
+        for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
             if (child._isWindow && child.visible && child.openness > 0) {
                 this._canvasClearWindowRect(renderer, child);
                 context.save();
@@ -136,7 +136,7 @@ export class WindowLayer extends PIXI.Container {
         renderer.context.globalAlpha = 1;
         renderer.context.drawImage(this._tempCanvas, 0, 0);
 
-        for (var j = 0; j < this.children.length; j++) {
+        for (let j = 0; j < this.children.length; j++) {
             if (!this.children[j]._isWindow) {
                 this.children[j].renderCanvas(renderer);
             }
@@ -150,10 +150,10 @@ export class WindowLayer extends PIXI.Container {
      * @private
      */
     _canvasClearWindowRect(renderSession, window) {
-        var rx = this.x + window.x;
-        var ry = this.y + window.y + (window.height / 2) * (1 - window._openness / 255);
-        var rw = window.width;
-        var rh = (window.height * window._openness) / 255;
+        const rx = this.x + window.x;
+        const ry = this.y + window.y + (window.height / 2) * (1 - window._openness / 255);
+        const rw = window.width;
+        const rh = (window.height * window._openness) / 255;
         renderSession.context.clearRect(rx, ry, rw, rh);
     }
 
@@ -176,14 +176,14 @@ export class WindowLayer extends PIXI.Container {
         renderer.filterManager.pushFilter(this, this.filters);
         renderer.currentRenderer.start();
 
-        var shift = new PIXI.Point();
-        var rt = renderer._activeRenderTarget;
-        var projectionMatrix = rt.projectionMatrix;
+        const shift = new PIXI.Point();
+        const rt = renderer._activeRenderTarget;
+        const projectionMatrix = rt.projectionMatrix;
         shift.x = Math.round(((projectionMatrix.tx + 1) / 2) * rt.sourceFrame.width);
         shift.y = Math.round(((projectionMatrix.ty + 1) / 2) * rt.sourceFrame.height);
 
-        for (var i = 0; i < this.children.length; i++) {
-            var child = this.children[i];
+        for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
             if (child._isWindow && child.visible && child.openness > 0) {
                 this._maskWindow(child, shift);
                 renderer.maskManager.pushScissorMask(this, this._windowMask);
@@ -199,7 +199,7 @@ export class WindowLayer extends PIXI.Container {
         renderer.filterManager.popFilter();
         renderer.maskManager.popScissorMask();
 
-        for (var j = 0; j < this.children.length; j++) {
+        for (let j = 0; j < this.children.length; j++) {
             if (!this.children[j]._isWindow) {
                 this.children[j].renderWebGL(renderer);
             }
@@ -214,7 +214,7 @@ export class WindowLayer extends PIXI.Container {
     _maskWindow(window, shift) {
         this._windowMask._currentBounds = null;
         this._windowMask.boundsDirty = true;
-        var rect = this._windowRect;
+        const rect = this._windowRect;
         rect.x = this.x + shift.x + window.x;
         rect.y = this.y + shift.y + window.y + (window.height / 2) * (1 - window._openness / 255);
         rect.width = window.width;

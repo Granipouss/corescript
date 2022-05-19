@@ -12,8 +12,8 @@ export class Window_DebugRange extends Window_Selectable {
     initialize(x, y) {
         this._maxSwitches = Math.ceil((global.$dataSystem.switches.length - 1) / 10);
         this._maxVariables = Math.ceil((global.$dataSystem.variables.length - 1) / 10);
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this.refresh();
         this.setTopRow(Window_DebugRange.lastTopRow);
@@ -46,7 +46,7 @@ export class Window_DebugRange extends Window_Selectable {
     }
 
     topId() {
-        var index = this.index();
+        const index = this.index();
         if (index < this._maxSwitches) {
             return index * 10 + 1;
         } else {
@@ -60,9 +60,9 @@ export class Window_DebugRange extends Window_Selectable {
     }
 
     drawItem(index) {
-        var rect = this.itemRectForText(index);
-        var start;
-        var text;
+        const rect = this.itemRectForText(index);
+        let start;
+        let text;
         if (index < this._maxSwitches) {
             start = index * 10 + 1;
             text = 'S';
@@ -70,7 +70,7 @@ export class Window_DebugRange extends Window_Selectable {
             start = (index - this._maxSwitches) * 10 + 1;
             text = 'V';
         }
-        var end = start + 9;
+        const end = start + 9;
         text += ' [' + start.padZero(4) + '-' + end.padZero(4) + ']';
         this.drawText(text, rect.x, rect.y, rect.width);
     }

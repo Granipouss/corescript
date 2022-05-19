@@ -33,8 +33,8 @@ export class Spriteset_Map extends Spriteset_Base {
     }
 
     hideCharacters() {
-        for (var i = 0; i < this._characterSprites.length; i++) {
-            var sprite = this._characterSprites[i];
+        for (let i = 0; i < this._characterSprites.length; i++) {
+            const sprite = this._characterSprites[i];
             if (!sprite.isTile()) {
                 sprite.hide();
             }
@@ -65,11 +65,11 @@ export class Spriteset_Map extends Spriteset_Base {
     loadTileset() {
         this._tileset = global.$gameMap.tileset();
         if (this._tileset) {
-            var tilesetNames = this._tileset.tilesetNames;
-            for (var i = 0; i < tilesetNames.length; i++) {
+            const tilesetNames = this._tileset.tilesetNames;
+            for (let i = 0; i < tilesetNames.length; i++) {
                 this._tilemap.bitmaps[i] = ImageManager.loadTileset(tilesetNames[i]);
             }
-            var newTilesetFlags = global.$gameMap.tilesetFlags();
+            const newTilesetFlags = global.$gameMap.tilesetFlags();
             this._tilemap.refreshTileset();
             if (!this._tilemap.flags.equals(newTilesetFlags)) {
                 this._tilemap.refresh();
@@ -90,7 +90,7 @@ export class Spriteset_Map extends Spriteset_Base {
             this._characterSprites.push(new Sprite_Character(follower));
         }, this);
         this._characterSprites.push(new Sprite_Character(global.$gamePlayer));
-        for (var i = 0; i < this._characterSprites.length; i++) {
+        for (let i = 0; i < this._characterSprites.length; i++) {
             this._tilemap.addChild(this._characterSprites[i]);
         }
     }
@@ -125,7 +125,7 @@ export class Spriteset_Map extends Spriteset_Base {
      * Simple fix for canvas parallax issue, destroy old parallax and readd to  the tree.
      */
     _canvasReAddParallax() {
-        var index = this._baseSprite.children.indexOf(this._parallax);
+        const index = this._baseSprite.children.indexOf(this._parallax);
         this._baseSprite.removeChild(this._parallax);
         this._parallax = new TilingSprite();
         this._parallax.move(0, 0, Graphics.width, Graphics.height);
@@ -155,7 +155,7 @@ export class Spriteset_Map extends Spriteset_Base {
     }
 
     updateShadow() {
-        var airship = global.$gameMap.airship();
+        const airship = global.$gameMap.airship();
         this._shadowSprite.x = airship.shadowX();
         this._shadowSprite.y = airship.shadowY();
         this._shadowSprite.opacity = airship.shadowOpacity();

@@ -7,8 +7,8 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_Status extends Window_Selectable {
     initialize() {
-        var width = Graphics.boxWidth;
-        var height = Graphics.boxHeight;
+        const width = Graphics.boxWidth;
+        const height = Graphics.boxHeight;
         super.initialize(0, 0, width, height);
         this._actor = null;
         this.refresh();
@@ -25,7 +25,7 @@ export class Window_Status extends Window_Selectable {
     refresh() {
         this.contents.clear();
         if (this._actor) {
-            var lineHeight = this.lineHeight();
+            const lineHeight = this.lineHeight();
             this.drawBlock1(lineHeight * 0);
             this.drawHorzLine(lineHeight * 1);
             this.drawBlock2(lineHeight * 2);
@@ -58,7 +58,7 @@ export class Window_Status extends Window_Selectable {
     }
 
     drawHorzLine(y) {
-        var lineY = y + this.lineHeight() / 2 - 1;
+        const lineY = y + this.lineHeight() / 2 - 1;
         this.contents.paintOpacity = 48;
         this.contents.fillRect(0, lineY, this.contentsWidth(), 2, this.lineColor());
         this.contents.paintOpacity = 255;
@@ -69,7 +69,7 @@ export class Window_Status extends Window_Selectable {
     }
 
     drawBasicInfo(x, y) {
-        var lineHeight = this.lineHeight();
+        const lineHeight = this.lineHeight();
         this.drawActorLevel(this._actor, x, y + lineHeight * 0);
         this.drawActorIcons(this._actor, x, y + lineHeight * 1);
         this.drawActorHp(this._actor, x, y + lineHeight * 2);
@@ -77,10 +77,10 @@ export class Window_Status extends Window_Selectable {
     }
 
     drawParameters(x, y) {
-        var lineHeight = this.lineHeight();
-        for (var i = 0; i < 6; i++) {
-            var paramId = i + 2;
-            var y2 = y + lineHeight * i;
+        const lineHeight = this.lineHeight();
+        for (let i = 0; i < 6; i++) {
+            const paramId = i + 2;
+            const y2 = y + lineHeight * i;
             this.changeTextColor(this.systemColor());
             this.drawText(TextManager.param(paramId), x, y2, 160);
             this.resetTextColor();
@@ -89,11 +89,11 @@ export class Window_Status extends Window_Selectable {
     }
 
     drawExpInfo(x, y) {
-        var lineHeight = this.lineHeight();
-        var expTotal = TextManager.expTotal.format(TextManager.exp);
-        var expNext = TextManager.expNext.format(TextManager.level);
-        var value1 = this._actor.currentExp();
-        var value2 = this._actor.nextRequiredExp();
+        const lineHeight = this.lineHeight();
+        const expTotal = TextManager.expTotal.format(TextManager.exp);
+        const expNext = TextManager.expNext.format(TextManager.level);
+        let value1 = this._actor.currentExp();
+        let value2 = this._actor.nextRequiredExp();
         if (this._actor.isMaxLevel()) {
             value1 = '-------';
             value2 = '-------';
@@ -107,9 +107,9 @@ export class Window_Status extends Window_Selectable {
     }
 
     drawEquipments(x, y) {
-        var equips = this._actor.equips();
-        var count = Math.min(equips.length, this.maxEquipmentLines());
-        for (var i = 0; i < count; i++) {
+        const equips = this._actor.equips();
+        const count = Math.min(equips.length, this.maxEquipmentLines());
+        for (let i = 0; i < count; i++) {
             this.drawItemName(equips[i], x, y + this.lineHeight() * i);
         }
     }

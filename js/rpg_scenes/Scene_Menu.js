@@ -106,9 +106,9 @@ export class Scene_Menu extends Scene_MenuBase {
     }
 
     onFormationOk() {
-        var index = this._statusWindow.index();
+        const index = this._statusWindow.index();
         // var actor = global.$gameParty.members()[index];
-        var pendingIndex = this._statusWindow.pendingIndex();
+        const pendingIndex = this._statusWindow.pendingIndex();
         if (pendingIndex >= 0) {
             global.$gameParty.swapOrder(index, pendingIndex);
             this._statusWindow.setPendingIndex(-1);

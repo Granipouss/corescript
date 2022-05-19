@@ -14,9 +14,9 @@ import { Window_NumberInput } from './Window_NumberInput';
  */
 export class Window_Message extends Window_Base {
     initialize() {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
-        var x = (Graphics.boxWidth - width) / 2;
+        const width = this.windowWidth();
+        const height = this.windowHeight();
+        const x = (Graphics.boxWidth - width) / 2;
         super.initialize(x, 0, width, height);
         this.openness = 0;
         this.initMembers();

@@ -6,8 +6,8 @@ import { Window_Base } from './Window_Base';
  */
 export class Window_Help extends Window_Base {
     initialize(numLines) {
-        var width = Graphics.boxWidth;
-        var height = this.fittingHeight(numLines || 2);
+        const width = Graphics.boxWidth;
+        const height = this.fittingHeight(numLines || 2);
         super.initialize(0, 0, width, height);
         this._text = '';
     }

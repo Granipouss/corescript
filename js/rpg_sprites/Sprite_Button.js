@@ -21,7 +21,7 @@ export class Sprite_Button extends Sprite {
     }
 
     updateFrame() {
-        var frame;
+        let frame;
         if (this._touching) {
             frame = this._hotFrame;
         } else {
@@ -69,7 +69,7 @@ export class Sprite_Button extends Sprite {
     }
 
     isActive() {
-        var node = this;
+        let node = this;
         while (node) {
             if (!node.visible) {
                 return false;
@@ -80,13 +80,13 @@ export class Sprite_Button extends Sprite {
     }
 
     isButtonTouched() {
-        var x = this.canvasToLocalX(TouchInput.x);
-        var y = this.canvasToLocalY(TouchInput.y);
+        const x = this.canvasToLocalX(TouchInput.x);
+        const y = this.canvasToLocalY(TouchInput.y);
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
     }
 
     canvasToLocalX(x) {
-        var node = this;
+        let node = this;
         while (node) {
             x -= node.x;
             node = node.parent;
@@ -95,7 +95,7 @@ export class Sprite_Button extends Sprite {
     }
 
     canvasToLocalY(y) {
-        var node = this;
+        let node = this;
         while (node) {
             y -= node.y;
             node = node.parent;

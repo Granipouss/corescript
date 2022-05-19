@@ -61,7 +61,7 @@ export class Game_Vehicle extends Game_Character {
     }
 
     loadSystemSettings() {
-        var vehicle = this.vehicle();
+        const vehicle = this.vehicle();
         this._mapId = vehicle.startMapId;
         this.setPosition(vehicle.startX, vehicle.startY);
         this.setImage(vehicle.characterName, vehicle.characterIndex);
@@ -99,8 +99,8 @@ export class Game_Vehicle extends Game_Character {
     }
 
     isMapPassable(x, y, d) {
-        var x2 = global.$gameMap.roundXWithDirection(x, d);
-        var y2 = global.$gameMap.roundYWithDirection(y, d);
+        const x2 = global.$gameMap.roundXWithDirection(x, d);
+        const y2 = global.$gameMap.roundYWithDirection(y, d);
         if (this.isBoat()) {
             return global.$gameMap.isBoatPassable(x2, y2);
         } else if (this.isShip()) {
@@ -212,8 +212,8 @@ export class Game_Vehicle extends Game_Character {
                 return false;
             }
         } else {
-            var x2 = global.$gameMap.roundXWithDirection(x, d);
-            var y2 = global.$gameMap.roundYWithDirection(y, d);
+            const x2 = global.$gameMap.roundXWithDirection(x, d);
+            const y2 = global.$gameMap.roundYWithDirection(y, d);
             if (!global.$gameMap.isValid(x2, y2)) {
                 return false;
             }

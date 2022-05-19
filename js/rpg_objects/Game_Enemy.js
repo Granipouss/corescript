@@ -176,7 +176,7 @@ export class Game_Enemy extends Game_Battler {
     }
 
     transform(enemyId) {
-        var name = this.originalName();
+        const name = this.originalName();
         this._enemyId = enemyId;
         if (this.originalName() !== name) {
             this._letter = '';
@@ -189,8 +189,8 @@ export class Game_Enemy extends Game_Battler {
     }
 
     meetsCondition(action) {
-        var param1 = action.conditionParam1;
-        var param2 = action.conditionParam2;
+        const param1 = action.conditionParam1;
+        const param2 = action.conditionParam2;
         switch (action.conditionType) {
             case 1:
                 return this.meetsTurnCondition(param1, param2);
@@ -210,7 +210,7 @@ export class Game_Enemy extends Game_Battler {
     }
 
     meetsTurnCondition(param1, param2) {
-        var n = global.$gameTroop.turnCount();
+        const n = global.$gameTroop.turnCount();
         if (param2 === 0) {
             return n === param1;
         } else {
@@ -243,13 +243,13 @@ export class Game_Enemy extends Game_Battler {
     }
 
     selectAction(actionList, ratingZero) {
-        var sum = actionList.reduce(function (r, a) {
+        const sum = actionList.reduce(function (r, a) {
             return r + a.rating - ratingZero;
         }, 0);
         if (sum > 0) {
-            var value = Math.randomInt(sum);
-            for (var i = 0; i < actionList.length; i++) {
-                var action = actionList[i];
+            let value = Math.randomInt(sum);
+            for (let i = 0; i < actionList.length; i++) {
+                const action = actionList[i];
                 value -= action.rating - ratingZero;
                 if (value < 0) {
                     return action;
@@ -261,17 +261,17 @@ export class Game_Enemy extends Game_Battler {
     }
 
     selectAllActions(actionList) {
-        var ratingMax = Math.max.apply(
+        const ratingMax = Math.max.apply(
             null,
             actionList.map(function (a) {
                 return a.rating;
             })
         );
-        var ratingZero = ratingMax - 3;
+        const ratingZero = ratingMax - 3;
         actionList = actionList.filter(function (a) {
             return a.rating > ratingZero;
         });
-        for (var i = 0; i < this.numActions(); i++) {
+        for (let i = 0; i < this.numActions(); i++) {
             this.action(i).setEnemyAction(this.selectAction(actionList, ratingZero));
         }
     }
@@ -279,7 +279,7 @@ export class Game_Enemy extends Game_Battler {
     makeActions() {
         super.makeActions();
         if (this.numActions() > 0) {
-            var actionList = this.enemy().actions.filter(function (a) {
+            const actionList = this.enemy().actions.filter(function (a) {
                 return this.isActionValid(a);
             }, this);
             if (actionList.length > 0) {

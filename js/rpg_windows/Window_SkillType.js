@@ -27,12 +27,12 @@ export class Window_SkillType extends Window_Command {
 
     makeCommandList() {
         if (this._actor) {
-            var skillTypes = this._actor.addedSkillTypes();
+            const skillTypes = this._actor.addedSkillTypes();
             skillTypes.sort(function (a, b) {
                 return a - b;
             });
             skillTypes.forEach(function (stypeId) {
-                var name = global.$dataSystem.skillTypes[stypeId];
+                const name = global.$dataSystem.skillTypes[stypeId];
                 this.addCommand(name, 'skill', true, stypeId);
             }, this);
         }
@@ -50,7 +50,7 @@ export class Window_SkillType extends Window_Command {
     }
 
     selectLast() {
-        var skill = this._actor.lastMenuSkill();
+        const skill = this._actor.lastMenuSkill();
         if (skill) {
             this.selectExt(skill.stypeId);
         } else {

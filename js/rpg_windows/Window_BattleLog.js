@@ -14,8 +14,8 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_BattleLog extends Window_Selectable {
     initialize() {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(0, 0, width, height);
         this.opacity = 0;
         this._lines = [];
@@ -90,7 +90,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     updateWaitMode() {
-        var waiting = false;
+        let waiting = false;
         switch (this._waitMode) {
             case 'effect':
                 waiting = this._spriteset.isEffecting();
@@ -111,7 +111,7 @@ export class Window_BattleLog extends Window_Selectable {
 
     callNextMethod() {
         if (this._methods.length > 0) {
-            var method = this._methods.shift();
+            const method = this._methods.shift();
             if (method.name && this[method.name]) {
                 this[method.name].apply(this, method.params);
             } else {
@@ -157,14 +157,14 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     popBaseLine() {
-        var baseLine = this._baseLineStack.pop();
+        const baseLine = this._baseLineStack.pop();
         while (this._lines.length > baseLine) {
             this._lines.pop();
         }
     }
 
     waitForNewLine() {
-        var baseLine = 0;
+        let baseLine = 0;
         if (this._baseLineStack.length > 0) {
             baseLine = this._baseLineStack[this._baseLineStack.length - 1];
         }
@@ -251,10 +251,10 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     showNormalAnimation(targets, animationId, mirror) {
-        var animation = global.$dataAnimations[animationId];
+        const animation = global.$dataAnimations[animationId];
         if (animation) {
-            var delay = this.animationBaseDelay();
-            var nextDelay = this.animationNextDelay();
+            let delay = this.animationBaseDelay();
+            const nextDelay = this.animationNextDelay();
             targets.forEach(function (target) {
                 target.startAnimation(animationId, mirror, delay);
                 delay += nextDelay;
@@ -273,14 +273,14 @@ export class Window_BattleLog extends Window_Selectable {
     refresh() {
         this.drawBackground();
         this.contents.clear();
-        for (var i = 0; i < this._lines.length; i++) {
+        for (let i = 0; i < this._lines.length; i++) {
             this.drawLineText(i);
         }
     }
 
     drawBackground() {
-        var rect = this.backRect();
-        var color = this.backColor();
+        const rect = this.backRect();
+        const color = this.backColor();
         this._backBitmap.clear();
         this._backBitmap.paintOpacity = this.backPaintOpacity();
         this._backBitmap.fillRect(rect.x, rect.y, rect.width, rect.height, color);
@@ -305,7 +305,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     drawLineText(index) {
-        var rect = this.itemRectForText(index);
+        const rect = this.itemRectForText(index);
         this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
         this.drawTextEx(this._lines[index], rect.x, rect.y, rect.width);
     }
@@ -315,7 +315,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     startAction(subject, action, targets) {
-        var item = action.item();
+        const item = action.item();
         this.push('performActionStart', subject, action);
         this.push('waitForMovement');
         this.push('performAction', subject, action);
@@ -330,7 +330,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     displayCurrentState(subject) {
-        var stateText = subject.mostImportantStateText();
+        const stateText = subject.mostImportantStateText();
         if (stateText) {
             this.push('addText', subject.name() + stateText);
             this.push('wait');
@@ -343,7 +343,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     displayAction(subject, item) {
-        var numMethods = this._methods.length;
+        const numMethods = this._methods.length;
         if (DataManager.isSkill(item)) {
             if (item.message1) {
                 this.push('addText', subject.name() + item.message1.format(item.name));
@@ -370,7 +370,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     displaySubstitute(substitute, target) {
-        var substName = substitute.name();
+        const substName = substitute.name();
         this.push('performSubstitute', substitute, target);
         this.push('addText', TextManager.substitute.format(substName, target.name()));
     }
@@ -418,7 +418,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     displayMiss(target) {
-        var fmt;
+        let fmt;
         if (target.result().physical) {
             fmt = target.isActor() ? TextManager.actorNoHit : TextManager.enemyNoHit;
             this.push('performMiss', target);
@@ -429,7 +429,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     displayEvasion(target) {
-        var fmt;
+        let fmt;
         if (target.result().physical) {
             fmt = TextManager.evasion;
             this.push('performEvasion', target);
@@ -497,7 +497,7 @@ export class Window_BattleLog extends Window_Selectable {
             .result()
             .addedStateObjects()
             .forEach(function (state) {
-                var stateMsg = target.isActor() ? state.message1 : state.message2;
+                const stateMsg = target.isActor() ? state.message1 : state.message2;
                 if (state.id === target.deathStateId()) {
                     this.push('performCollapse', target);
                 }
@@ -524,7 +524,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     displayChangedBuffs(target) {
-        var result = target.result();
+        const result = target.result();
         this.displayBuffs(target, result.addedBuffs, TextManager.buffAdd);
         this.displayBuffs(target, result.addedDebuffs, TextManager.debuffAdd);
         this.displayBuffs(target, result.removedBuffs, TextManager.buffRemove);
@@ -539,10 +539,10 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     makeHpDamageText(target) {
-        var result = target.result();
-        var damage = result.hpDamage;
-        var isActor = target.isActor();
-        var fmt;
+        const result = target.result();
+        const damage = result.hpDamage;
+        const isActor = target.isActor();
+        let fmt;
         if (damage > 0 && result.drain) {
             fmt = isActor ? TextManager.actorDrain : TextManager.enemyDrain;
             return fmt.format(target.name(), TextManager.hp, damage);
@@ -559,10 +559,10 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     makeMpDamageText(target) {
-        var result = target.result();
-        var damage = result.mpDamage;
-        var isActor = target.isActor();
-        var fmt;
+        const result = target.result();
+        const damage = result.mpDamage;
+        const isActor = target.isActor();
+        let fmt;
         if (damage > 0 && result.drain) {
             fmt = isActor ? TextManager.actorDrain : TextManager.enemyDrain;
             return fmt.format(target.name(), TextManager.mp, damage);
@@ -578,10 +578,10 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     makeTpDamageText(target) {
-        var result = target.result();
-        var damage = result.tpDamage;
-        var isActor = target.isActor();
-        var fmt;
+        const result = target.result();
+        const damage = result.tpDamage;
+        const isActor = target.isActor();
+        let fmt;
         if (damage > 0) {
             fmt = isActor ? TextManager.actorLoss : TextManager.enemyLoss;
             return fmt.format(target.name(), TextManager.tp, damage);

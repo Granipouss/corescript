@@ -106,7 +106,7 @@ export class Window_Selectable extends Window_Base {
     }
 
     setTopRow(row) {
-        var scrollY = row.clamp(0, this.maxTopRow()) * this.itemHeight();
+        const scrollY = row.clamp(0, this.maxTopRow()) * this.itemHeight();
         if (this._scrollY !== scrollY) {
             this._scrollY = scrollY;
             this.refresh();
@@ -119,7 +119,7 @@ export class Window_Selectable extends Window_Base {
     }
 
     maxPageRows() {
-        var pageHeight = this.height - this.padding * 2;
+        const pageHeight = this.height - this.padding * 2;
         return Math.floor(pageHeight / this.itemHeight());
     }
 
@@ -144,8 +144,8 @@ export class Window_Selectable extends Window_Base {
     }
 
     itemRect(index) {
-        var rect = new Rectangle();
-        var maxCols = this.maxCols();
+        const rect = new Rectangle();
+        const maxCols = this.maxCols();
         rect.width = this.itemWidth();
         rect.height = this.itemHeight();
         rect.x = (index % maxCols) * (rect.width + this.spacing()) - this._scrollX;
@@ -154,7 +154,7 @@ export class Window_Selectable extends Window_Base {
     }
 
     itemRectForText(index) {
-        var rect = this.itemRect(index);
+        const rect = this.itemRect(index);
         rect.x += this.textPadding();
         rect.width -= this.textPadding() * 2;
         return rect;
@@ -200,44 +200,44 @@ export class Window_Selectable extends Window_Base {
     }
 
     cursorDown(wrap) {
-        var index = this.index();
-        var maxItems = this.maxItems();
-        var maxCols = this.maxCols();
+        const index = this.index();
+        const maxItems = this.maxItems();
+        const maxCols = this.maxCols();
         if (index < maxItems - maxCols || (wrap && maxCols === 1)) {
             this.select((index + maxCols) % maxItems);
         }
     }
 
     cursorUp(wrap) {
-        var index = this.index();
-        var maxItems = this.maxItems();
-        var maxCols = this.maxCols();
+        const index = this.index();
+        const maxItems = this.maxItems();
+        const maxCols = this.maxCols();
         if (index >= maxCols || (wrap && maxCols === 1)) {
             this.select((index - maxCols + maxItems) % maxItems);
         }
     }
 
     cursorRight(wrap) {
-        var index = this.index();
-        var maxItems = this.maxItems();
-        var maxCols = this.maxCols();
+        const index = this.index();
+        const maxItems = this.maxItems();
+        const maxCols = this.maxCols();
         if (maxCols >= 2 && (index < maxItems - 1 || (wrap && this.isHorizontal()))) {
             this.select((index + 1) % maxItems);
         }
     }
 
     cursorLeft(wrap) {
-        var index = this.index();
-        var maxItems = this.maxItems();
-        var maxCols = this.maxCols();
+        const index = this.index();
+        const maxItems = this.maxItems();
+        const maxCols = this.maxCols();
         if (maxCols >= 2 && (index > 0 || (wrap && this.isHorizontal()))) {
             this.select((index - 1 + maxItems) % maxItems);
         }
     }
 
     cursorPagedown() {
-        var index = this.index();
-        var maxItems = this.maxItems();
+        const index = this.index();
+        const maxItems = this.maxItems();
         if (this.topRow() + this.maxPageRows() < this.maxRows()) {
             this.setTopRow(this.topRow() + this.maxPageRows());
             this.select(Math.min(index + this.maxPageItems(), maxItems - 1));
@@ -245,7 +245,7 @@ export class Window_Selectable extends Window_Base {
     }
 
     cursorPageup() {
-        var index = this.index();
+        const index = this.index();
         if (this.topRow() > 0) {
             this.setTopRow(this.topRow() - this.maxPageRows());
             this.select(Math.max(index - this.maxPageItems(), 0));
@@ -275,15 +275,15 @@ export class Window_Selectable extends Window_Base {
     }
 
     updateArrows() {
-        var topRow = this.topRow();
-        var maxTopRow = this.maxTopRow();
+        const topRow = this.topRow();
+        const maxTopRow = this.maxTopRow();
         this.downArrowVisible = maxTopRow > 0 && topRow < maxTopRow;
         this.upArrowVisible = topRow > 0;
     }
 
     processCursorMove() {
         if (this.isCursorMovable()) {
-            var lastIndex = this.index();
+            const lastIndex = this.index();
             if (Input.isRepeated('down')) {
                 this.cursorDown(Input.isTriggered('down'));
             }
@@ -324,7 +324,7 @@ export class Window_Selectable extends Window_Base {
 
     processWheel() {
         if (this.isOpenAndActive()) {
-            var threshold = 20;
+            const threshold = 20;
             if (TouchInput.wheelY >= threshold) {
                 this.scrollDown();
             }
@@ -357,16 +357,16 @@ export class Window_Selectable extends Window_Base {
     }
 
     isTouchedInsideFrame() {
-        var x = this.canvasToLocalX(TouchInput.x);
-        var y = this.canvasToLocalY(TouchInput.y);
+        const x = this.canvasToLocalX(TouchInput.x);
+        const y = this.canvasToLocalY(TouchInput.y);
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
     }
 
     onTouch(triggered) {
-        var lastIndex = this.index();
-        var x = this.canvasToLocalX(TouchInput.x);
-        var y = this.canvasToLocalY(TouchInput.y);
-        var hitIndex = this.hitTest(x, y);
+        const lastIndex = this.index();
+        const x = this.canvasToLocalX(TouchInput.x);
+        const y = this.canvasToLocalY(TouchInput.y);
+        const hitIndex = this.hitTest(x, y);
         if (hitIndex >= 0) {
             if (hitIndex === this.index()) {
                 if (triggered && this.isTouchOkEnabled()) {
@@ -389,15 +389,15 @@ export class Window_Selectable extends Window_Base {
 
     hitTest(x, y) {
         if (this.isContentsArea(x, y)) {
-            var cx = x - this.padding;
-            var cy = y - this.padding;
-            var topIndex = this.topIndex();
-            for (var i = 0; i < this.maxPageItems(); i++) {
-                var index = topIndex + i;
+            const cx = x - this.padding;
+            const cy = y - this.padding;
+            const topIndex = this.topIndex();
+            for (let i = 0; i < this.maxPageItems(); i++) {
+                const index = topIndex + i;
                 if (index < this.maxItems()) {
-                    var rect = this.itemRect(index);
-                    var right = rect.x + rect.width;
-                    var bottom = rect.y + rect.height;
+                    const rect = this.itemRect(index);
+                    const right = rect.x + rect.width;
+                    const bottom = rect.y + rect.height;
                     if (cx >= rect.x && cy >= rect.y && cx < right && cy < bottom) {
                         return index;
                     }
@@ -408,10 +408,10 @@ export class Window_Selectable extends Window_Base {
     }
 
     isContentsArea(x, y) {
-        var left = this.padding;
-        var top = this.padding;
-        var right = this.width - this.padding;
-        var bottom = this.height - this.padding;
+        const left = this.padding;
+        const top = this.padding;
+        const right = this.width - this.padding;
+        const bottom = this.height - this.padding;
         return x >= left && y >= top && x < right && y < bottom;
     }
 
@@ -490,11 +490,11 @@ export class Window_Selectable extends Window_Base {
 
     updateCursor() {
         if (this._cursorAll) {
-            var allRowsHeight = this.maxRows() * this.itemHeight();
+            const allRowsHeight = this.maxRows() * this.itemHeight();
             this.setCursorRect(0, 0, this.contents.width, allRowsHeight);
             this.setTopRow(0);
         } else if (this.isCursorVisible()) {
-            var rect = this.itemRect(this.index());
+            const rect = this.itemRect(this.index());
             this.setCursorRect(rect.x, rect.y, rect.width, rect.height);
         } else {
             this.setCursorRect(0, 0, 0, 0);
@@ -502,12 +502,12 @@ export class Window_Selectable extends Window_Base {
     }
 
     isCursorVisible() {
-        var row = this.row();
+        const row = this.row();
         return row >= this.topRow() && row <= this.bottomRow();
     }
 
     ensureCursorVisible() {
-        var row = this.row();
+        const row = this.row();
         if (row < this.topRow()) {
             this.setTopRow(row);
         } else if (row > this.bottomRow()) {
@@ -536,9 +536,9 @@ export class Window_Selectable extends Window_Base {
     }
 
     drawAllItems() {
-        var topIndex = this.topIndex();
-        for (var i = 0; i < this.maxPageItems(); i++) {
-            var index = topIndex + i;
+        const topIndex = this.topIndex();
+        for (let i = 0; i < this.maxPageItems(); i++) {
+            const index = topIndex + i;
             if (index < this.maxItems()) {
                 this.drawItem(index);
             }
@@ -548,7 +548,7 @@ export class Window_Selectable extends Window_Base {
     drawItem(_index) {}
 
     clearItem(index) {
-        var rect = this.itemRect(index);
+        const rect = this.itemRect(index);
         this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
     }
 

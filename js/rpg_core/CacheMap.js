@@ -18,19 +18,19 @@ export class CacheMap {
      * checks ttl of all elements and removes dead ones
      */
     checkTTL() {
-        var cache = this._inner;
-        var temp = this._lastRemovedEntries;
+        const cache = this._inner;
+        let temp = this._lastRemovedEntries;
         if (!temp) {
             temp = [];
             this._lastRemovedEntries = temp;
         }
-        for (var key in cache) {
-            var entry = cache[key];
+        for (const key in cache) {
+            const entry = cache[key];
             if (!entry.isStillAlive()) {
                 temp.push(entry);
             }
         }
-        for (var i = 0; i < temp.length; i++) {
+        for (let i = 0; i < temp.length; i++) {
             temp[i].free(true);
         }
         temp.length = 0;
@@ -42,7 +42,7 @@ export class CacheMap {
      * @returns {*|null}
      */
     getItem(key) {
-        var entry = this._inner[key];
+        const entry = this._inner[key];
         if (entry) {
             return entry.item;
         }
@@ -50,8 +50,8 @@ export class CacheMap {
     }
 
     clear() {
-        var keys = Object.keys(this._inner);
-        for (var i = 0; i < keys.length; i++) {
+        const keys = Object.keys(this._inner);
+        for (let i = 0; i < keys.length; i++) {
             this._inner[keys[i]].free();
         }
     }

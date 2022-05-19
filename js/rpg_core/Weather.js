@@ -85,7 +85,7 @@ export class Weather extends PIXI.Container {
      * @private
      */
     _updateAllSprites() {
-        var maxSprites = Math.floor(this.power * 10);
+        const maxSprites = Math.floor(this.power * 10);
         while (this._sprites.length < maxSprites) {
             this._addSprite();
         }
@@ -103,7 +103,7 @@ export class Weather extends PIXI.Container {
      * @private
      */
     _addSprite() {
-        var sprite = new Sprite(this.viewport);
+        const sprite = new Sprite(this.viewport);
         sprite.opacity = 0;
         this._sprites.push(sprite);
         this.addChild(sprite);

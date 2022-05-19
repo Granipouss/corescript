@@ -83,7 +83,7 @@ export class Window_Base extends Window {
     }
 
     updateTone() {
-        var tone = global.$gameSystem.windowTone();
+        const tone = global.$gameSystem.windowTone();
         this.setTone(tone[0], tone[1], tone[2]);
     }
 
@@ -167,8 +167,8 @@ export class Window_Base extends Window {
     }
 
     textColor(n) {
-        var px = 96 + (n % 8) * 12 + 6;
-        var py = 144 + Math.floor(n / 8) * 12 + 6;
+        const px = 96 + (n % 8) * 12 + 6;
+        const py = 144 + Math.floor(n / 8) * 12 + 6;
         return this.windowskin.getPixel(px, py);
     }
 
@@ -258,7 +258,7 @@ export class Window_Base extends Window {
 
     drawTextEx(text, x, y) {
         if (text) {
-            var textState = { index: 0, x: x, y: y, left: x };
+            const textState = { index: 0, x: x, y: y, left: x };
             textState.text = this.convertEscapeCharacters(text);
             textState.height = this.calcTextHeight(textState, false);
             this.resetFontSettings();
@@ -303,12 +303,12 @@ export class Window_Base extends Window {
     }
 
     actorName(n) {
-        var actor = n >= 1 ? global.$gameActors.actor(n) : null;
+        const actor = n >= 1 ? global.$gameActors.actor(n) : null;
         return actor ? actor.name() : '';
     }
 
     partyMemberName(n) {
-        var actor = n >= 1 ? global.$gameParty.members()[n - 1] : null;
+        const actor = n >= 1 ? global.$gameParty.members()[n - 1] : null;
         return actor ? actor.name() : '';
     }
 
@@ -330,8 +330,8 @@ export class Window_Base extends Window {
     }
 
     processNormalCharacter(textState) {
-        var c = textState.text[textState.index++];
-        var w = this.textWidth(c);
+        const c = textState.text[textState.index++];
+        const w = this.textWidth(c);
         this.contents.drawText(c, textState.x, textState.y, w * 2, textState.height);
         textState.x += w;
     }
@@ -349,8 +349,8 @@ export class Window_Base extends Window {
 
     obtainEscapeCode(textState) {
         textState.index++;
-        var regExp = /^[$.|^!><{}\\]|^[A-Z]+/i;
-        var arr = regExp.exec(textState.text.slice(textState.index));
+        const regExp = /^[$.|^!><{}\\]|^[A-Z]+/i;
+        const arr = regExp.exec(textState.text.slice(textState.index));
         if (arr) {
             textState.index += arr[0].length;
             return arr[0].toUpperCase();
@@ -360,7 +360,7 @@ export class Window_Base extends Window {
     }
 
     obtainEscapeParam(textState) {
-        var arr = /^\[\d+\]/.exec(textState.text.slice(textState.index));
+        const arr = /^\[\d+\]/.exec(textState.text.slice(textState.index));
         if (arr) {
             textState.index += arr[0].length;
             return parseInt(arr[0].slice(1));
@@ -404,16 +404,16 @@ export class Window_Base extends Window {
     }
 
     calcTextHeight(textState, all) {
-        var lastFontSize = this.contents.fontSize;
-        var textHeight = 0;
-        var lines = textState.text.slice(textState.index).split('\n');
-        var maxLines = all ? lines.length : 1;
+        const lastFontSize = this.contents.fontSize;
+        let textHeight = 0;
+        const lines = textState.text.slice(textState.index).split('\n');
+        const maxLines = all ? lines.length : 1;
 
-        for (var i = 0; i < maxLines; i++) {
-            var maxFontSize = this.contents.fontSize;
-            var regExp = /\x1b[{}]/g;
+        for (let i = 0; i < maxLines; i++) {
+            let maxFontSize = this.contents.fontSize;
+            const regExp = /\x1b[{}]/g;
             for (;;) {
-                var array = regExp.exec(lines[i]);
+                const array = regExp.exec(lines[i]);
                 if (array) {
                     if (array[0] === '\x1b{') {
                         this.makeFontBigger();
@@ -436,43 +436,43 @@ export class Window_Base extends Window {
     }
 
     drawIcon(iconIndex, x, y) {
-        var bitmap = ImageManager.loadSystem('IconSet');
-        var pw = Window_Base._iconWidth;
-        var ph = Window_Base._iconHeight;
-        var sx = (iconIndex % 16) * pw;
-        var sy = Math.floor(iconIndex / 16) * ph;
+        const bitmap = ImageManager.loadSystem('IconSet');
+        const pw = Window_Base._iconWidth;
+        const ph = Window_Base._iconHeight;
+        const sx = (iconIndex % 16) * pw;
+        const sy = Math.floor(iconIndex / 16) * ph;
         this.contents.blt(bitmap, sx, sy, pw, ph, x, y);
     }
 
     drawFace(faceName, faceIndex, x, y, width, height) {
         width = width || Window_Base._faceWidth;
         height = height || Window_Base._faceHeight;
-        var bitmap = ImageManager.loadFace(faceName);
-        var pw = Window_Base._faceWidth;
-        var ph = Window_Base._faceHeight;
-        var sw = Math.min(width, pw);
-        var sh = Math.min(height, ph);
-        var dx = Math.floor(x + Math.max(width - pw, 0) / 2);
-        var dy = Math.floor(y + Math.max(height - ph, 0) / 2);
-        var sx = (faceIndex % 4) * pw + (pw - sw) / 2;
-        var sy = Math.floor(faceIndex / 4) * ph + (ph - sh) / 2;
+        const bitmap = ImageManager.loadFace(faceName);
+        const pw = Window_Base._faceWidth;
+        const ph = Window_Base._faceHeight;
+        const sw = Math.min(width, pw);
+        const sh = Math.min(height, ph);
+        const dx = Math.floor(x + Math.max(width - pw, 0) / 2);
+        const dy = Math.floor(y + Math.max(height - ph, 0) / 2);
+        const sx = (faceIndex % 4) * pw + (pw - sw) / 2;
+        const sy = Math.floor(faceIndex / 4) * ph + (ph - sh) / 2;
         this.contents.blt(bitmap, sx, sy, sw, sh, dx, dy);
     }
 
     drawCharacter(characterName, characterIndex, x, y) {
-        var bitmap = ImageManager.loadCharacter(characterName);
-        var big = ImageManager.isBigCharacter(characterName);
-        var pw = bitmap.width / (big ? 3 : 12);
-        var ph = bitmap.height / (big ? 4 : 8);
-        var n = big ? 0 : characterIndex;
-        var sx = ((n % 4) * 3 + 1) * pw;
-        var sy = Math.floor(n / 4) * 4 * ph;
+        const bitmap = ImageManager.loadCharacter(characterName);
+        const big = ImageManager.isBigCharacter(characterName);
+        const pw = bitmap.width / (big ? 3 : 12);
+        const ph = bitmap.height / (big ? 4 : 8);
+        const n = big ? 0 : characterIndex;
+        const sx = ((n % 4) * 3 + 1) * pw;
+        const sy = Math.floor(n / 4) * 4 * ph;
         this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
     }
 
     drawGauge(x, y, width, rate, color1, color2) {
-        var fillW = Math.floor(width * rate);
-        var gaugeY = y + this.lineHeight() - 8;
+        const fillW = Math.floor(width * rate);
+        const gaugeY = y + this.lineHeight() - 8;
         this.contents.fillRect(x, gaugeY, width, 6, this.gaugeBackColor());
         this.contents.gradientFillRect(x, gaugeY, fillW, 6, color1, color2);
     }
@@ -530,19 +530,19 @@ export class Window_Base extends Window {
 
     drawActorIcons(actor, x, y, width) {
         width = width || 144;
-        var icons = actor.allIcons().slice(0, Math.floor(width / Window_Base._iconWidth));
-        for (var i = 0; i < icons.length; i++) {
+        const icons = actor.allIcons().slice(0, Math.floor(width / Window_Base._iconWidth));
+        for (let i = 0; i < icons.length; i++) {
             this.drawIcon(icons[i], x + Window_Base._iconWidth * i, y + 2);
         }
     }
 
     drawCurrentAndMax(current, max, x, y, width, color1, color2) {
-        var labelWidth = this.textWidth('HP');
-        var valueWidth = this.textWidth('0000');
-        var slashWidth = this.textWidth('/');
-        var x1 = x + width - valueWidth;
-        var x2 = x1 - slashWidth;
-        var x3 = x2 - valueWidth;
+        const labelWidth = this.textWidth('HP');
+        const valueWidth = this.textWidth('0000');
+        const slashWidth = this.textWidth('/');
+        const x1 = x + width - valueWidth;
+        const x2 = x1 - slashWidth;
+        const x3 = x2 - valueWidth;
         if (x3 >= x + labelWidth) {
             this.changeTextColor(color1);
             this.drawText(current, x3, y, valueWidth, 'right');
@@ -557,8 +557,8 @@ export class Window_Base extends Window {
 
     drawActorHp(actor, x, y, width) {
         width = width || 186;
-        var color1 = this.hpGaugeColor1();
-        var color2 = this.hpGaugeColor2();
+        const color1 = this.hpGaugeColor1();
+        const color2 = this.hpGaugeColor2();
         this.drawGauge(x, y, width, actor.hpRate(), color1, color2);
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.hpA, x, y, 44);
@@ -567,8 +567,8 @@ export class Window_Base extends Window {
 
     drawActorMp(actor, x, y, width) {
         width = width || 186;
-        var color1 = this.mpGaugeColor1();
-        var color2 = this.mpGaugeColor2();
+        const color1 = this.mpGaugeColor1();
+        const color2 = this.mpGaugeColor2();
         this.drawGauge(x, y, width, actor.mpRate(), color1, color2);
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.mpA, x, y, 44);
@@ -577,8 +577,8 @@ export class Window_Base extends Window {
 
     drawActorTp(actor, x, y, width) {
         width = width || 96;
-        var color1 = this.tpGaugeColor1();
-        var color2 = this.tpGaugeColor2();
+        const color1 = this.tpGaugeColor1();
+        const color2 = this.tpGaugeColor2();
         this.drawGauge(x, y, width, actor.tpRate(), color1, color2);
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.tpA, x, y, 44);
@@ -587,9 +587,9 @@ export class Window_Base extends Window {
     }
 
     drawActorSimpleStatus(actor, x, y, width) {
-        var lineHeight = this.lineHeight();
-        var x2 = x + 180;
-        var width2 = Math.min(200, width - 180 - this.textPadding());
+        const lineHeight = this.lineHeight();
+        const x2 = x + 180;
+        const width2 = Math.min(200, width - 180 - this.textPadding());
         this.drawActorName(actor, x, y);
         this.drawActorLevel(actor, x, y + lineHeight * 1);
         this.drawActorIcons(actor, x, y + lineHeight * 2);
@@ -601,7 +601,7 @@ export class Window_Base extends Window {
     drawItemName(item, x, y, width) {
         width = width || 312;
         if (item) {
-            var iconBoxWidth = Window_Base._iconWidth + 4;
+            const iconBoxWidth = Window_Base._iconWidth + 4;
             this.resetTextColor();
             this.drawIcon(item.iconIndex, x + 2, y + 2);
             this.drawText(item.name, x + iconBoxWidth, y, width - iconBoxWidth);
@@ -609,7 +609,7 @@ export class Window_Base extends Window {
     }
 
     drawCurrencyValue(value, unit, x, y, width) {
-        var unitWidth = Math.min(80, this.textWidth(unit));
+        const unitWidth = Math.min(80, this.textWidth(unit));
         this.resetTextColor();
         this.drawText(value, x, y, width - unitWidth - 6, 'right');
         this.changeTextColor(this.systemColor());
@@ -667,12 +667,12 @@ export class Window_Base extends Window {
 
     refreshDimmerBitmap() {
         if (this._dimmerSprite) {
-            var bitmap = this._dimmerSprite.bitmap;
-            var w = this.width;
-            var h = this.height;
-            var m = this.padding;
-            var c1 = this.dimColor1();
-            var c2 = this.dimColor2();
+            const bitmap = this._dimmerSprite.bitmap;
+            const w = this.width;
+            const h = this.height;
+            const m = this.padding;
+            const c1 = this.dimColor1();
+            const c2 = this.dimColor2();
             bitmap.resize(w, h);
             bitmap.gradientFillRect(0, 0, w, m, c2, c1, true);
             bitmap.fillRect(0, m, w, h - m * 2, c1);
@@ -690,7 +690,7 @@ export class Window_Base extends Window {
     }
 
     canvasToLocalX(x) {
-        var node = this;
+        let node = this;
         while (node) {
             x -= node.x;
             node = node.parent;
@@ -699,7 +699,7 @@ export class Window_Base extends Window {
     }
 
     canvasToLocalY(y) {
-        var node = this;
+        let node = this;
         while (node) {
             y -= node.y;
             node = node.parent;

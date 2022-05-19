@@ -39,10 +39,10 @@ export class Spriteset_Battle extends Spriteset_Base {
     }
 
     createBattleField() {
-        var width = Graphics.boxWidth;
-        var height = Graphics.boxHeight;
-        var x = (Graphics.width - width) / 2;
-        var y = (Graphics.height - height) / 2;
+        const width = Graphics.boxWidth;
+        const height = Graphics.boxHeight;
+        const x = (Graphics.width - width) / 2;
+        const y = (Graphics.height - height) / 2;
         this._battleField = new Sprite();
         this._battleField.setFrame(x, y, width, height);
         this._battleField.x = x;
@@ -51,11 +51,11 @@ export class Spriteset_Battle extends Spriteset_Base {
     }
 
     createBattleback() {
-        var margin = 32;
-        var x = -this._battleField.x - margin;
-        var y = -this._battleField.y - margin;
-        var width = Graphics.width + margin * 2;
-        var height = Graphics.height + margin * 2;
+        const margin = 32;
+        const x = -this._battleField.x - margin;
+        const y = -this._battleField.y - margin;
+        const width = Graphics.width + margin * 2;
+        const height = Graphics.height + margin * 2;
         this._back1Sprite = new TilingSprite();
         this._back2Sprite = new TilingSprite();
         this._back1Sprite.bitmap = this.battleback1Bitmap();
@@ -74,10 +74,10 @@ export class Spriteset_Battle extends Spriteset_Base {
     }
 
     locateBattleback() {
-        var width = this._battleField.width;
-        var height = this._battleField.height;
-        var sprite1 = this._back1Sprite;
-        var sprite2 = this._back2Sprite;
+        const width = this._battleField.width;
+        const height = this._battleField.height;
+        const sprite1 = this._back1Sprite;
+        const sprite2 = this._back2Sprite;
         sprite1.origin.x = sprite1.x + (sprite1.bitmap.width - width) / 2;
         sprite2.origin.x = sprite1.y + (sprite2.bitmap.width - width) / 2;
         if (global.$gameSystem.isSideView()) {
@@ -232,13 +232,13 @@ export class Spriteset_Battle extends Spriteset_Base {
     }
 
     createEnemies() {
-        var enemies = global.$gameTroop.members();
-        var sprites = [];
-        for (var i = 0; i < enemies.length; i++) {
+        const enemies = global.$gameTroop.members();
+        const sprites = [];
+        for (let i = 0; i < enemies.length; i++) {
             sprites[i] = new Sprite_Enemy(enemies[i]);
         }
         sprites.sort(this.compareEnemySprite.bind(this));
-        for (var j = 0; j < sprites.length; j++) {
+        for (let j = 0; j < sprites.length; j++) {
             this._battleField.addChild(sprites[j]);
         }
         this._enemySprites = sprites;
@@ -254,15 +254,15 @@ export class Spriteset_Battle extends Spriteset_Base {
 
     createActors() {
         this._actorSprites = [];
-        for (var i = 0; i < global.$gameParty.maxBattleMembers(); i++) {
+        for (let i = 0; i < global.$gameParty.maxBattleMembers(); i++) {
             this._actorSprites[i] = new Sprite_Actor();
             this._battleField.addChild(this._actorSprites[i]);
         }
     }
 
     updateActors() {
-        var members = global.$gameParty.battleMembers();
-        for (var i = 0; i < this._actorSprites.length; i++) {
+        const members = global.$gameParty.battleMembers();
+        for (let i = 0; i < this._actorSprites.length; i++) {
             this._actorSprites[i].setBattler(members[i]);
         }
     }

@@ -28,8 +28,8 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     updatePlacement() {
-        var positionType = global.$gameMessage.choicePositionType();
-        var messageY = this._messageWindow.y;
+        const positionType = global.$gameMessage.choicePositionType();
+        const messageY = this._messageWindow.y;
         this.width = this.windowWidth();
         this.height = this.windowHeight();
         switch (positionType) {
@@ -56,17 +56,17 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     windowWidth() {
-        var width = this.maxChoiceWidth() + this.padding * 2;
+        const width = this.maxChoiceWidth() + this.padding * 2;
         return Math.min(width, Graphics.boxWidth);
     }
 
     numVisibleRows() {
-        var messageY = this._messageWindow.y;
-        var messageHeight = this._messageWindow.height;
-        var centerY = Graphics.boxHeight / 2;
-        var choices = global.$gameMessage.choices();
-        var numLines = choices.length;
-        var maxLines = 8;
+        const messageY = this._messageWindow.y;
+        const messageHeight = this._messageWindow.height;
+        const centerY = Graphics.boxHeight / 2;
+        const choices = global.$gameMessage.choices();
+        let numLines = choices.length;
+        let maxLines = 8;
         if (messageY < centerY && messageY + messageHeight > centerY) {
             maxLines = 4;
         }
@@ -77,10 +77,10 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     maxChoiceWidth() {
-        var maxWidth = 96;
-        var choices = global.$gameMessage.choices();
-        for (var i = 0; i < choices.length; i++) {
-            var choiceWidth = this.textWidthEx(choices[i]) + this.textPadding() * 2;
+        let maxWidth = 96;
+        const choices = global.$gameMessage.choices();
+        for (let i = 0; i < choices.length; i++) {
+            const choiceWidth = this.textWidthEx(choices[i]) + this.textPadding() * 2;
             if (maxWidth < choiceWidth) {
                 maxWidth = choiceWidth;
             }
@@ -97,14 +97,14 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     makeCommandList() {
-        var choices = global.$gameMessage.choices();
-        for (var i = 0; i < choices.length; i++) {
+        const choices = global.$gameMessage.choices();
+        for (let i = 0; i < choices.length; i++) {
             this.addCommand(choices[i], 'choice');
         }
     }
 
     drawItem(index) {
-        var rect = this.itemRectForText(index);
+        const rect = this.itemRectForText(index);
         this.drawTextEx(this.commandName(index), rect.x, rect.y);
     }
 

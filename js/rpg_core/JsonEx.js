@@ -22,9 +22,9 @@ export const JsonEx = new (class JsonEx {
      * @return {String} The JSON string
      */
     stringify(object) {
-        var circular = [];
+        const circular = [];
         this._id = 1;
-        var json = JSON.stringify(this._encode(object, circular, 0));
+        const json = JSON.stringify(this._encode(object, circular, 0));
         this._cleanMetadata(object);
         this._restoreCircularReference(circular);
 
@@ -33,9 +33,9 @@ export const JsonEx = new (class JsonEx {
 
     _restoreCircularReference(circulars) {
         circulars.forEach(function (circular) {
-            var key = circular[0];
-            var value = circular[1];
-            var content = circular[2];
+            const key = circular[0];
+            const value = circular[1];
+            const content = circular[2];
 
             value[key] = content;
         });
@@ -48,9 +48,9 @@ export const JsonEx = new (class JsonEx {
      * @return {Object} The reconstructed object
      */
     parse(json) {
-        var circular = [];
-        var registry = {};
-        var contents = this._decode(JSON.parse(json), circular, registry);
+        const circular = [];
+        const registry = {};
+        const contents = this._decode(JSON.parse(json), circular, registry);
         this._cleanMetadata(contents);
         this._linkCircularReference(contents, circular, registry);
 
@@ -59,9 +59,9 @@ export const JsonEx = new (class JsonEx {
 
     _linkCircularReference(contents, circulars, registry) {
         circulars.forEach(function (circular) {
-            var key = circular[0];
-            var value = circular[1];
-            var id = circular[2];
+            const key = circular[0];
+            const value = circular[1];
+            const id = circular[2];
 
             value[key] = registry[id];
         });
@@ -75,7 +75,7 @@ export const JsonEx = new (class JsonEx {
 
         if (typeof object === 'object') {
             Object.keys(object).forEach((key) => {
-                var value = object[key];
+                const value = object[key];
                 if (typeof value === 'object') {
                     this._cleanMetadata(value);
                 }
@@ -105,15 +105,15 @@ export const JsonEx = new (class JsonEx {
         if (++depth >= this.maxDepth) {
             throw new Error('Object too deep');
         }
-        var type = Object.prototype.toString.call(value);
+        const type = Object.prototype.toString.call(value);
         if (type === '[object Object]' || type === '[object Array]') {
             value['@c'] = this._generateId();
 
-            var constructorName = this._getConstructorName(value);
+            const constructorName = this._getConstructorName(value);
             if (constructorName !== 'Object' && constructorName !== 'Array') {
                 value['@'] = constructorName;
             }
-            for (var key in value) {
+            for (const key in value) {
                 if ((!value.hasOwnProperty || value.hasOwnProperty(key)) && !key.match(/^@./)) {
                     if (value[key] && typeof value[key] === 'object') {
                         if (value[key]['@c']) {
@@ -150,23 +150,23 @@ export const JsonEx = new (class JsonEx {
      * @private
      */
     _decode(value, circular, registry) {
-        var type = Object.prototype.toString.call(value);
+        const type = Object.prototype.toString.call(value);
         if (type === '[object Object]' || type === '[object Array]') {
             registry[value['@c']] = value;
 
             if (value['@'] === null) {
                 value = this._resetPrototype(value, null);
             } else if (value['@']) {
-                var constructor = window[value['@']];
+                const constructor = window[value['@']];
                 if (constructor) {
                     value = this._resetPrototype(value, constructor.prototype);
                 }
             }
-            for (var key in value) {
+            for (const key in value) {
                 if (!value.hasOwnProperty || value.hasOwnProperty(key)) {
                     if (value[key] && value[key]['@a']) {
                         //object is array wrapper
-                        var body = value[key]['@a'];
+                        const body = value[key]['@a'];
                         body['@c'] = value[key]['@c'];
                         value[key] = body;
                     }
@@ -190,9 +190,9 @@ export const JsonEx = new (class JsonEx {
         if (!value.constructor) {
             return null;
         }
-        var name = value.constructor.name;
+        let name = value.constructor.name;
         if (name === undefined) {
-            var func = /^\s*function\s*([A-Za-z0-9_$]*)/;
+            const func = /^\s*function\s*([A-Za-z0-9_$]*)/;
             name = func.exec(value.constructor)[1];
         }
         return name;
@@ -210,8 +210,8 @@ export const JsonEx = new (class JsonEx {
         } else if ('__proto__' in value) {
             value.__proto__ = prototype;
         } else {
-            var newValue = Object.create(prototype);
-            for (var key in value) {
+            const newValue = Object.create(prototype);
+            for (const key in value) {
                 if (value.hasOwnProperty(key)) {
                     newValue[key] = value[key];
                 }

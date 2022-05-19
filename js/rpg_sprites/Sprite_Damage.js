@@ -14,7 +14,7 @@ export class Sprite_Damage extends Sprite {
     }
 
     setup(target) {
-        var result = target.result();
+        const result = target.result();
         if (result.missed || result.evaded) {
             this.createMiss();
         } else if (result.hpAffected) {
@@ -41,21 +41,21 @@ export class Sprite_Damage extends Sprite {
     }
 
     createMiss() {
-        var w = this.digitWidth();
-        var h = this.digitHeight();
-        var sprite = this.createChildSprite();
+        const w = this.digitWidth();
+        const h = this.digitHeight();
+        const sprite = this.createChildSprite();
         sprite.setFrame(0, 4 * h, 4 * w, h);
         sprite.dy = 0;
     }
 
     createDigits(baseRow, value) {
-        var string = Math.abs(value).toString();
-        var row = baseRow + (value < 0 ? 1 : 0);
-        var w = this.digitWidth();
-        var h = this.digitHeight();
-        for (var i = 0; i < string.length; i++) {
-            var sprite = this.createChildSprite();
-            var n = Number(string[i]);
+        const string = Math.abs(value).toString();
+        const row = baseRow + (value < 0 ? 1 : 0);
+        const w = this.digitWidth();
+        const h = this.digitHeight();
+        for (let i = 0; i < string.length; i++) {
+            const sprite = this.createChildSprite();
+            const n = Number(string[i]);
             sprite.setFrame(n * w, row * h, w, h);
             sprite.x = (i - (string.length - 1) / 2) * w;
             sprite.dy = -i;
@@ -63,7 +63,7 @@ export class Sprite_Damage extends Sprite {
     }
 
     createChildSprite() {
-        var sprite = new Sprite();
+        const sprite = new Sprite();
         sprite.bitmap = this._damageBitmap;
         sprite.anchor.x = 0.5;
         sprite.anchor.y = 1;
@@ -77,7 +77,7 @@ export class Sprite_Damage extends Sprite {
         super.update();
         if (this._duration > 0) {
             this._duration--;
-            for (var i = 0; i < this.children.length; i++) {
+            for (let i = 0; i < this.children.length; i++) {
                 this.updateChild(this.children[i]);
             }
         }
@@ -98,7 +98,7 @@ export class Sprite_Damage extends Sprite {
 
     updateFlash() {
         if (this._flashDuration > 0) {
-            var d = this._flashDuration--;
+            const d = this._flashDuration--;
             this._flashColor[3] *= (d - 1) / d;
         }
     }

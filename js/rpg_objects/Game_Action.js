@@ -106,7 +106,7 @@ export class Game_Action {
     }
 
     numRepeats() {
-        var repeats = this.item().repeats;
+        let repeats = this.item().repeats;
         if (this.isAttack()) {
             repeats += this.subject().attackTimesAdd();
         }
@@ -214,7 +214,7 @@ export class Game_Action {
     }
 
     decideRandomTarget() {
-        var target;
+        let target;
         if (this.isForDeadFriend()) {
             target = this.friendsUnit().randomDeadTarget();
         } else if (this.isForFriend()) {
@@ -244,8 +244,8 @@ export class Game_Action {
     }
 
     speed() {
-        var agi = this.subject().agi;
-        var speed = agi + Math.randomInt(Math.floor(5 + agi / 4));
+        const agi = this.subject().agi;
+        let speed = agi + Math.randomInt(Math.floor(5 + agi / 4));
         if (this.item()) {
             speed += this.item().speed;
         }
@@ -256,7 +256,7 @@ export class Game_Action {
     }
 
     makeTargets() {
-        var targets = [];
+        let targets = [];
         if (!this._forcing && this.subject().isConfused()) {
             targets = [this.confusionTarget()];
         } else if (this.isForOpponent()) {
@@ -268,12 +268,12 @@ export class Game_Action {
     }
 
     repeatTargets(targets) {
-        var repeatedTargets = [];
-        var repeats = this.numRepeats();
-        for (var i = 0; i < targets.length; i++) {
-            var target = targets[i];
+        const repeatedTargets = [];
+        const repeats = this.numRepeats();
+        for (let i = 0; i < targets.length; i++) {
+            const target = targets[i];
             if (target) {
-                for (var j = 0; j < repeats; j++) {
+                for (let j = 0; j < repeats; j++) {
                     repeatedTargets.push(target);
                 }
             }
@@ -296,10 +296,10 @@ export class Game_Action {
     }
 
     targetsForOpponents() {
-        var targets = [];
-        var unit = this.opponentsUnit();
+        let targets = [];
+        const unit = this.opponentsUnit();
         if (this.isForRandom()) {
-            for (var i = 0; i < this.numTargets(); i++) {
+            for (let i = 0; i < this.numTargets(); i++) {
                 targets.push(unit.randomTarget());
             }
         } else if (this.isForOne()) {
@@ -315,8 +315,8 @@ export class Game_Action {
     }
 
     targetsForFriends() {
-        var targets = [];
-        var unit = this.friendsUnit();
+        let targets = [];
+        const unit = this.friendsUnit();
         if (this.isForUser()) {
             return [this.subject()];
         } else if (this.isForDeadFriend()) {
@@ -338,9 +338,9 @@ export class Game_Action {
     }
 
     evaluate() {
-        var value = 0;
+        let value = 0;
         this.itemTargetCandidates().forEach(function (target) {
-            var targetValue = this.evaluateWithTarget(target);
+            const targetValue = this.evaluateWithTarget(target);
             if (this.isForAll()) {
                 value += targetValue;
             } else if (targetValue > value) {
@@ -371,11 +371,11 @@ export class Game_Action {
 
     evaluateWithTarget(target) {
         if (this.isHpEffect()) {
-            var value = this.makeDamageValue(target, false);
+            const value = this.makeDamageValue(target, false);
             if (this.isForOpponent()) {
                 return value / Math.max(target.hp, 1);
             } else {
-                var recovery = Math.min(-value, target.mhp - target.hp);
+                const recovery = Math.min(-value, target.mhp - target.hp);
                 return recovery / target.mhp;
             }
         }
@@ -462,7 +462,7 @@ export class Game_Action {
     }
 
     apply(target) {
-        var result = target.result();
+        const result = target.result();
         this.subject().clearResult();
         result.clear();
         result.used = this.testApply(target);
@@ -473,7 +473,7 @@ export class Game_Action {
         if (result.isHit()) {
             if (this.item().damage.type > 0) {
                 result.critical = Math.random() < this.itemCri(target);
-                var value = this.makeDamageValue(target, result.critical);
+                const value = this.makeDamageValue(target, result.critical);
                 this.executeDamage(target, value);
             }
             this.item().effects.forEach(function (effect) {
@@ -484,9 +484,9 @@ export class Game_Action {
     }
 
     makeDamageValue(target, critical) {
-        var item = this.item();
-        var baseValue = this.evalDamageFormula(target);
-        var value = baseValue * this.calcElementRate(target);
+        const item = this.item();
+        const baseValue = this.evalDamageFormula(target);
+        let value = baseValue * this.calcElementRate(target);
         if (this.isPhysical()) {
             value *= target.pdr;
         }
@@ -507,12 +507,12 @@ export class Game_Action {
 
     evalDamageFormula(_target) {
         try {
-            var item = this.item();
+            const item = this.item();
             // var a = this.subject();
             // var b = target;
             // var v = global.$gameVariables._data;
-            var sign = [3, 4].contains(item.damage.type) ? -1 : 1;
-            var value = Math.max(eval(item.damage.formula), 0) * sign;
+            const sign = [3, 4].contains(item.damage.type) ? -1 : 1;
+            let value = Math.max(eval(item.damage.formula), 0) * sign;
             if (isNaN(value)) value = 0;
             return value;
         } catch (e) {
@@ -546,8 +546,8 @@ export class Game_Action {
     }
 
     applyVariance(damage, variance) {
-        var amp = Math.floor(Math.max((Math.abs(damage) * variance) / 100, 0));
-        var v = Math.randomInt(amp + 1) + Math.randomInt(amp + 1) - amp;
+        const amp = Math.floor(Math.max((Math.abs(damage) * variance) / 100, 0));
+        const v = Math.randomInt(amp + 1) + Math.randomInt(amp + 1) - amp;
         return damage >= 0 ? damage + v : damage - v;
     }
 
@@ -556,7 +556,7 @@ export class Game_Action {
     }
 
     executeDamage(target, value) {
-        var result = target.result();
+        const result = target.result();
         if (value === 0) {
             result.critical = false;
         }
@@ -593,7 +593,7 @@ export class Game_Action {
 
     gainDrainedHp(value) {
         if (this.isDrain()) {
-            var gainTarget = this.subject();
+            let gainTarget = this.subject();
             if (this._reflectionTarget !== undefined) {
                 gainTarget = this._reflectionTarget;
             }
@@ -603,7 +603,7 @@ export class Game_Action {
 
     gainDrainedMp(value) {
         if (this.isDrain()) {
-            var gainTarget = this.subject();
+            let gainTarget = this.subject();
             if (this._reflectionTarget !== undefined) {
                 gainTarget = this._reflectionTarget;
             }
@@ -656,7 +656,7 @@ export class Game_Action {
     }
 
     itemEffectRecoverHp(target, effect) {
-        var value = (target.mhp * effect.value1 + effect.value2) * target.rec;
+        let value = (target.mhp * effect.value1 + effect.value2) * target.rec;
         if (this.isItem()) {
             value *= this.subject().pha;
         }
@@ -668,7 +668,7 @@ export class Game_Action {
     }
 
     itemEffectRecoverMp(target, effect) {
-        var value = (target.mmp * effect.value1 + effect.value2) * target.rec;
+        let value = (target.mmp * effect.value1 + effect.value2) * target.rec;
         if (this.isItem()) {
             value *= this.subject().pha;
         }
@@ -680,7 +680,7 @@ export class Game_Action {
     }
 
     itemEffectGainTp(target, effect) {
-        var value = Math.floor(effect.value1);
+        const value = Math.floor(effect.value1);
         if (value !== 0) {
             target.gainTp(value);
             this.makeSuccess(target);
@@ -700,7 +700,7 @@ export class Game_Action {
             .attackStates()
             .forEach(
                 function (stateId) {
-                    var chance = effect.value1;
+                    let chance = effect.value1;
                     chance *= target.stateRate(stateId);
                     chance *= this.subject().attackStatesRate(stateId);
                     chance *= this.lukEffectRate(target);
@@ -714,7 +714,7 @@ export class Game_Action {
     }
 
     itemEffectAddNormalState(target, effect) {
-        var chance = effect.value1;
+        let chance = effect.value1;
         if (!this.isCertainHit()) {
             chance *= target.stateRate(effect.dataId);
             chance *= this.lukEffectRate(target);
@@ -726,7 +726,7 @@ export class Game_Action {
     }
 
     itemEffectRemoveState(target, effect) {
-        var chance = effect.value1;
+        const chance = effect.value1;
         if (Math.random() < chance) {
             target.removeState(effect.dataId);
             this.makeSuccess(target);
@@ -739,7 +739,7 @@ export class Game_Action {
     }
 
     itemEffectAddDebuff(target, effect) {
-        var chance = target.debuffRate(effect.dataId) * this.lukEffectRate(target);
+        const chance = target.debuffRate(effect.dataId) * this.lukEffectRate(target);
         if (Math.random() < chance) {
             target.addDebuff(effect.dataId, effect.value1);
             this.makeSuccess(target);
@@ -786,7 +786,7 @@ export class Game_Action {
     }
 
     applyItemUserEffect(_target) {
-        var value = Math.floor(this.item().tpGain * this.subject().tcr);
+        const value = Math.floor(this.item().tpGain * this.subject().tcr);
         this.subject().gainSilentTp(value);
     }
 

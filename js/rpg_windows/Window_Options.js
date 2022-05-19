@@ -46,9 +46,9 @@ export class Window_Options extends Window_Command {
     }
 
     drawItem(index) {
-        var rect = this.itemRectForText(index);
-        var statusWidth = this.statusWidth();
-        var titleWidth = rect.width - statusWidth;
+        const rect = this.itemRectForText(index);
+        const statusWidth = this.statusWidth();
+        const titleWidth = rect.width - statusWidth;
         this.resetTextColor();
         this.changePaintOpacity(this.isCommandEnabled(index));
         this.drawText(this.commandName(index), rect.x, rect.y, titleWidth, 'left');
@@ -60,8 +60,8 @@ export class Window_Options extends Window_Command {
     }
 
     statusText(index) {
-        var symbol = this.commandSymbol(index);
-        var value = this.getConfigValue(symbol);
+        const symbol = this.commandSymbol(index);
+        const value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
             return this.volumeStatusText(value);
         } else {
@@ -82,9 +82,9 @@ export class Window_Options extends Window_Command {
     }
 
     processOk() {
-        var index = this.index();
-        var symbol = this.commandSymbol(index);
-        var value = this.getConfigValue(symbol);
+        const index = this.index();
+        const symbol = this.commandSymbol(index);
+        let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
             value += this.volumeOffset();
             if (value > 100) {
@@ -98,9 +98,9 @@ export class Window_Options extends Window_Command {
     }
 
     cursorRight(_wrap) {
-        var index = this.index();
-        var symbol = this.commandSymbol(index);
-        var value = this.getConfigValue(symbol);
+        const index = this.index();
+        const symbol = this.commandSymbol(index);
+        let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
             value += this.volumeOffset();
             value = value.clamp(0, 100);
@@ -111,9 +111,9 @@ export class Window_Options extends Window_Command {
     }
 
     cursorLeft(_wrap) {
-        var index = this.index();
-        var symbol = this.commandSymbol(index);
-        var value = this.getConfigValue(symbol);
+        const index = this.index();
+        const symbol = this.commandSymbol(index);
+        let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
             value -= this.volumeOffset();
             value = value.clamp(0, 100);
@@ -128,7 +128,7 @@ export class Window_Options extends Window_Command {
     }
 
     changeValue(symbol, value) {
-        var lastValue = this.getConfigValue(symbol);
+        const lastValue = this.getConfigValue(symbol);
         if (lastValue !== value) {
             this.setConfigValue(symbol, value);
             this.redrawItem(this.findSymbol(symbol));

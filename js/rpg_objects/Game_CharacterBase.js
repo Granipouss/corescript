@@ -153,8 +153,8 @@ export class Game_CharacterBase {
     }
 
     canPass(x, y, d) {
-        var x2 = global.$gameMap.roundXWithDirection(x, d);
-        var y2 = global.$gameMap.roundYWithDirection(y, d);
+        const x2 = global.$gameMap.roundXWithDirection(x, d);
+        const y2 = global.$gameMap.roundYWithDirection(y, d);
         if (!global.$gameMap.isValid(x2, y2)) {
             return false;
         }
@@ -171,8 +171,8 @@ export class Game_CharacterBase {
     }
 
     canPassDiagonally(x, y, horz, vert) {
-        var x2 = global.$gameMap.roundXWithDirection(x, horz);
-        var y2 = global.$gameMap.roundYWithDirection(y, vert);
+        const x2 = global.$gameMap.roundXWithDirection(x, horz);
+        const y2 = global.$gameMap.roundYWithDirection(y, vert);
         if (this.canPass(x, y, vert) && this.canPass(x, y2, horz)) {
             return true;
         }
@@ -183,9 +183,9 @@ export class Game_CharacterBase {
     }
 
     isMapPassable(x, y, d) {
-        var x2 = global.$gameMap.roundXWithDirection(x, d);
-        var y2 = global.$gameMap.roundYWithDirection(y, d);
-        var d2 = this.reverseDir(d);
+        const x2 = global.$gameMap.roundXWithDirection(x, d);
+        const y2 = global.$gameMap.roundYWithDirection(y, d);
+        const d2 = this.reverseDir(d);
         return global.$gameMap.isPassable(x, y, d) && global.$gameMap.isPassable(x2, y2, d2);
     }
 
@@ -194,7 +194,7 @@ export class Game_CharacterBase {
     }
 
     isCollidedWithEvents(x, y) {
-        var events = global.$gameMap.eventsXyNt(x, y);
+        const events = global.$gameMap.eventsXyNt(x, y);
         return events.some(function (event) {
             return event.isNormalPriority();
         });
@@ -257,12 +257,12 @@ export class Game_CharacterBase {
     }
 
     screenX() {
-        var tw = global.$gameMap.tileWidth();
+        const tw = global.$gameMap.tileWidth();
         return Math.round(this.scrolledX() * tw + tw / 2);
     }
 
     screenY() {
-        var th = global.$gameMap.tileHeight();
+        const th = global.$gameMap.tileHeight();
         return Math.round(this.scrolledY() * th + th - this.shiftY() - this.jumpHeight());
     }
 
@@ -271,12 +271,12 @@ export class Game_CharacterBase {
     }
 
     isNearTheScreen() {
-        var gw = Graphics.width;
-        var gh = Graphics.height;
-        var tw = global.$gameMap.tileWidth();
-        var th = global.$gameMap.tileHeight();
-        var px = this.scrolledX() * tw + tw / 2 - gw / 2;
-        var py = this.scrolledY() * th + th / 2 - gh / 2;
+        const gw = Graphics.width;
+        const gh = Graphics.height;
+        const tw = global.$gameMap.tileWidth();
+        const th = global.$gameMap.tileHeight();
+        const px = this.scrolledX() * tw + tw / 2 - gw / 2;
+        const py = this.scrolledY() * th + th / 2 - gh / 2;
         return px >= -gw && px <= gw && py >= -gh && py <= gh;
     }
 
@@ -434,8 +434,8 @@ export class Game_CharacterBase {
     }
 
     checkEventTriggerTouchFront(d) {
-        var x2 = global.$gameMap.roundXWithDirection(this._x, d);
-        var y2 = global.$gameMap.roundYWithDirection(this._y, d);
+        const x2 = global.$gameMap.roundXWithDirection(this._x, d);
+        const y2 = global.$gameMap.roundYWithDirection(this._y, d);
         this.checkEventTriggerTouch(x2, y2);
     }
 
@@ -495,7 +495,7 @@ export class Game_CharacterBase {
         }
         this._x += xPlus;
         this._y += yPlus;
-        var distance = Math.round(Math.sqrt(xPlus * xPlus + yPlus * yPlus));
+        const distance = Math.round(Math.sqrt(xPlus * xPlus + yPlus * yPlus));
         this._jumpPeak = 10 + distance - this._moveSpeed;
         this._jumpCount = this._jumpPeak * 2;
         this.resetStopCount();

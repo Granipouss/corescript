@@ -8,7 +8,7 @@ export class Game_Followers {
         this._visible = global.$dataSystem.optFollowers;
         this._gathering = false;
         this._data = [];
-        for (var i = 1; i < global.$gameParty.maxBattleMembers(); i++) {
+        for (let i = 1; i < global.$gameParty.maxBattleMembers(); i++) {
             this._data.push(new Game_Follower(i));
         }
     }
@@ -60,18 +60,18 @@ export class Game_Followers {
     }
 
     updateMove() {
-        for (var i = this._data.length - 1; i >= 0; i--) {
-            var precedingCharacter = i > 0 ? this._data[i - 1] : global.$gamePlayer;
+        for (let i = this._data.length - 1; i >= 0; i--) {
+            const precedingCharacter = i > 0 ? this._data[i - 1] : global.$gamePlayer;
             this._data[i].chaseCharacter(precedingCharacter);
         }
     }
 
     jumpAll() {
         if (global.$gamePlayer.isJumping()) {
-            for (var i = 0; i < this._data.length; i++) {
-                var follower = this._data[i];
-                var sx = global.$gamePlayer.deltaXFrom(follower.x);
-                var sy = global.$gamePlayer.deltaYFrom(follower.y);
+            for (let i = 0; i < this._data.length; i++) {
+                const follower = this._data[i];
+                const sx = global.$gamePlayer.deltaXFrom(follower.x);
+                const sy = global.$gamePlayer.deltaYFrom(follower.y);
                 follower.jump(sx, sy);
             }
         }

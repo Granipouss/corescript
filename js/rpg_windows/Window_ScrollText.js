@@ -9,8 +9,8 @@ import { Window_Base } from './Window_Base';
  */
 export class Window_ScrollText extends Window_Base {
     initialize() {
-        var width = Graphics.boxWidth;
-        var height = Graphics.boxHeight;
+        const width = Graphics.boxWidth;
+        const height = Graphics.boxHeight;
         super.initialize(0, 0, width, height);
         this.opacity = 0;
         this.hide();
@@ -37,7 +37,7 @@ export class Window_ScrollText extends Window_Base {
     }
 
     refresh() {
-        var textState = { index: 0 };
+        const textState = { index: 0 };
         textState.text = this.convertEscapeCharacters(this._text);
         this.resetFontSettings();
         this._allTextHeight = this.calcTextHeight(textState, true);
@@ -58,7 +58,7 @@ export class Window_ScrollText extends Window_Base {
     }
 
     scrollSpeed() {
-        var speed = global.$gameMessage.scrollSpeed() / 2;
+        let speed = global.$gameMessage.scrollSpeed() / 2;
         if (this.isFastForward()) {
             speed *= this.fastForwardRate();
         }

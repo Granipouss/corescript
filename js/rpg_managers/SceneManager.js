@@ -63,7 +63,7 @@ export const SceneManager = new (class SceneManager {
     }
 
     initGraphics() {
-        var type = this.preferableRendererType();
+        const type = this.preferableRendererType();
         Graphics.initialize(this._screenWidth, this._screenHeight, type);
         Graphics.boxWidth = this._boxWidth;
         Graphics.boxHeight = this._boxHeight;
@@ -103,7 +103,7 @@ export const SceneManager = new (class SceneManager {
     }
 
     initAudio() {
-        var noAudio = Utils.isOptionValid('noaudio');
+        const noAudio = Utils.isOptionValid('noaudio');
         if (!WebAudio.initialize(noAudio) && !noAudio) {
             throw new Error('Your browser does not support Web Audio API.');
         }
@@ -208,11 +208,11 @@ export const SceneManager = new (class SceneManager {
             this.changeScene();
             this.updateScene();
         } else {
-            var newTime = this._getTimeInMsWithoutMobileSafari();
+            const newTime = this._getTimeInMsWithoutMobileSafari();
             if (this._currentTime === undefined) {
                 this._currentTime = newTime;
             }
-            var fTime = (newTime - this._currentTime) / 1000;
+            let fTime = (newTime - this._currentTime) / 1000;
             if (fTime > 0.25) {
                 fTime = 0.25;
             }

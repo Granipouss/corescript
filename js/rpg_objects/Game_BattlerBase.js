@@ -215,7 +215,7 @@ export class Game_BattlerBase {
     }
 
     eraseState(stateId) {
-        var index = this._states.indexOf(stateId);
+        const index = this._states.indexOf(stateId);
         if (index >= 0) {
             this._states.splice(index, 1);
         }
@@ -235,8 +235,8 @@ export class Game_BattlerBase {
     }
 
     resetStateCounts(stateId) {
-        var state = global.$dataStates[stateId];
-        var variance = 1 + Math.max(state.maxTurns - state.minTurns, 0);
+        const state = global.$dataStates[stateId];
+        const variance = 1 + Math.max(state.maxTurns - state.minTurns, 0);
         this._stateTurns[stateId] = state.minTurns + Math.randomInt(variance);
     }
 
@@ -313,7 +313,7 @@ export class Game_BattlerBase {
     }
 
     updateBuffTurns() {
-        for (var i = 0; i < this._buffTurns.length; i++) {
+        for (let i = 0; i < this._buffTurns.length; i++) {
             if (this._buffTurns[i] > 0) {
                 this._buffTurns[i]--;
             }
@@ -349,8 +349,8 @@ export class Game_BattlerBase {
     }
 
     buffIcons() {
-        var icons = [];
-        for (var i = 0; i < this._buffs.length; i++) {
+        const icons = [];
+        for (let i = 0; i < this._buffs.length; i++) {
             if (this._buffs[i] !== 0) {
                 icons.push(this.buffIconIndex(this._buffs[i], i));
             }
@@ -454,10 +454,10 @@ export class Game_BattlerBase {
     }
 
     param(paramId) {
-        var value = this.paramBase(paramId) + this.paramPlus(paramId);
+        let value = this.paramBase(paramId) + this.paramPlus(paramId);
         value *= this.paramRate(paramId) * this.paramBuffRate(paramId);
-        var maxValue = this.paramMax(paramId);
-        var minValue = this.paramMin(paramId);
+        const maxValue = this.paramMax(paramId);
+        const minValue = this.paramMin(paramId);
         return Math.round(value.clamp(minValue, maxValue));
     }
 
@@ -542,7 +542,7 @@ export class Game_BattlerBase {
     }
 
     slotType() {
-        var set = this.traitsSet(Game_BattlerBase.TRAIT_SLOT_TYPE);
+        const set = this.traitsSet(Game_BattlerBase.TRAIT_SLOT_TYPE);
         return set.length > 0 ? Math.max.apply(null, set) : 0;
     }
 
@@ -563,7 +563,7 @@ export class Game_BattlerBase {
     }
 
     collapseType() {
-        var set = this.traitsSet(Game_BattlerBase.TRAIT_COLLAPSE_TYPE);
+        const set = this.traitsSet(Game_BattlerBase.TRAIT_COLLAPSE_TYPE);
         return set.length > 0 ? Math.max.apply(null, set) : 0;
     }
 
@@ -698,8 +698,8 @@ export class Game_BattlerBase {
 
     sortStates() {
         this._states.sort(function (a, b) {
-            var p1 = global.$dataStates[a].priority;
-            var p2 = global.$dataStates[b].priority;
+            const p1 = global.$dataStates[a].priority;
+            const p2 = global.$dataStates[b].priority;
             if (p1 !== p2) {
                 return p2 - p1;
             }
@@ -722,7 +722,7 @@ export class Game_BattlerBase {
         if (stateId === this.deathStateId()) {
             this.die();
         }
-        var restricted = this.isRestricted();
+        const restricted = this.isRestricted();
         this._states.push(stateId);
         this.sortStates();
         if (!restricted && this.isRestricted()) {
@@ -733,8 +733,8 @@ export class Game_BattlerBase {
     onRestrict() {}
 
     mostImportantStateText() {
-        var states = this.states();
-        for (var i = 0; i < states.length; i++) {
+        const states = this.states();
+        for (let i = 0; i < states.length; i++) {
             if (states[i].message3) {
                 return states[i].message3;
             }
@@ -743,7 +743,7 @@ export class Game_BattlerBase {
     }
 
     stateMotionIndex() {
-        var states = this.states();
+        const states = this.states();
         if (states.length > 0) {
             return states[0].motion;
         } else {
@@ -752,7 +752,7 @@ export class Game_BattlerBase {
     }
 
     stateOverlayIndex() {
-        var states = this.states();
+        const states = this.states();
         if (states.length > 0) {
             return states[0].overlay;
         } else {

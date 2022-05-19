@@ -8,8 +8,8 @@ export class Window_Command extends Window_Selectable {
     initialize(x, y) {
         this.clearCommandList();
         this.makeCommandList();
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this.refresh();
         this.select(0);
@@ -77,7 +77,7 @@ export class Window_Command extends Window_Selectable {
     }
 
     findSymbol(symbol) {
-        for (var i = 0; i < this._list.length; i++) {
+        for (let i = 0; i < this._list.length; i++) {
             if (this._list[i].symbol === symbol) {
                 return i;
             }
@@ -86,7 +86,7 @@ export class Window_Command extends Window_Selectable {
     }
 
     selectSymbol(symbol) {
-        var index = this.findSymbol(symbol);
+        const index = this.findSymbol(symbol);
         if (index >= 0) {
             this.select(index);
         } else {
@@ -95,7 +95,7 @@ export class Window_Command extends Window_Selectable {
     }
 
     findExt(ext) {
-        for (var i = 0; i < this._list.length; i++) {
+        for (let i = 0; i < this._list.length; i++) {
             if (this._list[i].ext === ext) {
                 return i;
             }
@@ -104,7 +104,7 @@ export class Window_Command extends Window_Selectable {
     }
 
     selectExt(ext) {
-        var index = this.findExt(ext);
+        const index = this.findExt(ext);
         if (index >= 0) {
             this.select(index);
         } else {
@@ -113,8 +113,8 @@ export class Window_Command extends Window_Selectable {
     }
 
     drawItem(index) {
-        var rect = this.itemRectForText(index);
-        var align = this.itemTextAlign();
+        const rect = this.itemRectForText(index);
+        const align = this.itemTextAlign();
         this.resetTextColor();
         this.changePaintOpacity(this.isCommandEnabled(index));
         this.drawText(this.commandName(index), rect.x, rect.y, rect.width, align);
@@ -129,7 +129,7 @@ export class Window_Command extends Window_Selectable {
     }
 
     callOkHandler() {
-        var symbol = this.currentSymbol();
+        const symbol = this.currentSymbol();
         if (this.isHandled(symbol)) {
             this.callHandler(symbol);
         } else if (this.isHandled('ok')) {

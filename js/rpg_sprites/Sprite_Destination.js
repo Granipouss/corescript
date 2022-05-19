@@ -25,8 +25,8 @@ export class Sprite_Destination extends Sprite {
     }
 
     createBitmap() {
-        var tileWidth = global.$gameMap.tileWidth();
-        var tileHeight = global.$gameMap.tileHeight();
+        const tileWidth = global.$gameMap.tileWidth();
+        const tileHeight = global.$gameMap.tileHeight();
         this.bitmap = new Bitmap(tileWidth, tileHeight);
         this.bitmap.fillAll('white');
         this.anchor.x = 0.5;
@@ -35,10 +35,10 @@ export class Sprite_Destination extends Sprite {
     }
 
     updatePosition() {
-        var tileWidth = global.$gameMap.tileWidth();
-        var tileHeight = global.$gameMap.tileHeight();
-        var x = global.$gameTemp.destinationX();
-        var y = global.$gameTemp.destinationY();
+        const tileWidth = global.$gameMap.tileWidth();
+        const tileHeight = global.$gameMap.tileHeight();
+        const x = global.$gameTemp.destinationX();
+        const y = global.$gameTemp.destinationY();
         this.x = (global.$gameMap.adjustX(x) + 0.5) * tileWidth;
         this.y = (global.$gameMap.adjustY(y) + 0.5) * tileHeight;
     }

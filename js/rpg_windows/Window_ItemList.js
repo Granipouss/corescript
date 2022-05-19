@@ -33,7 +33,7 @@ export class Window_ItemList extends Window_Selectable {
     }
 
     item() {
-        var index = this.index();
+        const index = this.index();
         return this._data && index >= 0 ? this._data[index] : null;
     }
 
@@ -74,15 +74,15 @@ export class Window_ItemList extends Window_Selectable {
     }
 
     selectLast() {
-        var index = this._data.indexOf(global.$gameParty.lastItem());
+        const index = this._data.indexOf(global.$gameParty.lastItem());
         this.select(index >= 0 ? index : 0);
     }
 
     drawItem(index) {
-        var item = this._data[index];
+        const item = this._data[index];
         if (item) {
-            var numberWidth = this.numberWidth();
-            var rect = this.itemRect(index);
+            const numberWidth = this.numberWidth();
+            const rect = this.itemRect(index);
             rect.width -= this.textPadding();
             this.changePaintOpacity(this.isEnabled(item));
             this.drawItemName(item, rect.x, rect.y, rect.width - numberWidth);

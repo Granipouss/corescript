@@ -6,8 +6,8 @@ import { Window_Base } from './Window_Base';
  */
 export class Window_EquipStatus extends Window_Base {
     initialize(x, y) {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this._actor = null;
         this._tempActor = null;
@@ -37,7 +37,7 @@ export class Window_EquipStatus extends Window_Base {
         this.contents.clear();
         if (this._actor) {
             this.drawActorName(this._actor, this.textPadding(), 0);
-            for (var i = 0; i < 6; i++) {
+            for (let i = 0; i < 6; i++) {
                 this.drawItem(0, this.lineHeight() * (1 + i), 2 + i);
             }
         }
@@ -77,8 +77,8 @@ export class Window_EquipStatus extends Window_Base {
     }
 
     drawNewParam(x, y, paramId) {
-        var newValue = this._tempActor.param(paramId);
-        var diffvalue = newValue - this._actor.param(paramId);
+        const newValue = this._tempActor.param(paramId);
+        const diffvalue = newValue - this._actor.param(paramId);
         this.changeTextColor(this.paramchangeTextColor(diffvalue));
         this.drawText(newValue, x, y, 48, 'right');
     }

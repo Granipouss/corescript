@@ -54,13 +54,13 @@ export class Scene_ItemBase extends Scene_MenuBase {
     }
 
     action() {
-        var action = new Game_Action(this.user());
+        const action = new Game_Action(this.user());
         action.setItemObject(this.item());
         return action;
     }
 
     determineItem() {
-        var action = this.action();
+        const action = this.action();
         if (action.isForFriend()) {
             this.showSubWindow(this._actorWindow);
             this._actorWindow.selectForItem(this.item());
@@ -85,7 +85,7 @@ export class Scene_ItemBase extends Scene_MenuBase {
     }
 
     itemTargetActors() {
-        var action = this.action();
+        const action = this.action();
         if (!action.isForFriend()) {
             return [];
         } else if (action.isForAll()) {
@@ -96,7 +96,7 @@ export class Scene_ItemBase extends Scene_MenuBase {
     }
 
     canUse() {
-        var user = this.user();
+        const user = this.user();
         if (user) {
             return user.canUse(this.item()) && this.isItemEffectsValid();
         }
@@ -104,18 +104,18 @@ export class Scene_ItemBase extends Scene_MenuBase {
     }
 
     isItemEffectsValid() {
-        var action = this.action();
+        const action = this.action();
         return this.itemTargetActors().some(function (target) {
             return action.testApply(target);
         }, this);
     }
 
     applyItem() {
-        var action = this.action();
-        var targets = this.itemTargetActors();
+        const action = this.action();
+        const targets = this.itemTargetActors();
         targets.forEach(function (battler) {
-            var repeats = action.numRepeats();
-            for (var i = 0; i < repeats; i++) {
+            const repeats = action.numRepeats();
+            for (let i = 0; i < repeats; i++) {
                 action.apply(battler);
             }
         });

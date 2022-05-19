@@ -9,7 +9,7 @@ import { SceneManager } from './rpg_managers/SceneManager';
 
 import { Scene_Boot } from './rpg_scenes/Scene_Boot';
 
-var $plugins = [];
+const $plugins = [];
 
 PluginManager.setup($plugins);
 

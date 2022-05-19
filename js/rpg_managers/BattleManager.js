@@ -208,9 +208,9 @@ export const BattleManager = new (class BattleManager {
     }
 
     changeActor(newActorIndex, lastActorActionState) {
-        var lastActor = this.actor();
+        const lastActor = this.actor();
         this._actorIndex = newActorIndex;
-        var newActor = this.actor();
+        const newActor = this.actor();
         if (lastActor) {
             lastActor.setActionState(lastActorActionState);
         }
@@ -249,7 +249,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     inputtingAction() {
-        var actor = this.actor();
+        const actor = this.actor();
         return actor ? actor.inputtingAction() : null;
     }
 
@@ -304,8 +304,8 @@ export const BattleManager = new (class BattleManager {
     }
 
     processTurn() {
-        var subject = this._subject;
-        var action = subject.currentAction();
+        const subject = this._subject;
+        const action = subject.currentAction();
         if (action) {
             action.prepare();
             if (action.isValid()) {
@@ -347,7 +347,7 @@ export const BattleManager = new (class BattleManager {
 
     getNextSubject() {
         for (;;) {
-            var battler = this._actionBattlers.shift();
+            const battler = this._actionBattlers.shift();
             if (!battler) {
                 return null;
             }
@@ -362,7 +362,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     makeActionOrders() {
-        var battlers = [];
+        let battlers = [];
         if (!this._surprise) {
             battlers = battlers.concat(global.$gameParty.members());
         }
@@ -379,9 +379,9 @@ export const BattleManager = new (class BattleManager {
     }
 
     startAction() {
-        var subject = this._subject;
-        var action = subject.currentAction();
-        var targets = action.makeTargets();
+        const subject = this._subject;
+        const action = subject.currentAction();
+        const targets = action.makeTargets();
         this._phase = 'action';
         this._action = action;
         this._targets = targets;
@@ -392,7 +392,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     updateAction() {
-        var target = this._targets.shift();
+        const target = this._targets.shift();
         if (target) {
             this.invokeAction(this._subject, target);
         } else {
@@ -420,13 +420,13 @@ export const BattleManager = new (class BattleManager {
     }
 
     invokeNormalAction(subject, target) {
-        var realTarget = this.applySubstitute(target);
+        const realTarget = this.applySubstitute(target);
         this._action.apply(realTarget);
         this._logWindow.displayActionResults(subject, realTarget);
     }
 
     invokeCounterAttack(subject, target) {
-        var action = new Game_Action(target);
+        const action = new Game_Action(target);
         action.setAttack();
         action.apply(subject);
         this._logWindow.displayCounter(target);
@@ -442,7 +442,7 @@ export const BattleManager = new (class BattleManager {
 
     applySubstitute(target) {
         if (this.checkSubstitute(target)) {
-            var substitute = target.friendsUnit().substituteBattler();
+            const substitute = target.friendsUnit().substituteBattler();
             if (substitute && target !== substitute) {
                 this._logWindow.displaySubstitute(substitute, target);
                 return substitute;
@@ -461,7 +461,7 @@ export const BattleManager = new (class BattleManager {
 
     forceAction(battler) {
         this._actionForcedBattler = battler;
-        var index = this._actionBattlers.indexOf(battler);
+        const index = this._actionBattlers.indexOf(battler);
         if (index >= 0) {
             this._actionBattlers.splice(index, 1);
         }
@@ -520,7 +520,7 @@ export const BattleManager = new (class BattleManager {
     processEscape() {
         global.$gameParty.performEscape();
         SoundManager.playEscape();
-        var success = this._preemptive ? true : Math.random() < this._escapeRatio;
+        const success = this._preemptive ? true : Math.random() < this._escapeRatio;
         if (success) {
             this.displayEscapeSuccessMessage();
             this._escaped = true;
@@ -611,22 +611,22 @@ export const BattleManager = new (class BattleManager {
     }
 
     displayExp() {
-        var exp = this._rewards.exp;
+        const exp = this._rewards.exp;
         if (exp > 0) {
-            var text = TextManager.obtainExp.format(exp, TextManager.exp);
+            const text = TextManager.obtainExp.format(exp, TextManager.exp);
             global.$gameMessage.add('\\.' + text);
         }
     }
 
     displayGold() {
-        var gold = this._rewards.gold;
+        const gold = this._rewards.gold;
         if (gold > 0) {
             global.$gameMessage.add('\\.' + TextManager.obtainGold.format(gold));
         }
     }
 
     displayDropItems() {
-        var items = this._rewards.items;
+        const items = this._rewards.items;
         if (items.length > 0) {
             global.$gameMessage.newPage();
             items.forEach(function (item) {
@@ -642,7 +642,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     gainExp() {
-        var exp = this._rewards.exp;
+        const exp = this._rewards.exp;
         global.$gameParty.allMembers().forEach(function (actor) {
             actor.gainExp(exp);
         });
@@ -653,7 +653,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     gainDropItems() {
-        var items = this._rewards.items;
+        const items = this._rewards.items;
         items.forEach(function (item) {
             global.$gameParty.gainItem(item, 1);
         });

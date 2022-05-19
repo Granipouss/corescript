@@ -6,8 +6,8 @@ import { Window_Base } from './Window_Base';
  */
 export class Window_Gold extends Window_Base {
     initialize(x, y) {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this.refresh();
     }
@@ -21,8 +21,8 @@ export class Window_Gold extends Window_Base {
     }
 
     refresh() {
-        var x = this.textPadding();
-        var width = this.contents.width - this.textPadding() * 2;
+        const x = this.textPadding();
+        const width = this.contents.width - this.textPadding() * 2;
         this.contents.clear();
         this.drawCurrencyValue(this.value(), this.currencyUnit(), x, 0, width);
     }

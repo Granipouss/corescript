@@ -76,8 +76,8 @@ export const ImageManager = new (class ImageManager {
 
     loadBitmap(folder, filename, hue, smooth) {
         if (filename) {
-            var path = folder + encodeURIComponent(filename) + '.png';
-            var bitmap = this.loadNormalBitmap(path, hue || 0);
+            const path = folder + encodeURIComponent(filename) + '.png';
+            const bitmap = this.loadNormalBitmap(path, hue || 0);
             bitmap.smooth = smooth;
             return bitmap;
         } else {
@@ -86,7 +86,7 @@ export const ImageManager = new (class ImageManager {
     }
 
     loadEmptyBitmap() {
-        var empty = this._imageCache.get('empty');
+        let empty = this._imageCache.get('empty');
         if (!empty) {
             empty = new Bitmap();
             this._imageCache.add('empty', empty);
@@ -97,8 +97,8 @@ export const ImageManager = new (class ImageManager {
     }
 
     loadNormalBitmap(path, hue) {
-        var key = this._generateCacheKey(path, hue);
-        var bitmap = this._imageCache.get(key);
+        const key = this._generateCacheKey(path, hue);
+        let bitmap = this._imageCache.get(key);
         if (!bitmap) {
             bitmap = Bitmap.load(path);
             this._callCreationHook(bitmap);
@@ -123,12 +123,12 @@ export const ImageManager = new (class ImageManager {
     }
 
     isObjectCharacter(filename) {
-        var sign = filename.match(/^[!$]+/);
+        const sign = filename.match(/^[!$]+/);
         return sign && sign[0].contains('!');
     }
 
     isBigCharacter(filename) {
-        var sign = filename.match(/^[!$]+/);
+        const sign = filename.match(/^[!$]+/);
         return sign && sign[0].contains('$');
     }
 
@@ -194,8 +194,8 @@ export const ImageManager = new (class ImageManager {
 
     reserveBitmap(folder, filename, hue, smooth, reservationId) {
         if (filename) {
-            var path = folder + encodeURIComponent(filename) + '.png';
-            var bitmap = this.reserveNormalBitmap(path, hue || 0, reservationId || this._defaultReservationId);
+            const path = folder + encodeURIComponent(filename) + '.png';
+            const bitmap = this.reserveNormalBitmap(path, hue || 0, reservationId || this._defaultReservationId);
             bitmap.smooth = smooth;
             return bitmap;
         } else {
@@ -204,7 +204,7 @@ export const ImageManager = new (class ImageManager {
     }
 
     reserveNormalBitmap(path, hue, reservationId) {
-        var bitmap = this.loadNormalBitmap(path, hue);
+        const bitmap = this.loadNormalBitmap(path, hue);
         this._imageCache.reserve(this._generateCacheKey(path, hue), bitmap, reservationId);
 
         return bitmap;
@@ -276,8 +276,8 @@ export const ImageManager = new (class ImageManager {
 
     requestBitmap(folder, filename, hue, smooth) {
         if (filename) {
-            var path = folder + encodeURIComponent(filename) + '.png';
-            var bitmap = this.requestNormalBitmap(path, hue || 0);
+            const path = folder + encodeURIComponent(filename) + '.png';
+            const bitmap = this.requestNormalBitmap(path, hue || 0);
             bitmap.smooth = smooth;
             return bitmap;
         } else {
@@ -286,8 +286,8 @@ export const ImageManager = new (class ImageManager {
     }
 
     requestNormalBitmap(path, hue) {
-        var key = this._generateCacheKey(path, hue);
-        var bitmap = this._imageCache.get(key);
+        const key = this._generateCacheKey(path, hue);
+        let bitmap = this._imageCache.get(key);
         if (!bitmap) {
             bitmap = Bitmap.request(path);
             this._callCreationHook(bitmap);

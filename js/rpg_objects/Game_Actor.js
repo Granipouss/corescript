@@ -41,7 +41,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     setup(actorId) {
-        var actor = global.$dataActors[actorId];
+        const actor = global.$dataActors[actorId];
         this._actorId = actorId;
         this._name = actor.name;
         this._nickname = actor.nickname;
@@ -124,7 +124,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     initImages() {
-        var actor = this.actor();
+        const actor = this.actor();
         this._characterName = actor.characterName;
         this._characterIndex = actor.characterIndex;
         this._faceName = actor.faceName;
@@ -133,11 +133,11 @@ export class Game_Actor extends Game_Battler {
     }
 
     expForLevel(level) {
-        var c = this.currentClass();
-        var basis = c.expParams[0];
-        var extra = c.expParams[1];
-        var acc_a = c.expParams[2];
-        var acc_b = c.expParams[3];
+        const c = this.currentClass();
+        const basis = c.expParams[0];
+        const extra = c.expParams[1];
+        const acc_a = c.expParams[2];
+        const acc_b = c.expParams[3];
         return Math.round(
             (basis * Math.pow(level - 1, 0.9 + acc_a / 250) * level * (level + 1)) /
                 (6 + Math.pow(level, 2) / 50 / acc_b) +
@@ -183,13 +183,13 @@ export class Game_Actor extends Game_Battler {
     }
 
     initEquips(equips) {
-        var slots = this.equipSlots();
-        var maxSlots = slots.length;
+        const slots = this.equipSlots();
+        const maxSlots = slots.length;
         this._equips = [];
-        for (var i = 0; i < maxSlots; i++) {
+        for (let i = 0; i < maxSlots; i++) {
             this._equips[i] = new Game_Item();
         }
-        for (var j = 0; j < equips.length; j++) {
+        for (let j = 0; j < equips.length; j++) {
             if (j < maxSlots) {
                 this._equips[j].setEquip(slots[j] === 1, equips[j]);
             }
@@ -199,8 +199,8 @@ export class Game_Actor extends Game_Battler {
     }
 
     equipSlots() {
-        var slots = [];
-        for (var i = 1; i < global.$dataSystem.equipTypes.length; i++) {
+        const slots = [];
+        for (let i = 1; i < global.$dataSystem.equipTypes.length; i++) {
             slots.push(i);
         }
         if (slots.length >= 2 && this.isDualWield()) {
@@ -266,7 +266,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     changeEquipById(etypeId, itemId) {
-        var slotId = etypeId - 1;
+        const slotId = etypeId - 1;
         if (this.equipSlots()[slotId] === 1) {
             this.changeEquip(slotId, global.$dataWeapons[itemId]);
         } else {
@@ -279,7 +279,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     discardEquip(item) {
-        var slotId = this.equips().indexOf(item);
+        const slotId = this.equips().indexOf(item);
         if (slotId >= 0) {
             this._equips[slotId].setObject(null);
         }
@@ -287,11 +287,11 @@ export class Game_Actor extends Game_Battler {
 
     releaseUnequippableItems(forcing) {
         for (;;) {
-            var slots = this.equipSlots();
-            var equips = this.equips();
-            var changed = false;
-            for (var i = 0; i < equips.length; i++) {
-                var item = equips[i];
+            const slots = this.equipSlots();
+            const equips = this.equips();
+            let changed = false;
+            for (let i = 0; i < equips.length; i++) {
+                const item = equips[i];
                 if (item && (!this.canEquip(item) || item.etypeId !== slots[i])) {
                     if (!forcing) {
                         this.tradeItemWithParty(null, item);
@@ -307,8 +307,8 @@ export class Game_Actor extends Game_Battler {
     }
 
     clearEquipments() {
-        var maxSlots = this.equipSlots().length;
-        for (var i = 0; i < maxSlots; i++) {
+        const maxSlots = this.equipSlots().length;
+        for (let i = 0; i < maxSlots; i++) {
             if (this.isEquipChangeOk(i)) {
                 this.changeEquip(i, null);
             }
@@ -316,9 +316,9 @@ export class Game_Actor extends Game_Battler {
     }
 
     optimizeEquipments() {
-        var maxSlots = this.equipSlots().length;
+        const maxSlots = this.equipSlots().length;
         this.clearEquipments();
-        for (var i = 0; i < maxSlots; i++) {
+        for (let i = 0; i < maxSlots; i++) {
             if (this.isEquipChangeOk(i)) {
                 this.changeEquip(i, this.bestEquipItem(i));
             }
@@ -326,14 +326,14 @@ export class Game_Actor extends Game_Battler {
     }
 
     bestEquipItem(slotId) {
-        var etypeId = this.equipSlots()[slotId];
-        var items = global.$gameParty.equipItems().filter(function (item) {
+        const etypeId = this.equipSlots()[slotId];
+        const items = global.$gameParty.equipItems().filter(function (item) {
             return item.etypeId === etypeId && this.canEquip(item);
         }, this);
-        var bestItem = null;
-        var bestPerformance = -1000;
-        for (var i = 0; i < items.length; i++) {
-            var performance = this.calcEquipItemPerformance(items[i]);
+        let bestItem = null;
+        let bestPerformance = -1000;
+        for (let i = 0; i < items.length; i++) {
+            const performance = this.calcEquipItemPerformance(items[i]);
             if (performance > bestPerformance) {
                 bestPerformance = performance;
                 bestItem = items[i];
@@ -349,8 +349,8 @@ export class Game_Actor extends Game_Battler {
     }
 
     isSkillWtypeOk(skill) {
-        var wtypeId1 = skill.requiredWtypeId1;
-        var wtypeId2 = skill.requiredWtypeId2;
+        const wtypeId1 = skill.requiredWtypeId1;
+        const wtypeId2 = skill.requiredWtypeId2;
         if (
             (wtypeId1 === 0 && wtypeId2 === 0) ||
             (wtypeId1 > 0 && this.isWtypeEquipped(wtypeId1)) ||
@@ -406,7 +406,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     skills() {
-        var list = [];
+        const list = [];
         this._skills.concat(this.addedSkills()).forEach(function (id) {
             if (!list.contains(global.$dataSkills[id])) {
                 list.push(global.$dataSkills[id]);
@@ -422,11 +422,11 @@ export class Game_Actor extends Game_Battler {
     }
 
     traitObjects() {
-        var objects = super.traitObjects();
+        let objects = super.traitObjects();
         objects = objects.concat([this.actor(), this.currentClass()]);
-        var equips = this.equips();
-        for (var i = 0; i < equips.length; i++) {
-            var item = equips[i];
+        const equips = this.equips();
+        for (let i = 0; i < equips.length; i++) {
+            const item = equips[i];
             if (item) {
                 objects.push(item);
             }
@@ -435,7 +435,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     attackElements() {
-        var set = super.attackElements();
+        const set = super.attackElements();
         if (this.hasNoWeapons() && !set.contains(this.bareHandsElementId())) {
             set.push(this.bareHandsElementId());
         }
@@ -462,10 +462,10 @@ export class Game_Actor extends Game_Battler {
     }
 
     paramPlus(paramId) {
-        var value = super.paramPlus(paramId);
-        var equips = this.equips();
-        for (var i = 0; i < equips.length; i++) {
-            var item = equips[i];
+        let value = super.paramPlus(paramId);
+        const equips = this.equips();
+        for (let i = 0; i < equips.length; i++) {
+            const item = equips[i];
             if (item) {
                 value += item.params[paramId];
             }
@@ -477,13 +477,13 @@ export class Game_Actor extends Game_Battler {
         if (this.hasNoWeapons()) {
             return this.bareHandsAnimationId();
         } else {
-            var weapons = this.weapons();
+            const weapons = this.weapons();
             return weapons[0] ? weapons[0].animationId : 0;
         }
     }
 
     attackAnimationId2() {
-        var weapons = this.weapons();
+        const weapons = this.weapons();
         return weapons[1] ? weapons[1].animationId : 0;
     }
 
@@ -493,8 +493,8 @@ export class Game_Actor extends Game_Battler {
 
     changeExp(exp, show) {
         this._exp[this._classId] = Math.max(exp, 0);
-        var lastLevel = this._level;
-        var lastSkills = this.skills();
+        const lastLevel = this._level;
+        const lastSkills = this.skills();
         while (!this.isMaxLevel() && this.currentExp() >= this.nextLevelExp()) {
             this.levelUp();
         }
@@ -521,9 +521,9 @@ export class Game_Actor extends Game_Battler {
     }
 
     findNewSkills(lastSkills) {
-        var newSkills = this.skills();
-        for (var i = 0; i < lastSkills.length; i++) {
-            var index = newSkills.indexOf(lastSkills[i]);
+        const newSkills = this.skills();
+        for (let i = 0; i < lastSkills.length; i++) {
+            const index = newSkills.indexOf(lastSkills[i]);
             if (index >= 0) {
                 newSkills.splice(index, 1);
             }
@@ -532,7 +532,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     displayLevelUp(newSkills) {
-        var text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
+        const text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
         global.$gameMessage.newPage();
         global.$gameMessage.add(text);
         newSkills.forEach(function (skill) {
@@ -541,7 +541,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     gainExp(exp) {
-        var newExp = this.currentExp() + Math.round(exp * this.finalExpRate());
+        const newExp = this.currentExp() + Math.round(exp * this.finalExpRate());
         this.changeExp(newExp, this.shouldDisplayLevelUp());
     }
 
@@ -572,7 +572,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     forgetSkill(skillId) {
-        var index = this._skills.indexOf(skillId);
+        const index = this._skills.indexOf(skillId);
         if (index >= 0) {
             this._skills.splice(index, 1);
         }
@@ -642,9 +642,9 @@ export class Game_Actor extends Game_Battler {
     }
 
     performAttack() {
-        var weapons = this.weapons();
-        var wtypeId = weapons[0] ? weapons[0].wtypeId : 0;
-        var attackMotion = global.$dataSystem.attackMotions[wtypeId];
+        const weapons = this.weapons();
+        const wtypeId = weapons[0] ? weapons[0].wtypeId : 0;
+        const attackMotion = global.$dataSystem.attackMotions[wtypeId];
         if (attackMotion) {
             if (attackMotion.type === 0) {
                 this.requestMotion('thrust');
@@ -702,8 +702,8 @@ export class Game_Actor extends Game_Battler {
     }
 
     makeActionList() {
-        var list = [];
-        var action = new Game_Action(this);
+        const list = [];
+        let action = new Game_Action(this);
         action.setAttack();
         list.push(action);
         this.usableSkills().forEach(function (skill) {
@@ -715,11 +715,11 @@ export class Game_Actor extends Game_Battler {
     }
 
     makeAutoBattleActions() {
-        for (var i = 0; i < this.numActions(); i++) {
-            var list = this.makeActionList();
-            var maxValue = Number.MIN_VALUE;
-            for (var j = 0; j < list.length; j++) {
-                var value = list[j].evaluate();
+        for (let i = 0; i < this.numActions(); i++) {
+            const list = this.makeActionList();
+            let maxValue = Number.MIN_VALUE;
+            for (let j = 0; j < list.length; j++) {
+                const value = list[j].evaluate();
                 if (value > maxValue) {
                     maxValue = value;
                     this.setAction(i, list[j]);
@@ -730,7 +730,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     makeConfusionActions() {
-        for (var i = 0; i < this.numActions(); i++) {
+        for (let i = 0; i < this.numActions(); i++) {
             this.action(i).setConfusion();
         }
         this.setActionState('waiting');
@@ -813,7 +813,7 @@ export class Game_Actor extends Game_Battler {
     }
 
     executeFloorDamage() {
-        var damage = Math.floor(this.basicFloorDamage() * this.fdr);
+        let damage = Math.floor(this.basicFloorDamage() * this.fdr);
         damage = Math.min(damage, this.maxFloorDamage());
         this.gainHp(-damage);
         if (damage > 0) {

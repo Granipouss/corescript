@@ -152,7 +152,7 @@ export class Game_Map {
 
     setupEvents() {
         this._events = [];
-        for (var i = 0; i < global.$dataMap.events.length; i++) {
+        for (let i = 0; i < global.$dataMap.events.length; i++) {
             if (global.$dataMap.events[i]) {
                 this._events[i] = new Game_Event(this._mapId, i);
             }
@@ -215,7 +215,7 @@ export class Game_Map {
             this._displayX = x.mod(this.width());
             this._parallaxX = x;
         } else {
-            var endX = this.width() - this.screenTileX();
+            const endX = this.width() - this.screenTileX();
             this._displayX = endX < 0 ? endX / 2 : x.clamp(0, endX);
             this._parallaxX = this._displayX;
         }
@@ -223,7 +223,7 @@ export class Game_Map {
             this._displayY = y.mod(this.height());
             this._parallaxY = y;
         } else {
-            var endY = this.height() - this.screenTileY();
+            const endY = this.height() - this.screenTileY();
             this._displayY = endY < 0 ? endY / 2 : y.clamp(0, endY);
             this._parallaxY = this._displayY;
         }
@@ -254,7 +254,7 @@ export class Game_Map {
     }
 
     tilesetFlags() {
-        var tileset = this.tileset();
+        const tileset = this.tileset();
         if (tileset) {
             return tileset.flags;
         } else {
@@ -351,7 +351,7 @@ export class Game_Map {
     }
 
     deltaX(x1, x2) {
-        var result = x1 - x2;
+        let result = x1 - x2;
         if (this.isLoopHorizontal() && Math.abs(result) > this.width() / 2) {
             if (result < 0) {
                 result += this.width();
@@ -363,7 +363,7 @@ export class Game_Map {
     }
 
     deltaY(y1, y2) {
-        var result = y1 - y2;
+        let result = y1 - y2;
         if (this.isLoopVertical() && Math.abs(result) > this.height() / 2) {
             if (result < 0) {
                 result += this.height();
@@ -379,16 +379,16 @@ export class Game_Map {
     }
 
     canvasToMapX(x) {
-        var tileWidth = this.tileWidth();
-        var originX = this._displayX * tileWidth;
-        var mapX = Math.floor((originX + x) / tileWidth);
+        const tileWidth = this.tileWidth();
+        const originX = this._displayX * tileWidth;
+        const mapX = Math.floor((originX + x) / tileWidth);
         return this.roundX(mapX);
     }
 
     canvasToMapY(y) {
-        var tileHeight = this.tileHeight();
-        var originY = this._displayY * tileHeight;
-        var mapY = Math.floor((originY + y) / tileHeight);
+        const tileHeight = this.tileHeight();
+        const originY = this._displayY * tileHeight;
+        const mapY = Math.floor((originY + y) / tileHeight);
         return this.roundY(mapY);
     }
 
@@ -447,7 +447,7 @@ export class Game_Map {
     }
 
     eventIdXy(x, y) {
-        var list = this.eventsXy(x, y);
+        const list = this.eventsXy(x, y);
         return list.length === 0 ? 0 : list[0].eventId();
     }
 
@@ -459,7 +459,7 @@ export class Game_Map {
                 this._parallaxY += distance;
             }
         } else if (this.height() >= this.screenTileY()) {
-            var lastY = this._displayY;
+            const lastY = this._displayY;
             this._displayY = Math.min(this._displayY + distance, this.height() - this.screenTileY());
             this._parallaxY += this._displayY - lastY;
         }
@@ -473,7 +473,7 @@ export class Game_Map {
                 this._parallaxX -= distance;
             }
         } else if (this.width() >= this.screenTileX()) {
-            var lastX = this._displayX;
+            const lastX = this._displayX;
             this._displayX = Math.max(this._displayX - distance, 0);
             this._parallaxX += this._displayX - lastX;
         }
@@ -487,7 +487,7 @@ export class Game_Map {
                 this._parallaxX += distance;
             }
         } else if (this.width() >= this.screenTileX()) {
-            var lastX = this._displayX;
+            const lastX = this._displayX;
             this._displayX = Math.min(this._displayX + distance, this.width() - this.screenTileX());
             this._parallaxX += this._displayX - lastX;
         }
@@ -501,7 +501,7 @@ export class Game_Map {
                 this._parallaxY -= distance;
             }
         } else if (this.height() >= this.screenTileY()) {
-            var lastY = this._displayY;
+            const lastY = this._displayY;
             this._displayY = Math.max(this._displayY - distance, 0);
             this._parallaxY += this._displayY - lastY;
         }
@@ -512,10 +512,10 @@ export class Game_Map {
     }
 
     checkPassage(x, y, bit) {
-        var flags = this.tilesetFlags();
-        var tiles = this.allTiles(x, y);
-        for (var i = 0; i < tiles.length; i++) {
-            var flag = flags[tiles[i]];
+        const flags = this.tilesetFlags();
+        const tiles = this.allTiles(x, y);
+        for (let i = 0; i < tiles.length; i++) {
+            const flag = flags[tiles[i]];
             if ((flag & 0x10) !== 0)
                 // [*] No effect on passage
                 continue;
@@ -530,28 +530,28 @@ export class Game_Map {
     }
 
     tileId(x, y, z) {
-        var width = global.$dataMap.width;
-        var height = global.$dataMap.height;
+        const width = global.$dataMap.width;
+        const height = global.$dataMap.height;
         return global.$dataMap.data[(z * height + y) * width + x] || 0;
     }
 
     layeredTiles(x, y) {
-        var tiles = [];
-        for (var i = 0; i < 4; i++) {
+        const tiles = [];
+        for (let i = 0; i < 4; i++) {
             tiles.push(this.tileId(x, y, 3 - i));
         }
         return tiles;
     }
 
     allTiles(x, y) {
-        var tiles = this.tileEventsXy(x, y).map(function (event) {
+        const tiles = this.tileEventsXy(x, y).map(function (event) {
             return event.tileId();
         });
         return tiles.concat(this.layeredTiles(x, y));
     }
 
     autotileType(x, y, z) {
-        var tileId = this.tileId(x, y, z);
+        const tileId = this.tileId(x, y, z);
         return tileId >= 2048 ? Math.floor((tileId - 2048) / 48) : -1;
     }
 
@@ -572,7 +572,7 @@ export class Game_Map {
     }
 
     checkLayeredTilesFlags(x, y, bit) {
-        var flags = this.tilesetFlags();
+        const flags = this.tilesetFlags();
         return this.layeredTiles(x, y).some(function (tileId) {
             return (flags[tileId] & bit) !== 0;
         });
@@ -596,10 +596,10 @@ export class Game_Map {
 
     terrainTag(x, y) {
         if (this.isValid(x, y)) {
-            var flags = this.tilesetFlags();
-            var tiles = this.layeredTiles(x, y);
-            for (var i = 0; i < tiles.length; i++) {
-                var tag = flags[tiles[i]] >> 12;
+            const flags = this.tilesetFlags();
+            const tiles = this.layeredTiles(x, y);
+            for (let i = 0; i < tiles.length; i++) {
+                const tag = flags[tiles[i]] >> 12;
                 if (tag > 0) {
                     return tag;
                 }
@@ -635,8 +635,8 @@ export class Game_Map {
 
     updateScroll() {
         if (this.isScrolling()) {
-            var lastX = this._displayX;
-            var lastY = this._displayY;
+            const lastX = this._displayX;
+            const lastY = this._displayY;
             this.doScroll(this._scrollDirection, this.scrollDistance());
             if (this._displayX === lastX && this._displayY === lastY) {
                 this._scrollRest = 0;
@@ -766,9 +766,9 @@ export class Game_Map {
     }
 
     setupStartingMapEvent() {
-        var events = this.events();
-        for (var i = 0; i < events.length; i++) {
-            var event = events[i];
+        const events = this.events();
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i];
             if (event.isStarting()) {
                 event.clearStartingFlag();
                 this._interpreter.setup(event.list(), event.eventId());
@@ -780,8 +780,8 @@ export class Game_Map {
     }
 
     setupAutorunCommonEvent() {
-        for (var i = 0; i < global.$dataCommonEvents.length; i++) {
-            var event = global.$dataCommonEvents[i];
+        for (let i = 0; i < global.$dataCommonEvents.length; i++) {
+            const event = global.$dataCommonEvents[i];
             if (event && event.trigger === 1 && global.$gameSwitches.value(event.switchId)) {
                 this._interpreter.setup(event.list);
                 this._interpreter.setEventInfo({

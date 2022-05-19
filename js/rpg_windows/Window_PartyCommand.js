@@ -8,7 +8,7 @@ import { Window_Command } from './Window_Command';
  */
 export class Window_PartyCommand extends Window_Command {
     initialize() {
-        var y = Graphics.boxHeight - this.windowHeight();
+        const y = Graphics.boxHeight - this.windowHeight();
         super.initialize(0, y);
         this.openness = 0;
         this.deactivate();

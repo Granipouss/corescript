@@ -136,7 +136,7 @@ export class Game_Picture {
 
     updateMove() {
         if (this._duration > 0) {
-            var d = this._duration;
+            const d = this._duration;
             this._x = (this._x * (d - 1) + this._targetX) / d;
             this._y = (this._y * (d - 1) + this._targetY) / d;
             this._scaleX = (this._scaleX * (d - 1) + this._targetScaleX) / d;
@@ -148,8 +148,8 @@ export class Game_Picture {
 
     updateTone() {
         if (this._toneDuration > 0) {
-            var d = this._toneDuration;
-            for (var i = 0; i < 4; i++) {
+            const d = this._toneDuration;
+            for (let i = 0; i < 4; i++) {
                 this._tone[i] = (this._tone[i] * (d - 1) + this._toneTarget[i]) / d;
             }
             this._toneDuration--;

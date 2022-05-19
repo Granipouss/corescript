@@ -29,7 +29,7 @@ export class Game_CommonEvent {
     }
 
     isActive() {
-        var event = this.event();
+        const event = this.event();
         return event.trigger === 2 && global.$gameSwitches.value(event.switchId);
     }
 

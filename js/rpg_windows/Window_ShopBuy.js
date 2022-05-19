@@ -5,7 +5,7 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_ShopBuy extends Window_Selectable {
     initialize(x, y, height, shopGoods) {
-        var width = this.windowWidth();
+        const width = this.windowWidth();
         super.initialize(x, y, width, height);
         this._shopGoods = shopGoods;
         this._money = 0;
@@ -52,7 +52,7 @@ export class Window_ShopBuy extends Window_Selectable {
         this._data = [];
         this._price = [];
         this._shopGoods.forEach(function (goods) {
-            var item = null;
+            let item = null;
             switch (goods[0]) {
                 case 0:
                     item = global.$dataItems[goods[1]];
@@ -72,9 +72,9 @@ export class Window_ShopBuy extends Window_Selectable {
     }
 
     drawItem(index) {
-        var item = this._data[index];
-        var rect = this.itemRect(index);
-        var priceWidth = 96;
+        const item = this._data[index];
+        const rect = this.itemRect(index);
+        const priceWidth = 96;
         rect.width -= this.textPadding();
         this.changePaintOpacity(this.isEnabled(item));
         this.drawItemName(item, rect.x, rect.y, rect.width - priceWidth);

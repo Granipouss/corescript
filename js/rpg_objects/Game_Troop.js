@@ -107,9 +107,9 @@ export class Game_Troop extends Game_Unit {
         this.troop().members.forEach(function (member) {
             if (global.$dataEnemies[member.enemyId]) {
                 var enemyId = member.enemyId;
-                var x = member.x;
-                var y = member.y;
-                var enemy = new Game_Enemy(enemyId, x, y);
+                const x = member.x;
+                const y = member.y;
+                const enemy = new Game_Enemy(enemyId, x, y);
                 if (member.hidden) {
                     enemy.hide();
                 }
@@ -120,17 +120,17 @@ export class Game_Troop extends Game_Unit {
     }
 
     makeUniqueNames() {
-        var table = this.letterTable();
+        const table = this.letterTable();
         this.members().forEach(function (enemy) {
             if (enemy.isAlive() && enemy.isLetterEmpty()) {
-                var name = enemy.originalName();
-                var n = this._namesCount[name] || 0;
+                const name = enemy.originalName();
+                const n = this._namesCount[name] || 0;
                 enemy.setLetter(table[n % table.length]);
                 this._namesCount[name] = n + 1;
             }
         }, this);
         this.members().forEach(function (enemy) {
-            var name = enemy.originalName();
+            const name = enemy.originalName();
             if (this._namesCount[name] >= 2) {
                 enemy.setPlural(true);
             }
@@ -142,9 +142,9 @@ export class Game_Troop extends Game_Unit {
     }
 
     enemyNames() {
-        var names = [];
+        const names = [];
         this.members().forEach(function (enemy) {
-            var name = enemy.originalName();
+            const name = enemy.originalName();
             if (enemy.isAlive() && !names.contains(name)) {
                 names.push(name);
             }
@@ -153,7 +153,7 @@ export class Game_Troop extends Game_Unit {
     }
 
     meetsConditions(page) {
-        var c = page.conditions;
+        const c = page.conditions;
         if (!c.turnEnding && !c.turnValid && !c.enemyValid && !c.actorValid && !c.switchValid) {
             return false; // Conditions not set
         }
@@ -163,9 +163,9 @@ export class Game_Troop extends Game_Unit {
             }
         }
         if (c.turnValid) {
-            var n = this._turnCount;
-            var a = c.turnA;
-            var b = c.turnB;
+            const n = this._turnCount;
+            const a = c.turnA;
+            const b = c.turnB;
             if (b === 0 && n !== a) {
                 return false;
             }
@@ -174,13 +174,13 @@ export class Game_Troop extends Game_Unit {
             }
         }
         if (c.enemyValid) {
-            var enemy = global.$gameTroop.members()[c.enemyIndex];
+            const enemy = global.$gameTroop.members()[c.enemyIndex];
             if (!enemy || enemy.hpRate() * 100 > c.enemyHp) {
                 return false;
             }
         }
         if (c.actorValid) {
-            var actor = global.$gameActors.actor(c.actorId);
+            const actor = global.$gameActors.actor(c.actorId);
             if (!actor || actor.hpRate() * 100 > c.actorHp) {
                 return false;
             }
@@ -198,9 +198,9 @@ export class Game_Troop extends Game_Unit {
             if (this._interpreter.setupReservedCommonEvent()) {
                 return;
             }
-            var pages = this.troop().pages;
-            for (var i = 0; i < pages.length; i++) {
-                var page = pages[i];
+            const pages = this.troop().pages;
+            for (let i = 0; i < pages.length; i++) {
+                const page = pages[i];
                 if (this.meetsConditions(page) && !this._eventFlags[i]) {
                     this._interpreter.setup(page.list);
                     this._interpreter.setEventInfo({
@@ -218,9 +218,9 @@ export class Game_Troop extends Game_Unit {
     }
 
     increaseTurn() {
-        var pages = this.troop().pages;
-        for (var i = 0; i < pages.length; i++) {
-            var page = pages[i];
+        const pages = this.troop().pages;
+        for (let i = 0; i < pages.length; i++) {
+            const page = pages[i];
             if (page.span === 1) {
                 this._eventFlags[i] = false;
             }

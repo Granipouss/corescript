@@ -11,7 +11,7 @@ import { Sprite } from '../rpg_core/Sprite';
  */
 export class TilingSprite extends PIXI.extras.PictureTilingSprite {
     constructor(bitmap) {
-        var texture = new PIXI.Texture(new PIXI.BaseTexture());
+        const texture = new PIXI.Texture(new PIXI.BaseTexture());
 
         super(texture);
 
@@ -145,7 +145,7 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
      * @private
      */
     _refresh() {
-        var frame = this._frame.clone();
+        const frame = this._frame.clone();
         if (frame.width === 0 && frame.height === 0 && this._bitmap) {
             frame.width = this._bitmap.width;
             frame.height = this._bitmap.height;

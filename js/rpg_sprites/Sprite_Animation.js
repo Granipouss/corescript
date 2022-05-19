@@ -76,7 +76,7 @@ export class Sprite_Animation extends Sprite {
 
     updateFlash() {
         if (this._flashDuration > 0) {
-            var d = this._flashDuration--;
+            const d = this._flashDuration--;
             this._flashColor[3] *= (d - 1) / d;
             this._target.setBlendColor(this._flashColor);
         }
@@ -84,7 +84,7 @@ export class Sprite_Animation extends Sprite {
 
     updateScreenFlash() {
         if (this._screenFlashDuration > 0) {
-            var d = this._screenFlashDuration--;
+            const d = this._screenFlashDuration--;
             if (this._screenFlashSprite) {
                 this._screenFlashSprite.x = -this.absoluteX();
                 this._screenFlashSprite.y = -this.absoluteY();
@@ -95,8 +95,8 @@ export class Sprite_Animation extends Sprite {
     }
 
     absoluteX() {
-        var x = 0;
-        var object = this;
+        let x = 0;
+        let object = this;
         while (object) {
             x += object.x;
             object = object.parent;
@@ -105,8 +105,8 @@ export class Sprite_Animation extends Sprite {
     }
 
     absoluteY() {
-        var y = 0;
-        var object = this;
+        let y = 0;
+        let object = this;
         while (object) {
             y += object.y;
             object = object.parent;
@@ -128,10 +128,10 @@ export class Sprite_Animation extends Sprite {
     }
 
     loadBitmaps() {
-        var name1 = this._animation.animation1Name;
-        var name2 = this._animation.animation2Name;
-        var hue1 = this._animation.animation1Hue;
-        var hue2 = this._animation.animation2Hue;
+        const name1 = this._animation.animation1Name;
+        const name2 = this._animation.animation2Name;
+        const hue1 = this._animation.animation1Hue;
+        const hue2 = this._animation.animation2Hue;
         this._bitmap1 = ImageManager.loadAnimation(name1, hue1);
         this._bitmap2 = ImageManager.loadAnimation(name2, hue2);
     }
@@ -160,8 +160,8 @@ export class Sprite_Animation extends Sprite {
 
     createCellSprites() {
         this._cellSprites = [];
-        for (var i = 0; i < 16; i++) {
-            var sprite = new Sprite();
+        for (let i = 0; i < 16; i++) {
+            const sprite = new Sprite();
             sprite.anchor.x = 0.5;
             sprite.anchor.y = 0.5;
             this._cellSprites.push(sprite);
@@ -194,7 +194,7 @@ export class Sprite_Animation extends Sprite {
             this.y = this.parent.height / 2;
         } else {
             var parent = this._target.parent;
-            var grandparent = parent ? parent.parent : null;
+            const grandparent = parent ? parent.parent : null;
             this.x = this._target.x;
             this.y = this._target.y;
             if (this.parent === grandparent) {
@@ -211,7 +211,7 @@ export class Sprite_Animation extends Sprite {
 
     updateFrame() {
         if (this._duration > 0) {
-            var frameIndex = this.currentFrameIndex();
+            const frameIndex = this.currentFrameIndex();
             this.updateAllCellSprites(this._animation.frames[frameIndex]);
             this._animation.timings.forEach(function (timing) {
                 if (timing.frame === frameIndex) {
@@ -226,8 +226,8 @@ export class Sprite_Animation extends Sprite {
     }
 
     updateAllCellSprites(frame) {
-        for (var i = 0; i < this._cellSprites.length; i++) {
-            var sprite = this._cellSprites[i];
+        for (let i = 0; i < this._cellSprites.length; i++) {
+            const sprite = this._cellSprites[i];
             if (i < frame.length) {
                 this.updateCellSprite(sprite, frame[i]);
             } else {
@@ -237,11 +237,11 @@ export class Sprite_Animation extends Sprite {
     }
 
     updateCellSprite(sprite, cell) {
-        var pattern = cell[0];
+        const pattern = cell[0];
         if (pattern >= 0) {
-            var sx = (pattern % 5) * 192;
-            var sy = Math.floor((pattern % 100) / 5) * 192;
-            var mirror = this._mirror;
+            const sx = (pattern % 5) * 192;
+            const sy = Math.floor((pattern % 100) / 5) * 192;
+            const mirror = this._mirror;
             sprite.bitmap = pattern < 100 ? this._bitmap1 : this._bitmap2;
             sprite.setFrame(sx, sy, 192, 192);
             sprite.x = cell[1];
@@ -268,7 +268,7 @@ export class Sprite_Animation extends Sprite {
     }
 
     processTimingData(timing) {
-        var duration = timing.flashDuration * this._rate;
+        const duration = timing.flashDuration * this._rate;
         switch (timing.flashScope) {
             case 1:
                 this.startFlash(timing.flashColor, duration);

@@ -8,8 +8,8 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_MenuStatus extends Window_Selectable {
     initialize(x, y) {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
+        const width = this.windowWidth();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this._formationMode = false;
         this._pendingIndex = -1;
@@ -29,7 +29,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     itemHeight() {
-        var clientHeight = this.height - this.padding * 2;
+        const clientHeight = this.height - this.padding * 2;
         return Math.floor(clientHeight / this.numVisibleRows());
     }
 
@@ -51,8 +51,8 @@ export class Window_MenuStatus extends Window_Selectable {
 
     drawItemBackground(index) {
         if (index === this._pendingIndex) {
-            var rect = this.itemRect(index);
-            var color = this.pendingColor();
+            const rect = this.itemRect(index);
+            const color = this.pendingColor();
             this.changePaintOpacity(false);
             this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
             this.changePaintOpacity(true);
@@ -60,19 +60,19 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     drawItemImage(index) {
-        var actor = global.$gameParty.members()[index];
-        var rect = this.itemRect(index);
+        const actor = global.$gameParty.members()[index];
+        const rect = this.itemRect(index);
         this.changePaintOpacity(actor.isBattleMember());
         this.drawActorFace(actor, rect.x + 1, rect.y + 1, Window_Base._faceWidth, Window_Base._faceHeight);
         this.changePaintOpacity(true);
     }
 
     drawItemStatus(index) {
-        var actor = global.$gameParty.members()[index];
-        var rect = this.itemRect(index);
-        var x = rect.x + 162;
-        var y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
-        var width = rect.width - x - this.textPadding();
+        const actor = global.$gameParty.members()[index];
+        const rect = this.itemRect(index);
+        const x = rect.x + 162;
+        const y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
+        const width = rect.width - x - this.textPadding();
         this.drawActorSimpleStatus(actor, x, y, width);
     }
 
@@ -83,7 +83,7 @@ export class Window_MenuStatus extends Window_Selectable {
 
     isCurrentItemEnabled() {
         if (this._formationMode) {
-            var actor = global.$gameParty.members()[this.index()];
+            const actor = global.$gameParty.members()[this.index()];
             return actor && actor.isFormationChangeOk();
         } else {
             return true;
@@ -107,7 +107,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     setPendingIndex(index) {
-        var lastPendingIndex = this._pendingIndex;
+        const lastPendingIndex = this._pendingIndex;
         this._pendingIndex = index;
         this.redrawItem(this._pendingIndex);
         this.redrawItem(lastPendingIndex);

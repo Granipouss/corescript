@@ -10,8 +10,8 @@ export const ResourceHandler = new (class ResourceHandler {
 
     createLoader(url, retryMethod, resignMethod, retryInterval) {
         retryInterval = retryInterval || this._defaultRetryInterval;
-        var reloaders = this._reloaders;
-        var retryCount = 0;
+        const reloaders = this._reloaders;
+        let retryCount = 0;
         return function () {
             if (retryCount < retryInterval.length) {
                 setTimeout(retryMethod, retryInterval[retryCount]);

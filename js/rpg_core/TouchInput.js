@@ -204,7 +204,7 @@ export const TouchInput = new (class TouchInput {
      * @private
      */
     _setupEventHandlers() {
-        var isSupportPassive = Utils.isSupportPassiveEvent();
+        const isSupportPassive = Utils.isSupportPassiveEvent();
         document.addEventListener('mousedown', this._onMouseDown.bind(this));
         document.addEventListener('mousemove', this._onMouseMove.bind(this));
         document.addEventListener('mouseup', this._onMouseUp.bind(this));
@@ -244,8 +244,8 @@ export const TouchInput = new (class TouchInput {
      * @private
      */
     _onLeftButtonDown(event) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
+        const x = Graphics.pageToCanvasX(event.pageX);
+        const y = Graphics.pageToCanvasY(event.pageY);
         if (Graphics.isInsideCanvas(x, y)) {
             this._mousePressed = true;
             this._pressedTime = 0;
@@ -264,8 +264,8 @@ export const TouchInput = new (class TouchInput {
      * @private
      */
     _onRightButtonDown(event) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
+        const x = Graphics.pageToCanvasX(event.pageX);
+        const y = Graphics.pageToCanvasY(event.pageY);
         if (Graphics.isInsideCanvas(x, y)) {
             this._onCancel(x, y);
         }
@@ -277,8 +277,8 @@ export const TouchInput = new (class TouchInput {
      */
     _onMouseMove(event) {
         if (this._mousePressed) {
-            var x = Graphics.pageToCanvasX(event.pageX);
-            var y = Graphics.pageToCanvasY(event.pageY);
+            const x = Graphics.pageToCanvasX(event.pageX);
+            const y = Graphics.pageToCanvasY(event.pageY);
             this._onMove(x, y);
         }
     }
@@ -289,8 +289,8 @@ export const TouchInput = new (class TouchInput {
      */
     _onMouseUp(event) {
         if (event.button === 0) {
-            var x = Graphics.pageToCanvasX(event.pageX);
-            var y = Graphics.pageToCanvasY(event.pageY);
+            const x = Graphics.pageToCanvasX(event.pageX);
+            const y = Graphics.pageToCanvasY(event.pageY);
             this._mousePressed = false;
             this._onRelease(x, y);
         }
@@ -311,10 +311,10 @@ export const TouchInput = new (class TouchInput {
      * @private
      */
     _onTouchStart(event) {
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var touch = event.changedTouches[i];
-            var x = Graphics.pageToCanvasX(touch.pageX);
-            var y = Graphics.pageToCanvasY(touch.pageY);
+        for (let i = 0; i < event.changedTouches.length; i++) {
+            const touch = event.changedTouches[i];
+            const x = Graphics.pageToCanvasX(touch.pageX);
+            const y = Graphics.pageToCanvasY(touch.pageY);
             if (Graphics.isInsideCanvas(x, y)) {
                 this._screenPressed = true;
                 this._pressedTime = 0;
@@ -336,10 +336,10 @@ export const TouchInput = new (class TouchInput {
      * @private
      */
     _onTouchMove(event) {
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var touch = event.changedTouches[i];
-            var x = Graphics.pageToCanvasX(touch.pageX);
-            var y = Graphics.pageToCanvasY(touch.pageY);
+        for (let i = 0; i < event.changedTouches.length; i++) {
+            const touch = event.changedTouches[i];
+            const x = Graphics.pageToCanvasX(touch.pageX);
+            const y = Graphics.pageToCanvasY(touch.pageY);
             this._onMove(x, y);
         }
     }
@@ -349,10 +349,10 @@ export const TouchInput = new (class TouchInput {
      * @private
      */
     _onTouchEnd(event) {
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var touch = event.changedTouches[i];
-            var x = Graphics.pageToCanvasX(touch.pageX);
-            var y = Graphics.pageToCanvasY(touch.pageY);
+        for (let i = 0; i < event.changedTouches.length; i++) {
+            const touch = event.changedTouches[i];
+            const x = Graphics.pageToCanvasX(touch.pageX);
+            const y = Graphics.pageToCanvasY(touch.pageY);
             this._screenPressed = false;
             this._onRelease(x, y);
         }
@@ -372,8 +372,8 @@ export const TouchInput = new (class TouchInput {
      */
     _onPointerDown(event) {
         if (event.pointerType === 'touch' && !event.isPrimary) {
-            var x = Graphics.pageToCanvasX(event.pageX);
-            var y = Graphics.pageToCanvasY(event.pageY);
+            const x = Graphics.pageToCanvasX(event.pageX);
+            const y = Graphics.pageToCanvasY(event.pageY);
             if (Graphics.isInsideCanvas(x, y)) {
                 // For Microsoft Edge
                 this._onCancel(x, y);

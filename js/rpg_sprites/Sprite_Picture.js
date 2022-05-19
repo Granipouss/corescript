@@ -30,9 +30,9 @@ export class Sprite_Picture extends Sprite {
     }
 
     updateBitmap() {
-        var picture = this.picture();
+        const picture = this.picture();
         if (picture) {
-            var pictureName = picture.name();
+            const pictureName = picture.name();
             if (this._pictureName !== pictureName) {
                 this._pictureName = pictureName;
                 this.loadBitmap();
@@ -46,7 +46,7 @@ export class Sprite_Picture extends Sprite {
     }
 
     updateOrigin() {
-        var picture = this.picture();
+        const picture = this.picture();
         if (picture.origin() === 0) {
             this.anchor.x = 0;
             this.anchor.y = 0;
@@ -57,19 +57,19 @@ export class Sprite_Picture extends Sprite {
     }
 
     updatePosition() {
-        var picture = this.picture();
+        const picture = this.picture();
         this.x = Math.floor(picture.x());
         this.y = Math.floor(picture.y());
     }
 
     updateScale() {
-        var picture = this.picture();
+        const picture = this.picture();
         this.scale.x = picture.scaleX() / 100;
         this.scale.y = picture.scaleY() / 100;
     }
 
     updateTone() {
-        var picture = this.picture();
+        const picture = this.picture();
         if (picture.tone()) {
             this.setColorTone(picture.tone());
         } else {
@@ -78,7 +78,7 @@ export class Sprite_Picture extends Sprite {
     }
 
     updateOther() {
-        var picture = this.picture();
+        const picture = this.picture();
         this.opacity = picture.opacity();
         this.blendMode = picture.blendMode();
         this.rotation = (picture.angle() * Math.PI) / 180;

@@ -105,7 +105,7 @@ export const Input = new (class Input {
         } else {
             this._latestButton = null;
         }
-        for (var name in this._currentState) {
+        for (const name in this._currentState) {
             if (this._currentState[name] && !this._previousState[name]) {
                 this._latestButton = name;
                 this._pressedTime = 0;
@@ -227,7 +227,7 @@ export const Input = new (class Input {
             // Numlock
             this.clear();
         }
-        var buttonName = this.keyMapper[event.keyCode];
+        const buttonName = this.keyMapper[event.keyCode];
         if (ResourceHandler.exists() && buttonName === 'ok') {
             ResourceHandler.retry();
         } else if (buttonName) {
@@ -258,7 +258,7 @@ export const Input = new (class Input {
      * @private
      */
     _onKeyUp(event) {
-        var buttonName = this.keyMapper[event.keyCode];
+        const buttonName = this.keyMapper[event.keyCode];
         if (buttonName) {
             this._currentState[buttonName] = false;
         }
@@ -280,10 +280,10 @@ export const Input = new (class Input {
      */
     _pollGamepads() {
         if (navigator.getGamepads) {
-            var gamepads = navigator.getGamepads();
+            const gamepads = navigator.getGamepads();
             if (gamepads) {
-                for (var i = 0; i < gamepads.length; i++) {
-                    var gamepad = gamepads[i];
+                for (let i = 0; i < gamepads.length; i++) {
+                    const gamepad = gamepads[i];
                     if (gamepad && gamepad.connected) {
                         this._updateGamepadState(gamepad);
                     }
@@ -298,16 +298,16 @@ export const Input = new (class Input {
      * @private
      */
     _updateGamepadState(gamepad) {
-        var lastState = this._gamepadStates[gamepad.index] || [];
-        var newState = [];
-        var buttons = gamepad.buttons;
-        var axes = gamepad.axes;
-        var threshold = 0.5;
+        const lastState = this._gamepadStates[gamepad.index] || [];
+        const newState = [];
+        const buttons = gamepad.buttons;
+        const axes = gamepad.axes;
+        const threshold = 0.5;
         newState[12] = false;
         newState[13] = false;
         newState[14] = false;
         newState[15] = false;
-        for (var i = 0; i < buttons.length; i++) {
+        for (let i = 0; i < buttons.length; i++) {
             newState[i] = buttons[i].pressed;
         }
         if (axes[1] < -threshold) {
@@ -320,9 +320,9 @@ export const Input = new (class Input {
         } else if (axes[0] > threshold) {
             newState[15] = true; // right
         }
-        for (var j = 0; j < newState.length; j++) {
+        for (let j = 0; j < newState.length; j++) {
             if (newState[j] !== lastState[j]) {
-                var buttonName = this.gamepadMapper[j];
+                const buttonName = this.gamepadMapper[j];
                 if (buttonName) {
                     this._currentState[buttonName] = newState[j];
                 }
@@ -335,8 +335,8 @@ export const Input = new (class Input {
      * @private
      */
     _updateDirection() {
-        var x = this._signX();
-        var y = this._signY();
+        let x = this._signX();
+        let y = this._signY();
 
         this._dir8 = this._makeNumpadDirection(x, y);
 
@@ -359,7 +359,7 @@ export const Input = new (class Input {
      * @private
      */
     _signX() {
-        var x = 0;
+        let x = 0;
 
         if (this.isPressed('left')) {
             x--;
@@ -374,7 +374,7 @@ export const Input = new (class Input {
      * @private
      */
     _signY() {
-        var y = 0;
+        let y = 0;
 
         if (this.isPressed('up')) {
             y--;

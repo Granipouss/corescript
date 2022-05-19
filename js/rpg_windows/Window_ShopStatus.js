@@ -20,7 +20,7 @@ export class Window_ShopStatus extends Window_Base {
     refresh() {
         this.contents.clear();
         if (this._item) {
-            var x = this.textPadding();
+            const x = this.textPadding();
             this.drawPossession(x, 0);
             if (this.isEquipItem()) {
                 this.drawEquipInfo(x, this.lineHeight() * 2);
@@ -38,8 +38,8 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     drawPossession(x, y) {
-        var width = this.contents.width - this.textPadding() - x;
-        var possessionWidth = this.textWidth('0000');
+        const width = this.contents.width - this.textPadding() - x;
+        const possessionWidth = this.textWidth('0000');
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.possession, x, y, width - possessionWidth);
         this.resetTextColor();
@@ -47,15 +47,15 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     drawEquipInfo(x, y) {
-        var members = this.statusMembers();
-        for (var i = 0; i < members.length; i++) {
+        const members = this.statusMembers();
+        for (let i = 0; i < members.length; i++) {
             this.drawActorEquipInfo(x, y + this.lineHeight() * (i * 2.4), members[i]);
         }
     }
 
     statusMembers() {
-        var start = this._pageIndex * this.pageSize();
-        var end = start + this.pageSize();
+        const start = this._pageIndex * this.pageSize();
+        const end = start + this.pageSize();
         return global.$gameParty.members().slice(start, end);
     }
 
@@ -68,11 +68,11 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     drawActorEquipInfo(x, y, actor) {
-        var enabled = actor.canEquip(this._item);
+        const enabled = actor.canEquip(this._item);
         this.changePaintOpacity(enabled);
         this.resetTextColor();
         this.drawText(actor.name(), x, y, 168);
-        var item1 = this.currentEquippedItem(actor, this._item.etypeId);
+        const item1 = this.currentEquippedItem(actor, this._item.etypeId);
         if (enabled) {
             this.drawActorParamChange(x, y, actor, item1);
         }
@@ -81,9 +81,9 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     drawActorParamChange(x, y, actor, item1) {
-        var width = this.contents.width - this.textPadding() - x;
-        var paramId = this.paramId();
-        var change = this._item.params[paramId] - (item1 ? item1.params[paramId] : 0);
+        const width = this.contents.width - this.textPadding() - x;
+        const paramId = this.paramId();
+        const change = this._item.params[paramId] - (item1 ? item1.params[paramId] : 0);
         this.changeTextColor(this.paramchangeTextColor(change));
         this.drawText((change > 0 ? '+' : '') + change, x, y, width, 'right');
     }
@@ -93,18 +93,18 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     currentEquippedItem(actor, etypeId) {
-        var list = [];
-        var equips = actor.equips();
-        var slots = actor.equipSlots();
-        for (var i = 0; i < slots.length; i++) {
+        const list = [];
+        const equips = actor.equips();
+        const slots = actor.equipSlots();
+        for (let i = 0; i < slots.length; i++) {
             if (slots[i] === etypeId) {
                 list.push(equips[i]);
             }
         }
-        var paramId = this.paramId();
-        var worstParam = Number.MAX_VALUE;
-        var worstItem = null;
-        for (var j = 0; j < list.length; j++) {
+        const paramId = this.paramId();
+        let worstParam = Number.MAX_VALUE;
+        let worstItem = null;
+        for (let j = 0; j < list.length; j++) {
             if (list[j] && list[j].params[paramId] < worstParam) {
                 worstParam = list[j].params[paramId];
                 worstItem = list[j];
@@ -139,8 +139,8 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     isTouchedInsideFrame() {
-        var x = this.canvasToLocalX(TouchInput.x);
-        var y = this.canvasToLocalY(TouchInput.y);
+        const x = this.canvasToLocalX(TouchInput.x);
+        const y = this.canvasToLocalY(TouchInput.y);
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
     }
 

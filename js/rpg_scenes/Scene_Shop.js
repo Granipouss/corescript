@@ -49,15 +49,15 @@ export class Scene_Shop extends Scene_MenuBase {
     }
 
     createDummyWindow() {
-        var wy = this._commandWindow.y + this._commandWindow.height;
-        var wh = Graphics.boxHeight - wy;
+        const wy = this._commandWindow.y + this._commandWindow.height;
+        const wh = Graphics.boxHeight - wy;
         this._dummyWindow = new Window_Base(0, wy, Graphics.boxWidth, wh);
         this.addWindow(this._dummyWindow);
     }
 
     createNumberWindow() {
-        var wy = this._dummyWindow.y;
-        var wh = this._dummyWindow.height;
+        const wy = this._dummyWindow.y;
+        const wh = this._dummyWindow.height;
         this._numberWindow = new Window_ShopNumber(0, wy, wh);
         this._numberWindow.hide();
         this._numberWindow.setHandler('ok', this.onNumberOk.bind(this));
@@ -66,18 +66,18 @@ export class Scene_Shop extends Scene_MenuBase {
     }
 
     createStatusWindow() {
-        var wx = this._numberWindow.width;
-        var wy = this._dummyWindow.y;
-        var ww = Graphics.boxWidth - wx;
-        var wh = this._dummyWindow.height;
+        const wx = this._numberWindow.width;
+        const wy = this._dummyWindow.y;
+        const ww = Graphics.boxWidth - wx;
+        const wh = this._dummyWindow.height;
         this._statusWindow = new Window_ShopStatus(wx, wy, ww, wh);
         this._statusWindow.hide();
         this.addWindow(this._statusWindow);
     }
 
     createBuyWindow() {
-        var wy = this._dummyWindow.y;
-        var wh = this._dummyWindow.height;
+        const wy = this._dummyWindow.y;
+        const wh = this._dummyWindow.height;
         this._buyWindow = new Window_ShopBuy(0, wy, wh, this._goods);
         this._buyWindow.setHelpWindow(this._helpWindow);
         this._buyWindow.setStatusWindow(this._statusWindow);
@@ -99,8 +99,8 @@ export class Scene_Shop extends Scene_MenuBase {
     }
 
     createSellWindow() {
-        var wy = this._categoryWindow.y + this._categoryWindow.height;
-        var wh = Graphics.boxHeight - wy;
+        const wy = this._categoryWindow.y + this._categoryWindow.height;
+        const wh = Graphics.boxHeight - wy;
         this._sellWindow = new Window_ShopSell(0, wy, Graphics.boxWidth, wh);
         this._sellWindow.setHelpWindow(this._helpWindow);
         this._sellWindow.hide();
@@ -231,8 +231,8 @@ export class Scene_Shop extends Scene_MenuBase {
     }
 
     maxBuy() {
-        var max = global.$gameParty.maxItems(this._item) - global.$gameParty.numItems(this._item);
-        var price = this.buyingPrice();
+        const max = global.$gameParty.maxItems(this._item) - global.$gameParty.numItems(this._item);
+        const price = this.buyingPrice();
         if (price > 0) {
             return Math.min(max, Math.floor(this.money() / price));
         } else {

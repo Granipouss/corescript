@@ -44,11 +44,11 @@ export const StorageManager = new (class StorageManager {
     backup(savefileId) {
         if (this.exists(savefileId)) {
             if (this.isLocalMode()) {
-                var data = this.loadFromLocalFile(savefileId);
+                const data = this.loadFromLocalFile(savefileId);
                 var compressed = LZString.compressToBase64(data);
-                var fs = require('fs');
-                var dirPath = this.localFileDirectoryPath();
-                var filePath = this.localFilePath(savefileId) + '.bak';
+                const fs = require('fs');
+                const dirPath = this.localFileDirectoryPath();
+                const filePath = this.localFilePath(savefileId) + '.bak';
                 if (!fs.existsSync(dirPath)) {
                     fs.mkdirSync(dirPath);
                 }
@@ -56,7 +56,7 @@ export const StorageManager = new (class StorageManager {
             } else {
                 // var data = this.loadFromWebStorage(savefileId);
                 // var compressed = LZString.compressToBase64(data);
-                var key = this.webStorageKey(savefileId) + 'bak';
+                const key = this.webStorageKey(savefileId) + 'bak';
                 localStorage.setItem(key, compressed);
             }
         }
@@ -73,12 +73,12 @@ export const StorageManager = new (class StorageManager {
     cleanBackup(savefileId) {
         if (this.backupExists(savefileId)) {
             if (this.isLocalMode()) {
-                var fs = require('fs');
+                const fs = require('fs');
                 // var dirPath = this.localFileDirectoryPath();
-                var filePath = this.localFilePath(savefileId);
+                const filePath = this.localFilePath(savefileId);
                 fs.unlinkSync(filePath + '.bak');
             } else {
-                var key = this.webStorageKey(savefileId);
+                const key = this.webStorageKey(savefileId);
                 localStorage.removeItem(key + 'bak');
             }
         }
@@ -87,11 +87,11 @@ export const StorageManager = new (class StorageManager {
     restoreBackup(savefileId) {
         if (this.backupExists(savefileId)) {
             if (this.isLocalMode()) {
-                var data = this.loadFromLocalBackupFile(savefileId);
+                const data = this.loadFromLocalBackupFile(savefileId);
                 var compressed = LZString.compressToBase64(data);
-                var fs = require('fs');
-                var dirPath = this.localFileDirectoryPath();
-                var filePath = this.localFilePath(savefileId);
+                const fs = require('fs');
+                const dirPath = this.localFileDirectoryPath();
+                const filePath = this.localFilePath(savefileId);
                 if (!fs.existsSync(dirPath)) {
                     fs.mkdirSync(dirPath);
                 }
@@ -100,7 +100,7 @@ export const StorageManager = new (class StorageManager {
             } else {
                 // var data = this.loadFromWebStorageBackup(savefileId);
                 // var compressed = LZString.compressToBase64(data);
-                var key = this.webStorageKey(savefileId);
+                const key = this.webStorageKey(savefileId);
                 localStorage.setItem(key, compressed);
                 localStorage.removeItem(key + 'bak');
             }
@@ -112,10 +112,10 @@ export const StorageManager = new (class StorageManager {
     }
 
     saveToLocalFile(savefileId, json) {
-        var data = LZString.compressToBase64(json);
-        var fs = require('fs');
-        var dirPath = this.localFileDirectoryPath();
-        var filePath = this.localFilePath(savefileId);
+        const data = LZString.compressToBase64(json);
+        const fs = require('fs');
+        const dirPath = this.localFileDirectoryPath();
+        const filePath = this.localFilePath(savefileId);
         if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath);
         }
@@ -123,9 +123,9 @@ export const StorageManager = new (class StorageManager {
     }
 
     loadFromLocalFile(savefileId) {
-        var data = null;
-        var fs = require('fs');
-        var filePath = this.localFilePath(savefileId);
+        let data = null;
+        const fs = require('fs');
+        const filePath = this.localFilePath(savefileId);
         if (fs.existsSync(filePath)) {
             data = fs.readFileSync(filePath, { encoding: 'utf8' });
         }
@@ -133,9 +133,9 @@ export const StorageManager = new (class StorageManager {
     }
 
     loadFromLocalBackupFile(savefileId) {
-        var data = null;
-        var fs = require('fs');
-        var filePath = this.localFilePath(savefileId) + '.bak';
+        let data = null;
+        const fs = require('fs');
+        const filePath = this.localFilePath(savefileId) + '.bak';
         if (fs.existsSync(filePath)) {
             data = fs.readFileSync(filePath, { encoding: 'utf8' });
         }
@@ -143,60 +143,60 @@ export const StorageManager = new (class StorageManager {
     }
 
     localFileBackupExists(savefileId) {
-        var fs = require('fs');
+        const fs = require('fs');
         return fs.existsSync(this.localFilePath(savefileId) + '.bak');
     }
 
     localFileExists(savefileId) {
-        var fs = require('fs');
+        const fs = require('fs');
         return fs.existsSync(this.localFilePath(savefileId));
     }
 
     removeLocalFile(savefileId) {
-        var fs = require('fs');
-        var filePath = this.localFilePath(savefileId);
+        const fs = require('fs');
+        const filePath = this.localFilePath(savefileId);
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
         }
     }
 
     saveToWebStorage(savefileId, json) {
-        var key = this.webStorageKey(savefileId);
-        var data = LZString.compressToBase64(json);
+        const key = this.webStorageKey(savefileId);
+        const data = LZString.compressToBase64(json);
         localStorage.setItem(key, data);
     }
 
     loadFromWebStorage(savefileId) {
-        var key = this.webStorageKey(savefileId);
-        var data = localStorage.getItem(key);
+        const key = this.webStorageKey(savefileId);
+        const data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     }
 
     loadFromWebStorageBackup(savefileId) {
-        var key = this.webStorageKey(savefileId) + 'bak';
-        var data = localStorage.getItem(key);
+        const key = this.webStorageKey(savefileId) + 'bak';
+        const data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     }
 
     webStorageBackupExists(savefileId) {
-        var key = this.webStorageKey(savefileId) + 'bak';
+        const key = this.webStorageKey(savefileId) + 'bak';
         return !!localStorage.getItem(key);
     }
 
     webStorageExists(savefileId) {
-        var key = this.webStorageKey(savefileId);
+        const key = this.webStorageKey(savefileId);
         return !!localStorage.getItem(key);
     }
 
     removeWebStorage(savefileId) {
-        var key = this.webStorageKey(savefileId);
+        const key = this.webStorageKey(savefileId);
         localStorage.removeItem(key);
     }
 
     localFileDirectoryPath() {
-        var path = require('path');
+        const path = require('path');
 
-        var base = path.dirname(process.mainModule.filename);
+        const base = path.dirname(process.mainModule.filename);
         if (this.canMakeWwwSaveDirectory()) {
             return path.join(base, 'save/');
         } else {
@@ -205,7 +205,7 @@ export const StorageManager = new (class StorageManager {
     }
 
     localFilePath(savefileId) {
-        var name;
+        let name;
         if (savefileId < 0) {
             name = 'config.rpgsave';
         } else if (savefileId === 0) {
@@ -229,10 +229,10 @@ export const StorageManager = new (class StorageManager {
     // Enigma Virtual Box cannot make www/save directory
     canMakeWwwSaveDirectory() {
         if (this._canMakeWwwSaveDirectory === undefined) {
-            var fs = require('fs');
-            var path = require('path');
-            var base = path.dirname(process.mainModule.filename);
-            var testPath = path.join(base, 'testDirectory/');
+            const fs = require('fs');
+            const path = require('path');
+            const base = path.dirname(process.mainModule.filename);
+            const testPath = path.join(base, 'testDirectory/');
             try {
                 fs.mkdirSync(testPath);
                 fs.rmdirSync(testPath);

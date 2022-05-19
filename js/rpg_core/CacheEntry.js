@@ -57,7 +57,7 @@ export class CacheEntry {
     }
 
     isStillAlive() {
-        var cache = this.cache;
+        const cache = this.cache;
         return (
             (this.ttlTicks == 0 || this.touchTicks + this.ttlTicks < cache.updateTicks) &&
             (this.ttlSeconds == 0 || this.touchSeconds + this.ttlSeconds < cache.updateSeconds)
@@ -69,7 +69,7 @@ export class CacheEntry {
      * if resource was already freed by TTL, put it in cache again
      */
     touch() {
-        var cache = this.cache;
+        const cache = this.cache;
         if (this.cached) {
             this.touchTicks = cache.updateTicks;
             this.touchSeconds = cache.updateSeconds;

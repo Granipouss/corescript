@@ -47,9 +47,9 @@ export class Game_Player extends Game_Character {
     }
 
     refresh() {
-        var actor = global.$gameParty.leader();
-        var characterName = actor ? actor.characterName() : '';
-        var characterIndex = actor ? actor.characterIndex() : 0;
+        const actor = global.$gameParty.leader();
+        const characterName = actor ? actor.characterName() : '';
+        const characterIndex = actor ? actor.characterIndex() : 0;
         this.setImage(characterName, characterIndex);
         this._followers.refresh();
     }
@@ -101,7 +101,7 @@ export class Game_Player extends Game_Character {
     }
 
     isMapPassable(x, y, d) {
-        var vehicle = this.vehicle();
+        const vehicle = this.vehicle();
         if (vehicle) {
             return vehicle.isMapPassable(x, y, d);
         } else {
@@ -179,13 +179,13 @@ export class Game_Player extends Game_Character {
     }
 
     makeEncounterCount() {
-        var n = global.$gameMap.encounterStep();
+        const n = global.$gameMap.encounterStep();
         this._encounterCount = Math.randomInt(n) + Math.randomInt(n) + 1;
     }
 
     makeEncounterTroopId() {
-        var encounterList = [];
-        var weightSum = 0;
+        const encounterList = [];
+        let weightSum = 0;
         global.$gameMap.encounterList().forEach(function (encounter) {
             if (this.meetsEncounterConditions(encounter)) {
                 encounterList.push(encounter);
@@ -193,8 +193,8 @@ export class Game_Player extends Game_Character {
             }
         }, this);
         if (weightSum > 0) {
-            var value = Math.randomInt(weightSum);
-            for (var i = 0; i < encounterList.length; i++) {
+            let value = Math.randomInt(weightSum);
+            for (let i = 0; i < encounterList.length; i++) {
                 value -= encounterList[i].weight;
                 if (value < 0) {
                     return encounterList[i].troopId;
@@ -211,7 +211,7 @@ export class Game_Player extends Game_Character {
     executeEncounter() {
         if (!global.$gameMap.isEventRunning() && this._encounterCount <= 0) {
             this.makeEncounterCount();
-            var troopId = this.makeEncounterTroopId();
+            const troopId = this.makeEncounterTroopId();
             if (global.$dataTroops[troopId]) {
                 BattleManager.setup(troopId, true, false);
                 BattleManager.onEncounter();
@@ -236,12 +236,12 @@ export class Game_Player extends Game_Character {
 
     moveByInput() {
         if (!this.isMoving() && this.canMove()) {
-            var direction = this.getInputDirection();
+            let direction = this.getInputDirection();
             if (direction > 0) {
                 global.$gameTemp.clearDestination();
             } else if (global.$gameTemp.isDestinationValid()) {
-                var x = global.$gameTemp.destinationX();
-                var y = global.$gameTemp.destinationY();
+                const x = global.$gameTemp.destinationX();
+                const y = global.$gameTemp.destinationY();
                 direction = this.findDirectionTo(x, y);
             }
             if (direction > 0) {
@@ -275,9 +275,9 @@ export class Game_Player extends Game_Character {
     }
 
     update(sceneActive) {
-        var lastScrolledX = this.scrolledX();
-        var lastScrolledY = this.scrolledY();
-        var wasMoving = this.isMoving();
+        const lastScrolledX = this.scrolledX();
+        const lastScrolledY = this.scrolledY();
+        const wasMoving = this.isMoving();
         this.updateDashing();
         if (sceneActive) {
             this.moveByInput();
@@ -303,7 +303,7 @@ export class Game_Player extends Game_Character {
     }
 
     isDashButtonPressed() {
-        var shift = Input.isPressed('shift');
+        const shift = Input.isPressed('shift');
         if (ConfigManager.alwaysDash) {
             return !shift;
         } else {
@@ -312,10 +312,10 @@ export class Game_Player extends Game_Character {
     }
 
     updateScroll(lastScrolledX, lastScrolledY) {
-        var x1 = lastScrolledX;
-        var y1 = lastScrolledY;
-        var x2 = this.scrolledX();
-        var y2 = this.scrolledY();
+        const x1 = lastScrolledX;
+        const y1 = lastScrolledY;
+        const x2 = this.scrolledX();
+        const y2 = this.scrolledY();
         if (y2 > y1 && y2 > this.centerY()) {
             global.$gameMap.scrollDown(y2 - y1);
         }
@@ -414,15 +414,15 @@ export class Game_Player extends Game_Character {
 
     triggerTouchAction() {
         if (global.$gameTemp.isDestinationValid()) {
-            var direction = this.direction();
-            var x1 = this.x;
-            var y1 = this.y;
-            var x2 = global.$gameMap.roundXWithDirection(x1, direction);
-            var y2 = global.$gameMap.roundYWithDirection(y1, direction);
-            var x3 = global.$gameMap.roundXWithDirection(x2, direction);
-            var y3 = global.$gameMap.roundYWithDirection(y2, direction);
-            var destX = global.$gameTemp.destinationX();
-            var destY = global.$gameTemp.destinationY();
+            const direction = this.direction();
+            const x1 = this.x;
+            const y1 = this.y;
+            const x2 = global.$gameMap.roundXWithDirection(x1, direction);
+            const y2 = global.$gameMap.roundYWithDirection(y1, direction);
+            const x3 = global.$gameMap.roundXWithDirection(x2, direction);
+            const y3 = global.$gameMap.roundYWithDirection(y2, direction);
+            const destX = global.$gameTemp.destinationX();
+            const destY = global.$gameTemp.destinationY();
             if (destX === x1 && destY === y1) {
                 return this.triggerTouchActionD1(x1, y1);
             } else if (destX === x2 && destY === y2) {
@@ -483,7 +483,7 @@ export class Game_Player extends Game_Character {
     }
 
     encounterProgressValue() {
-        var value = global.$gameMap.isBush(this.x, this.y) ? 2 : 1;
+        let value = global.$gameMap.isBush(this.x, this.y) ? 2 : 1;
         if (global.$gameParty.hasEncounterHalf()) {
             value *= 0.5;
         }
@@ -501,15 +501,15 @@ export class Game_Player extends Game_Character {
 
     checkEventTriggerThere(triggers) {
         if (this.canStartLocalEvents()) {
-            var direction = this.direction();
-            var x1 = this.x;
-            var y1 = this.y;
-            var x2 = global.$gameMap.roundXWithDirection(x1, direction);
-            var y2 = global.$gameMap.roundYWithDirection(y1, direction);
+            const direction = this.direction();
+            const x1 = this.x;
+            const y1 = this.y;
+            const x2 = global.$gameMap.roundXWithDirection(x1, direction);
+            const y2 = global.$gameMap.roundYWithDirection(y1, direction);
             this.startMapEvent(x2, y2, triggers, true);
             if (!global.$gameMap.isAnyEventStarting() && global.$gameMap.isCounter(x2, y2)) {
-                var x3 = global.$gameMap.roundXWithDirection(x2, direction);
-                var y3 = global.$gameMap.roundYWithDirection(y2, direction);
+                const x3 = global.$gameMap.roundXWithDirection(x2, direction);
+                const y3 = global.$gameMap.roundYWithDirection(y2, direction);
                 this.startMapEvent(x3, y3, triggers, true);
             }
         }
@@ -534,11 +534,11 @@ export class Game_Player extends Game_Character {
     }
 
     getOnVehicle() {
-        var direction = this.direction();
-        var x1 = this.x;
-        var y1 = this.y;
-        var x2 = global.$gameMap.roundXWithDirection(x1, direction);
-        var y2 = global.$gameMap.roundYWithDirection(y1, direction);
+        const direction = this.direction();
+        const x1 = this.x;
+        const y1 = this.y;
+        const x2 = global.$gameMap.roundXWithDirection(x1, direction);
+        const y2 = global.$gameMap.roundYWithDirection(y1, direction);
         if (global.$gameMap.airship().pos(x1, y1)) {
             this._vehicleType = 'airship';
         } else if (global.$gameMap.ship().pos(x2, y2)) {

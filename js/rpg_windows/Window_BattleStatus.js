@@ -6,10 +6,10 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_BattleStatus extends Window_Selectable {
     initialize() {
-        var width = this.windowWidth();
-        var height = this.windowHeight();
-        var x = Graphics.boxWidth - width;
-        var y = Graphics.boxHeight - height;
+        const width = this.windowWidth();
+        const height = this.windowHeight();
+        const x = Graphics.boxWidth - width;
+        const y = Graphics.boxHeight - height;
         super.initialize(x, y, width, height);
         this.refresh();
         this.openness = 0;
@@ -37,19 +37,19 @@ export class Window_BattleStatus extends Window_Selectable {
     }
 
     drawItem(index) {
-        var actor = global.$gameParty.battleMembers()[index];
+        const actor = global.$gameParty.battleMembers()[index];
         this.drawBasicArea(this.basicAreaRect(index), actor);
         this.drawGaugeArea(this.gaugeAreaRect(index), actor);
     }
 
     basicAreaRect(index) {
-        var rect = this.itemRectForText(index);
+        const rect = this.itemRectForText(index);
         rect.width -= this.gaugeAreaWidth() + 15;
         return rect;
     }
 
     gaugeAreaRect(index) {
-        var rect = this.itemRectForText(index);
+        const rect = this.itemRectForText(index);
         rect.x += rect.width - this.gaugeAreaWidth();
         rect.width = this.gaugeAreaWidth();
         return rect;
