@@ -39,8 +39,7 @@ Number.prototype.mod = function (n) {
  * @param {Any} ...args The objects to format
  * @return {String} A formatted string
  */
-String.prototype.format = function () {
-    const args = arguments;
+String.prototype.format = function (...args) {
     return this.replace(/%([0-9]+)/g, (s, n) => args[Number(n) - 1]);
 };
 

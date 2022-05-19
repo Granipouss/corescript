@@ -256,10 +256,7 @@ export class Game_Enemy extends Game_Battler {
     }
 
     selectAllActions(actionList) {
-        const ratingMax = Math.max.apply(
-            null,
-            actionList.map((a) => a.rating)
-        );
+        const ratingMax = Math.max(...actionList.map((a) => a.rating));
         const ratingZero = ratingMax - 3;
         actionList = actionList.filter((a) => a.rating > ratingZero);
         for (let i = 0; i < this.numActions(); i++) {

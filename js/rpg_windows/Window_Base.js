@@ -271,13 +271,13 @@ export class Window_Base extends Window {
         }
     }
 
-    convertEscapeCharacters(text) {
+    convertEscapeCharacters(text, arg) {
         text = text.replace(/\\/g, '\x1b');
         text = text.replace(/\x1b\x1b/g, '\\');
-        text = text.replace(/\x1bV\[(\d+)\]/gi, () => global.$gameVariables.value(parseInt(arguments[1])));
-        text = text.replace(/\x1bV\[(\d+)\]/gi, () => global.$gameVariables.value(parseInt(arguments[1])));
-        text = text.replace(/\x1bN\[(\d+)\]/gi, () => this.actorName(parseInt(arguments[1])));
-        text = text.replace(/\x1bP\[(\d+)\]/gi, () => this.partyMemberName(parseInt(arguments[1])));
+        text = text.replace(/\x1bV\[(\d+)\]/gi, () => global.$gameVariables.value(parseInt(arg)));
+        text = text.replace(/\x1bV\[(\d+)\]/gi, () => global.$gameVariables.value(parseInt(arg)));
+        text = text.replace(/\x1bN\[(\d+)\]/gi, () => this.actorName(parseInt(arg)));
+        text = text.replace(/\x1bP\[(\d+)\]/gi, () => this.partyMemberName(parseInt(arg)));
         text = text.replace(/\x1bG/gi, TextManager.currencyUnit);
         return text;
     }

@@ -347,8 +347,8 @@ export const SceneManager = new (class SceneManager {
         this._stopped = true;
     }
 
-    prepareNextScene() {
-        this._nextScene.prepare.apply(this._nextScene, arguments);
+    prepareNextScene(...args) {
+        this._nextScene.prepare(...args);
     }
 
     snap() {

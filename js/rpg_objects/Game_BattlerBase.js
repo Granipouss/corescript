@@ -523,7 +523,7 @@ export class Game_BattlerBase {
 
     slotType() {
         const set = this.traitsSet(Game_BattlerBase.TRAIT_SLOT_TYPE);
-        return set.length > 0 ? Math.max.apply(null, set) : 0;
+        return set.length > 0 ? Math.max(...set) : 0;
     }
 
     isDualWield() {
@@ -540,7 +540,7 @@ export class Game_BattlerBase {
 
     collapseType() {
         const set = this.traitsSet(Game_BattlerBase.TRAIT_COLLAPSE_TYPE);
-        return set.length > 0 ? Math.max.apply(null, set) : 0;
+        return set.length > 0 ? Math.max(...set) : 0;
     }
 
     partyAbility(abilityId) {
@@ -682,9 +682,8 @@ export class Game_BattlerBase {
     }
 
     restriction() {
-        return Math.max.apply(
-            null,
-            this.states()
+        return Math.max(
+            ...this.states()
                 .map((state) => state.restriction)
                 .concat(0)
         );

@@ -166,10 +166,7 @@ export class Game_Party extends Game_Unit {
     }
 
     highestLevel() {
-        return Math.max.apply(
-            null,
-            this.members().map((actor) => actor.level)
-        );
+        return Math.max(...this.members().map((actor) => actor.level));
     }
 
     addActor(actorId) {

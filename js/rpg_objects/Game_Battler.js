@@ -300,11 +300,7 @@ export class Game_Battler extends Game_BattlerBase {
     }
 
     makeSpeed() {
-        this._speed =
-            Math.min.apply(
-                null,
-                this._actions.map((action) => action.speed())
-            ) || 0;
+        this._speed = Math.min(...this._actions.map((action) => action.speed())) || 0;
     }
 
     currentAction() {

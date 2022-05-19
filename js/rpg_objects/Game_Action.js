@@ -530,10 +530,7 @@ export class Game_Action {
 
     elementsMaxRate(target, elements) {
         if (elements.length > 0) {
-            return Math.max.apply(
-                null,
-                elements.map((elementId) => target.elementRate(elementId), this)
-            );
+            return Math.max(...elements.map((elementId) => target.elementRate(elementId), this));
         } else {
             return 1;
         }
