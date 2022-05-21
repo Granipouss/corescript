@@ -1,28 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+type Circular = [string, any, any];
+type Registry = Record<string, any>;
+
 /**
  * The static class that handles JSON with object information.
  */
 export const JsonEx = new (class JsonEx {
     /**
      * The maximum depth of objects.
-     *
-     * @type Number
      * @default 100
      */
     maxDepth = 100;
 
-    _id = 1;
-    _generateId() {
+    private _id = 1;
+    private _generateId() {
         return this._id++;
     }
 
     /**
      * Converts an object to a JSON string with object information.
-     *
-     * @param {Object} object The object to be converted
-     * @return {String} The JSON string
      */
-    stringify(object) {
-        const circular = [];
+    stringify(object: unknown): string {
+        const circular: Circular[] = [];
         this._id = 1;
         const json = JSON.stringify(this._encode(object, circular, 0));
         this._cleanMetadata(object);
@@ -31,7 +31,7 @@ export const JsonEx = new (class JsonEx {
         return json;
     }
 
-    _restoreCircularReference(circulars) {
+    private _restoreCircularReference(circulars: Circular[]): void {
         circulars.forEach((circular) => {
             const key = circular[0];
             const value = circular[1];
@@ -43,13 +43,10 @@ export const JsonEx = new (class JsonEx {
 
     /**
      * Parses a JSON string and reconstructs the corresponding object.
-     *
-     * @param {String} json The JSON string
-     * @return {any} The reconstructed object
      */
-    parse(json) {
-        const circular = [];
-        const registry = {};
+    parse(json: string): any {
+        const circular: Circular[] = [];
+        const registry: Registry = {};
         const contents = this._decode(JSON.parse(json), circular, registry);
         this._cleanMetadata(contents);
         this._linkCircularReference(contents, circular, registry);
@@ -57,7 +54,7 @@ export const JsonEx = new (class JsonEx {
         return contents;
     }
 
-    _linkCircularReference(contents, circulars, registry) {
+    private _linkCircularReference(contents: any, circulars: Circular[], registry: Registry): void {
         circulars.forEach((circular) => {
             const key = circular[0];
             const value = circular[1];
@@ -67,7 +64,7 @@ export const JsonEx = new (class JsonEx {
         });
     }
 
-    _cleanMetadata(object) {
+    private _cleanMetadata(object: any): void {
         if (!object) return;
 
         delete object['@'];
@@ -85,23 +82,12 @@ export const JsonEx = new (class JsonEx {
 
     /**
      * Makes a deep copy of the specified object.
-     *
-     * @param {Object} object The object to be copied
-     * @return {Object} The copied object
      */
-    makeDeepCopy(object) {
+    makeDeepCopy<T>(object: T): T {
         return this.parse(this.stringify(object));
     }
 
-    /**
-     * @param {Object} value
-     * @param {Array} circular
-     * @param {Number} depth
-     * @return {Object}
-     * @private
-     */
-    _encode(value, circular, depth) {
-        depth = depth || 0;
+    private _encode(value: any, circular: Circular[], depth = 0): object {
         if (++depth >= this.maxDepth) {
             throw new Error('Object too deep');
         }
@@ -142,14 +128,7 @@ export const JsonEx = new (class JsonEx {
         return value;
     }
 
-    /**
-     * @param {Object} value
-     * @param {Array} circular
-     * @param {Object} registry
-     * @return {Object}
-     * @private
-     */
-    _decode(value, circular, registry) {
+    private _decode(value: any, circular: Circular[], registry: Registry): any {
         const type = Object.prototype.toString.call(value);
         if (type === '[object Object]' || type === '[object Array]') {
             registry[value['@c']] = value;
@@ -157,7 +136,7 @@ export const JsonEx = new (class JsonEx {
             if (value['@'] === null) {
                 value = this._resetPrototype(value, null);
             } else if (value['@']) {
-                const constructor = window[value['@']];
+                const constructor = window[value['@']] as any;
                 if (constructor) {
                     value = this._resetPrototype(value, constructor.prototype);
                 }
@@ -181,12 +160,7 @@ export const JsonEx = new (class JsonEx {
         return value;
     }
 
-    /**
-     * @param {Object} value
-     * @return {String}
-     * @private
-     */
-    _getConstructorName(value) {
+    private _getConstructorName(value: any): string {
         if (!value.constructor) {
             return null;
         }
@@ -198,13 +172,7 @@ export const JsonEx = new (class JsonEx {
         return name;
     }
 
-    /**
-     * @param {Object} value
-     * @param {Object} prototype
-     * @return {Object}
-     * @private
-     */
-    _resetPrototype(value, prototype) {
+    private _resetPrototype(value: any, prototype: any): any {
         if (Object.setPrototypeOf !== undefined) {
             Object.setPrototypeOf(value, prototype);
         } else if ('__proto__' in value) {
