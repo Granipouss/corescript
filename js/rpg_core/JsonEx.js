@@ -45,7 +45,7 @@ export const JsonEx = new (class JsonEx {
      * Parses a JSON string and reconstructs the corresponding object.
      *
      * @param {String} json The JSON string
-     * @return {Object} The reconstructed object
+     * @return {any} The reconstructed object
      */
     parse(json) {
         const circular = [];

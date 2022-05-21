@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ResourceHandler } from '../rpg_core/ResourceHandler';
 import { JsonEx } from '../rpg_core/JsonEx';
 import { Utils } from '../rpg_core/Utils';
 import { Decrypter } from '../rpg_core/Decrypter';
 import { Graphics } from '../rpg_core/Graphics';
 
-import { SceneManager } from '../rpg_managers/SceneManager';
-import { BattleManager } from '../rpg_managers/BattleManager';
-import { ImageManager } from '../rpg_managers/ImageManager';
+import { SceneManager } from './SceneManager';
+import { BattleManager } from './BattleManager';
+import { ImageManager } from './ImageManager';
 
 import { Game_Temp } from '../rpg_objects/Game_Temp';
 import { Game_System } from '../rpg_objects/Game_System';
@@ -24,47 +25,95 @@ import { Game_Player } from '../rpg_objects/Game_Player';
 
 import { Scene_Boot } from '../rpg_scenes/Scene_Boot';
 import { StorageManager } from './StorageManager';
+import { Skill } from '../rpg_data/skill';
+import { Item } from '../rpg_data/item';
+import { Weapon } from '../rpg_data/weapon';
+import { Armor } from '../rpg_data/armor';
 
-global.$dataActors = null;
-global.$dataClasses = null;
-global.$dataSkills = null;
-global.$dataItems = null;
-global.$dataWeapons = null;
-global.$dataArmors = null;
-global.$dataEnemies = null;
-global.$dataTroops = null;
-global.$dataStates = null;
-global.$dataAnimations = null;
-global.$dataTilesets = null;
-global.$dataCommonEvents = null;
-global.$dataSystem = null;
-global.$dataMapInfos = null;
-global.$dataMap = null;
-global.$gameTemp = null;
-global.$gameSystem = null;
-global.$gameScreen = null;
-global.$gameTimer = null;
-global.$gameMessage = null;
-global.$gameSwitches = null;
-global.$gameVariables = null;
-global.$gameSelfSwitches = null;
-global.$gameActors = null;
-global.$gameParty = null;
-global.$gameTroop = null;
-global.$gameMap = null;
-global.$gamePlayer = null;
-global.$testEvent = null;
+window.$dataActors = null;
+window.$dataClasses = null;
+window.$dataSkills = null;
+window.$dataItems = null;
+window.$dataWeapons = null;
+window.$dataArmors = null;
+window.$dataEnemies = null;
+window.$dataTroops = null;
+window.$dataStates = null;
+window.$dataAnimations = null;
+window.$dataTilesets = null;
+window.$dataCommonEvents = null;
+window.$dataSystem = null;
+window.$dataMapInfos = null;
+window.$dataMap = null;
+
+window.$gameTemp = null;
+window.$gameSystem = null;
+window.$gameScreen = null;
+window.$gameTimer = null;
+window.$gameMessage = null;
+window.$gameSwitches = null;
+window.$gameVariables = null;
+window.$gameSelfSwitches = null;
+window.$gameActors = null;
+window.$gameParty = null;
+window.$gameTroop = null;
+window.$gameMap = null;
+window.$gamePlayer = null;
+
+window.$testEvent = null;
+
+type SaveInfo = {
+    globalId: string;
+    title: string;
+    characters: string[][];
+    faces: string[][];
+    playtime: string;
+    timestamp: number;
+};
+
+type SaveContent = {
+    readonly system: Game_System;
+    readonly screen: Game_Screen;
+    readonly timer: Game_Timer;
+    readonly switches: Game_Switches;
+    readonly variables: Game_Variables;
+    readonly selfSwitches: Game_SelfSwitches;
+    readonly actors: Game_Actors;
+    readonly party: Game_Party;
+    readonly map: Game_Map;
+    readonly player: Game_Player;
+};
+
+type DatabaseEntry =
+    | '$dataActors'
+    | '$dataClasses'
+    | '$dataSkills'
+    | '$dataItems'
+    | '$dataWeapons'
+    | '$dataArmors'
+    | '$dataEnemies'
+    | '$dataTroops'
+    | '$dataStates'
+    | '$dataAnimations'
+    | '$dataTilesets'
+    | '$dataCommonEvents'
+    | '$dataSystem'
+    | '$dataMapInfos'
+    | '$dataMap'
+    | '$testEvent';
 
 /**
  * The static class that manages the database and game objects.
  */
 export const DataManager = new (class DataManager {
-    _globalId = 'RPGMV';
-    _lastAccessedId = 1;
-    _errorUrl = null;
-    _autoSaveFileId = 0;
+    private readonly _globalId = 'RPGMV';
+    private _lastAccessedId = 1;
+    private _errorUrl: string = null;
+    private _autoSaveFileId = 0;
+    private _mapLoader?: () => void;
+    private _globalInfo?: SaveInfo[];
 
-    _databaseFiles = [
+    private readonly _databaseFiles: { name: DatabaseEntry; src: string }[] = [
         { name: '$dataActors', src: 'Actors.json' },
         { name: '$dataClasses', src: 'Classes.json' },
         { name: '$dataSkills', src: 'Skills.json' },
@@ -81,7 +130,7 @@ export const DataManager = new (class DataManager {
         { name: '$dataMapInfos', src: 'MapInfos.json' },
     ];
 
-    loadDatabase() {
+    loadDatabase(): void {
         const test = this.isBattleTest() || this.isEventTest();
         const prefix = test ? 'Test_' : '';
         for (let i = 0; i < this._databaseFiles.length; i++) {
@@ -94,7 +143,7 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    loadDataFile(name, src) {
+    loadDataFile(name: DatabaseEntry, src: string): void {
         const xhr = new XMLHttpRequest();
         const url = 'data/' + src;
         xhr.open('GET', url);
@@ -114,7 +163,7 @@ export const DataManager = new (class DataManager {
         xhr.send();
     }
 
-    isDatabaseLoaded() {
+    isDatabaseLoaded(): boolean {
         this.checkError();
         for (let i = 0; i < this._databaseFiles.length; i++) {
             if (!window[this._databaseFiles[i].name]) {
@@ -124,9 +173,9 @@ export const DataManager = new (class DataManager {
         return true;
     }
 
-    loadMapData(mapId) {
+    loadMapData(mapId: number): void {
         if (mapId > 0) {
-            const filename = 'Map%1.json'.format(mapId.padZero(3));
+            const filename = `Map${String(mapId).padStart(3, '0')}.json`;
             this._mapLoader = ResourceHandler.createLoader(
                 'data/' + filename,
                 this.loadDataFile.bind(this, '$dataMap', filename)
@@ -137,23 +186,24 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    makeEmptyMap() {
-        global.$dataMap = {};
-        global.$dataMap.data = [];
-        global.$dataMap.events = [];
-        global.$dataMap.width = 100;
-        global.$dataMap.height = 100;
-        global.$dataMap.scrollType = 3;
+    makeEmptyMap(): void {
+        window.$dataMap = {
+            data: [],
+            events: [],
+            width: 100,
+            height: 100,
+            scrollType: 3,
+        } as any;
     }
 
-    isMapLoaded() {
+    isMapLoaded(): boolean {
         this.checkError();
-        return !!global.$dataMap;
+        return !!window.$dataMap;
     }
 
-    onLoad(object) {
+    onLoad(object: any): void {
         let array;
-        if (object === global.$dataMap) {
+        if (object === window.$dataMap) {
             this.extractMetadata(object);
             array = object.events;
         } else {
@@ -167,14 +217,14 @@ export const DataManager = new (class DataManager {
                 }
             }
         }
-        if (object === global.$dataSystem) {
+        if (object === window.$dataSystem) {
             Decrypter.hasEncryptedImages = !!object.hasEncryptedImages;
             Decrypter.hasEncryptedAudio = !!object.hasEncryptedAudio;
             Scene_Boot.loadSystemImages();
         }
     }
 
-    extractMetadata(data) {
+    extractMetadata(data: any): void {
         const re = /<([^<>:]+)(:?)([^>]*)>/g;
         data.meta = {};
         for (;;) {
@@ -191,82 +241,82 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    checkError() {
+    checkError(): void {
         if (this._errorUrl) {
             throw new Error('Failed to load: ' + this._errorUrl);
         }
     }
 
-    isBattleTest() {
+    isBattleTest(): boolean {
         return Utils.isOptionValid('btest');
     }
 
-    isEventTest() {
+    isEventTest(): boolean {
         return Utils.isOptionValid('etest');
     }
 
-    isSkill(item) {
-        return item && global.$dataSkills.contains(item);
+    isSkill(item: unknown): item is Skill {
+        return item && window.$dataSkills.includes(item as Skill);
     }
 
-    isItem(item) {
-        return item && global.$dataItems.contains(item);
+    isItem(item: unknown): item is Item {
+        return item && window.$dataItems.includes(item as Item);
     }
 
-    isWeapon(item) {
-        return item && global.$dataWeapons.contains(item);
+    isWeapon(item: unknown): item is Weapon {
+        return item && window.$dataWeapons.includes(item as Weapon);
     }
 
-    isArmor(item) {
-        return item && global.$dataArmors.contains(item);
+    isArmor(item: unknown): item is Armor {
+        return item && window.$dataArmors.includes(item as Armor);
     }
 
-    createGameObjects() {
-        global.$gameTemp = new Game_Temp();
-        global.$gameSystem = new Game_System();
-        global.$gameScreen = new Game_Screen();
-        global.$gameTimer = new Game_Timer();
-        global.$gameMessage = new Game_Message();
-        global.$gameSwitches = new Game_Switches();
-        global.$gameVariables = new Game_Variables();
-        global.$gameSelfSwitches = new Game_SelfSwitches();
-        global.$gameActors = new Game_Actors();
-        global.$gameParty = new Game_Party();
-        global.$gameTroop = new Game_Troop();
-        global.$gameMap = new Game_Map();
-        global.$gamePlayer = new Game_Player();
+    createGameObjects(): void {
+        window.$gameTemp = new Game_Temp();
+        window.$gameSystem = new Game_System();
+        window.$gameScreen = new Game_Screen();
+        window.$gameTimer = new Game_Timer();
+        window.$gameMessage = new Game_Message();
+        window.$gameSwitches = new Game_Switches();
+        window.$gameVariables = new Game_Variables();
+        window.$gameSelfSwitches = new Game_SelfSwitches();
+        window.$gameActors = new Game_Actors();
+        window.$gameParty = new Game_Party();
+        window.$gameTroop = new Game_Troop();
+        window.$gameMap = new Game_Map();
+        window.$gamePlayer = new Game_Player();
     }
 
-    setupNewGame() {
+    setupNewGame(): void {
         this.createGameObjects();
         this.selectSavefileForNewGame();
-        global.$gameParty.setupStartingMembers();
-        global.$gamePlayer.reserveTransfer(
-            global.$dataSystem.startMapId,
-            global.$dataSystem.startX,
-            global.$dataSystem.startY
+        window.$gameParty.setupStartingMembers();
+        window.$gamePlayer.reserveTransfer(
+            window.$dataSystem.startMapId,
+            window.$dataSystem.startX,
+            window.$dataSystem.startY
         );
         Graphics.frameCount = 0;
         SceneManager.resetFrameCount();
     }
 
-    setupBattleTest() {
+    setupBattleTest(): void {
         this.createGameObjects();
-        global.$gameParty.setupBattleTest();
-        BattleManager.setup(global.$dataSystem.testTroopId, true, false);
+        window.$gameParty.setupBattleTest();
+        BattleManager.setup(window.$dataSystem.testTroopId, true, false);
         BattleManager.setBattleTest(true);
         BattleManager.playBattleBgm();
     }
 
-    setupEventTest() {
+    setupEventTest(): void {
         this.createGameObjects();
         this.selectSavefileForNewGame();
-        global.$gameParty.setupStartingMembers();
-        global.$gamePlayer.reserveTransfer(-1, 8, 6);
-        global.$gamePlayer.setTransparent(false);
+        window.$gameParty.setupStartingMembers();
+        window.$gamePlayer.reserveTransfer(-1, 8, 6);
+        window.$gamePlayer.setTransparent(false);
     }
 
-    loadGlobalInfo() {
+    loadGlobalInfo(): SaveInfo[] {
         if (this._globalInfo) {
             return this._globalInfo;
         }
@@ -290,26 +340,26 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    saveGlobalInfo(info) {
+    saveGlobalInfo(info: readonly SaveInfo[]): void {
         this._globalInfo = null;
         StorageManager.save(0, JSON.stringify(info));
     }
 
-    isThisGameFile(savefileId) {
+    isThisGameFile(savefileId: number): boolean {
         const globalInfo = this.loadGlobalInfo();
         if (globalInfo && globalInfo[savefileId]) {
             if (StorageManager.isLocalMode()) {
                 return true;
             } else {
                 const savefile = globalInfo[savefileId];
-                return savefile.globalId === this._globalId && savefile.title === global.$dataSystem.gameTitle;
+                return savefile.globalId === this._globalId && savefile.title === window.$dataSystem.gameTitle;
             }
         } else {
             return false;
         }
     }
 
-    isAnySavefileExists() {
+    isAnySavefileExists(): boolean {
         const globalInfo = this.loadGlobalInfo();
         if (globalInfo) {
             for (let i = 1; i < globalInfo.length; i++) {
@@ -321,7 +371,7 @@ export const DataManager = new (class DataManager {
         return false;
     }
 
-    latestSavefileId() {
+    latestSavefileId(): number {
         const globalInfo = this.loadGlobalInfo();
         let savefileId = 1;
         let timestamp = 0;
@@ -336,7 +386,7 @@ export const DataManager = new (class DataManager {
         return savefileId;
     }
 
-    loadAllSavefileImages() {
+    loadAllSavefileImages(): void {
         const globalInfo = this.loadGlobalInfo();
         if (globalInfo) {
             for (let i = 1; i < globalInfo.length; i++) {
@@ -348,7 +398,7 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    loadSavefileImages(info) {
+    loadSavefileImages(info: SaveInfo): void {
         if (info.characters) {
             for (let i = 0; i < info.characters.length; i++) {
                 ImageManager.reserveCharacter(info.characters[i][0]);
@@ -361,11 +411,11 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    maxSavefiles() {
+    maxSavefiles(): number {
         return 20;
     }
 
-    saveGame(savefileId) {
+    saveGame(savefileId: number): boolean {
         try {
             StorageManager.backup(savefileId);
             return this.saveGameWithoutRescue(savefileId);
@@ -381,7 +431,7 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    loadGame(savefileId) {
+    loadGame(savefileId: number): boolean {
         try {
             return this.loadGameWithoutRescue(savefileId);
         } catch (e) {
@@ -390,16 +440,16 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    loadSavefileInfo(savefileId) {
+    loadSavefileInfo(savefileId: number) {
         const globalInfo = this.loadGlobalInfo();
         return globalInfo && globalInfo[savefileId] ? globalInfo[savefileId] : null;
     }
 
-    lastAccessedSavefileId() {
+    lastAccessedSavefileId(): number {
         return this._lastAccessedId;
     }
 
-    saveGameWithoutRescue(savefileId) {
+    saveGameWithoutRescue(savefileId: number): boolean {
         const json = JsonEx.stringify(this.makeSaveContents());
         if (json.length >= 200000) {
             console.warn('Save data too big!');
@@ -412,7 +462,7 @@ export const DataManager = new (class DataManager {
         return true;
     }
 
-    loadGameWithoutRescue(savefileId) {
+    loadGameWithoutRescue(savefileId: number): boolean {
         if (this.isThisGameFile(savefileId)) {
             const json = StorageManager.load(savefileId);
             this.createGameObjects();
@@ -424,7 +474,7 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    selectSavefileForNewGame() {
+    selectSavefileForNewGame(): void {
         const globalInfo = this.loadGlobalInfo();
         this._lastAccessedId = 1;
         if (globalInfo) {
@@ -447,57 +497,57 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    makeSavefileInfo() {
-        const info = {};
-        info.globalId = this._globalId;
-        info.title = global.$dataSystem.gameTitle;
-        info.characters = global.$gameParty.charactersForSavefile();
-        info.faces = global.$gameParty.facesForSavefile();
-        info.playtime = global.$gameSystem.playtimeText();
-        info.timestamp = Date.now();
-        return info;
+    makeSavefileInfo(): SaveInfo {
+        return {
+            globalId: this._globalId,
+            title: window.$dataSystem.gameTitle,
+            characters: window.$gameParty.charactersForSavefile(),
+            faces: window.$gameParty.facesForSavefile(),
+            playtime: window.$gameSystem.playtimeText(),
+            timestamp: Date.now(),
+        };
     }
 
-    makeSaveContents() {
-        // A save data does not contain global.$gameTemp, global.$gameMessage, and global.$gameTroop.
-        const contents = {};
-        contents.system = global.$gameSystem;
-        contents.screen = global.$gameScreen;
-        contents.timer = global.$gameTimer;
-        contents.switches = global.$gameSwitches;
-        contents.variables = global.$gameVariables;
-        contents.selfSwitches = global.$gameSelfSwitches;
-        contents.actors = global.$gameActors;
-        contents.party = global.$gameParty;
-        contents.map = global.$gameMap;
-        contents.player = global.$gamePlayer;
-        return contents;
+    makeSaveContents(): SaveContent {
+        // A save data does not contain window.$gameTemp, window.$gameMessage, and window.$gameTroop.
+        return {
+            system: window.$gameSystem,
+            screen: window.$gameScreen,
+            timer: window.$gameTimer,
+            switches: window.$gameSwitches,
+            variables: window.$gameVariables,
+            selfSwitches: window.$gameSelfSwitches,
+            actors: window.$gameActors,
+            party: window.$gameParty,
+            map: window.$gameMap,
+            player: window.$gamePlayer,
+        };
     }
 
-    extractSaveContents(contents) {
-        global.$gameSystem = contents.system;
-        global.$gameScreen = contents.screen;
-        global.$gameTimer = contents.timer;
-        global.$gameSwitches = contents.switches;
-        global.$gameVariables = contents.variables;
-        global.$gameSelfSwitches = contents.selfSwitches;
-        global.$gameActors = contents.actors;
-        global.$gameParty = contents.party;
-        global.$gameMap = contents.map;
-        global.$gamePlayer = contents.player;
+    extractSaveContents(contents: SaveContent) {
+        window.$gameSystem = contents.system;
+        window.$gameScreen = contents.screen;
+        window.$gameTimer = contents.timer;
+        window.$gameSwitches = contents.switches;
+        window.$gameVariables = contents.variables;
+        window.$gameSelfSwitches = contents.selfSwitches;
+        window.$gameActors = contents.actors;
+        window.$gameParty = contents.party;
+        window.$gameMap = contents.map;
+        window.$gamePlayer = contents.player;
     }
 
-    setAutoSaveFileId(autoSaveFileId) {
+    setAutoSaveFileId(autoSaveFileId: number): void {
         this._autoSaveFileId = autoSaveFileId;
     }
 
-    isAutoSaveFileId(saveFileId) {
+    isAutoSaveFileId(saveFileId: number): boolean {
         return this._autoSaveFileId !== 0 && this._autoSaveFileId === saveFileId;
     }
 
     autoSaveGame() {
-        if (this._autoSaveFileId !== 0 && !this.isEventTest() && global.$gameSystem.isSaveEnabled()) {
-            global.$gameSystem.onBeforeSave();
+        if (this._autoSaveFileId !== 0 && !this.isEventTest() && window.$gameSystem.isSaveEnabled()) {
+            window.$gameSystem.onBeforeSave();
             if (this.saveGame(this._autoSaveFileId)) {
                 StorageManager.cleanBackup(this._autoSaveFileId);
             }
