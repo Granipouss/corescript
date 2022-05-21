@@ -3,21 +3,23 @@ import { CacheEntry } from './CacheEntry';
 /**
  * Cache for images, audio, or any other kind of resource
  */
-export class CacheMap {
-    constructor(manager) {
-        this.manager = manager;
-        this._inner = {};
-        this._lastRemovedEntries = {};
-        this.updateTicks = 0;
-        this.lastCheckTTL = 0;
-        this.delayCheckTTL = 100.0;
-        this.updateSeconds = Date.now();
-    }
+export class CacheMap<T> {
+    constructor(
+        readonly manager: unknown //
+    ) {}
+
+    _inner: Record<string, CacheEntry<T>> = {};
+    _lastRemovedEntries: CacheEntry<T>[] = [];
+
+    updateTicks = 0;
+    lastCheckTTL = 0;
+    delayCheckTTL = 100.0;
+    updateSeconds = Date.now();
 
     /**
      * checks ttl of all elements and removes dead ones
      */
-    checkTTL() {
+    checkTTL(): void {
         const cache = this._inner;
         let temp = this._lastRemovedEntries;
         if (!temp) {
@@ -39,9 +41,8 @@ export class CacheMap {
     /**
      * cache item
      * @param key url of cache element
-     * @returns {*|null}
      */
-    getItem(key) {
+    getItem(key: string): T | null {
         const entry = this._inner[key];
         if (entry) {
             return entry.item;
@@ -49,18 +50,18 @@ export class CacheMap {
         return null;
     }
 
-    clear() {
+    clear(): void {
         const keys = Object.keys(this._inner);
         for (let i = 0; i < keys.length; i++) {
             this._inner[keys[i]].free();
         }
     }
 
-    setItem(key, item) {
+    setItem(key: string, item: T): CacheEntry<T> {
         return new CacheEntry(this, key, item).allocate();
     }
 
-    update(ticks, delta) {
+    update(ticks: number, delta: number): void {
         this.updateTicks += ticks;
         this.updateSeconds += delta;
         if (this.updateSeconds >= this.delayCheckTTL + this.lastCheckTTL) {

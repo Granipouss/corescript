@@ -1,30 +1,27 @@
+import type { CacheMap } from './CacheMap';
+
 /**
  * The resource class. Allows to be collected as a garbage if not use for some time or ticks
- *
- * @class CacheEntry
- * @constructor
- * @param {ResourceManager} resource manager
- * @param {string} key, url of the resource
- * @param {string} item - Bitmap, HTML5Audio, WebAudio - whatever you want to store in the cache
  */
-export class CacheEntry {
-    constructor(cache, key, item) {
-        this.cache = cache;
-        this.key = key;
-        this.item = item;
-        this.cached = false;
-        this.touchTicks = 0;
-        this.touchSeconds = 0;
-        this.ttlTicks = 0;
-        this.ttlSeconds = 0;
-        this.freedByTTL = false;
-    }
+export class CacheEntry<T> {
+    constructor(
+        readonly cache: CacheMap<T>, //
+        readonly key: string,
+        readonly item: T
+    ) {}
+
+    cached = false;
+    touchTicks = 0;
+    touchSeconds = 0;
+    ttlTicks = 0;
+    ttlSeconds = 0;
+    freedByTTL = false;
 
     /**
      * frees the resource
      */
-    free(byTTL) {
-        this.freedByTTL = byTTL || false;
+    free(byTTL = false) {
+        this.freedByTTL = byTTL;
         if (this.cached) {
             this.cached = false;
             delete this.cache._inner[this.key];
@@ -33,9 +30,8 @@ export class CacheEntry {
 
     /**
      * Allocates the resource
-     * @returns {CacheEntry}
      */
-    allocate() {
+    allocate(): this {
         if (!this.cached) {
             this.cache._inner[this.key] = this;
             this.cached = true;
@@ -46,17 +42,16 @@ export class CacheEntry {
 
     /**
      * Sets the time to live
-     * @param {number} ticks TTL in ticks, 0 if not set
-     * @param {number} time TTL in seconds, 0 if not set
-     * @returns {CacheEntry}
+     * @param ticks TTL in ticks, 0 if not set
+     * @param seconds TTL in seconds, 0 if not set
      */
-    setTimeToLive(ticks, seconds) {
-        this.ttlTicks = ticks || 0;
-        this.ttlSeconds = seconds || 0;
+    setTimeToLive(ticks = 0, seconds = 0): this {
+        this.ttlTicks = ticks;
+        this.ttlSeconds = seconds;
         return this;
     }
 
-    isStillAlive() {
+    isStillAlive(): boolean {
         const cache = this.cache;
         return (
             (this.ttlTicks == 0 || this.touchTicks + this.ttlTicks < cache.updateTicks) &&
@@ -68,7 +63,7 @@ export class CacheEntry {
      * makes sure that resource wont freed by Time To Live
      * if resource was already freed by TTL, put it in cache again
      */
-    touch() {
+    touch(): void {
         const cache = this.cache;
         if (this.cached) {
             this.touchTicks = cache.updateTicks;

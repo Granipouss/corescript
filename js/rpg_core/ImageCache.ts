@@ -1,11 +1,18 @@
+import type { Bitmap } from './Bitmap';
+
+type Entry = {
+    bitmap: Bitmap;
+    touch: number;
+    key: string;
+    reservationId?: number;
+};
+
 export class ImageCache {
     static limit = 10 * 1000 * 1000;
 
-    constructor() {
-        this._items = {};
-    }
+    private _items: Record<string, Entry> = {};
 
-    add(key, value) {
+    add(key: string, value: Bitmap): void {
         this._items[key] = {
             bitmap: value,
             touch: Date.now(),
@@ -15,7 +22,7 @@ export class ImageCache {
         this._truncateCache();
     }
 
-    get(key) {
+    get(key: string): Bitmap | null {
         if (this._items[key]) {
             const item = this._items[key];
             item.touch = Date.now();
@@ -25,7 +32,7 @@ export class ImageCache {
         return null;
     }
 
-    reserve(key, value, reservationId) {
+    reserve(key: string, value: Bitmap, reservationId: number): void {
         if (!this._items[key]) {
             this._items[key] = {
                 bitmap: value,
@@ -37,7 +44,7 @@ export class ImageCache {
         this._items[key].reservationId = reservationId;
     }
 
-    releaseReservation(reservationId) {
+    releaseReservation(reservationId: number): void {
         const items = this._items;
 
         Object.keys(items)
@@ -49,7 +56,7 @@ export class ImageCache {
             });
     }
 
-    _truncateCache() {
+    private _truncateCache(): void {
         const items = this._items;
         let sizeLeft = ImageCache.limit;
 
@@ -66,7 +73,7 @@ export class ImageCache {
             });
     }
 
-    _mustBeHeld(item) {
+    private _mustBeHeld(item: Entry): boolean {
         // request only is weak so It's purgeable
         if (item.bitmap.isRequestOnly()) return false;
         // reserved item must be held
@@ -77,14 +84,14 @@ export class ImageCache {
         return false;
     }
 
-    isReady() {
+    isReady(): boolean {
         const items = this._items;
         return !Object.keys(items).some((key) => !items[key].bitmap.isRequestOnly() && !items[key].bitmap.isReady());
     }
 
-    getErrorBitmap() {
+    getErrorBitmap(): Bitmap | null {
         const items = this._items;
-        let bitmap = null;
+        let bitmap: Bitmap | null = null;
         if (
             Object.keys(items).some((key) => {
                 if (items[key].bitmap.isError()) {
