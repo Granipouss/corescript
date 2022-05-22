@@ -1,9 +1,37 @@
-import { ResourceHandler } from '../rpg_core/ResourceHandler';
+import { ResourceHandler } from './ResourceHandler';
+
+export type InputKey =
+    | 'tab'
+    | 'ok'
+    | 'shift'
+    | 'control'
+    | 'escape'
+    | 'pageup'
+    | 'pagedown'
+    | 'left'
+    | 'up'
+    | 'right'
+    | 'down'
+    | 'debug'
+    | 'cancel'
+    | 'menu';
+
+type KeyMapper = Record<number, InputKey>;
 
 /**
  * The static class that handles input data from the keyboard and gamepads.
  */
 export const Input = new (class Input {
+    private _currentState: Record<string, boolean>;
+    private _previousState: Record<string, boolean>;
+    private _gamepadStates: unknown[][];
+    private _latestButton?: string;
+    private _pressedTime: number;
+    private _dir4: number;
+    private _dir8: number;
+    private _preferredAxis: string;
+    private _date: number;
+
     /**
      * Initializes the input system.
      */
@@ -14,27 +42,18 @@ export const Input = new (class Input {
 
     /**
      * The wait time of the key repeat in frames.
-     *
-     * @property keyRepeatWait
-     * @type Number
      */
     keyRepeatWait = 24;
 
     /**
      * The interval of the key repeat in frames.
-     *
-     * @property keyRepeatInterval
-     * @type Number
      */
     keyRepeatInterval = 6;
 
     /**
      * A hash table to convert from a virtual key code to a mapped key name.
-     *
-     * @property keyMapper
-     * @type Object
      */
-    keyMapper = {
+    readonly keyMapper: KeyMapper = {
         9: 'tab', // tab
         13: 'ok', // enter
         16: 'shift', // shift
@@ -63,11 +82,8 @@ export const Input = new (class Input {
 
     /**
      * A hash table to convert from a gamepad button to a mapped key name.
-     *
-     * @property gamepadMapper
-     * @type Object
      */
-    gamepadMapper = {
+    readonly gamepadMapper: KeyMapper = {
         0: 'ok', // A
         1: 'cancel', // B
         2: 'shift', // X
@@ -83,7 +99,7 @@ export const Input = new (class Input {
     /**
      * Clears all the input data.
      */
-    clear() {
+    clear(): void {
         this._currentState = {};
         this._previousState = {};
         this._gamepadStates = [];
@@ -98,7 +114,7 @@ export const Input = new (class Input {
     /**
      * Updates the input data.
      */
-    update() {
+    update(): void {
         this._pollGamepads();
         if (this._currentState[this._latestButton]) {
             this._pressedTime++;
@@ -118,11 +134,8 @@ export const Input = new (class Input {
 
     /**
      * Checks whether a key is currently pressed down.
-     *
-     * @param {String} keyName The mapped name of the key
-     * @return {Boolean} True if the key is pressed
      */
-    isPressed(keyName) {
+    isPressed(keyName: InputKey): boolean {
         if (this._isEscapeCompatible(keyName) && this.isPressed('escape')) {
             return true;
         } else {
@@ -132,11 +145,8 @@ export const Input = new (class Input {
 
     /**
      * Checks whether a key is just pressed.
-     *
-     * @param {String} keyName The mapped name of the key
-     * @return {Boolean} True if the key is triggered
      */
-    isTriggered(keyName) {
+    isTriggered(keyName: InputKey): boolean {
         if (this._isEscapeCompatible(keyName) && this.isTriggered('escape')) {
             return true;
         } else {
@@ -146,11 +156,8 @@ export const Input = new (class Input {
 
     /**
      * Checks whether a key is just pressed or a key repeat occurred.
-     *
-     * @param {String} keyName The mapped name of the key
-     * @return {Boolean} True if the key is repeated
      */
-    isRepeated(keyName) {
+    isRepeated(keyName: InputKey): boolean {
         if (this._isEscapeCompatible(keyName) && this.isRepeated('escape')) {
             return true;
         } else {
@@ -164,11 +171,8 @@ export const Input = new (class Input {
 
     /**
      * Checks whether a key is kept depressed.
-     *
-     * @param {String} keyName The mapped name of the key
-     * @return {Boolean} True if the key is long-pressed
      */
-    isLongPressed(keyName) {
+    isLongPressed(keyName: InputKey): boolean {
         if (this._isEscapeCompatible(keyName) && this.isLongPressed('escape')) {
             return true;
         } else {
@@ -178,48 +182,32 @@ export const Input = new (class Input {
 
     /**
      * [read-only] The four direction value as a number of the numpad, or 0 for neutral.
-     *
-     * @property dir4
-     * @type Number
      */
-    get dir4() {
+    get dir4(): number {
         return this._dir4;
     }
 
     /**
      * [read-only] The eight direction value as a number of the numpad, or 0 for neutral.
-     *
-     * @property dir8
-     * @type Number
      */
-    get dir8() {
+    get dir8(): number {
         return this._dir8;
     }
 
     /**
      * [read-only] The time of the last input in milliseconds.
-     *
-     * @property date
-     * @type Number
      */
-    get date() {
+    get date(): number {
         return this._date;
     }
 
-    /**
-     * @private
-     */
-    _setupEventHandlers() {
+    private _setupEventHandlers(): void {
         document.addEventListener('keydown', this._onKeyDown.bind(this));
         document.addEventListener('keyup', this._onKeyUp.bind(this));
         window.addEventListener('blur', this._onLostFocus.bind(this));
     }
 
-    /**
-     * @param {KeyboardEvent} event
-     * @private
-     */
-    _onKeyDown(event) {
+    private _onKeyDown(event: KeyboardEvent): void {
         if (this._shouldPreventDefault(event.keyCode)) {
             event.preventDefault();
         }
@@ -235,11 +223,7 @@ export const Input = new (class Input {
         }
     }
 
-    /**
-     * @param {Number} keyCode
-     * @private
-     */
-    _shouldPreventDefault(keyCode) {
+    private _shouldPreventDefault(keyCode: number): boolean {
         switch (keyCode) {
             case 8: // backspace
             case 33: // pageup
@@ -257,7 +241,7 @@ export const Input = new (class Input {
      * @param {KeyboardEvent} event
      * @private
      */
-    _onKeyUp(event) {
+    _onKeyUp(event: KeyboardEvent) {
         const buttonName = this.keyMapper[event.keyCode];
         if (buttonName) {
             this._currentState[buttonName] = false;
@@ -297,7 +281,7 @@ export const Input = new (class Input {
      * @param {Number} index
      * @private
      */
-    _updateGamepadState(gamepad) {
+    _updateGamepadState(gamepad: Gamepad) {
         const lastState = this._gamepadStates[gamepad.index] || [];
         const newState = [];
         const buttons = gamepad.buttons;
@@ -331,10 +315,7 @@ export const Input = new (class Input {
         this._gamepadStates[gamepad.index] = newState;
     }
 
-    /**
-     * @private
-     */
-    _updateDirection() {
+    private _updateDirection(): void {
         let x = this._signX();
         let y = this._signY();
 
@@ -355,10 +336,7 @@ export const Input = new (class Input {
         this._dir4 = this._makeNumpadDirection(x, y);
     }
 
-    /**
-     * @private
-     */
-    _signX() {
+    private _signX(): number {
         let x = 0;
 
         if (this.isPressed('left')) {
@@ -370,10 +348,7 @@ export const Input = new (class Input {
         return x;
     }
 
-    /**
-     * @private
-     */
-    _signY() {
+    private _signY(): number {
         let y = 0;
 
         if (this.isPressed('up')) {
@@ -385,25 +360,14 @@ export const Input = new (class Input {
         return y;
     }
 
-    /**
-     * @param {Number} x
-     * @param {Number} y
-     * @return {Number}
-     * @private
-     */
-    _makeNumpadDirection(x, y) {
+    private _makeNumpadDirection(x: number, y: number): number {
         if (x !== 0 || y !== 0) {
             return 5 - y * 3 + x;
         }
         return 0;
     }
 
-    /**
-     * @param {String} keyName
-     * @return {Boolean}
-     * @private
-     */
-    _isEscapeCompatible(keyName) {
+    private _isEscapeCompatible(keyName: InputKey): boolean {
         return keyName === 'cancel' || keyName === 'menu';
     }
 })();

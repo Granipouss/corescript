@@ -1,10 +1,31 @@
-import { Utils } from '../rpg_core/Utils';
-import { Graphics } from '../rpg_core/Graphics';
+import { Utils } from './Utils';
+import { Graphics } from './Graphics';
 
 /**
  * The static class that handles input data from the mouse and touchscreen.
  */
 export const TouchInput = new (class TouchInput {
+    private _mousePressed: boolean;
+    private _screenPressed: boolean;
+    private _pressedTime: number;
+    private _events: {
+        triggered: boolean;
+        cancelled: boolean;
+        moved: boolean;
+        released: boolean;
+        wheelX: number;
+        wheelY: number;
+    };
+    private _triggered: boolean;
+    private _cancelled: boolean;
+    private _moved: boolean;
+    private _released: boolean;
+    private _wheelX: number;
+    private _wheelY: number;
+    private _x: number;
+    private _y: number;
+    private _date: number;
+
     /**
      * Initializes the touch system.
      */
@@ -15,17 +36,11 @@ export const TouchInput = new (class TouchInput {
 
     /**
      * The wait time of the pseudo key repeat in frames.
-     *
-     * @property keyRepeatWait
-     * @type Number
      */
     keyRepeatWait = 24;
 
     /**
      * The interval of the pseudo key repeat in frames.
-     *
-     * @property keyRepeatInterval
-     * @type Number
      */
     keyRepeatInterval = 6;
 
@@ -36,13 +51,14 @@ export const TouchInput = new (class TouchInput {
         this._mousePressed = false;
         this._screenPressed = false;
         this._pressedTime = 0;
-        this._events = {};
-        this._events.triggered = false;
-        this._events.cancelled = false;
-        this._events.moved = false;
-        this._events.released = false;
-        this._events.wheelX = 0;
-        this._events.wheelY = 0;
+        this._events = {
+            triggered: false,
+            cancelled: false,
+            moved: false,
+            released: false,
+            wheelX: 0,
+            wheelY: 0,
+        };
         this._triggered = false;
         this._cancelled = false;
         this._moved = false;
@@ -77,32 +93,23 @@ export const TouchInput = new (class TouchInput {
 
     /**
      * Checks whether the mouse button or touchscreen is currently pressed down.
-     *
-     * @method isPressed
-     * @return {Boolean} True if the mouse button or touchscreen is pressed
      */
-    isPressed() {
+    isPressed(): boolean {
         return this._mousePressed || this._screenPressed;
     }
 
     /**
      * Checks whether the left mouse button or touchscreen is just pressed.
-     *
-     * @method isTriggered
-     * @return {Boolean} True if the mouse button or touchscreen is triggered
      */
-    isTriggered() {
+    isTriggered(): boolean {
         return this._triggered;
     }
 
     /**
      * Checks whether the left mouse button or touchscreen is just pressed
      * or a pseudo key repeat occurred.
-     *
-     * @method isRepeated
-     * @return {Boolean} True if the mouse button or touchscreen is repeated
      */
-    isRepeated() {
+    isRepeated(): boolean {
         return (
             this.isPressed() &&
             (this._triggered ||
@@ -112,98 +119,68 @@ export const TouchInput = new (class TouchInput {
 
     /**
      * Checks whether the left mouse button or touchscreen is kept depressed.
-     *
-     * @method isLongPressed
-     * @return {Boolean} True if the left mouse button or touchscreen is long-pressed
      */
-    isLongPressed() {
+    isLongPressed(): boolean {
         return this.isPressed() && this._pressedTime >= this.keyRepeatWait;
     }
 
     /**
      * Checks whether the right mouse button is just pressed.
-     *
-     * @method isCancelled
-     * @return {Boolean} True if the right mouse button is just pressed
      */
-    isCancelled() {
+    isCancelled(): boolean {
         return this._cancelled;
     }
 
     /**
      * Checks whether the mouse or a finger on the touchscreen is moved.
-     *
-     * @method isMoved
-     * @return {Boolean} True if the mouse or a finger on the touchscreen is moved
      */
-    isMoved() {
+    isMoved(): boolean {
         return this._moved;
     }
 
     /**
      * Checks whether the left mouse button or touchscreen is released.
-     *
-     * @method isReleased
-     * @return {Boolean} True if the mouse button or touchscreen is released
      */
-    isReleased() {
+    isReleased(): boolean {
         return this._released;
     }
 
     /**
      * [read-only] The horizontal scroll amount.
-     *
-     * @property wheelX
-     * @type Number
      */
-    get wheelX() {
+    get wheelX(): number {
         return this._wheelX;
     }
 
     /**
      * [read-only] The vertical scroll amount.
-     *
-     * @property wheelY
-     * @type Number
      */
-    get wheelY() {
+    get wheelY(): number {
         return this._wheelY;
     }
 
     /**
      * [read-only] The x coordinate on the canvas area of the latest touch event.
-     *
-     * @property x
-     * @type Number
      */
-    get x() {
+    get x(): number {
         return this._x;
     }
 
     /**
      * [read-only] The y coordinate on the canvas area of the latest touch event.
-     *
-     * @property y
-     * @type Number
      */
-    get y() {
+    get y(): number {
         return this._y;
     }
 
     /**
      * [read-only] The time of the last input in milliseconds.
-     *
-     * @property date
-     * @type Number
      */
-    get date() {
+    get date(): number {
         return this._date;
     }
 
-    /**
-     * @private
-     */
-    _setupEventHandlers() {
+    private _setupEventHandlers() {
         const isSupportPassive = Utils.isSupportPassiveEvent();
         document.addEventListener('mousedown', this._onMouseDown.bind(this));
         document.addEventListener('mousemove', this._onMouseMove.bind(this));
@@ -219,17 +196,13 @@ export const TouchInput = new (class TouchInput {
             this._onTouchMove.bind(this),
             isSupportPassive ? { passive: false } : false
         );
-        document.addEventListener('touchend', this._onTouchEnd.bind(this));
-        document.addEventListener('touchcancel', this._onTouchCancel.bind(this));
-        document.addEventListener('pointerdown', this._onPointerDown.bind(this));
-        window.addEventListener('blur', this._onLostFocus.bind(this));
+        document.addEventListener('touchend', (ev) => this._onTouchEnd(ev));
+        document.addEventListener('touchcancel', (ev) => this._onTouchCancel(ev));
+        document.addEventListener('pointerdown', (ev) => this._onPointerDown(ev));
+        window.addEventListener('blur', () => this._onLostFocus());
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onMouseDown(event) {
+    private _onMouseDown(event: MouseEvent): void {
         if (event.button === 0) {
             this._onLeftButtonDown(event);
         } else if (event.button === 1) {
@@ -239,11 +212,7 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onLeftButtonDown(event) {
+    private _onLeftButtonDown(event: MouseEvent): void {
         const x = Graphics.pageToCanvasX(event.pageX);
         const y = Graphics.pageToCanvasY(event.pageY);
         if (Graphics.isInsideCanvas(x, y)) {
@@ -253,19 +222,11 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onMiddleButtonDown(_event) {
+    private _onMiddleButtonDown(_event: MouseEvent): void {
         // ...
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onRightButtonDown(event) {
+    private _onRightButtonDown(event: MouseEvent): void {
         const x = Graphics.pageToCanvasX(event.pageX);
         const y = Graphics.pageToCanvasY(event.pageY);
         if (Graphics.isInsideCanvas(x, y)) {
@@ -273,11 +234,7 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onMouseMove(event) {
+    private _onMouseMove(event: MouseEvent): void {
         if (this._mousePressed) {
             const x = Graphics.pageToCanvasX(event.pageX);
             const y = Graphics.pageToCanvasY(event.pageY);
@@ -285,11 +242,7 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onMouseUp(event) {
+    private _onMouseUp(event: MouseEvent): void {
         if (event.button === 0) {
             const x = Graphics.pageToCanvasX(event.pageX);
             const y = Graphics.pageToCanvasY(event.pageY);
@@ -298,21 +251,13 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {WheelEvent} event
-     * @private
-     */
-    _onWheel(event) {
+    private _onWheel(event: WheelEvent): void {
         this._events.wheelX += event.deltaX;
         this._events.wheelY += event.deltaY;
         event.preventDefault();
     }
 
-    /**
-     * @param {TouchEvent} event
-     * @private
-     */
-    _onTouchStart(event) {
+    private _onTouchStart(event: TouchEvent): void {
         for (let i = 0; i < event.changedTouches.length; i++) {
             const touch = event.changedTouches[i];
             const x = Graphics.pageToCanvasX(touch.pageX);
@@ -328,16 +273,13 @@ export const TouchInput = new (class TouchInput {
                 event.preventDefault();
             }
         }
-        if (window.cordova || window.navigator.standalone) {
-            event.preventDefault();
-        }
+        // FIXME:
+        // if (window.cordova || window.navigator.standalone) {
+        //     event.preventDefault();
+        // }
     }
 
-    /**
-     * @param {TouchEvent} event
-     * @private
-     */
-    _onTouchMove(event) {
+    private _onTouchMove(event: TouchEvent): void {
         for (let i = 0; i < event.changedTouches.length; i++) {
             const touch = event.changedTouches[i];
             const x = Graphics.pageToCanvasX(touch.pageX);
@@ -346,11 +288,7 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {TouchEvent} event
-     * @private
-     */
-    _onTouchEnd(event) {
+    private _onTouchEnd(event: TouchEvent): void {
         for (let i = 0; i < event.changedTouches.length; i++) {
             const touch = event.changedTouches[i];
             const x = Graphics.pageToCanvasX(touch.pageX);
@@ -360,19 +298,11 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @param {TouchEvent} event
-     * @private
-     */
-    _onTouchCancel(_event) {
+    private _onTouchCancel(_event: TouchEvent): void {
         this._screenPressed = false;
     }
 
-    /**
-     * @param {PointerEvent} event
-     * @private
-     */
-    _onPointerDown(event) {
+    private _onPointerDown(event: PointerEvent): void {
         if (event.pointerType === 'touch' && !event.isPrimary) {
             const x = Graphics.pageToCanvasX(event.pageX);
             const y = Graphics.pageToCanvasY(event.pageY);
@@ -384,53 +314,30 @@ export const TouchInput = new (class TouchInput {
         }
     }
 
-    /**
-     * @private
-     */
-    _onLostFocus() {
+    private _onLostFocus(): void {
         this.clear();
     }
 
-    /**
-     * @param {Number} x
-     * @param {Number} y
-     * @private
-     */
-    _onTrigger(x, y) {
+    private _onTrigger(x: number, y: number): void {
         this._events.triggered = true;
         this._x = x;
         this._y = y;
         this._date = Date.now();
     }
 
-    /**
-     * @param {Number} x
-     * @param {Number} y
-     * @private
-     */
-    _onCancel(x, y) {
+    private _onCancel(x: number, y: number): void {
         this._events.cancelled = true;
         this._x = x;
         this._y = y;
     }
 
-    /**
-     * @param {Number} x
-     * @param {Number} y
-     * @private
-     */
-    _onMove(x, y) {
+    private _onMove(x: number, y: number): void {
         this._events.moved = true;
         this._x = x;
         this._y = y;
     }
 
-    /**
-     * @param {Number} x
-     * @param {Number} y
-     * @private
-     */
-    _onRelease(x, y) {
+    private _onRelease(x: number, y: number): void {
         this._events.released = true;
         this._x = x;
         this._y = y;
