@@ -1,4 +1,6 @@
+import { Tone } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
+import type { AudioFile } from '../rpg_data/audio-file';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { SceneManager } from '../rpg_managers/SceneManager';
 
@@ -6,6 +8,26 @@ import { SceneManager } from '../rpg_managers/SceneManager';
  * The game object class for the system data.
  */
 export class Game_System {
+    private _saveEnabled: boolean;
+    private _menuEnabled: boolean;
+    private _encounterEnabled: boolean;
+    private _formationEnabled: boolean;
+    private _battleCount: number;
+    private _winCount: number;
+    private _escapeCount: number;
+    private _saveCount: number;
+    private _versionId: number;
+    private _framesOnSave: number;
+    private _sceneFramesOnSave: number;
+    private _windowTone: Tone;
+    private _bgmOnSave: AudioFile;
+    private _bgsOnSave: AudioFile;
+    private _battleBgm: AudioFile;
+    private _victoryMe: AudioFile;
+    private _defeatMe: AudioFile;
+    private _savedBgm: AudioFile;
+    private _walkingBgm: AudioFile;
+
     constructor() {
         this._saveEnabled = true;
         this._menuEnabled = true;
@@ -28,190 +50,190 @@ export class Game_System {
         this._walkingBgm = null;
     }
 
-    isJapanese() {
-        return global.$dataSystem.locale.match(/^ja/);
+    isJapanese(): boolean {
+        return !!window.$dataSystem.locale.match(/^ja/);
     }
 
-    isChinese() {
-        return global.$dataSystem.locale.match(/^zh/);
+    isChinese(): boolean {
+        return !!window.$dataSystem.locale.match(/^zh/);
     }
 
-    isKorean() {
-        return global.$dataSystem.locale.match(/^ko/);
+    isKorean(): boolean {
+        return !!window.$dataSystem.locale.match(/^ko/);
     }
 
-    isCJK() {
-        return global.$dataSystem.locale.match(/^(ja|zh|ko)/);
+    isCJK(): boolean {
+        return !!window.$dataSystem.locale.match(/^(ja|zh|ko)/);
     }
 
-    isRussian() {
-        return global.$dataSystem.locale.match(/^ru/);
+    isRussian(): boolean {
+        return !!window.$dataSystem.locale.match(/^ru/);
     }
 
-    isSideView() {
-        return global.$dataSystem.optSideView;
+    isSideView(): boolean {
+        return window.$dataSystem.optSideView;
     }
 
-    isSaveEnabled() {
+    isSaveEnabled(): boolean {
         return this._saveEnabled;
     }
 
-    disableSave() {
+    disableSave(): void {
         this._saveEnabled = false;
     }
 
-    enableSave() {
+    enableSave(): void {
         this._saveEnabled = true;
     }
 
-    isMenuEnabled() {
+    isMenuEnabled(): boolean {
         return this._menuEnabled;
     }
 
-    disableMenu() {
+    disableMenu(): void {
         this._menuEnabled = false;
     }
 
-    enableMenu() {
+    enableMenu(): void {
         this._menuEnabled = true;
     }
 
-    isEncounterEnabled() {
+    isEncounterEnabled(): boolean {
         return this._encounterEnabled;
     }
 
-    disableEncounter() {
+    disableEncounter(): void {
         this._encounterEnabled = false;
     }
 
-    enableEncounter() {
+    enableEncounter(): void {
         this._encounterEnabled = true;
     }
 
-    isFormationEnabled() {
+    isFormationEnabled(): boolean {
         return this._formationEnabled;
     }
 
-    disableFormation() {
+    disableFormation(): void {
         this._formationEnabled = false;
     }
 
-    enableFormation() {
+    enableFormation(): void {
         this._formationEnabled = true;
     }
 
-    battleCount() {
+    battleCount(): number {
         return this._battleCount;
     }
 
-    winCount() {
+    winCount(): number {
         return this._winCount;
     }
 
-    escapeCount() {
+    escapeCount(): number {
         return this._escapeCount;
     }
 
-    saveCount() {
+    saveCount(): number {
         return this._saveCount;
     }
 
-    versionId() {
+    versionId(): number {
         return this._versionId;
     }
 
-    windowTone() {
-        return this._windowTone || global.$dataSystem.windowTone;
+    windowTone(): Tone {
+        return this._windowTone || window.$dataSystem.windowTone;
     }
 
-    setWindowTone(value) {
+    setWindowTone(value: Tone) {
         this._windowTone = value;
     }
 
-    battleBgm() {
-        return this._battleBgm || global.$dataSystem.battleBgm;
+    battleBgm(): AudioFile {
+        return this._battleBgm || window.$dataSystem.battleBgm;
     }
 
-    setBattleBgm(value) {
+    setBattleBgm(value: AudioFile): void {
         this._battleBgm = value;
     }
 
-    victoryMe() {
-        return this._victoryMe || global.$dataSystem.victoryMe;
+    victoryMe(): AudioFile {
+        return this._victoryMe || window.$dataSystem.victoryMe;
     }
 
-    setVictoryMe(value) {
+    setVictoryMe(value: AudioFile): void {
         this._victoryMe = value;
     }
 
-    defeatMe() {
-        return this._defeatMe || global.$dataSystem.defeatMe;
+    defeatMe(): AudioFile {
+        return this._defeatMe || window.$dataSystem.defeatMe;
     }
 
-    setDefeatMe(value) {
+    setDefeatMe(value: AudioFile): void {
         this._defeatMe = value;
     }
 
-    onBattleStart() {
+    onBattleStart(): void {
         this._battleCount++;
     }
 
-    onBattleWin() {
+    onBattleWin(): void {
         this._winCount++;
     }
 
-    onBattleEscape() {
+    onBattleEscape(): void {
         this._escapeCount++;
     }
 
-    onBeforeSave() {
+    onBeforeSave(): void {
         this._saveCount++;
-        this._versionId = global.$dataSystem.versionId;
+        this._versionId = window.$dataSystem.versionId;
         this._framesOnSave = Graphics.frameCount;
         this._sceneFramesOnSave = SceneManager.frameCount();
         this._bgmOnSave = AudioManager.saveBgm();
         this._bgsOnSave = AudioManager.saveBgs();
     }
 
-    onAfterLoad() {
+    onAfterLoad(): void {
         Graphics.frameCount = this._framesOnSave;
         SceneManager.setFrameCount(this._sceneFramesOnSave || this._framesOnSave);
         AudioManager.playBgm(this._bgmOnSave);
         AudioManager.playBgs(this._bgsOnSave);
     }
 
-    playtime() {
+    playtime(): number {
         return Math.floor(SceneManager.frameCount() / 60);
     }
 
-    playtimeText() {
+    playtimeText(): string {
         const hour = Math.floor(this.playtime() / 60 / 60);
         const min = Math.floor(this.playtime() / 60) % 60;
         const sec = this.playtime() % 60;
-        return hour.padZero(2) + ':' + min.padZero(2) + ':' + sec.padZero(2);
+        return String(hour).padStart(2, '0') + ':' + String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
     }
 
-    saveBgm() {
+    saveBgm(): void {
         this._savedBgm = AudioManager.saveBgm();
     }
 
-    replayBgm() {
+    replayBgm(): void {
         if (this._savedBgm) {
             AudioManager.replayBgm(this._savedBgm);
         }
     }
 
-    saveWalkingBgm() {
+    saveWalkingBgm(): void {
         this._walkingBgm = AudioManager.saveBgm();
     }
 
-    replayWalkingBgm() {
+    replayWalkingBgm(): void {
         if (this._walkingBgm) {
             AudioManager.playBgm(this._walkingBgm);
         }
     }
 
-    saveWalkingBgm2() {
-        this._walkingBgm = global.$dataMap.bgm;
+    saveWalkingBgm2(): void {
+        this._walkingBgm = window.$dataMap.bgm;
     }
 }

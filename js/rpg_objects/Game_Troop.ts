@@ -1,13 +1,15 @@
+import { RPGBattleEventPage } from '../rpg_data/battle-event-page';
+import { RPGTroop } from '../rpg_data/troop';
 import { BattleManager } from '../rpg_managers/BattleManager';
 
-import { Game_Enemy } from '../rpg_objects/Game_Enemy';
-import { Game_Interpreter } from '../rpg_objects/Game_Interpreter';
-import { Game_Unit } from '../rpg_objects/Game_Unit';
+import { Game_Enemy } from './Game_Enemy';
+import { Game_Interpreter } from './Game_Interpreter';
+import { Game_Unit } from './Game_Unit';
 
 /**
  * The game object class for a troop and the battle-related data.
  */
-export class Game_Troop extends Game_Unit {
+export class Game_Troop extends Game_Unit<Game_Enemy> {
     static LETTER_TABLE_HALF = [
         ' A',
         ' B',
@@ -65,29 +67,36 @@ export class Game_Troop extends Game_Unit {
         'Ｚ',
     ];
 
+    private _interpreter: Game_Interpreter;
+    private _turnCount: number;
+    private _enemies: Game_Enemy[];
+    private _troopId: number;
+    private _eventFlags: Record<number, boolean>;
+    private _namesCount: Record<string, number>;
+
     constructor() {
         super();
         this._interpreter = new Game_Interpreter();
         this.clear();
     }
 
-    isEventRunning() {
+    isEventRunning(): boolean {
         return this._interpreter.isRunning();
     }
 
-    updateInterpreter() {
+    updateInterpreter(): void {
         this._interpreter.update();
     }
 
-    turnCount() {
+    turnCount(): number {
         return this._turnCount;
     }
 
-    members() {
+    members(): Game_Enemy[] {
         return this._enemies;
     }
 
-    clear() {
+    clear(): void {
         this._interpreter.clear();
         this._troopId = 0;
         this._eventFlags = {};
@@ -96,17 +105,17 @@ export class Game_Troop extends Game_Unit {
         this._namesCount = {};
     }
 
-    troop() {
-        return global.$dataTroops[this._troopId];
+    troop(): RPGTroop {
+        return window.$dataTroops[this._troopId];
     }
 
-    setup(troopId) {
+    setup(troopId: number): void {
         this.clear();
         this._troopId = troopId;
         this._enemies = [];
         this.troop().members.forEach(function (member) {
-            if (global.$dataEnemies[member.enemyId]) {
-                var enemyId = member.enemyId;
+            if (window.$dataEnemies[member.enemyId]) {
+                const enemyId = member.enemyId;
                 const x = member.x;
                 const y = member.y;
                 const enemy = new Game_Enemy(enemyId, x, y);
@@ -119,40 +128,40 @@ export class Game_Troop extends Game_Unit {
         this.makeUniqueNames();
     }
 
-    makeUniqueNames() {
+    makeUniqueNames(): void {
         const table = this.letterTable();
-        this.members().forEach(function (enemy) {
+        this.members().forEach((enemy) => {
             if (enemy.isAlive() && enemy.isLetterEmpty()) {
                 const name = enemy.originalName();
                 const n = this._namesCount[name] || 0;
                 enemy.setLetter(table[n % table.length]);
                 this._namesCount[name] = n + 1;
             }
-        }, this);
-        this.members().forEach(function (enemy) {
+        });
+        this.members().forEach((enemy) => {
             const name = enemy.originalName();
             if (this._namesCount[name] >= 2) {
                 enemy.setPlural(true);
             }
-        }, this);
+        });
     }
 
-    letterTable() {
-        return global.$gameSystem.isCJK() ? Game_Troop.LETTER_TABLE_FULL : Game_Troop.LETTER_TABLE_HALF;
+    letterTable(): string[] {
+        return window.$gameSystem.isCJK() ? Game_Troop.LETTER_TABLE_FULL : Game_Troop.LETTER_TABLE_HALF;
     }
 
-    enemyNames() {
-        const names = [];
+    enemyNames(): string[] {
+        const names: string[] = [];
         this.members().forEach((enemy) => {
             const name = enemy.originalName();
-            if (enemy.isAlive() && !names.contains(name)) {
+            if (enemy.isAlive() && !names.includes(name)) {
                 names.push(name);
             }
         });
         return names;
     }
 
-    meetsConditions(page) {
+    meetsConditions(page: RPGBattleEventPage): boolean {
         const c = page.conditions;
         if (!c.turnEnding && !c.turnValid && !c.enemyValid && !c.actorValid && !c.switchValid) {
             return false; // Conditions not set
@@ -174,26 +183,26 @@ export class Game_Troop extends Game_Unit {
             }
         }
         if (c.enemyValid) {
-            const enemy = global.$gameTroop.members()[c.enemyIndex];
+            const enemy = window.$gameTroop.members()[c.enemyIndex];
             if (!enemy || enemy.hpRate() * 100 > c.enemyHp) {
                 return false;
             }
         }
         if (c.actorValid) {
-            const actor = global.$gameActors.actor(c.actorId);
+            const actor = window.$gameActors.actor(c.actorId);
             if (!actor || actor.hpRate() * 100 > c.actorHp) {
                 return false;
             }
         }
         if (c.switchValid) {
-            if (!global.$gameSwitches.value(c.switchId)) {
+            if (!window.$gameSwitches.value(c.switchId)) {
                 return false;
             }
         }
         return true;
     }
 
-    setupBattleEvent() {
+    setupBattleEvent(): void {
         if (!this._interpreter.isRunning()) {
             if (this._interpreter.setupReservedCommonEvent()) {
                 return;
@@ -217,7 +226,7 @@ export class Game_Troop extends Game_Unit {
         }
     }
 
-    increaseTurn() {
+    increaseTurn(): void {
         const pages = this.troop().pages;
         for (let i = 0; i < pages.length; i++) {
             const page = pages[i];
@@ -228,16 +237,16 @@ export class Game_Troop extends Game_Unit {
         this._turnCount++;
     }
 
-    expTotal() {
+    expTotal(): number {
         return this.deadMembers().reduce((r, enemy) => r + enemy.exp(), 0);
     }
 
-    goldTotal() {
+    goldTotal(): number {
         return this.deadMembers().reduce((r, enemy) => r + enemy.gold(), 0) * this.goldRate();
     }
 
-    goldRate() {
-        return global.$gameParty.hasGoldDouble() ? 2 : 1;
+    goldRate(): number {
+        return window.$gameParty.hasGoldDouble() ? 2 : 1;
     }
 
     makeDropItems() {

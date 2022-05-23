@@ -1,3 +1,5 @@
+import { RPGCommonEvent } from '../rpg_data/common-event';
+import { RPGEventCommand } from '../rpg_data/event-command';
 import { Game_Interpreter } from './Game_Interpreter';
 
 /**
@@ -5,20 +7,23 @@ import { Game_Interpreter } from './Game_Interpreter';
  * running parallel process events.
  */
 export class Game_CommonEvent {
-    constructor(commonEventId) {
+    private _commonEventId: number;
+    private _interpreter: Game_Interpreter;
+
+    constructor(commonEventId: number) {
         this._commonEventId = commonEventId;
         this.refresh();
     }
 
-    event() {
-        return global.$dataCommonEvents[this._commonEventId];
+    event(): RPGCommonEvent {
+        return window.$dataCommonEvents[this._commonEventId];
     }
 
-    list() {
+    list(): readonly RPGEventCommand[] {
         return this.event().list;
     }
 
-    refresh() {
+    refresh(): void {
         if (this.isActive()) {
             if (!this._interpreter) {
                 this._interpreter = new Game_Interpreter();
@@ -28,12 +33,12 @@ export class Game_CommonEvent {
         }
     }
 
-    isActive() {
+    isActive(): boolean {
         const event = this.event();
-        return event.trigger === 2 && global.$gameSwitches.value(event.switchId);
+        return event.trigger === 2 && window.$gameSwitches.value(event.switchId);
     }
 
-    update() {
+    update(): void {
         if (this._interpreter) {
             if (!this._interpreter.isRunning()) {
                 this._interpreter.setup(this.list());

@@ -1,36 +1,40 @@
+import { Game_Battler } from './Game_Battler';
+
 /**
  * The superclass of Game_Party and Game_Troop.
  */
-export class Game_Unit {
+export abstract class Game_Unit<T extends Game_Battler = Game_Battler> {
+    protected _inBattle: boolean;
+
     constructor() {
         this._inBattle = false;
     }
 
-    inBattle() {
+    inBattle(): boolean {
         return this._inBattle;
     }
 
-    members() {
+    members(): T[] {
         return [];
     }
 
-    aliveMembers() {
+    aliveMembers(): T[] {
         return this.members().filter((member) => member.isAlive());
     }
 
-    deadMembers() {
+    deadMembers(): T[] {
         return this.members().filter((member) => member.isDead());
     }
 
-    movableMembers() {
+    movableMembers(): T[] {
         return this.members().filter((member) => member.canMove());
     }
 
-    clearActions() {
+    clearActions(): void {
         return this.members().forEach((member) => member.clearActions());
     }
 
-    agility() {
+    agility(): number {
         const members = this.members();
         if (members.length === 0) {
             return 1;
@@ -39,13 +43,13 @@ export class Game_Unit {
         return sum / members.length;
     }
 
-    tgrSum() {
+    tgrSum(): number {
         return this.aliveMembers().reduce((r, member) => r + member.tgr, 0);
     }
 
-    randomTarget() {
+    randomTarget(): T {
         let tgrRand = Math.random() * this.tgrSum();
-        let target = null;
+        let target: T = null;
         this.aliveMembers().forEach((member) => {
             tgrRand -= member.tgr;
             if (tgrRand <= 0 && !target) {
@@ -55,7 +59,7 @@ export class Game_Unit {
         return target;
     }
 
-    randomDeadTarget() {
+    randomDeadTarget(): T {
         const members = this.deadMembers();
         if (members.length === 0) {
             return null;
@@ -63,7 +67,7 @@ export class Game_Unit {
         return members[Math.floor(Math.random() * members.length)];
     }
 
-    smoothTarget(index) {
+    smoothTarget(index: number): T {
         if (index < 0) {
             index = 0;
         }
@@ -71,7 +75,7 @@ export class Game_Unit {
         return member && member.isAlive() ? member : this.aliveMembers()[0];
     }
 
-    smoothDeadTarget(index) {
+    smoothDeadTarget(index: number): T {
         if (index < 0) {
             index = 0;
         }
@@ -79,33 +83,33 @@ export class Game_Unit {
         return member && member.isDead() ? member : this.deadMembers()[0];
     }
 
-    clearResults() {
+    clearResults(): void {
         this.members().forEach((member) => {
             member.clearResult();
         });
     }
 
-    onBattleStart() {
+    onBattleStart(): void {
         this.members().forEach((member) => {
             member.onBattleStart();
         });
         this._inBattle = true;
     }
 
-    onBattleEnd() {
+    onBattleEnd(): void {
         this._inBattle = false;
         this.members().forEach((member) => {
             member.onBattleEnd();
         });
     }
 
-    makeActions() {
+    makeActions(): void {
         this.members().forEach((member) => {
             member.makeActions();
         });
     }
 
-    select(activeMember) {
+    select(activeMember: T): void {
         this.members().forEach((member) => {
             if (member === activeMember) {
                 member.select();
@@ -115,11 +119,11 @@ export class Game_Unit {
         });
     }
 
-    isAllDead() {
+    isAllDead(): boolean {
         return this.aliveMembers().length === 0;
     }
 
-    substituteBattler() {
+    substituteBattler(): T {
         const members = this.members();
         for (let i = 0; i < members.length; i++) {
             if (members[i].isSubstitute()) {

@@ -1,3 +1,5 @@
+import { AudioFile } from '../rpg_data/audio-file';
+import { RPGSystemVehicle } from '../rpg_data/system';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { Game_Character } from './Game_Character';
 
@@ -5,7 +7,12 @@ import { Game_Character } from './Game_Character';
  * The game object class for a vehicle.
  */
 export class Game_Vehicle extends Game_Character {
-    constructor(type) {
+    private _type: string;
+    private _altitude: number;
+    private _driving: boolean;
+    private _bgm: AudioFile;
+
+    constructor(type: string) {
         super();
         this._type = type;
         this.resetDirection();
@@ -13,7 +20,7 @@ export class Game_Vehicle extends Game_Character {
         this.loadSystemSettings();
     }
 
-    initMembers() {
+    initMembers(): void {
         super.initMembers();
         this._type = '';
         this._mapId = 0;
@@ -22,23 +29,23 @@ export class Game_Vehicle extends Game_Character {
         this._bgm = null;
     }
 
-    isBoat() {
+    isBoat(): boolean {
         return this._type === 'boat';
     }
 
-    isShip() {
+    isShip(): boolean {
         return this._type === 'ship';
     }
 
-    isAirship() {
+    isAirship(): boolean {
         return this._type === 'airship';
     }
 
-    resetDirection() {
+    resetDirection(): void {
         this.setDirection(4);
     }
 
-    initMoveSpeed() {
+    initMoveSpeed(): void {
         if (this.isBoat()) {
             this.setMoveSpeed(4);
         } else if (this.isShip()) {
@@ -48,30 +55,30 @@ export class Game_Vehicle extends Game_Character {
         }
     }
 
-    vehicle() {
+    vehicle(): RPGSystemVehicle {
         if (this.isBoat()) {
-            return global.$dataSystem.boat;
+            return window.$dataSystem.boat;
         } else if (this.isShip()) {
-            return global.$dataSystem.ship;
+            return window.$dataSystem.ship;
         } else if (this.isAirship()) {
-            return global.$dataSystem.airship;
+            return window.$dataSystem.airship;
         } else {
             return null;
         }
     }
 
-    loadSystemSettings() {
+    loadSystemSettings(): void {
         const vehicle = this.vehicle();
         this._mapId = vehicle.startMapId;
         this.setPosition(vehicle.startX, vehicle.startY);
         this.setImage(vehicle.characterName, vehicle.characterIndex);
     }
 
-    refresh() {
+    refresh(): void {
         if (this._driving) {
-            this._mapId = global.$gameMap.mapId();
+            this._mapId = window.$gameMap.mapId();
             this.syncWithPlayer();
-        } else if (this._mapId === global.$gameMap.mapId()) {
+        } else if (this._mapId === window.$gameMap.mapId()) {
             this.locate(this.x, this.y);
         }
         if (this.isAirship()) {
@@ -81,30 +88,30 @@ export class Game_Vehicle extends Game_Character {
         }
         this.setWalkAnime(this._driving);
         this.setStepAnime(this._driving);
-        this.setTransparent(this._mapId !== global.$gameMap.mapId());
+        this.setTransparent(this._mapId !== window.$gameMap.mapId());
     }
 
-    setLocation(mapId, x, y) {
+    setLocation(mapId: number, x: number, y: number): void {
         this._mapId = mapId;
         this.setPosition(x, y);
         this.refresh();
     }
 
-    pos(x, y) {
-        if (this._mapId === global.$gameMap.mapId()) {
+    pos(x: number, y: number): boolean {
+        if (this._mapId === window.$gameMap.mapId()) {
             return super.pos(x, y);
         } else {
             return false;
         }
     }
 
-    isMapPassable(x, y, d) {
-        const x2 = global.$gameMap.roundXWithDirection(x, d);
-        const y2 = global.$gameMap.roundYWithDirection(y, d);
+    isMapPassable(x: number, y: number, d: number): boolean {
+        const x2 = window.$gameMap.roundXWithDirection(x, d);
+        const y2 = window.$gameMap.roundYWithDirection(y, d);
         if (this.isBoat()) {
-            return global.$gameMap.isBoatPassable(x2, y2);
+            return window.$gameMap.isBoatPassable(x2, y2);
         } else if (this.isShip()) {
-            return global.$gameMap.isShipPassable(x2, y2);
+            return window.$gameMap.isShipPassable(x2, y2);
         } else if (this.isAirship()) {
             return true;
         } else {
@@ -112,52 +119,52 @@ export class Game_Vehicle extends Game_Character {
         }
     }
 
-    getOn() {
+    getOn(): void {
         this._driving = true;
         this.setWalkAnime(true);
         this.setStepAnime(true);
-        global.$gameSystem.saveWalkingBgm();
+        window.$gameSystem.saveWalkingBgm();
         this.playBgm();
     }
 
-    getOff() {
+    getOff(): void {
         this._driving = false;
         this.setWalkAnime(false);
         this.setStepAnime(false);
         this.resetDirection();
-        global.$gameSystem.replayWalkingBgm();
+        window.$gameSystem.replayWalkingBgm();
     }
 
-    setBgm(bgm) {
+    setBgm(bgm: AudioFile): void {
         this._bgm = bgm;
     }
 
-    playBgm() {
+    playBgm(): void {
         AudioManager.playBgm(this._bgm || this.vehicle().bgm);
     }
 
-    syncWithPlayer() {
-        this.copyPosition(global.$gamePlayer);
+    syncWithPlayer(): void {
+        this.copyPosition(window.$gamePlayer);
         this.refreshBushDepth();
     }
 
-    screenY() {
+    screenY(): number {
         return super.screenY() - this._altitude;
     }
 
-    shadowX() {
+    shadowX(): number {
         return this.screenX();
     }
 
-    shadowY() {
+    shadowY(): number {
         return this.screenY() + this._altitude;
     }
 
-    shadowOpacity() {
+    shadowOpacity(): number {
         return (255 * this._altitude) / this.maxAltitude();
     }
 
-    canMove() {
+    canMove(): boolean {
         if (this.isAirship()) {
             return this.isHighest();
         } else {
@@ -165,20 +172,20 @@ export class Game_Vehicle extends Game_Character {
         }
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this.isAirship()) {
             this.updateAirship();
         }
     }
 
-    updateAirship() {
+    updateAirship(): void {
         this.updateAirshipAltitude();
         this.setStepAnime(this.isHighest());
         this.setPriorityType(this.isLowest() ? 0 : 2);
     }
 
-    updateAirshipAltitude() {
+    updateAirshipAltitude(): void {
         if (this._driving && !this.isHighest()) {
             this._altitude++;
         }
@@ -187,37 +194,37 @@ export class Game_Vehicle extends Game_Character {
         }
     }
 
-    maxAltitude() {
+    maxAltitude(): number {
         return 48;
     }
 
-    isLowest() {
+    isLowest(): boolean {
         return this._altitude <= 0;
     }
 
-    isHighest() {
+    isHighest(): boolean {
         return this._altitude >= this.maxAltitude();
     }
 
-    isTakeoffOk() {
-        return global.$gamePlayer.areFollowersGathered();
+    isTakeoffOk(): boolean {
+        return window.$gamePlayer.areFollowersGathered();
     }
 
-    isLandOk(x, y, d) {
+    isLandOk(x: number, y: number, d: number): boolean {
         if (this.isAirship()) {
-            if (!global.$gameMap.isAirshipLandOk(x, y)) {
+            if (!window.$gameMap.isAirshipLandOk(x, y)) {
                 return false;
             }
-            if (global.$gameMap.eventsXy(x, y).length > 0) {
+            if (window.$gameMap.eventsXy(x, y).length > 0) {
                 return false;
             }
         } else {
-            const x2 = global.$gameMap.roundXWithDirection(x, d);
-            const y2 = global.$gameMap.roundYWithDirection(y, d);
-            if (!global.$gameMap.isValid(x2, y2)) {
+            const x2 = window.$gameMap.roundXWithDirection(x, d);
+            const y2 = window.$gameMap.roundYWithDirection(y, d);
+            if (!window.$gameMap.isValid(x2, y2)) {
                 return false;
             }
-            if (!global.$gameMap.isPassable(x2, y2, this.reverseDir(d))) {
+            if (!window.$gameMap.isPassable(x2, y2, this.reverseDir(d))) {
                 return false;
             }
             if (this.isCollidedWithCharacters(x2, y2)) {

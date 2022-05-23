@@ -6,12 +6,43 @@ import { ImageManager } from '../rpg_managers/ImageManager';
  * coordinates and images, shared by all characters.
  * @abstract
  */
-export class Game_CharacterBase {
-    get x() {
+export abstract class Game_CharacterBase {
+    protected _x: number;
+    protected _y: number;
+    protected _realX: number;
+    protected _realY: number;
+    protected _moveSpeed: number;
+    protected _moveFrequency: number;
+    protected _opacity: number;
+    protected _blendMode: number;
+    protected _direction: number;
+    protected _pattern: number;
+    protected _priorityType: number;
+    protected _tileId: number;
+    protected _characterName: string;
+    protected _characterIndex: number;
+    protected _isObjectCharacter: boolean;
+    protected _walkAnime: boolean;
+    protected _stepAnime: boolean;
+    protected _directionFix: boolean;
+    protected _through: boolean;
+    protected _transparent: boolean;
+    protected _bushDepth: number;
+    protected _animationId: number;
+    protected _balloonId: number;
+    protected _animationPlaying: boolean;
+    protected _balloonPlaying: boolean;
+    protected _animationCount: number;
+    protected _stopCount: number;
+    protected _jumpCount: number;
+    protected _jumpPeak: number;
+    protected _movementSuccess: boolean;
+
+    get x(): number {
         return this._x;
     }
 
-    get y() {
+    get y(): number {
         return this._y;
     }
 
@@ -19,7 +50,7 @@ export class Game_CharacterBase {
         this.initMembers();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._x = 0;
         this._y = 0;
         this._realX = 0;
@@ -52,110 +83,110 @@ export class Game_CharacterBase {
         this._movementSuccess = true;
     }
 
-    pos(x, y) {
+    pos(x: number, y: number): boolean {
         return this._x === x && this._y === y;
     }
 
-    posNt(x, y) {
+    posNt(x: number, y: number): boolean {
         // No through
         return this.pos(x, y) && !this.isThrough();
     }
 
-    moveSpeed() {
+    moveSpeed(): number {
         return this._moveSpeed;
     }
 
-    setMoveSpeed(moveSpeed) {
+    setMoveSpeed(moveSpeed: number): void {
         this._moveSpeed = moveSpeed;
     }
 
-    moveFrequency() {
+    moveFrequency(): number {
         return this._moveFrequency;
     }
 
-    setMoveFrequency(moveFrequency) {
+    setMoveFrequency(moveFrequency: number): void {
         this._moveFrequency = moveFrequency;
     }
 
-    opacity() {
+    opacity(): number {
         return this._opacity;
     }
 
-    setOpacity(opacity) {
+    setOpacity(opacity: number): void {
         this._opacity = opacity;
     }
 
-    blendMode() {
+    blendMode(): number {
         return this._blendMode;
     }
 
-    setBlendMode(blendMode) {
+    setBlendMode(blendMode: number): void {
         this._blendMode = blendMode;
     }
 
-    isNormalPriority() {
+    isNormalPriority(): boolean {
         return this._priorityType === 1;
     }
 
-    setPriorityType(priorityType) {
+    setPriorityType(priorityType: number): void {
         this._priorityType = priorityType;
     }
 
-    isMoving() {
+    isMoving(): boolean {
         return this._realX !== this._x || this._realY !== this._y;
     }
 
-    isJumping() {
+    isJumping(): boolean {
         return this._jumpCount > 0;
     }
 
-    jumpHeight() {
+    jumpHeight(): number {
         return (this._jumpPeak * this._jumpPeak - Math.pow(Math.abs(this._jumpCount - this._jumpPeak), 2)) / 2;
     }
 
-    isStopping() {
+    isStopping(): boolean {
         return !this.isMoving() && !this.isJumping();
     }
 
-    checkStop(threshold) {
+    checkStop(threshold: number): boolean {
         return this._stopCount > threshold;
     }
 
-    resetStopCount() {
+    resetStopCount(): void {
         this._stopCount = 0;
     }
 
-    realMoveSpeed() {
+    realMoveSpeed(): number {
         return this._moveSpeed + (this.isDashing() ? 1 : 0);
     }
 
-    distancePerFrame() {
+    distancePerFrame(): number {
         return Math.pow(2, this.realMoveSpeed()) / 256;
     }
 
-    isDashing() {
+    isDashing(): boolean {
         return false;
     }
 
-    isDebugThrough() {
+    isDebugThrough(): boolean {
         return false;
     }
 
-    straighten() {
+    straighten(): void {
         if (this.hasWalkAnime() || this.hasStepAnime()) {
             this._pattern = 1;
         }
         this._animationCount = 0;
     }
 
-    reverseDir(d) {
+    reverseDir(d: number): number {
         return 10 - d;
     }
 
-    canPass(x, y, d) {
-        const x2 = global.$gameMap.roundXWithDirection(x, d);
-        const y2 = global.$gameMap.roundYWithDirection(y, d);
-        if (!global.$gameMap.isValid(x2, y2)) {
+    canPass(x: number, y: number, d: number): boolean {
+        const x2 = window.$gameMap.roundXWithDirection(x, d);
+        const y2 = window.$gameMap.roundYWithDirection(y, d);
+        if (!window.$gameMap.isValid(x2, y2)) {
             return false;
         }
         if (this.isThrough() || this.isDebugThrough()) {
@@ -170,9 +201,9 @@ export class Game_CharacterBase {
         return true;
     }
 
-    canPassDiagonally(x, y, horz, vert) {
-        const x2 = global.$gameMap.roundXWithDirection(x, horz);
-        const y2 = global.$gameMap.roundYWithDirection(y, vert);
+    canPassDiagonally(x: number, y: number, horz: number, vert: number): boolean {
+        const x2 = window.$gameMap.roundXWithDirection(x, horz);
+        const y2 = window.$gameMap.roundYWithDirection(y, vert);
         if (this.canPass(x, y, vert) && this.canPass(x, y2, horz)) {
             return true;
         }
@@ -182,34 +213,34 @@ export class Game_CharacterBase {
         return false;
     }
 
-    isMapPassable(x, y, d) {
-        const x2 = global.$gameMap.roundXWithDirection(x, d);
-        const y2 = global.$gameMap.roundYWithDirection(y, d);
+    isMapPassable(x: number, y: number, d: number): boolean {
+        const x2 = window.$gameMap.roundXWithDirection(x, d);
+        const y2 = window.$gameMap.roundYWithDirection(y, d);
         const d2 = this.reverseDir(d);
-        return global.$gameMap.isPassable(x, y, d) && global.$gameMap.isPassable(x2, y2, d2);
+        return window.$gameMap.isPassable(x, y, d) && window.$gameMap.isPassable(x2, y2, d2);
     }
 
-    isCollidedWithCharacters(x, y) {
+    isCollidedWithCharacters(x: number, y: number): boolean {
         return this.isCollidedWithEvents(x, y) || this.isCollidedWithVehicles(x, y);
     }
 
-    isCollidedWithEvents(x, y) {
-        const events = global.$gameMap.eventsXyNt(x, y);
+    isCollidedWithEvents(x: number, y: number): boolean {
+        const events = window.$gameMap.eventsXyNt(x, y);
         return events.some((event) => event.isNormalPriority());
     }
 
-    isCollidedWithVehicles(x, y) {
-        return global.$gameMap.boat().posNt(x, y) || global.$gameMap.ship().posNt(x, y);
+    isCollidedWithVehicles(x: number, y: number): boolean {
+        return window.$gameMap.boat().posNt(x, y) || window.$gameMap.ship().posNt(x, y);
     }
 
-    setPosition(x, y) {
+    setPosition(x: number, y: number): void {
         this._x = Math.round(x);
         this._y = Math.round(y);
         this._realX = x;
         this._realY = y;
     }
 
-    copyPosition(character) {
+    copyPosition(character: Game_CharacterBase): void {
         this._x = character._x;
         this._y = character._y;
         this._realX = character._realX;
@@ -217,68 +248,68 @@ export class Game_CharacterBase {
         this._direction = character._direction;
     }
 
-    locate(x, y) {
+    locate(x: number, y: number): void {
         this.setPosition(x, y);
         this.straighten();
         this.refreshBushDepth();
     }
 
-    direction() {
+    direction(): number {
         return this._direction;
     }
 
-    setDirection(d) {
+    setDirection(d: number): void {
         if (!this.isDirectionFixed() && d) {
             this._direction = d;
         }
         this.resetStopCount();
     }
 
-    isTile() {
+    isTile(): boolean {
         return this._tileId > 0 && this._priorityType === 0;
     }
 
-    isObjectCharacter() {
+    isObjectCharacter(): boolean {
         return this._isObjectCharacter;
     }
 
-    shiftY() {
+    shiftY(): number {
         return this.isObjectCharacter() ? 0 : 6;
     }
 
-    scrolledX() {
-        return global.$gameMap.adjustX(this._realX);
+    scrolledX(): number {
+        return window.$gameMap.adjustX(this._realX);
     }
 
-    scrolledY() {
-        return global.$gameMap.adjustY(this._realY);
+    scrolledY(): number {
+        return window.$gameMap.adjustY(this._realY);
     }
 
-    screenX() {
-        const tw = global.$gameMap.tileWidth();
+    screenX(): number {
+        const tw = window.$gameMap.tileWidth();
         return Math.round(this.scrolledX() * tw + tw / 2);
     }
 
-    screenY() {
-        const th = global.$gameMap.tileHeight();
+    screenY(): number {
+        const th = window.$gameMap.tileHeight();
         return Math.round(this.scrolledY() * th + th - this.shiftY() - this.jumpHeight());
     }
 
-    screenZ() {
+    screenZ(): number {
         return this._priorityType * 2 + 1;
     }
 
-    isNearTheScreen() {
+    isNearTheScreen(): boolean {
         const gw = Graphics.width;
         const gh = Graphics.height;
-        const tw = global.$gameMap.tileWidth();
-        const th = global.$gameMap.tileHeight();
+        const tw = window.$gameMap.tileWidth();
+        const th = window.$gameMap.tileHeight();
         const px = this.scrolledX() * tw + tw / 2 - gw / 2;
         const py = this.scrolledY() * th + th / 2 - gh / 2;
         return px >= -gw && px <= gw && py >= -gh && py <= gh;
     }
 
-    update() {
+    update(_sceneActive = false): void {
         if (this.isStopping()) {
             this.updateStop();
         }
@@ -290,22 +321,22 @@ export class Game_CharacterBase {
         this.updateAnimation();
     }
 
-    updateStop() {
+    updateStop(): void {
         this._stopCount++;
     }
 
-    updateJump() {
+    updateJump(): void {
         this._jumpCount--;
         this._realX = (this._realX * this._jumpCount + this._x) / (this._jumpCount + 1.0);
         this._realY = (this._realY * this._jumpCount + this._y) / (this._jumpCount + 1.0);
         this.refreshBushDepth();
         if (this._jumpCount === 0) {
-            this._realX = this._x = global.$gameMap.roundX(this._x);
-            this._realY = this._y = global.$gameMap.roundY(this._y);
+            this._realX = this._x = window.$gameMap.roundX(this._x);
+            this._realY = this._y = window.$gameMap.roundY(this._y);
         }
     }
 
-    updateMove() {
+    updateMove(): void {
         if (this._x < this._realX) {
             this._realX = Math.max(this._realX - this.distancePerFrame(), this._x);
         }
@@ -323,7 +354,7 @@ export class Game_CharacterBase {
         }
     }
 
-    updateAnimation() {
+    updateAnimation(): void {
         this.updateAnimationCount();
         if (this._animationCount >= this.animationWait()) {
             this.updatePattern();
@@ -331,11 +362,11 @@ export class Game_CharacterBase {
         }
     }
 
-    animationWait() {
+    animationWait(): number {
         return (9 - this.realMoveSpeed()) * 3;
     }
 
-    updateAnimationCount() {
+    updateAnimationCount(): void {
         if (this.isMoving() && this.hasWalkAnime()) {
             this._animationCount += 1.5;
         } else if (this.hasStepAnime() || !this.isOriginalPattern()) {
@@ -343,7 +374,7 @@ export class Game_CharacterBase {
         }
     }
 
-    updatePattern() {
+    updatePattern(): void {
         if (!this.hasStepAnime() && this._stopCount > 0) {
             this.resetPattern();
         } else {
@@ -351,27 +382,27 @@ export class Game_CharacterBase {
         }
     }
 
-    maxPattern() {
+    maxPattern(): number {
         return 4;
     }
 
-    pattern() {
+    pattern(): number {
         return this._pattern < 3 ? this._pattern : 1;
     }
 
-    setPattern(pattern) {
+    setPattern(pattern: number): void {
         this._pattern = pattern;
     }
 
-    isOriginalPattern() {
+    isOriginalPattern(): boolean {
         return this.pattern() === 1;
     }
 
-    resetPattern() {
+    resetPattern(): void {
         this.setPattern(1);
     }
 
-    refreshBushDepth() {
+    refreshBushDepth(): void {
         if (this.isNormalPriority() && !this.isObjectCharacter() && this.isOnBush() && !this.isJumping()) {
             if (!this.isMoving()) {
                 this._bushDepth = 12;
@@ -381,23 +412,23 @@ export class Game_CharacterBase {
         }
     }
 
-    isOnLadder() {
-        return global.$gameMap.isLadder(this._x, this._y);
+    isOnLadder(): boolean {
+        return window.$gameMap.isLadder(this._x, this._y);
     }
 
-    isOnBush() {
-        return global.$gameMap.isBush(this._x, this._y);
+    isOnBush(): boolean {
+        return window.$gameMap.isBush(this._x, this._y);
     }
 
-    terrainTag() {
-        return global.$gameMap.terrainTag(this._x, this._y);
+    terrainTag(): number {
+        return window.$gameMap.terrainTag(this._x, this._y);
     }
 
-    regionId() {
-        return global.$gameMap.regionId(this._x, this._y);
+    regionId(): number {
+        return window.$gameMap.regionId(this._x, this._y);
     }
 
-    increaseSteps() {
+    increaseSteps(): void {
         if (this.isOnLadder()) {
             this.setDirection(8);
         }
@@ -405,58 +436,58 @@ export class Game_CharacterBase {
         this.refreshBushDepth();
     }
 
-    tileId() {
+    tileId(): number {
         return this._tileId;
     }
 
-    characterName() {
+    characterName(): string {
         return this._characterName;
     }
 
-    characterIndex() {
+    characterIndex(): number {
         return this._characterIndex;
     }
 
-    setImage(characterName, characterIndex) {
+    setImage(characterName: string, characterIndex: number): void {
         this._tileId = 0;
         this._characterName = characterName;
         this._characterIndex = characterIndex;
         this._isObjectCharacter = ImageManager.isObjectCharacter(characterName);
     }
 
-    setTileImage(tileId) {
+    setTileImage(tileId: number): void {
         this._tileId = tileId;
         this._characterName = '';
         this._characterIndex = 0;
         this._isObjectCharacter = true;
     }
 
-    checkEventTriggerTouchFront(d) {
-        const x2 = global.$gameMap.roundXWithDirection(this._x, d);
-        const y2 = global.$gameMap.roundYWithDirection(this._y, d);
+    checkEventTriggerTouchFront(d: number): void {
+        const x2 = window.$gameMap.roundXWithDirection(this._x, d);
+        const y2 = window.$gameMap.roundYWithDirection(this._y, d);
         this.checkEventTriggerTouch(x2, y2);
     }
 
-    checkEventTriggerTouch(_x, _y) {
-        return false;
+    checkEventTriggerTouch(_x = 0, _y = 0): void {
+        // return false;
     }
 
-    isMovementSucceeded(_x, _y) {
+    isMovementSucceeded(_x = 0, _y = 0): boolean {
         return this._movementSuccess;
     }
 
-    setMovementSuccess(success) {
+    setMovementSuccess(success: boolean): void {
         this._movementSuccess = success;
     }
 
-    moveStraight(d) {
+    moveStraight(d: number): void {
         this.setMovementSuccess(this.canPass(this._x, this._y, d));
         if (this.isMovementSucceeded()) {
             this.setDirection(d);
-            this._x = global.$gameMap.roundXWithDirection(this._x, d);
-            this._y = global.$gameMap.roundYWithDirection(this._y, d);
-            this._realX = global.$gameMap.xWithDirection(this._x, this.reverseDir(d));
-            this._realY = global.$gameMap.yWithDirection(this._y, this.reverseDir(d));
+            this._x = window.$gameMap.roundXWithDirection(this._x, d);
+            this._y = window.$gameMap.roundYWithDirection(this._y, d);
+            this._realX = window.$gameMap.xWithDirection(this._x, this.reverseDir(d));
+            this._realY = window.$gameMap.yWithDirection(this._y, this.reverseDir(d));
             this.increaseSteps();
         } else {
             this.setDirection(d);
@@ -464,13 +495,13 @@ export class Game_CharacterBase {
         }
     }
 
-    moveDiagonally(horz, vert) {
+    moveDiagonally(horz: number, vert: number): void {
         this.setMovementSuccess(this.canPassDiagonally(this._x, this._y, horz, vert));
         if (this.isMovementSucceeded()) {
-            this._x = global.$gameMap.roundXWithDirection(this._x, horz);
-            this._y = global.$gameMap.roundYWithDirection(this._y, vert);
-            this._realX = global.$gameMap.xWithDirection(this._x, this.reverseDir(horz));
-            this._realY = global.$gameMap.yWithDirection(this._y, this.reverseDir(vert));
+            this._x = window.$gameMap.roundXWithDirection(this._x, horz);
+            this._y = window.$gameMap.roundYWithDirection(this._y, vert);
+            this._realX = window.$gameMap.xWithDirection(this._x, this.reverseDir(horz));
+            this._realY = window.$gameMap.yWithDirection(this._y, this.reverseDir(vert));
             this.increaseSteps();
         }
         if (this._direction === this.reverseDir(horz)) {
@@ -481,7 +512,7 @@ export class Game_CharacterBase {
         }
     }
 
-    jump(xPlus, yPlus) {
+    jump(xPlus: number, yPlus: number): void {
         if (Math.abs(xPlus) > Math.abs(yPlus)) {
             if (xPlus !== 0) {
                 this.setDirection(xPlus < 0 ? 4 : 6);
@@ -500,89 +531,89 @@ export class Game_CharacterBase {
         this.straighten();
     }
 
-    hasWalkAnime() {
+    hasWalkAnime(): boolean {
         return this._walkAnime;
     }
 
-    setWalkAnime(walkAnime) {
+    setWalkAnime(walkAnime: boolean): void {
         this._walkAnime = walkAnime;
     }
 
-    hasStepAnime() {
+    hasStepAnime(): boolean {
         return this._stepAnime;
     }
 
-    setStepAnime(stepAnime) {
+    setStepAnime(stepAnime: boolean): void {
         this._stepAnime = stepAnime;
     }
 
-    isDirectionFixed() {
+    isDirectionFixed(): boolean {
         return this._directionFix;
     }
 
-    setDirectionFix(directionFix) {
+    setDirectionFix(directionFix: boolean): void {
         this._directionFix = directionFix;
     }
 
-    isThrough() {
+    isThrough(): boolean {
         return this._through;
     }
 
-    setThrough(through) {
+    setThrough(through: boolean): void {
         this._through = through;
     }
 
-    isTransparent() {
+    isTransparent(): boolean {
         return this._transparent;
     }
 
-    bushDepth() {
+    bushDepth(): number {
         return this._bushDepth;
     }
 
-    setTransparent(transparent) {
+    setTransparent(transparent: boolean): void {
         this._transparent = transparent;
     }
 
-    requestAnimation(animationId) {
+    requestAnimation(animationId: number): void {
         this._animationId = animationId;
     }
 
-    requestBalloon(balloonId) {
+    requestBalloon(balloonId: number): void {
         this._balloonId = balloonId;
     }
 
-    animationId() {
+    animationId(): number {
         return this._animationId;
     }
 
-    balloonId() {
+    balloonId(): number {
         return this._balloonId;
     }
 
-    startAnimation() {
+    startAnimation(): void {
         this._animationId = 0;
         this._animationPlaying = true;
     }
 
-    startBalloon() {
+    startBalloon(): void {
         this._balloonId = 0;
         this._balloonPlaying = true;
     }
 
-    isAnimationPlaying() {
+    isAnimationPlaying(): boolean {
         return this._animationId > 0 || this._animationPlaying;
     }
 
-    isBalloonPlaying() {
+    isBalloonPlaying(): boolean {
         return this._balloonId > 0 || this._balloonPlaying;
     }
 
-    endAnimation() {
+    endAnimation(): void {
         this._animationPlaying = false;
     }
 
-    endBalloon() {
+    endBalloon(): void {
         this._balloonPlaying = false;
     }
 }

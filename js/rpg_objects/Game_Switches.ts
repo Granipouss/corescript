@@ -2,26 +2,28 @@
  * The game object class for switches.
  */
 export class Game_Switches {
+    private _data: boolean[];
+
     constructor() {
         this.clear();
     }
 
-    clear() {
+    clear(): void {
         this._data = [];
     }
 
-    value(switchId) {
+    value(switchId: number): boolean {
         return !!this._data[switchId];
     }
 
-    setValue(switchId, value) {
-        if (switchId > 0 && switchId < global.$dataSystem.switches.length) {
+    setValue(switchId: number, value: boolean): void {
+        if (switchId > 0 && switchId < window.$dataSystem.switches.length) {
             this._data[switchId] = value;
             this.onChange();
         }
     }
 
-    onChange() {
-        global.$gameMap.requestRefresh();
+    onChange(): void {
+        window.$gameMap.requestRefresh();
     }
 }

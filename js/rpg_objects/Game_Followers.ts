@@ -4,46 +4,50 @@ import { Game_Follower } from './Game_Follower';
  * The wrapper class for a follower array.
  */
 export class Game_Followers {
+    private _visible: boolean;
+    private _gathering: boolean;
+    private _data: Game_Follower[];
+
     constructor() {
-        this._visible = global.$dataSystem.optFollowers;
+        this._visible = window.$dataSystem.optFollowers;
         this._gathering = false;
         this._data = [];
-        for (let i = 1; i < global.$gameParty.maxBattleMembers(); i++) {
+        for (let i = 1; i < window.$gameParty.maxBattleMembers(); i++) {
             this._data.push(new Game_Follower(i));
         }
     }
 
-    isVisible() {
+    isVisible(): boolean {
         return this._visible;
     }
 
-    show() {
+    show(): void {
         this._visible = true;
     }
 
-    hide() {
+    hide(): void {
         this._visible = false;
     }
 
-    follower(index) {
+    follower(index: number): Game_Follower {
         return this._data[index];
     }
 
-    forEach(callback, thisObject) {
+    forEach(callback: (follower: Game_Follower) => void, thisObject?: unknown): void {
         this._data.forEach(callback, thisObject);
     }
 
-    reverseEach(callback, thisObject) {
+    reverseEach(callback: (follower: Game_Follower) => void, thisObject?: unknown): void {
         this._data.reverse();
         this._data.forEach(callback, thisObject);
         this._data.reverse();
     }
 
-    refresh() {
-        this.forEach((follower) => follower.refresh(), this);
+    refresh(): void {
+        this.forEach((follower) => follower.refresh());
     }
 
-    update() {
+    update(): void {
         if (this.areGathering()) {
             if (!this.areMoving()) {
                 this.updateMove();
@@ -54,58 +58,58 @@ export class Game_Followers {
         }
         this.forEach((follower) => {
             follower.update();
-        }, this);
+        });
     }
 
-    updateMove() {
+    updateMove(): void {
         for (let i = this._data.length - 1; i >= 0; i--) {
-            const precedingCharacter = i > 0 ? this._data[i - 1] : global.$gamePlayer;
+            const precedingCharacter = i > 0 ? this._data[i - 1] : window.$gamePlayer;
             this._data[i].chaseCharacter(precedingCharacter);
         }
     }
 
-    jumpAll() {
-        if (global.$gamePlayer.isJumping()) {
+    jumpAll(): void {
+        if (window.$gamePlayer.isJumping()) {
             for (let i = 0; i < this._data.length; i++) {
                 const follower = this._data[i];
-                const sx = global.$gamePlayer.deltaXFrom(follower.x);
-                const sy = global.$gamePlayer.deltaYFrom(follower.y);
+                const sx = window.$gamePlayer.deltaXFrom(follower.x);
+                const sy = window.$gamePlayer.deltaYFrom(follower.y);
                 follower.jump(sx, sy);
             }
         }
     }
 
-    synchronize(x, y, d) {
+    synchronize(x: number, y: number, d: number): void {
         this.forEach((follower) => {
             follower.locate(x, y);
             follower.setDirection(d);
-        }, this);
+        });
     }
 
-    gather() {
+    gather(): void {
         this._gathering = true;
     }
 
-    areGathering() {
+    areGathering(): boolean {
         return this._gathering;
     }
 
-    visibleFollowers() {
-        return this._data.filter((follower) => follower.isVisible(), this);
+    visibleFollowers(): Game_Follower[] {
+        return this._data.filter((follower) => follower.isVisible());
     }
 
-    areMoving() {
+    areMoving(): boolean {
         return this.visibleFollowers().some((follower) => follower.isMoving(), this);
     }
 
-    areGathered() {
+    areGathered(): boolean {
         return this.visibleFollowers().every(
-            (follower) => !follower.isMoving() && follower.pos(global.$gamePlayer.x, global.$gamePlayer.y),
+            (follower) => !follower.isMoving() && follower.pos(window.$gamePlayer.x, window.$gamePlayer.y),
             this
         );
     }
 
-    isSomeoneCollided(x, y) {
+    isSomeoneCollided(x: number, y: number): boolean {
         return this.visibleFollowers().some((follower) => follower.pos(x, y), this);
     }
 }

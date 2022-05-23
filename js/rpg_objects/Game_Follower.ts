@@ -1,3 +1,4 @@
+import { Game_Actor } from './Game_Actor';
 import { Game_Character } from './Game_Character';
 
 /**
@@ -5,39 +6,41 @@ import { Game_Character } from './Game_Character';
  * other than the front character, displayed in the party.
  */
 export class Game_Follower extends Game_Character {
-    constructor(memberIndex) {
+    private _memberIndex: number;
+
+    constructor(memberIndex: number) {
         super();
         this._memberIndex = memberIndex;
-        this.setTransparent(global.$dataSystem.optTransparent);
+        this.setTransparent(window.$dataSystem.optTransparent);
         this.setThrough(true);
     }
 
-    refresh() {
+    refresh(): void {
         const characterName = this.isVisible() ? this.actor().characterName() : '';
         const characterIndex = this.isVisible() ? this.actor().characterIndex() : 0;
         this.setImage(characterName, characterIndex);
     }
 
-    actor() {
-        return global.$gameParty.battleMembers()[this._memberIndex];
+    actor(): Game_Actor {
+        return window.$gameParty.battleMembers()[this._memberIndex];
     }
 
-    isVisible() {
-        return this.actor() && global.$gamePlayer.followers().isVisible();
+    isVisible(): boolean {
+        return this.actor() && window.$gamePlayer.followers().isVisible();
     }
 
-    update() {
+    update(): void {
         super.update();
-        this.setMoveSpeed(global.$gamePlayer.realMoveSpeed());
-        this.setOpacity(global.$gamePlayer.opacity());
-        this.setBlendMode(global.$gamePlayer.blendMode());
-        this.setWalkAnime(global.$gamePlayer.hasWalkAnime());
-        this.setStepAnime(global.$gamePlayer.hasStepAnime());
-        this.setDirectionFix(global.$gamePlayer.isDirectionFixed());
-        this.setTransparent(global.$gamePlayer.isTransparent());
+        this.setMoveSpeed(window.$gamePlayer.realMoveSpeed());
+        this.setOpacity(window.$gamePlayer.opacity());
+        this.setBlendMode(window.$gamePlayer.blendMode());
+        this.setWalkAnime(window.$gamePlayer.hasWalkAnime());
+        this.setStepAnime(window.$gamePlayer.hasStepAnime());
+        this.setDirectionFix(window.$gamePlayer.isDirectionFixed());
+        this.setTransparent(window.$gamePlayer.isTransparent());
     }
 
-    chaseCharacter(character) {
+    chaseCharacter(character: Game_Character): void {
         const sx = this.deltaXFrom(character.x);
         const sy = this.deltaYFrom(character.y);
         if (sx !== 0 && sy !== 0) {
@@ -47,6 +50,6 @@ export class Game_Follower extends Game_Character {
         } else if (sy !== 0) {
             this.moveStraight(sy > 0 ? 8 : 2);
         }
-        this.setMoveSpeed(global.$gamePlayer.realMoveSpeed());
+        this.setMoveSpeed(window.$gamePlayer.realMoveSpeed());
     }
 }

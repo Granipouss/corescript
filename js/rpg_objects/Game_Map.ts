@@ -1,4 +1,8 @@
+import { clamp, mod } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
+import { RPGCommonEvent } from '../rpg_data/common-event';
+import { MapEncounter } from '../rpg_data/map';
+import { RPGTileset } from '../rpg_data/tileset';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { Game_CommonEvent } from './Game_CommonEvent';
@@ -11,6 +15,32 @@ import { Game_Vehicle } from './Game_Vehicle';
  * determination functions.
  */
 export class Game_Map {
+    private _interpreter: Game_Interpreter;
+    private _mapId: number;
+    private _tilesetId: number;
+    private _events: Game_Event[];
+    private _commonEvents: Game_CommonEvent[];
+    private _vehicles: Game_Vehicle[];
+    private _displayX: number;
+    private _displayY: number;
+    private _nameDisplay: boolean;
+    private _scrollDirection: number;
+    private _scrollRest: number;
+    private _scrollSpeed: number;
+    private _parallaxName: string;
+    private _parallaxZero: boolean;
+    private _parallaxLoopX: boolean;
+    private _parallaxLoopY: boolean;
+    private _parallaxSx: number;
+    private _parallaxSy: number;
+    private _parallaxX: number;
+    private _parallaxY: number;
+    private _battleback1Name: string;
+    private _battleback2Name: string;
+    private _needsRefresh: boolean;
+
+    tileEvents: Game_Event[];
+
     constructor() {
         this._interpreter = new Game_Interpreter();
         this._mapId = 0;
@@ -37,12 +67,12 @@ export class Game_Map {
         this.createVehicles();
     }
 
-    setup(mapId) {
-        if (!global.$dataMap) {
+    setup(mapId: number): void {
+        if (!window.$dataMap) {
             throw new Error('The map data is not available');
         }
         this._mapId = mapId;
-        this._tilesetId = global.$dataMap.tilesetId;
+        this._tilesetId = window.$dataMap.tilesetId;
         this._displayX = 0;
         this._displayY = 0;
         this.refereshVehicles();
@@ -53,80 +83,80 @@ export class Game_Map {
         this._needsRefresh = false;
     }
 
-    isEventRunning() {
+    isEventRunning(): boolean {
         return this._interpreter.isRunning() || this.isAnyEventStarting();
     }
 
-    tileWidth() {
+    tileWidth(): number {
         return 48;
     }
 
-    tileHeight() {
+    tileHeight(): number {
         return 48;
     }
 
-    mapId() {
+    mapId(): number {
         return this._mapId;
     }
 
-    tilesetId() {
+    tilesetId(): number {
         return this._tilesetId;
     }
 
-    displayX() {
+    displayX(): number {
         return this._displayX;
     }
 
-    displayY() {
+    displayY(): number {
         return this._displayY;
     }
 
-    parallaxName() {
+    parallaxName(): string {
         return this._parallaxName;
     }
 
-    battleback1Name() {
+    battleback1Name(): string {
         return this._battleback1Name;
     }
 
-    battleback2Name() {
+    battleback2Name(): string {
         return this._battleback2Name;
     }
 
-    requestRefresh(_mapId) {
+    requestRefresh(_mapId = 0): void {
         this._needsRefresh = true;
     }
 
-    isNameDisplayEnabled() {
+    isNameDisplayEnabled(): boolean {
         return this._nameDisplay;
     }
 
-    disableNameDisplay() {
+    disableNameDisplay(): void {
         this._nameDisplay = false;
     }
 
-    enableNameDisplay() {
+    enableNameDisplay(): void {
         this._nameDisplay = true;
     }
 
-    createVehicles() {
+    createVehicles(): void {
         this._vehicles = [];
         this._vehicles[0] = new Game_Vehicle('boat');
         this._vehicles[1] = new Game_Vehicle('ship');
         this._vehicles[2] = new Game_Vehicle('airship');
     }
 
-    refereshVehicles() {
+    refereshVehicles(): void {
         this._vehicles.forEach((vehicle) => {
             vehicle.refresh();
         });
     }
 
-    vehicles() {
+    vehicles(): Game_Vehicle[] {
         return this._vehicles;
     }
 
-    vehicle(type) {
+    vehicle(type: string | number): Game_Vehicle {
         if (type === 0 || type === 'boat') {
             return this.boat();
         } else if (type === 1 || type === 'ship') {
@@ -138,22 +168,22 @@ export class Game_Map {
         }
     }
 
-    boat() {
+    boat(): Game_Vehicle {
         return this._vehicles[0];
     }
 
-    ship() {
+    ship(): Game_Vehicle {
         return this._vehicles[1];
     }
 
-    airship() {
+    airship(): Game_Vehicle {
         return this._vehicles[2];
     }
 
-    setupEvents() {
+    setupEvents(): void {
         this._events = [];
-        for (let i = 0; i < global.$dataMap.events.length; i++) {
-            if (global.$dataMap.events[i]) {
+        for (let i = 0; i < window.$dataMap.events.length; i++) {
+            if (window.$dataMap.events[i]) {
                 this._events[i] = new Game_Event(this._mapId, i);
             }
         }
@@ -161,69 +191,69 @@ export class Game_Map {
         this.refreshTileEvents();
     }
 
-    events() {
+    events(): Game_Event[] {
         return this._events.filter((event) => !!event);
     }
 
-    event(eventId) {
+    event(eventId: number): Game_Event {
         return this._events[eventId];
     }
 
-    eraseEvent(eventId) {
+    eraseEvent(eventId: number): void {
         this._events[eventId].erase();
     }
 
-    parallelCommonEvents() {
-        return global.$dataCommonEvents.filter((commonEvent) => commonEvent && commonEvent.trigger === 2);
+    parallelCommonEvents(): RPGCommonEvent[] {
+        return window.$dataCommonEvents.filter((commonEvent) => commonEvent && commonEvent.trigger === 2);
     }
 
-    setupScroll() {
+    setupScroll(): void {
         this._scrollDirection = 2;
         this._scrollRest = 0;
         this._scrollSpeed = 4;
     }
 
-    setupParallax() {
-        this._parallaxName = global.$dataMap.parallaxName || '';
+    setupParallax(): void {
+        this._parallaxName = window.$dataMap.parallaxName || '';
         this._parallaxZero = ImageManager.isZeroParallax(this._parallaxName);
-        this._parallaxLoopX = global.$dataMap.parallaxLoopX;
-        this._parallaxLoopY = global.$dataMap.parallaxLoopY;
-        this._parallaxSx = global.$dataMap.parallaxSx;
-        this._parallaxSy = global.$dataMap.parallaxSy;
+        this._parallaxLoopX = window.$dataMap.parallaxLoopX;
+        this._parallaxLoopY = window.$dataMap.parallaxLoopY;
+        this._parallaxSx = window.$dataMap.parallaxSx;
+        this._parallaxSy = window.$dataMap.parallaxSy;
         this._parallaxX = 0;
         this._parallaxY = 0;
     }
 
-    setupBattleback() {
-        if (global.$dataMap.specifyBattleback) {
-            this._battleback1Name = global.$dataMap.battleback1Name;
-            this._battleback2Name = global.$dataMap.battleback2Name;
+    setupBattleback(): void {
+        if (window.$dataMap.specifyBattleback) {
+            this._battleback1Name = window.$dataMap.battleback1Name;
+            this._battleback2Name = window.$dataMap.battleback2Name;
         } else {
             this._battleback1Name = null;
             this._battleback2Name = null;
         }
     }
 
-    setDisplayPos(x, y) {
+    setDisplayPos(x: number, y: number): void {
         if (this.isLoopHorizontal()) {
-            this._displayX = x.mod(this.width());
+            this._displayX = mod(x, this.width());
             this._parallaxX = x;
         } else {
             const endX = this.width() - this.screenTileX();
-            this._displayX = endX < 0 ? endX / 2 : x.clamp(0, endX);
+            this._displayX = endX < 0 ? endX / 2 : clamp(x, [0, endX]);
             this._parallaxX = this._displayX;
         }
         if (this.isLoopVertical()) {
-            this._displayY = y.mod(this.height());
+            this._displayY = mod(y, this.height());
             this._parallaxY = y;
         } else {
             const endY = this.height() - this.screenTileY();
-            this._displayY = endY < 0 ? endY / 2 : y.clamp(0, endY);
+            this._displayY = endY < 0 ? endY / 2 : clamp(y, [0, endY]);
             this._parallaxY = this._displayY;
         }
     }
 
-    parallaxOx() {
+    parallaxOx(): number {
         if (this._parallaxZero) {
             return this._parallaxX * this.tileWidth();
         } else if (this._parallaxLoopX) {
@@ -233,7 +263,7 @@ export class Game_Map {
         }
     }
 
-    parallaxOy() {
+    parallaxOy(): number {
         if (this._parallaxZero) {
             return this._parallaxY * this.tileHeight();
         } else if (this._parallaxLoopY) {
@@ -243,11 +273,11 @@ export class Game_Map {
         }
     }
 
-    tileset() {
-        return global.$dataTilesets[this._tilesetId];
+    tileset(): RPGTileset {
+        return window.$dataTilesets[this._tilesetId];
     }
 
-    tilesetFlags() {
+    tilesetFlags(): readonly number[] {
         const tileset = this.tileset();
         if (tileset) {
             return tileset.flags;
@@ -256,95 +286,95 @@ export class Game_Map {
         }
     }
 
-    displayName() {
-        return global.$dataMap.displayName;
+    displayName(): string {
+        return window.$dataMap.displayName;
     }
 
-    width() {
-        return global.$dataMap.width;
+    width(): number {
+        return window.$dataMap.width;
     }
 
-    height() {
-        return global.$dataMap.height;
+    height(): number {
+        return window.$dataMap.height;
     }
 
-    data() {
-        return global.$dataMap.data;
+    data(): readonly number[] {
+        return window.$dataMap.data;
     }
 
-    isLoopHorizontal() {
-        return global.$dataMap.scrollType === 2 || global.$dataMap.scrollType === 3;
+    isLoopHorizontal(): boolean {
+        return window.$dataMap.scrollType === 2 || window.$dataMap.scrollType === 3;
     }
 
-    isLoopVertical() {
-        return global.$dataMap.scrollType === 1 || global.$dataMap.scrollType === 3;
+    isLoopVertical(): boolean {
+        return window.$dataMap.scrollType === 1 || window.$dataMap.scrollType === 3;
     }
 
-    isDashDisabled() {
-        return global.$dataMap.disableDashing;
+    isDashDisabled(): boolean {
+        return window.$dataMap.disableDashing;
     }
 
-    encounterList() {
-        return global.$dataMap.encounterList;
+    encounterList(): readonly MapEncounter[] {
+        return window.$dataMap.encounterList;
     }
 
-    encounterStep() {
-        return global.$dataMap.encounterStep;
+    encounterStep(): number {
+        return window.$dataMap.encounterStep;
     }
 
-    isOverworld() {
+    isOverworld(): boolean {
         return this.tileset() && this.tileset().mode === 0;
     }
 
-    screenTileX() {
+    screenTileX(): number {
         return Graphics.width / this.tileWidth();
     }
 
-    screenTileY() {
+    screenTileY(): number {
         return Graphics.height / this.tileHeight();
     }
 
-    adjustX(x) {
+    adjustX(x: number): number {
         if (this.isLoopHorizontal() && x < this._displayX - (this.width() - this.screenTileX()) / 2) {
-            return x - this._displayX + global.$dataMap.width;
+            return x - this._displayX + window.$dataMap.width;
         } else {
             return x - this._displayX;
         }
     }
 
-    adjustY(y) {
+    adjustY(y: number): number {
         if (this.isLoopVertical() && y < this._displayY - (this.height() - this.screenTileY()) / 2) {
-            return y - this._displayY + global.$dataMap.height;
+            return y - this._displayY + window.$dataMap.height;
         } else {
             return y - this._displayY;
         }
     }
 
-    roundX(x) {
-        return this.isLoopHorizontal() ? x.mod(this.width()) : x;
+    roundX(x: number): number {
+        return this.isLoopHorizontal() ? mod(x, this.width()) : x;
     }
 
-    roundY(y) {
-        return this.isLoopVertical() ? y.mod(this.height()) : y;
+    roundY(y: number): number {
+        return this.isLoopVertical() ? mod(y, this.height()) : y;
     }
 
-    xWithDirection(x, d) {
+    xWithDirection(x: number, d: number): number {
         return x + (d === 6 ? 1 : d === 4 ? -1 : 0);
     }
 
-    yWithDirection(y, d) {
+    yWithDirection(y: number, d: number): number {
         return y + (d === 2 ? 1 : d === 8 ? -1 : 0);
     }
 
-    roundXWithDirection(x, d) {
+    roundXWithDirection(x: number, d: number): number {
         return this.roundX(x + (d === 6 ? 1 : d === 4 ? -1 : 0));
     }
 
-    roundYWithDirection(y, d) {
+    roundYWithDirection(y: number, d: number): number {
         return this.roundY(y + (d === 2 ? 1 : d === 8 ? -1 : 0));
     }
 
-    deltaX(x1, x2) {
+    deltaX(x1: number, x2: number): number {
         let result = x1 - x2;
         if (this.isLoopHorizontal() && Math.abs(result) > this.width() / 2) {
             if (result < 0) {
@@ -356,7 +386,7 @@ export class Game_Map {
         return result;
     }
 
-    deltaY(y1, y2) {
+    deltaY(y1: number, y2: number): number {
         let result = y1 - y2;
         if (this.isLoopVertical() && Math.abs(result) > this.height() / 2) {
             if (result < 0) {
@@ -368,44 +398,44 @@ export class Game_Map {
         return result;
     }
 
-    distance(x1, y1, x2, y2) {
+    distance(x1: number, y1: number, x2: number, y2: number): number {
         return Math.abs(this.deltaX(x1, x2)) + Math.abs(this.deltaY(y1, y2));
     }
 
-    canvasToMapX(x) {
+    canvasToMapX(x: number): number {
         const tileWidth = this.tileWidth();
         const originX = this._displayX * tileWidth;
         const mapX = Math.floor((originX + x) / tileWidth);
         return this.roundX(mapX);
     }
 
-    canvasToMapY(y) {
+    canvasToMapY(y: number): number {
         const tileHeight = this.tileHeight();
         const originY = this._displayY * tileHeight;
         const mapY = Math.floor((originY + y) / tileHeight);
         return this.roundY(mapY);
     }
 
-    autoplay() {
-        if (global.$dataMap.autoplayBgm) {
-            if (global.$gamePlayer.isInVehicle()) {
-                global.$gameSystem.saveWalkingBgm2();
+    autoplay(): void {
+        if (window.$dataMap.autoplayBgm) {
+            if (window.$gamePlayer.isInVehicle()) {
+                window.$gameSystem.saveWalkingBgm2();
             } else {
-                AudioManager.playBgm(global.$dataMap.bgm);
+                AudioManager.playBgm(window.$dataMap.bgm);
             }
         }
-        if (global.$dataMap.autoplayBgs) {
-            AudioManager.playBgs(global.$dataMap.bgs);
+        if (window.$dataMap.autoplayBgs) {
+            AudioManager.playBgs(window.$dataMap.bgs);
         }
     }
 
-    refreshIfNeeded() {
+    refreshIfNeeded(): void {
         if (this._needsRefresh) {
             this.refresh();
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.events().forEach((event) => {
             event.refresh();
         });
@@ -416,31 +446,31 @@ export class Game_Map {
         this._needsRefresh = false;
     }
 
-    refreshTileEvents() {
+    refreshTileEvents(): void {
         this.tileEvents = this.events().filter((event) => event.isTile());
     }
 
-    eventsXy(x, y) {
+    eventsXy(x: number, y: number): Game_Event[] {
         return this.events().filter((event) => event.pos(x, y));
     }
 
-    eventsXyNt(x, y) {
+    eventsXyNt(x: number, y: number): Game_Event[] {
         return this.events().filter((event) => event.posNt(x, y));
     }
 
-    tileEventsXy(x, y) {
+    tileEventsXy(x: number, y: number): Game_Event[] {
         return this.tileEvents.filter((event) => event.posNt(x, y));
     }
 
-    eventIdXy(x, y) {
+    eventIdXy(x: number, y: number): number {
         const list = this.eventsXy(x, y);
         return list.length === 0 ? 0 : list[0].eventId();
     }
 
-    scrollDown(distance) {
+    scrollDown(distance: number): void {
         if (this.isLoopVertical()) {
             this._displayY += distance;
-            this._displayY %= global.$dataMap.height;
+            this._displayY %= window.$dataMap.height;
             if (this._parallaxLoopY) {
                 this._parallaxY += distance;
             }
@@ -451,10 +481,10 @@ export class Game_Map {
         }
     }
 
-    scrollLeft(distance) {
+    scrollLeft(distance: number): void {
         if (this.isLoopHorizontal()) {
-            this._displayX += global.$dataMap.width - distance;
-            this._displayX %= global.$dataMap.width;
+            this._displayX += window.$dataMap.width - distance;
+            this._displayX %= window.$dataMap.width;
             if (this._parallaxLoopX) {
                 this._parallaxX -= distance;
             }
@@ -465,10 +495,10 @@ export class Game_Map {
         }
     }
 
-    scrollRight(distance) {
+    scrollRight(distance: number): void {
         if (this.isLoopHorizontal()) {
             this._displayX += distance;
-            this._displayX %= global.$dataMap.width;
+            this._displayX %= window.$dataMap.width;
             if (this._parallaxLoopX) {
                 this._parallaxX += distance;
             }
@@ -479,10 +509,10 @@ export class Game_Map {
         }
     }
 
-    scrollUp(distance) {
+    scrollUp(distance: number): void {
         if (this.isLoopVertical()) {
-            this._displayY += global.$dataMap.height - distance;
-            this._displayY %= global.$dataMap.height;
+            this._displayY += window.$dataMap.height - distance;
+            this._displayY %= window.$dataMap.height;
             if (this._parallaxLoopY) {
                 this._parallaxY -= distance;
             }
@@ -493,11 +523,11 @@ export class Game_Map {
         }
     }
 
-    isValid(x, y) {
+    isValid(x: number, y: number): boolean {
         return x >= 0 && x < this.width() && y >= 0 && y < this.height();
     }
 
-    checkPassage(x, y, bit) {
+    checkPassage(x: number, y: number, bit: number): boolean {
         const flags = this.tilesetFlags();
         const tiles = this.allTiles(x, y);
         for (let i = 0; i < tiles.length; i++) {
@@ -515,13 +545,13 @@ export class Game_Map {
         return false;
     }
 
-    tileId(x, y, z) {
-        const width = global.$dataMap.width;
-        const height = global.$dataMap.height;
-        return global.$dataMap.data[(z * height + y) * width + x] || 0;
+    tileId(x: number, y: number, z: number): number {
+        const width = window.$dataMap.width;
+        const height = window.$dataMap.height;
+        return window.$dataMap.data[(z * height + y) * width + x] || 0;
     }
 
-    layeredTiles(x, y) {
+    layeredTiles(x: number, y: number): number[] {
         const tiles = [];
         for (let i = 0; i < 4; i++) {
             tiles.push(this.tileId(x, y, 3 - i));
@@ -529,54 +559,54 @@ export class Game_Map {
         return tiles;
     }
 
-    allTiles(x, y) {
+    allTiles(x: number, y: number): number[] {
         const tiles = this.tileEventsXy(x, y).map((event) => event.tileId());
         return tiles.concat(this.layeredTiles(x, y));
     }
 
-    autotileType(x, y, z) {
+    autotileType(x: number, y: number, z: number): number {
         const tileId = this.tileId(x, y, z);
         return tileId >= 2048 ? Math.floor((tileId - 2048) / 48) : -1;
     }
 
-    isPassable(x, y, d) {
+    isPassable(x: number, y: number, d: number): boolean {
         return this.checkPassage(x, y, (1 << (d / 2 - 1)) & 0x0f);
     }
 
-    isBoatPassable(x, y) {
+    isBoatPassable(x: number, y: number): boolean {
         return this.checkPassage(x, y, 0x0200);
     }
 
-    isShipPassable(x, y) {
+    isShipPassable(x: number, y: number): boolean {
         return this.checkPassage(x, y, 0x0400);
     }
 
-    isAirshipLandOk(x, y) {
+    isAirshipLandOk(x: number, y: number): boolean {
         return this.checkPassage(x, y, 0x0800) && this.checkPassage(x, y, 0x0f);
     }
 
-    checkLayeredTilesFlags(x, y, bit) {
+    checkLayeredTilesFlags(x: number, y: number, bit: number): boolean {
         const flags = this.tilesetFlags();
-        return this.layeredTiles(x, y).some((tileId) => flags[tileId] & (bit !== 0));
+        return this.layeredTiles(x, y).some((tileId) => flags[tileId] & (bit !== 0 ? 1 : 0));
     }
 
-    isLadder(x, y) {
+    isLadder(x: number, y: number): boolean {
         return this.isValid(x, y) && this.checkLayeredTilesFlags(x, y, 0x20);
     }
 
-    isBush(x, y) {
+    isBush(x: number, y: number): boolean {
         return this.isValid(x, y) && this.checkLayeredTilesFlags(x, y, 0x40);
     }
 
-    isCounter(x, y) {
+    isCounter(x: number, y: number): boolean {
         return this.isValid(x, y) && this.checkLayeredTilesFlags(x, y, 0x80);
     }
 
-    isDamageFloor(x, y) {
+    isDamageFloor(x: number, y: number): boolean {
         return this.isValid(x, y) && this.checkLayeredTilesFlags(x, y, 0x100);
     }
 
-    terrainTag(x, y) {
+    terrainTag(x: number, y: number): number {
         if (this.isValid(x, y)) {
             const flags = this.tilesetFlags();
             const tiles = this.layeredTiles(x, y);
@@ -590,21 +620,21 @@ export class Game_Map {
         return 0;
     }
 
-    regionId(x, y) {
+    regionId(x: number, y: number): number {
         return this.isValid(x, y) ? this.tileId(x, y, 5) : 0;
     }
 
-    startScroll(direction, distance, speed) {
+    startScroll(direction: number, distance: number, speed: number): void {
         this._scrollDirection = direction;
         this._scrollRest = distance;
         this._scrollSpeed = speed;
     }
 
-    isScrolling() {
+    isScrolling(): boolean {
         return this._scrollRest > 0;
     }
 
-    update(sceneActive) {
+    update(sceneActive = false): void {
         this.refreshIfNeeded();
         if (sceneActive) {
             this.updateInterpreter();
@@ -615,7 +645,7 @@ export class Game_Map {
         this.updateParallax();
     }
 
-    updateScroll() {
+    updateScroll(): void {
         if (this.isScrolling()) {
             const lastX = this._displayX;
             const lastY = this._displayY;
@@ -628,11 +658,11 @@ export class Game_Map {
         }
     }
 
-    scrollDistance() {
+    scrollDistance(): number {
         return Math.pow(2, this._scrollSpeed) / 256;
     }
 
-    doScroll(direction, distance) {
+    doScroll(direction: number, distance: number): void {
         switch (direction) {
             case 2:
                 this.scrollDown(distance);
@@ -649,7 +679,7 @@ export class Game_Map {
         }
     }
 
-    updateEvents() {
+    updateEvents(): void {
         this.events().forEach((event) => {
             event.update();
         });
@@ -658,13 +688,13 @@ export class Game_Map {
         });
     }
 
-    updateVehicles() {
+    updateVehicles(): void {
         this._vehicles.forEach((vehicle) => {
             vehicle.update();
         });
     }
 
-    updateParallax() {
+    updateParallax(): void {
         if (this._parallaxLoopX) {
             this._parallaxX += this._parallaxSx / this.tileWidth() / 2;
         }
@@ -673,17 +703,17 @@ export class Game_Map {
         }
     }
 
-    changeTileset(tilesetId) {
+    changeTileset(tilesetId: number): void {
         this._tilesetId = tilesetId;
         this.refresh();
     }
 
-    changeBattleback(battleback1Name, battleback2Name) {
+    changeBattleback(battleback1Name: string, battleback2Name: string): void {
         this._battleback1Name = battleback1Name;
         this._battleback2Name = battleback2Name;
     }
 
-    changeParallax(name, loopX, loopY, sx, sy) {
+    changeParallax(name: string, loopX: boolean, loopY: boolean, sx: number, sy: number): void {
         this._parallaxName = name;
         this._parallaxZero = ImageManager.isZeroParallax(this._parallaxName);
         if (this._parallaxLoopX && !loopX) {
@@ -698,7 +728,7 @@ export class Game_Map {
         this._parallaxSy = sy;
     }
 
-    updateInterpreter() {
+    updateInterpreter(): void {
         for (;;) {
             this._interpreter.update();
             if (this._interpreter.isRunning()) {
@@ -714,13 +744,13 @@ export class Game_Map {
         }
     }
 
-    unlockEvent(eventId) {
+    unlockEvent(eventId: number): void {
         if (this._events[eventId]) {
             this._events[eventId].unlock();
         }
     }
 
-    setupStartingEvent() {
+    setupStartingEvent(): boolean {
         this.refreshIfNeeded();
         if (this._interpreter.setupReservedCommonEvent()) {
             return true;
@@ -737,17 +767,17 @@ export class Game_Map {
         return false;
     }
 
-    setupTestEvent() {
-        if (global.$testEvent) {
-            this._interpreter.setup(global.$testEvent, 0);
+    setupTestEvent(): boolean {
+        if (window.$testEvent) {
+            this._interpreter.setup(window.$testEvent, 0);
             this._interpreter.setEventInfo({ eventType: 'test_event' });
-            global.$testEvent = null;
+            window.$testEvent = null;
             return true;
         }
         return false;
     }
 
-    setupStartingMapEvent() {
+    setupStartingMapEvent(): boolean {
         const events = this.events();
         for (let i = 0; i < events.length; i++) {
             const event = events[i];
@@ -761,10 +791,10 @@ export class Game_Map {
         return false;
     }
 
-    setupAutorunCommonEvent() {
-        for (let i = 0; i < global.$dataCommonEvents.length; i++) {
-            const event = global.$dataCommonEvents[i];
-            if (event && event.trigger === 1 && global.$gameSwitches.value(event.switchId)) {
+    setupAutorunCommonEvent(): boolean {
+        for (let i = 0; i < window.$dataCommonEvents.length; i++) {
+            const event = window.$dataCommonEvents[i];
+            if (event && event.trigger === 1 && window.$gameSwitches.value(event.switchId)) {
                 this._interpreter.setup(event.list);
                 this._interpreter.setEventInfo({
                     eventType: 'common_event',
@@ -776,7 +806,7 @@ export class Game_Map {
         return false;
     }
 
-    isAnyEventStarting() {
+    isAnyEventStarting(): boolean {
         return this.events().some((event) => event.isStarting());
     }
 }

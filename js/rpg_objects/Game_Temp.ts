@@ -1,9 +1,15 @@
 import { Utils } from '../rpg_core/Utils';
+import { RPGCommonEvent } from '../rpg_data/common-event';
 
 /**
  * The game object class for temporary data that is not included in save data.
  */
 export class Game_Temp {
+    private _isPlaytest: boolean;
+    private _commonEventId: number;
+    private _destinationX: number;
+    private _destinationY: number;
+
     constructor() {
         this._isPlaytest = Utils.isOptionValid('test');
         this._commonEventId = 0;
@@ -11,49 +17,49 @@ export class Game_Temp {
         this._destinationY = null;
     }
 
-    isPlaytest() {
+    isPlaytest(): boolean {
         return this._isPlaytest;
     }
 
-    reserveCommonEvent(commonEventId) {
+    reserveCommonEvent(commonEventId: number): void {
         this._commonEventId = commonEventId;
     }
 
-    clearCommonEvent() {
+    clearCommonEvent(): void {
         this._commonEventId = 0;
     }
 
-    isCommonEventReserved() {
+    isCommonEventReserved(): boolean {
         return this._commonEventId > 0;
     }
 
-    reservedCommonEvent() {
-        return global.$dataCommonEvents[this._commonEventId];
+    reservedCommonEvent(): RPGCommonEvent {
+        return window.$dataCommonEvents[this._commonEventId];
     }
 
-    reservedCommonEventId() {
+    reservedCommonEventId(): number {
         return this._commonEventId;
     }
 
-    setDestination(x, y) {
+    setDestination(x: number, y: number): void {
         this._destinationX = x;
         this._destinationY = y;
     }
 
-    clearDestination() {
+    clearDestination(): void {
         this._destinationX = null;
         this._destinationY = null;
     }
 
-    isDestinationValid() {
+    isDestinationValid(): boolean {
         return this._destinationX !== null;
     }
 
-    destinationX() {
+    destinationX(): number {
         return this._destinationX;
     }
 
-    destinationY() {
+    destinationY(): number {
         return this._destinationY;
     }
 }

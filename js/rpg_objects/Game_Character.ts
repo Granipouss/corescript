@@ -1,10 +1,13 @@
+import { randomInt } from '../rpg_core/extension';
+import { RPGMoveCommand } from '../rpg_data/move-command';
+import { RPGMoveRoute } from '../rpg_data/move-route';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { Game_CharacterBase } from './Game_CharacterBase';
 
 /**
  * The superclass of Game_Player, Game_Follower, GameVehicle, and Game_Event.
  */
-export class Game_Character extends Game_CharacterBase {
+export abstract class Game_Character extends Game_CharacterBase {
     static ROUTE_END = 0;
     static ROUTE_MOVE_DOWN = 1;
     static ROUTE_MOVE_LEFT = 2;
@@ -52,7 +55,18 @@ export class Game_Character extends Game_CharacterBase {
     static ROUTE_PLAY_SE = 44;
     static ROUTE_SCRIPT = 45;
 
-    initMembers() {
+    protected _moveRouteForcing: boolean;
+    protected _moveRoute: RPGMoveRoute;
+    protected _moveRouteIndex: number;
+    protected _originalMoveRoute: RPGMoveRoute;
+    protected _originalMoveRouteIndex: number;
+    protected _waitCount: number;
+    protected _callerEventInfo: Record<string, unknown>;
+    protected _mapId: number;
+    protected _eventId: number;
+    protected _pageIndex: number;
+
+    initMembers(): void {
         super.initMembers();
         this._moveRouteForcing = false;
         this._moveRoute = null;
@@ -63,29 +77,29 @@ export class Game_Character extends Game_CharacterBase {
         this._callerEventInfo = null;
     }
 
-    memorizeMoveRoute() {
+    memorizeMoveRoute(): void {
         this._originalMoveRoute = this._moveRoute;
         this._originalMoveRouteIndex = this._moveRouteIndex;
     }
 
-    restoreMoveRoute() {
+    restoreMoveRoute(): void {
         this._moveRoute = this._originalMoveRoute;
         this._moveRouteIndex = this._originalMoveRouteIndex;
         this._originalMoveRoute = null;
         this._callerEventInfo = null;
     }
 
-    isMoveRouteForcing() {
+    isMoveRouteForcing(): boolean {
         return this._moveRouteForcing;
     }
 
-    setMoveRoute(moveRoute) {
+    setMoveRoute(moveRoute: RPGMoveRoute): void {
         this._moveRoute = moveRoute;
         this._moveRouteIndex = 0;
         this._moveRouteForcing = false;
     }
 
-    forceMoveRoute(moveRoute) {
+    forceMoveRoute(moveRoute: RPGMoveRoute): void {
         if (!this._originalMoveRoute) {
             this.memorizeMoveRoute();
         }
@@ -95,18 +109,18 @@ export class Game_Character extends Game_CharacterBase {
         this._waitCount = 0;
     }
 
-    setCallerEventInfo(callerEventInfo) {
+    setCallerEventInfo(callerEventInfo: Record<string, unknown>): void {
         this._callerEventInfo = callerEventInfo;
     }
 
-    updateStop() {
+    updateStop(): void {
         super.updateStop();
         if (this._moveRouteForcing) {
             this.updateRoutineMove();
         }
     }
 
-    updateRoutineMove() {
+    updateRoutineMove(): void {
         if (this._waitCount > 0) {
             this._waitCount--;
         } else {
@@ -119,7 +133,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    processMoveCommand(command) {
+    processMoveCommand(command: RPGMoveCommand): void {
         const gc = Game_Character;
         const params = command.parameters;
         switch (command.code) {
@@ -205,10 +219,10 @@ export class Game_Character extends Game_CharacterBase {
                 this.turnAwayFromPlayer();
                 break;
             case gc.ROUTE_SWITCH_ON:
-                global.$gameSwitches.setValue(params[0], true);
+                window.$gameSwitches.setValue(params[0], true);
                 break;
             case gc.ROUTE_SWITCH_OFF:
-                global.$gameSwitches.setValue(params[0], false);
+                window.$gameSwitches.setValue(params[0], false);
                 break;
             case gc.ROUTE_CHANGE_SPEED:
                 this.setMoveSpeed(params[0]);
@@ -284,22 +298,22 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    deltaXFrom(x) {
-        return global.$gameMap.deltaX(this.x, x);
+    deltaXFrom(x: number): number {
+        return window.$gameMap.deltaX(this.x, x);
     }
 
-    deltaYFrom(y) {
-        return global.$gameMap.deltaY(this.y, y);
+    deltaYFrom(y: number): number {
+        return window.$gameMap.deltaY(this.y, y);
     }
 
-    moveRandom() {
-        const d = 2 + Math.randomInt(4) * 2;
+    moveRandom(): void {
+        const d = 2 + randomInt(4) * 2;
         if (this.canPass(this.x, this.y, d)) {
             this.moveStraight(d);
         }
     }
 
-    moveTowardCharacter(character) {
+    moveTowardCharacter(character: Game_Character): void {
         const sx = this.deltaXFrom(character.x);
         const sy = this.deltaYFrom(character.y);
         if (Math.abs(sx) > Math.abs(sy)) {
@@ -315,7 +329,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    moveAwayFromCharacter(character) {
+    moveAwayFromCharacter(character: Game_Character): void {
         const sx = this.deltaXFrom(character.x);
         const sy = this.deltaYFrom(character.y);
         if (Math.abs(sx) > Math.abs(sy)) {
@@ -331,7 +345,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turnTowardCharacter(character) {
+    turnTowardCharacter(character: Game_Character): void {
         const sx = this.deltaXFrom(character.x);
         const sy = this.deltaYFrom(character.y);
         if (Math.abs(sx) > Math.abs(sy)) {
@@ -341,7 +355,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turnAwayFromCharacter(character) {
+    turnAwayFromCharacter(character: Game_Character): void {
         const sx = this.deltaXFrom(character.x);
         const sy = this.deltaYFrom(character.y);
         if (Math.abs(sx) > Math.abs(sy)) {
@@ -351,34 +365,34 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turnTowardPlayer() {
-        this.turnTowardCharacter(global.$gamePlayer);
+    turnTowardPlayer(): void {
+        this.turnTowardCharacter(window.$gamePlayer);
     }
 
-    turnAwayFromPlayer() {
-        this.turnAwayFromCharacter(global.$gamePlayer);
+    turnAwayFromPlayer(): void {
+        this.turnAwayFromCharacter(window.$gamePlayer);
     }
 
-    moveTowardPlayer() {
-        this.moveTowardCharacter(global.$gamePlayer);
+    moveTowardPlayer(): void {
+        this.moveTowardCharacter(window.$gamePlayer);
     }
 
-    moveAwayFromPlayer() {
-        this.moveAwayFromCharacter(global.$gamePlayer);
+    moveAwayFromPlayer(): void {
+        this.moveAwayFromCharacter(window.$gamePlayer);
     }
 
-    moveForward() {
+    moveForward(): void {
         this.moveStraight(this.direction());
     }
 
-    moveBackward() {
+    moveBackward(): void {
         const lastDirectionFix = this.isDirectionFixed();
         this.setDirectionFix(true);
         this.moveStraight(this.reverseDir(this.direction()));
         this.setDirectionFix(lastDirectionFix);
     }
 
-    processRouteEnd() {
+    processRouteEnd(): void {
         if (this._moveRoute.repeat) {
             this._moveRouteIndex = -1;
         } else if (this._moveRouteForcing) {
@@ -387,7 +401,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    advanceMoveRouteIndex() {
+    advanceMoveRouteIndex(): void {
         const moveRoute = this._moveRoute;
         if (moveRoute && (this.isMovementSucceeded() || moveRoute.skippable)) {
             const numCommands = moveRoute.list.length - 1;
@@ -398,7 +412,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turnRight90() {
+    turnRight90(): void {
         switch (this.direction()) {
             case 2:
                 this.setDirection(4);
@@ -415,7 +429,7 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turnLeft90() {
+    turnLeft90(): void {
         switch (this.direction()) {
             case 2:
                 this.setDirection(6);
@@ -432,12 +446,12 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turn180() {
+    turn180(): void {
         this.setDirection(this.reverseDir(this.direction()));
     }
 
-    turnRightOrLeft90() {
-        switch (Math.randomInt(2)) {
+    turnRightOrLeft90(): void {
+        switch (randomInt(2)) {
             case 0:
                 this.turnRight90();
                 break;
@@ -447,24 +461,32 @@ export class Game_Character extends Game_CharacterBase {
         }
     }
 
-    turnRandom() {
-        this.setDirection(2 + Math.randomInt(4) * 2);
+    turnRandom(): void {
+        this.setDirection(2 + randomInt(4) * 2);
     }
 
-    swap(character) {
+    swap(character: Game_Character): void {
         const newX = character.x;
         const newY = character.y;
         character.locate(this.x, this.y);
         this.locate(newX, newY);
     }
 
-    findDirectionTo(goalX, goalY) {
+    findDirectionTo(goalX: number, goalY: number): number {
+        type Node = {
+            parent: Node;
+            x: number;
+            y: number;
+            g: number;
+            f: number;
+        };
+
         const searchLimit = this.searchLimit();
-        const mapWidth = global.$gameMap.width();
-        const nodeList = [];
-        const openList = [];
+        const mapWidth = window.$gameMap.width();
+        const nodeList: Node[] = [];
+        const openList: number[] = [];
         const closedList = [];
-        const start = {};
+        const start = {} as Node;
         let best = start;
 
         if (this.x === goalX && this.y === goalY) {
@@ -475,7 +497,7 @@ export class Game_Character extends Game_CharacterBase {
         start.x = this.x;
         start.y = this.y;
         start.g = 0;
-        start.f = global.$gameMap.distance(start.x, start.y, goalX, goalY);
+        start.f = window.$gameMap.distance(start.x, start.y, goalX, goalY);
         nodeList.push(start);
         openList.push(start.y * mapWidth + start.x);
 
@@ -508,11 +530,11 @@ export class Game_Character extends Game_CharacterBase {
 
             for (let j = 0; j < 4; j++) {
                 const direction = 2 + j * 2;
-                const x2 = global.$gameMap.roundXWithDirection(x1, direction);
-                const y2 = global.$gameMap.roundYWithDirection(y1, direction);
+                const x2 = window.$gameMap.roundXWithDirection(x1, direction);
+                const y2 = window.$gameMap.roundYWithDirection(y1, direction);
                 const pos2 = y2 * mapWidth + x2;
 
-                if (closedList.contains(pos2)) {
+                if (closedList.includes(pos2)) {
                     continue;
                 }
                 if (!this.canPass(x1, y1, direction)) {
@@ -523,11 +545,11 @@ export class Game_Character extends Game_CharacterBase {
                 const index2 = openList.indexOf(pos2);
 
                 if (index2 < 0 || g2 < nodeList[index2].g) {
-                    let neighbor;
+                    let neighbor: Node;
                     if (index2 >= 0) {
                         neighbor = nodeList[index2];
                     } else {
-                        neighbor = {};
+                        neighbor = {} as Node;
                         nodeList.push(neighbor);
                         openList.push(pos2);
                     }
@@ -535,7 +557,7 @@ export class Game_Character extends Game_CharacterBase {
                     neighbor.x = x2;
                     neighbor.y = y2;
                     neighbor.g = g2;
-                    neighbor.f = g2 + global.$gameMap.distance(x2, y2, goalX, goalY);
+                    neighbor.f = g2 + window.$gameMap.distance(x2, y2, goalX, goalY);
                     if (!best || neighbor.f - neighbor.g < best.f - best.g) {
                         best = neighbor;
                     }
@@ -548,8 +570,8 @@ export class Game_Character extends Game_CharacterBase {
             node = node.parent;
         }
 
-        const deltaX1 = global.$gameMap.deltaX(node.x, start.x);
-        const deltaY1 = global.$gameMap.deltaY(node.y, start.y);
+        const deltaX1 = window.$gameMap.deltaX(node.x, start.x);
+        const deltaY1 = window.$gameMap.deltaY(node.y, start.y);
         if (deltaY1 > 0) {
             return 2;
         } else if (deltaX1 < 0) {
@@ -571,7 +593,7 @@ export class Game_Character extends Game_CharacterBase {
         return 0;
     }
 
-    searchLimit() {
+    searchLimit(): number {
         return 12;
     }
 }

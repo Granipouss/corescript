@@ -1,21 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * The game object class for variables.
  */
 export class Game_Variables {
+    private _data: unknown[];
+
     constructor() {
         this.clear();
     }
 
-    clear() {
+    clear(): void {
         this._data = [];
     }
 
-    value(variableId) {
+    value(variableId: number): any {
         return this._data[variableId] || 0;
     }
 
-    setValue(variableId, value) {
-        if (variableId > 0 && variableId < global.$dataSystem.variables.length) {
+    setValue(variableId: number, value: unknown): void {
+        if (variableId > 0 && variableId < window.$dataSystem.variables.length) {
             if (typeof value === 'number') {
                 value = Math.floor(value);
             }
@@ -24,7 +28,7 @@ export class Game_Variables {
         }
     }
 
-    onChange() {
-        global.$gameMap.requestRefresh();
+    onChange(): void {
+        window.$gameMap.requestRefresh();
     }
 }

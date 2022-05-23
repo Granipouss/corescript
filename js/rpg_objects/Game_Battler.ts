@@ -1,15 +1,38 @@
+import { randomInt } from '../rpg_core/extension';
+import { RPGItem } from '../rpg_data/item';
+import { RPGSkill } from '../rpg_data/skill';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { DataManager } from '../rpg_managers/DataManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Game_Action } from './Game_Action';
 import { Game_ActionResult } from './Game_ActionResult';
 import { Game_BattlerBase } from './Game_BattlerBase';
+import { Game_Unit } from './Game_Unit';
+
+export type AnimationData = {
+    animationId: number;
+    mirror: boolean;
+    delay: number;
+};
 
 /**
  * The superclass of Game_Actor and Game_Enemy. It contains methods for sprites
  * and actions.
  */
-export class Game_Battler extends Game_BattlerBase {
+export abstract class Game_Battler extends Game_BattlerBase {
+    protected _actions: Game_Action[];
+    protected _speed: number;
+    protected _result: Game_ActionResult;
+    protected _actionState: string;
+    protected _lastTargetIndex: number;
+    protected _animations: AnimationData[];
+    protected _damagePopup: boolean;
+    protected _effectType: string;
+    protected _motionType: string;
+    protected _weaponImageId: number;
+    protected _motionRefresh: boolean;
+    protected _selected: boolean;
+
     initMembers() {
         super.initMembers();
         this._actions = [];
@@ -47,11 +70,11 @@ export class Game_Battler extends Game_BattlerBase {
         this._motionRefresh = false;
     }
 
-    requestEffect(effectType) {
+    requestEffect(effectType: string): void {
         this._effectType = effectType;
     }
 
-    requestMotion(motionType) {
+    requestMotion(motionType: string): void {
         this._motionType = motionType;
     }
 
@@ -59,39 +82,39 @@ export class Game_Battler extends Game_BattlerBase {
         this._motionRefresh = true;
     }
 
-    select() {
+    select(): void {
         this._selected = true;
     }
 
-    deselect() {
+    deselect(): void {
         this._selected = false;
     }
 
-    isAnimationRequested() {
+    isAnimationRequested(): boolean {
         return this._animations.length > 0;
     }
 
-    isDamagePopupRequested() {
+    isDamagePopupRequested(): boolean {
         return this._damagePopup;
     }
 
-    isEffectRequested() {
+    isEffectRequested(): boolean {
         return !!this._effectType;
     }
 
-    isMotionRequested() {
+    isMotionRequested(): boolean {
         return !!this._motionType;
     }
 
-    isWeaponAnimationRequested() {
+    isWeaponAnimationRequested(): boolean {
         return this._weaponImageId > 0;
     }
 
-    isMotionRefreshRequested() {
+    isMotionRefreshRequested(): boolean {
         return this._motionRefresh;
     }
 
-    isSelected() {
+    isSelected(): boolean {
         return this._selected;
     }
 
@@ -107,48 +130,48 @@ export class Game_Battler extends Game_BattlerBase {
         return this._weaponImageId;
     }
 
-    shiftAnimation() {
+    shiftAnimation(): AnimationData {
         return this._animations.shift();
     }
 
-    startAnimation(animationId, mirror, delay) {
+    startAnimation(animationId: number, mirror: boolean, delay: number): void {
         const data = { animationId: animationId, mirror: mirror, delay: delay };
         this._animations.push(data);
     }
 
-    startDamagePopup() {
+    startDamagePopup(): void {
         this._damagePopup = true;
     }
 
-    startWeaponAnimation(weaponImageId) {
+    startWeaponAnimation(weaponImageId: number): void {
         this._weaponImageId = weaponImageId;
     }
 
-    action(index) {
+    action(index: number): Game_Action {
         return this._actions[index];
     }
 
-    setAction(index, action) {
+    setAction(index: number, action: Game_Action): void {
         this._actions[index] = action;
     }
 
-    numActions() {
+    numActions(): number {
         return this._actions.length;
     }
 
-    clearActions() {
+    clearActions(): void {
         this._actions = [];
     }
 
-    result() {
+    result(): Game_ActionResult {
         return this._result;
     }
 
-    clearResult() {
+    clearResult(): void {
         this._result.clear();
     }
 
-    refresh() {
+    refresh(): void {
         super.refresh();
         if (this.hp === 0) {
             this.addState(this.deathStateId());
@@ -157,7 +180,7 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    addState(stateId) {
+    addState(stateId: number): void {
         if (this.isStateAddable(stateId)) {
             if (!this.isStateAffected(stateId)) {
                 this.addNewState(stateId);
@@ -168,21 +191,21 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    isStateAddable(stateId) {
+    isStateAddable(stateId: number): boolean {
         return (
             this.isAlive() &&
-            global.$dataStates[stateId] &&
+            window.$dataStates[stateId] &&
             !this.isStateResist(stateId) &&
             !this._result.isStateRemoved(stateId) &&
             !this.isStateRestrict(stateId)
         );
     }
 
-    isStateRestrict(stateId) {
-        return global.$dataStates[stateId].removeByRestriction && this.isRestricted();
+    isStateRestrict(stateId: number): boolean {
+        return window.$dataStates[stateId].removeByRestriction && this.isRestricted();
     }
 
-    onRestrict() {
+    onRestrict(): void {
         super.onRestrict();
         this.clearActions();
         this.states().forEach(function (state) {
@@ -192,7 +215,7 @@ export class Game_Battler extends Game_BattlerBase {
         }, this);
     }
 
-    removeState(stateId) {
+    removeState(stateId: number): void {
         if (this.isStateAffected(stateId)) {
             if (stateId === this.deathStateId()) {
                 this.revive();
@@ -203,8 +226,8 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    escape() {
-        if (global.$gameParty.inBattle()) {
+    escape(): void {
+        if (window.$gameParty.inBattle()) {
             this.hide();
         }
         this.clearActions();
@@ -212,7 +235,7 @@ export class Game_Battler extends Game_BattlerBase {
         SoundManager.playEscape();
     }
 
-    addBuff(paramId, turns) {
+    addBuff(paramId: number, turns: number): void {
         if (this.isAlive()) {
             this.increaseBuff(paramId);
             if (this.isBuffAffected(paramId)) {
@@ -223,7 +246,7 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    addDebuff(paramId, turns) {
+    addDebuff(paramId: number, turns: number): void {
         if (this.isAlive()) {
             this.decreaseBuff(paramId);
             if (this.isDebuffAffected(paramId)) {
@@ -234,7 +257,7 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    removeBuff(paramId) {
+    removeBuff(paramId: number): void {
         if (this.isAlive() && this.isBuffOrDebuffAffected(paramId)) {
             this.eraseBuff(paramId);
             this._result.pushRemovedBuff(paramId);
@@ -242,29 +265,29 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    removeBattleStates() {
-        this.states().forEach(function (state) {
+    removeBattleStates(): void {
+        this.states().forEach((state) => {
             if (state.removeAtBattleEnd) {
                 this.removeState(state.id);
             }
-        }, this);
+        });
     }
 
-    removeAllBuffs() {
+    removeAllBuffs(): void {
         for (let i = 0; i < this.buffLength(); i++) {
             this.removeBuff(i);
         }
     }
 
-    removeStatesAuto(timing) {
-        this.states().forEach(function (state) {
+    removeStatesAuto(timing: number): void {
+        this.states().forEach((state) => {
             if (this.isStateExpired(state.id) && state.autoRemovalTiming === timing) {
                 this.removeState(state.id);
             }
-        }, this);
+        });
     }
 
-    removeBuffsAuto() {
+    removeBuffsAuto(): void {
         for (let i = 0; i < this.buffLength(); i++) {
             if (this.isBuffExpired(i)) {
                 this.removeBuff(i);
@@ -272,19 +295,19 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    removeStatesByDamage() {
-        this.states().forEach(function (state) {
-            if (state.removeByDamage && Math.randomInt(100) < state.chanceByDamage) {
+    removeStatesByDamage(): void {
+        this.states().forEach((state) => {
+            if (state.removeByDamage && randomInt(100) < state.chanceByDamage) {
                 this.removeState(state.id);
             }
-        }, this);
+        });
     }
 
-    makeActionTimes() {
+    makeActionTimes(): number {
         return this.actionPlusSet().reduce((r, p) => (Math.random() < p ? r + 1 : r), 1);
     }
 
-    makeActions() {
+    makeActions(): void {
         this.clearActions();
         if (this.canMove()) {
             const actionTimes = this.makeActionTimes();
@@ -295,23 +318,23 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    speed() {
+    speed(): number {
         return this._speed;
     }
 
-    makeSpeed() {
+    makeSpeed(): void {
         this._speed = Math.min(...this._actions.map((action) => action.speed())) || 0;
     }
 
-    currentAction() {
+    currentAction(): Game_Action {
         return this._actions[0];
     }
 
-    removeCurrentAction() {
+    removeCurrentAction(): void {
         this._actions.shift();
     }
 
-    setLastTarget(target) {
+    setLastTarget(target: Game_Battler | null): void {
         if (target) {
             this._lastTargetIndex = target.index();
         } else {
@@ -319,7 +342,7 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    forceAction(skillId, targetIndex) {
+    forceAction(skillId: number, targetIndex: number): void {
         this.clearActions();
         const action = new Game_Action(this, true);
         action.setSkill(skillId);
@@ -333,7 +356,7 @@ export class Game_Battler extends Game_BattlerBase {
         this._actions.push(action);
     }
 
-    useItem(item) {
+    useItem(item: RPGItem | RPGSkill): void {
         if (DataManager.isSkill(item)) {
             this.paySkillCost(item);
         } else if (DataManager.isItem(item)) {
@@ -341,44 +364,44 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    consumeItem(item) {
-        global.$gameParty.consumeItem(item);
+    consumeItem(item: RPGItem): void {
+        window.$gameParty.consumeItem(item);
     }
 
-    gainHp(value) {
+    gainHp(value: number): void {
         this._result.hpDamage = -value;
         this._result.hpAffected = true;
         this.setHp(this.hp + value);
     }
 
-    gainMp(value) {
+    gainMp(value: number): void {
         this._result.mpDamage = -value;
         this.setMp(this.mp + value);
     }
 
-    gainTp(value) {
+    gainTp(value: number): void {
         this._result.tpDamage = -value;
         this.setTp(this.tp + value);
     }
 
-    gainSilentTp(value) {
+    gainSilentTp(value: number): void {
         this.setTp(this.tp + value);
     }
 
-    initTp() {
-        this.setTp(Math.randomInt(25));
+    initTp(): void {
+        this.setTp(randomInt(25));
     }
 
-    clearTp() {
+    clearTp(): void {
         this.setTp(0);
     }
 
-    chargeTpByDamage(damageRate) {
+    chargeTpByDamage(damageRate: number): void {
         const value = Math.floor(50 * damageRate * this.tcr);
         this.gainSilentTp(value);
     }
 
-    regenerateHp() {
+    regenerateHp(): void {
         let value = Math.floor(this.mhp * this.hrg);
         value = Math.max(value, -this.maxSlipDamage());
         if (value !== 0) {
@@ -386,23 +409,23 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    maxSlipDamage() {
-        return global.$dataSystem.optSlipDeath ? this.hp : Math.max(this.hp - 1, 0);
+    maxSlipDamage(): number {
+        return window.$dataSystem.optSlipDeath ? this.hp : Math.max(this.hp - 1, 0);
     }
 
-    regenerateMp() {
+    regenerateMp(): void {
         const value = Math.floor(this.mmp * this.mrg);
         if (value !== 0) {
             this.gainMp(value);
         }
     }
 
-    regenerateTp() {
+    regenerateTp(): void {
         const value = Math.floor(100 * this.trg);
         this.gainSilentTp(value);
     }
 
-    regenerateAll() {
+    regenerateAll(): void {
         if (this.isAlive()) {
             this.regenerateHp();
             this.regenerateMp();
@@ -410,7 +433,7 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    onBattleStart() {
+    onBattleStart(): void {
         this.setActionState('undecided');
         this.clearMotion();
         if (!this.isPreserveTp()) {
@@ -418,13 +441,13 @@ export class Game_Battler extends Game_BattlerBase {
         }
     }
 
-    onAllActionsEnd() {
+    onAllActionsEnd(): void {
         this.clearResult();
         this.removeStatesAuto(1);
         this.removeBuffsAuto();
     }
 
-    onTurnEnd() {
+    onTurnEnd(): void {
         this.clearResult();
         this.regenerateAll();
         if (!BattleManager.isForcedTurn()) {
@@ -434,7 +457,7 @@ export class Game_Battler extends Game_BattlerBase {
         this.removeStatesAuto(2);
     }
 
-    onBattleEnd() {
+    onBattleEnd(): void {
         this.clearResult();
         this.removeBattleStates();
         this.removeAllBuffs();
@@ -445,93 +468,98 @@ export class Game_Battler extends Game_BattlerBase {
         this.appear();
     }
 
-    onDamage(value) {
+    onDamage(value: number): void {
         this.removeStatesByDamage();
         this.chargeTpByDamage(value / this.mhp);
     }
 
-    setActionState(actionState) {
+    setActionState(actionState: string): void {
         this._actionState = actionState;
         this.requestMotionRefresh();
     }
 
-    isUndecided() {
+    isUndecided(): boolean {
         return this._actionState === 'undecided';
     }
 
-    isInputting() {
+    isInputting(): boolean {
         return this._actionState === 'inputting';
     }
 
-    isWaiting() {
+    isWaiting(): boolean {
         return this._actionState === 'waiting';
     }
 
-    isActing() {
+    isActing(): boolean {
         return this._actionState === 'acting';
     }
 
-    isChanting() {
+    isChanting(): boolean {
         if (this.isWaiting()) {
             return this._actions.some((action) => action.isMagicSkill());
         }
         return false;
     }
 
-    isGuardWaiting() {
+    isGuardWaiting(): boolean {
         if (this.isWaiting()) {
             return this._actions.some((action) => action.isGuard());
         }
         return false;
     }
 
-    performActionStart(action) {
+    performActionStart(action: Game_Action): void {
         if (!action.isGuard()) {
             this.setActionState('acting');
         }
     }
 
-    performAction(_action) {
+    performAction(_action: Game_Action): void {
         // ...
     }
 
-    performActionEnd() {
+    performActionEnd(): void {
         this.setActionState('done');
     }
 
-    performDamage() {
+    performDamage(): void {
         // ...
     }
 
-    performMiss() {
+    performMiss(): void {
         SoundManager.playMiss();
     }
 
-    performRecovery() {
+    performRecovery(): void {
         SoundManager.playRecovery();
     }
 
-    performEvasion() {
+    performEvasion(): void {
         SoundManager.playEvasion();
     }
 
-    performMagicEvasion() {
+    performMagicEvasion(): void {
         SoundManager.playMagicEvasion();
     }
 
-    performCounter() {
+    performCounter(): void {
         SoundManager.playEvasion();
     }
 
-    performReflection() {
+    performReflection(): void {
         SoundManager.playReflection();
     }
 
-    performSubstitute(_target) {
+    performSubstitute(_target: Game_Battler): void {
         // ...
     }
 
-    performCollapse() {
+    performCollapse(): void {
         // ...
     }
+
+    abstract index(): number;
+
+    abstract friendsUnit(): Game_Unit;
+    abstract opponentsUnit(): Game_Unit;
 }

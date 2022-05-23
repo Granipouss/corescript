@@ -1,3 +1,7 @@
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { DataManager } from '../rpg_managers/DataManager';
 
 /**
@@ -5,7 +9,10 @@ import { DataManager } from '../rpg_managers/DataManager';
  * required because save data should not include the database object itself.
  */
 export class Game_Item {
-    constructor(item) {
+    private _dataClass: string;
+    private _itemId: number;
+
+    constructor(item: RPGSkill | RPGArmor | RPGWeapon | RPGItem = null) {
         this._dataClass = '';
         this._itemId = 0;
         if (item) {
@@ -13,53 +20,53 @@ export class Game_Item {
         }
     }
 
-    isSkill() {
+    isSkill(): boolean {
         return this._dataClass === 'skill';
     }
 
-    isItem() {
+    isItem(): boolean {
         return this._dataClass === 'item';
     }
 
-    isUsableItem() {
+    isUsableItem(): boolean {
         return this.isSkill() || this.isItem();
     }
 
-    isWeapon() {
+    isWeapon(): boolean {
         return this._dataClass === 'weapon';
     }
 
-    isArmor() {
+    isArmor(): boolean {
         return this._dataClass === 'armor';
     }
 
-    isEquipItem() {
+    isEquipItem(): boolean {
         return this.isWeapon() || this.isArmor();
     }
 
-    isNull() {
+    isNull(): boolean {
         return this._dataClass === '';
     }
 
-    itemId() {
+    itemId(): number {
         return this._itemId;
     }
 
-    object() {
+    object(): RPGSkill | RPGArmor | RPGWeapon | RPGItem {
         if (this.isSkill()) {
-            return global.$dataSkills[this._itemId];
+            return window.$dataSkills[this._itemId];
         } else if (this.isItem()) {
-            return global.$dataItems[this._itemId];
+            return window.$dataItems[this._itemId];
         } else if (this.isWeapon()) {
-            return global.$dataWeapons[this._itemId];
+            return window.$dataWeapons[this._itemId];
         } else if (this.isArmor()) {
-            return global.$dataArmors[this._itemId];
+            return window.$dataArmors[this._itemId];
         } else {
             return null;
         }
     }
 
-    setObject(item) {
+    setObject(item: RPGSkill | RPGArmor | RPGWeapon | RPGItem): void {
         if (DataManager.isSkill(item)) {
             this._dataClass = 'skill';
         } else if (DataManager.isItem(item)) {
@@ -74,7 +81,7 @@ export class Game_Item {
         this._itemId = item ? item.id : 0;
     }
 
-    setEquip(isWeapon, itemId) {
+    setEquip(isWeapon: boolean, itemId: number): void {
         this._dataClass = isWeapon ? 'weapon' : 'armor';
         this._itemId = itemId;
     }

@@ -1,16 +1,31 @@
+import { randomInt } from '../rpg_core/extension';
+import { RPGArmor } from '../rpg_data/armor';
+import { RPGEnemy, RPGEnemyAction } from '../rpg_data/enemy';
+import { RPGItem } from '../rpg_data/item';
+import { RPGTraitObject } from '../rpg_data/trait';
+import { RPGWeapon } from '../rpg_data/weapon';
 import { SoundManager } from '../rpg_managers/SoundManager';
+import { Game_Action } from './Game_Action';
 import { Game_Battler } from './Game_Battler';
+import type { Game_Party } from './Game_Party';
+import type { Game_Troop } from './Game_Troop';
 
 /**
  * The game object class for an enemy.
  */
 export class Game_Enemy extends Game_Battler {
-    constructor(enemyId, x, y) {
+    private _enemyId: number;
+    private _letter: string;
+    private _plural: boolean;
+    private _screenX: number;
+    private _screenY: number;
+
+    constructor(enemyId: number, x: number, y: number) {
         super();
         this.setup(enemyId, x, y);
     }
 
-    initMembers() {
+    initMembers(): void {
         super.initMembers();
         this._enemyId = 0;
         this._letter = '';
@@ -19,58 +34,58 @@ export class Game_Enemy extends Game_Battler {
         this._screenY = 0;
     }
 
-    setup(enemyId, x, y) {
+    setup(enemyId: number, x: number, y: number): void {
         this._enemyId = enemyId;
         this._screenX = x;
         this._screenY = y;
         this.recoverAll();
     }
 
-    isEnemy() {
+    isEnemy(): boolean {
         return true;
     }
 
-    friendsUnit() {
-        return global.$gameTroop;
+    friendsUnit(): Game_Troop {
+        return window.$gameTroop;
     }
 
-    opponentsUnit() {
-        return global.$gameParty;
+    opponentsUnit(): Game_Party {
+        return window.$gameParty;
     }
 
-    index() {
-        return global.$gameTroop.members().indexOf(this);
+    index(): number {
+        return window.$gameTroop.members().indexOf(this);
     }
 
-    isBattleMember() {
+    isBattleMember(): boolean {
         return this.index() >= 0;
     }
 
-    enemyId() {
+    enemyId(): number {
         return this._enemyId;
     }
 
-    enemy() {
-        return global.$dataEnemies[this._enemyId];
+    enemy(): RPGEnemy {
+        return window.$dataEnemies[this._enemyId];
     }
 
-    traitObjects() {
+    traitObjects(): RPGTraitObject[] {
         return super.traitObjects().concat(this.enemy());
     }
 
-    paramBase(paramId) {
+    paramBase(paramId: number): number {
         return this.enemy().params[paramId];
     }
 
-    exp() {
+    exp(): number {
         return this.enemy().exp;
     }
 
-    gold() {
+    gold(): number {
         return this.enemy().gold;
     }
 
-    makeDropItems() {
+    makeDropItems(): (RPGItem | RPGWeapon | RPGArmor)[] {
         return this.enemy().dropItems.reduce((r, di) => {
             if (di.kind > 0 && Math.random() * di.denominator < this.dropItemRate()) {
                 return r.concat(this.itemObject(di.kind, di.dataId));
@@ -80,82 +95,78 @@ export class Game_Enemy extends Game_Battler {
         }, []);
     }
 
-    dropItemRate() {
-        return global.$gameParty.hasDropItemDouble() ? 2 : 1;
+    dropItemRate(): number {
+        return window.$gameParty.hasDropItemDouble() ? 2 : 1;
     }
 
-    itemObject(kind, dataId) {
+    itemObject(kind: number, dataId: number): RPGItem | RPGWeapon | RPGArmor {
         if (kind === 1) {
-            return global.$dataItems[dataId];
+            return window.$dataItems[dataId];
         } else if (kind === 2) {
-            return global.$dataWeapons[dataId];
+            return window.$dataWeapons[dataId];
         } else if (kind === 3) {
-            return global.$dataArmors[dataId];
+            return window.$dataArmors[dataId];
         } else {
             return null;
         }
     }
 
-    isSpriteVisible() {
+    isSpriteVisible(): boolean {
         return true;
     }
 
-    screenX() {
+    screenX(): number {
         return this._screenX;
     }
 
-    screenY() {
+    screenY(): number {
         return this._screenY;
     }
 
-    battlerName() {
+    battlerName(): string {
         return this.enemy().battlerName;
     }
 
-    battlerHue() {
+    battlerHue(): number {
         return this.enemy().battlerHue;
     }
 
-    originalName() {
+    originalName(): string {
         return this.enemy().name;
     }
 
-    name() {
+    name(): string {
         return this.originalName() + (this._plural ? this._letter : '');
     }
 
-    isLetterEmpty() {
+    isLetterEmpty(): boolean {
         return this._letter === '';
     }
 
-    setLetter(letter) {
+    setLetter(letter: string): void {
         this._letter = letter;
     }
 
-    setPlural(plural) {
+    setPlural(plural: boolean): void {
         this._plural = plural;
     }
 
-    performActionStart(action) {
+    performActionStart(action: Game_Action): void {
         super.performActionStart(action);
         this.requestEffect('whiten');
     }
 
-    performAction(action) {
+    performAction(action: Game_Action): void {
         super.performAction(action);
     }
 
-    performActionEnd() {
-        super.performActionEnd();
-    }
-
-    performDamage() {
+    performDamage(): void {
         super.performDamage();
         SoundManager.playEnemyDamage();
         this.requestEffect('blink');
     }
 
-    performCollapse() {
+    performCollapse(): void {
         super.performCollapse();
         switch (this.collapseType()) {
             case 0:
@@ -172,7 +183,7 @@ export class Game_Enemy extends Game_Battler {
         }
     }
 
-    transform(enemyId) {
+    transform(enemyId: number): void {
         const name = this.originalName();
         this._enemyId = enemyId;
         if (this.originalName() !== name) {
@@ -185,7 +196,7 @@ export class Game_Enemy extends Game_Battler {
         }
     }
 
-    meetsCondition(action) {
+    meetsCondition(action: RPGEnemyAction): boolean {
         const param1 = action.conditionParam1;
         const param2 = action.conditionParam2;
         switch (action.conditionType) {
@@ -206,8 +217,8 @@ export class Game_Enemy extends Game_Battler {
         }
     }
 
-    meetsTurnCondition(param1, param2) {
-        const n = global.$gameTroop.turnCount();
+    meetsTurnCondition(param1: number, param2: number): boolean {
+        const n = window.$gameTroop.turnCount();
         if (param2 === 0) {
             return n === param1;
         } else {
@@ -215,34 +226,34 @@ export class Game_Enemy extends Game_Battler {
         }
     }
 
-    meetsHpCondition(param1, param2) {
+    meetsHpCondition(param1: number, param2: number): boolean {
         return this.hpRate() >= param1 && this.hpRate() <= param2;
     }
 
-    meetsMpCondition(param1, param2) {
+    meetsMpCondition(param1: number, param2: number): boolean {
         return this.mpRate() >= param1 && this.mpRate() <= param2;
     }
 
-    meetsStateCondition(param) {
+    meetsStateCondition(param: number): boolean {
         return this.isStateAffected(param);
     }
 
-    meetsPartyLevelCondition(param) {
-        return global.$gameParty.highestLevel() >= param;
+    meetsPartyLevelCondition(param: number): boolean {
+        return window.$gameParty.highestLevel() >= param;
     }
 
-    meetsSwitchCondition(param) {
-        return global.$gameSwitches.value(param);
+    meetsSwitchCondition(param: number): boolean {
+        return window.$gameSwitches.value(param);
     }
 
-    isActionValid(action) {
-        return this.meetsCondition(action) && this.canUse(global.$dataSkills[action.skillId]);
+    isActionValid(action: RPGEnemyAction): boolean {
+        return this.meetsCondition(action) && this.canUse(window.$dataSkills[action.skillId]);
     }
 
-    selectAction(actionList, ratingZero) {
+    selectAction(actionList: RPGEnemyAction[], ratingZero: number): RPGEnemyAction {
         const sum = actionList.reduce((r, a) => r + a.rating - ratingZero, 0);
         if (sum > 0) {
-            let value = Math.randomInt(sum);
+            let value = randomInt(sum);
             for (let i = 0; i < actionList.length; i++) {
                 const action = actionList[i];
                 value -= action.rating - ratingZero;
@@ -255,7 +266,7 @@ export class Game_Enemy extends Game_Battler {
         }
     }
 
-    selectAllActions(actionList) {
+    selectAllActions(actionList: RPGEnemyAction[]): void {
         const ratingMax = Math.max(...actionList.map((a) => a.rating));
         const ratingZero = ratingMax - 3;
         actionList = actionList.filter((a) => a.rating > ratingZero);
@@ -264,12 +275,12 @@ export class Game_Enemy extends Game_Battler {
         }
     }
 
-    makeActions() {
+    makeActions(): void {
         super.makeActions();
         if (this.numActions() > 0) {
-            const actionList = this.enemy().actions.filter(function (a) {
+            const actionList = this.enemy().actions.filter((a) => {
                 return this.isActionValid(a);
-            }, this);
+            });
             if (actionList.length > 0) {
                 this.selectAllActions(actionList);
             }
