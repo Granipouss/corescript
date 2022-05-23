@@ -1,6 +1,6 @@
-import type { EventCommand } from './event-command';
+import type { RPGEventCommand } from './event-command';
 
-export type CommonEvent = {
+export type RPGCommonEvent = {
     /**
      * The ID.
      */
@@ -21,5 +21,8 @@ export type CommonEvent = {
      */
     readonly switchId: number;
 
-    readonly list: readonly EventCommand[];
+    /**
+     * The list of commands.
+     */
+    readonly list: readonly RPGEventCommand[];
 };

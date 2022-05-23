@@ -5,10 +5,6 @@ import { Utils } from '../rpg_core/Utils';
 import { Decrypter } from '../rpg_core/Decrypter';
 import { Graphics } from '../rpg_core/Graphics';
 
-import { SceneManager } from './SceneManager';
-import { BattleManager } from './BattleManager';
-import { ImageManager } from './ImageManager';
-
 import { Game_Temp } from '../rpg_objects/Game_Temp';
 import { Game_System } from '../rpg_objects/Game_System';
 import { Game_Screen } from '../rpg_objects/Game_Screen';
@@ -23,12 +19,17 @@ import { Game_Troop } from '../rpg_objects/Game_Troop';
 import { Game_Map } from '../rpg_objects/Game_Map';
 import { Game_Player } from '../rpg_objects/Game_Player';
 
+import type { RPGSkill } from '../rpg_data/skill';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+
 import { Scene_Boot } from '../rpg_scenes/Scene_Boot';
+
+import { BattleManager } from './BattleManager';
+import { ImageManager } from './ImageManager';
+import { SceneManager } from './SceneManager';
 import { StorageManager } from './StorageManager';
-import { Skill } from '../rpg_data/skill';
-import { Item } from '../rpg_data/item';
-import { Weapon } from '../rpg_data/weapon';
-import { Armor } from '../rpg_data/armor';
 
 window.$dataActors = null;
 window.$dataClasses = null;
@@ -65,8 +66,8 @@ window.$testEvent = null;
 type SaveInfo = {
     globalId: string;
     title: string;
-    characters: string[][];
-    faces: string[][];
+    characters: [string, number][];
+    faces: [string, number][];
     playtime: string;
     timestamp: number;
 };
@@ -255,20 +256,20 @@ export const DataManager = new (class DataManager {
         return Utils.isOptionValid('etest');
     }
 
-    isSkill(item: unknown): item is Skill {
-        return item && window.$dataSkills.includes(item as Skill);
+    isSkill(item: unknown): item is RPGSkill {
+        return item && window.$dataSkills.includes(item as RPGSkill);
     }
 
-    isItem(item: unknown): item is Item {
-        return item && window.$dataItems.includes(item as Item);
+    isItem(item: unknown): item is RPGItem {
+        return item && window.$dataItems.includes(item as RPGItem);
     }
 
-    isWeapon(item: unknown): item is Weapon {
-        return item && window.$dataWeapons.includes(item as Weapon);
+    isWeapon(item: unknown): item is RPGWeapon {
+        return item && window.$dataWeapons.includes(item as RPGWeapon);
     }
 
-    isArmor(item: unknown): item is Armor {
-        return item && window.$dataArmors.includes(item as Armor);
+    isArmor(item: unknown): item is RPGArmor {
+        return item && window.$dataArmors.includes(item as RPGArmor);
     }
 
     createGameObjects(): void {

@@ -17,5 +17,10 @@ export type AudioFile = {
     /**
      * The pan.
      */
-    readonly pan: number;
+    readonly pan?: number;
+
+    /**
+     * The pos.
+     */
+    readonly pos?: number;
 };

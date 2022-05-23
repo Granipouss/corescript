@@ -1,6 +1,6 @@
-import type { Trait } from './trait';
+import type { RPGTrait } from './trait';
 
-export type Class = {
+export type RPGClass = {
     /**
      * The ID.
      */
@@ -16,25 +16,28 @@ export type Class = {
      */
     readonly note: string;
 
-    readonly traits: readonly Trait[];
+    /**
+     * The list of traits.
+     */
+    readonly traits: readonly RPGTrait[];
 
     /**
      * The array of values that decides the EXP curve.
      */
-    readonly expParams: readonly unknown[];
+    readonly expParams: readonly [number, number, number, number];
 
     /**
      * The two-dimensional array containing the parameter values according to level.
      */
-    readonly params: readonly unknown[];
+    readonly params: readonly number[][];
 
     /**
      * The skills to learn.
      */
-    readonly learnings: readonly ClassLearning[];
+    readonly learnings: readonly RPGClassLearning[];
 };
 
-export type ClassLearning = {
+export type RPGClassLearning = {
     /**
      * The level.
      */

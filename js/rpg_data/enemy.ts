@@ -1,6 +1,6 @@
-import type { Trait } from './trait';
+import type { RPGTrait } from './trait';
 
-export type Enemy = {
+export type RPGEnemy = {
     /**
      * The ID.
      */
@@ -16,7 +16,10 @@ export type Enemy = {
      */
     readonly note: string;
 
-    readonly traits: readonly Trait[];
+    /**
+     * The list of traits.
+     */
+    readonly traits: readonly RPGTrait[];
 
     /**
      * The file name of the enemy image.
@@ -31,7 +34,7 @@ export type Enemy = {
     /**
      * The parameters.
      */
-    readonly params: readonly unknown[];
+    readonly params: readonly number[];
 
     /**
      * The EXP.
@@ -43,12 +46,18 @@ export type Enemy = {
      */
     readonly gold: number;
 
-    readonly dropItems: readonly EnemyDropItem[];
+    /**
+     * The list fo dropped items.
+     */
+    readonly dropItems: readonly RPGEnemyDropItem[];
 
-    readonly actions: readonly EnemyAction[];
+    /**
+     * The list of actions.
+     */
+    readonly actions: readonly RPGEnemyAction[];
 };
 
-export type EnemyDropItem = {
+export type RPGEnemyDropItem = {
     /**
      * The kind of the item.
      */
@@ -65,7 +74,7 @@ export type EnemyDropItem = {
     readonly denominator: number;
 };
 
-export type EnemyAction = {
+export type RPGEnemyAction = {
     /**
      * The skill ID.
      */

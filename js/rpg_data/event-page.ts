@@ -1,16 +1,16 @@
-import type { EventCommand } from './event-command';
-import type { MoveRoute } from './move-route';
+import type { RPGEventCommand } from './event-command';
+import type { RPGMoveRoute } from './move-route';
 
-export type EventPage = {
+export type RPGEventPage = {
     /**
      * The conditions.
      */
-    readonly conditions: EventPageConditions;
+    readonly conditions: RPGEventPageConditions;
 
     /**
      * The image.
      */
-    readonly image: EventPageImage;
+    readonly image: RPGEventPageImage;
 
     /**
      * The movement type.
@@ -30,7 +30,7 @@ export type EventPage = {
     /**
      * The movement route.
      */
-    readonly moveRoute: MoveRoute;
+    readonly moveRoute: RPGMoveRoute;
 
     /**
      * The "walking" option.
@@ -62,10 +62,13 @@ export type EventPage = {
      */
     readonly trigger: number;
 
-    readonly list: readonly EventCommand[];
+    /**
+     * The list of commands.
+     */
+    readonly list: readonly RPGEventCommand[];
 };
 
-export type EventPageConditions = {
+export type RPGEventPageConditions = {
     /**
      * The boolean value indicating whether the first "switch" is valid.
      */
@@ -132,7 +135,7 @@ export type EventPageConditions = {
     readonly actorId: number;
 };
 
-export type EventPageImage = {
+export type RPGEventPageImage = {
     /**
      * The tile ID.
      */

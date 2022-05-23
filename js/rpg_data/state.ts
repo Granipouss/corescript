@@ -1,6 +1,6 @@
-import type { Trait } from './trait';
+import type { RPGTrait } from './trait';
 
-export type State = {
+export type RPGState = {
     /**
      * The ID.
      */
@@ -21,7 +21,10 @@ export type State = {
      */
     readonly iconIndex: number;
 
-    readonly traits: readonly Trait[];
+    /**
+     * The list of traits.
+     */
+    readonly traits: readonly RPGTrait[];
 
     /**
      * The restriction.

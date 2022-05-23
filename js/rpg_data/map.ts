@@ -1,6 +1,7 @@
 import type { AudioFile } from './audio-file';
+import type { RPGEvent } from './event';
 
-export type Map = {
+export type RPGMap = {
     /**
      * The display name.
      */
@@ -66,6 +67,9 @@ export type Map = {
      */
     readonly disableDashing: boolean;
 
+    /**
+     * The list of encounters.
+     */
     readonly encounterList: readonly MapEncounter[];
 
     /**
@@ -111,9 +115,12 @@ export type Map = {
     /**
      * The three-dimensional array containing the map data.
      */
-    readonly data: readonly number[][][];
+    readonly data: readonly number[];
 
-    readonly events: readonly Event[];
+    /**
+     * The list of events.
+     */
+    readonly events: readonly RPGEvent[];
 };
 
 export type MapEncounter = {

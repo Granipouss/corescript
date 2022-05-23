@@ -1,6 +1,6 @@
-import type { MoveCommand } from './move-command';
+import type { RPGMoveCommand } from './move-command';
 
-export type MoveRoute = {
+export type RPGMoveRoute = {
     /**
      * The "repeat movements" option.
      */
@@ -16,5 +16,8 @@ export type MoveRoute = {
      */
     readonly wait: boolean;
 
-    readonly list: readonly MoveCommand[];
+    /**
+     * The list of commands.
+     */
+    readonly list: readonly RPGMoveCommand[];
 };

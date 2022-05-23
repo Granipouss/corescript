@@ -1,6 +1,6 @@
 import type { AudioFile } from './audio-file';
 
-export type Animation = {
+export type RPGAnimation = {
     /**
      * The ID.
      */
@@ -41,10 +41,10 @@ export type Animation = {
      */
     readonly frames: readonly unknown[];
 
-    readonly timings: readonly AnimationTiming[];
+    readonly timings: readonly RPGAnimationTiming[];
 };
 
-export type AnimationTiming = {
+export type RPGAnimationTiming = {
     /**
      * The frame index.
      */

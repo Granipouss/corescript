@@ -1,4 +1,4 @@
-export type Tileset = {
+export type RPGTileset = {
     /**
      * The ID.
      */

@@ -1,6 +1,6 @@
-import type { EventPage } from './event-page';
+import type { RPGEventPage } from './event-page';
 
-export type Event = {
+export type RPGEvent = {
     /**
      * The ID.
      */
@@ -26,5 +26,8 @@ export type Event = {
      */
     readonly y: number;
 
-    readonly pages: readonly EventPage[];
+    /**
+     * The list of pages.
+     */
+    readonly pages: readonly RPGEventPage[];
 };

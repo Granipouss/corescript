@@ -1,4 +1,4 @@
-export type Effect = {
+export type RPGEffect = {
     /**
      * The effect code.
      */

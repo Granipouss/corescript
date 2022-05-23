@@ -1,20 +1,23 @@
-import type { EventCommand } from './event-command';
+import type { RPGEventCommand } from './event-command';
 
-export type BattleEventPage = {
+export type RPGBattleEventPage = {
     /**
      * The conditions.
      */
-    readonly conditions: BattleEventPageConditions;
+    readonly conditions: RPGBattleEventPageConditions;
 
     /**
      * The span.
      */
     readonly span: number;
 
-    readonly list: readonly EventCommand[];
+    /**
+     * The list commands.
+     */
+    readonly list: readonly RPGEventCommand[];
 };
 
-export type BattleEventPageConditions = {
+export type RPGBattleEventPageConditions = {
     /**
      * The boolean value indicating whether the "turn end" is valid.
      */

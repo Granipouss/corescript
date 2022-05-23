@@ -1,4 +1,6 @@
-export type EventCommand = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export type RPGEventCommand = {
     /**
      * The command code.
      */
@@ -12,5 +14,5 @@ export type EventCommand = {
     /**
      * The parameters according to the command code.
      */
-    readonly parameters: readonly unknown[];
+    readonly parameters: readonly any[];
 };

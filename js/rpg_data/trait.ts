@@ -1,4 +1,4 @@
-export type Trait = {
+export type RPGTrait = {
     /**
      * The trait code.
      */
@@ -13,4 +13,8 @@ export type Trait = {
      * The value set according to the type of the trait.
      */
     readonly value: number;
+};
+
+export type RPGTraitObject = {
+    readonly traits: readonly RPGTrait[];
 };

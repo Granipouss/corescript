@@ -1,6 +1,6 @@
 import type { AudioFile } from './audio-file';
 
-export type System = {
+export type RPGSystem = {
     /**
      * The game title.
      */
@@ -34,17 +34,17 @@ export type System = {
     /**
      * The boat settings.
      */
-    readonly boat: SystemVehicle;
+    readonly boat: RPGSystemVehicle;
 
     /**
      * The ship settings.
      */
-    readonly ship: SystemVehicle;
+    readonly ship: RPGSystemVehicle;
 
     /**
      * The airship settings.
      */
-    readonly airship: SystemVehicle;
+    readonly airship: RPGSystemVehicle;
 
     /**
      * The file name of the background image in the title screen.
@@ -151,7 +151,7 @@ export type System = {
      */
     readonly magicSkills: readonly number[];
 
-    readonly attackMotions: readonly SystemAttackMotion[];
+    readonly attackMotions: readonly RPGSystemAttackMotion[];
 
     /**
      * The list of the elements.
@@ -191,9 +191,9 @@ export type System = {
     /**
      * The terms.
      */
-    readonly terms: SystemTerms;
+    readonly terms: RPGSystemTerms;
 
-    readonly testBattlers: readonly SystemTestBattler[];
+    readonly testBattlers: readonly RPGSystemTestBattler[];
 
     /**
      * The troop ID for battle tests.
@@ -226,7 +226,7 @@ export type System = {
     readonly editMapId: number;
 };
 
-export type SystemVehicle = {
+export type RPGSystemVehicle = {
     /**
      * The file name of the character image.
      */
@@ -258,7 +258,7 @@ export type SystemVehicle = {
     readonly bgm: AudioFile;
 };
 
-export type SystemAttackMotion = {
+export type RPGSystemAttackMotion = {
     /**
      * The type of the motion.
      */
@@ -270,7 +270,7 @@ export type SystemAttackMotion = {
     readonly weaponImageId: number;
 };
 
-export type SystemTestBattler = {
+export type RPGSystemTestBattler = {
     /**
      * The actor ID.
      */
@@ -284,10 +284,10 @@ export type SystemTestBattler = {
     /**
      * The equipment.
      */
-    readonly equips: readonly unknown[];
+    readonly equips: readonly number[];
 };
 
-export type SystemTerms = {
+export type RPGSystemTerms = {
     /**
      * The basic status names.
      */
@@ -306,5 +306,5 @@ export type SystemTerms = {
     /**
      * The messages.
      */
-    readonly messages: readonly string[];
+    readonly messages: Record<string, string>;
 };

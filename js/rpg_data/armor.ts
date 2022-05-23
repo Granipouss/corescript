@@ -1,6 +1,6 @@
-import type { Trait } from './trait';
+import type { RPGTrait } from './trait';
 
-export type Armor = {
+export type RPGArmor = {
     /**
      * The ID.
      */
@@ -26,7 +26,7 @@ export type Armor = {
      */
     readonly iconIndex: number;
 
-    readonly traits: readonly Trait[];
+    readonly traits: readonly RPGTrait[];
 
     /**
      * The equipment type ID.
@@ -41,7 +41,7 @@ export type Armor = {
     /**
      * The parameter changes.
      */
-    readonly params: readonly unknown[];
+    readonly params: readonly number[];
 
     /**
      * The armor type ID.

@@ -1,6 +1,6 @@
-import type { Trait } from './trait';
+import type { RPGTrait } from './trait';
 
-export type Actor = {
+export type RPGActor = {
     /**
      * The ID.
      */
@@ -21,7 +21,10 @@ export type Actor = {
      */
     readonly note: string;
 
-    readonly traits: readonly Trait[];
+    /**
+     * The list of traits.
+     */
+    readonly traits: readonly RPGTrait[];
 
     /**
      * The nickname.
@@ -71,5 +74,5 @@ export type Actor = {
     /**
      * The initial equipment.
      */
-    readonly equips: readonly unknown[];
+    readonly equips: readonly number[];
 };

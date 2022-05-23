@@ -1,4 +1,4 @@
-export type Damage = {
+export type RPGDamage = {
     /**
      * The type.
      */

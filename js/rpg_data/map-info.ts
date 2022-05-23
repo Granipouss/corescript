@@ -1,4 +1,4 @@
-export type MapInfo = {
+export type RPGMapInfo = {
     /**
      * The name.
      */

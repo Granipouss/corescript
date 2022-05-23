@@ -1,6 +1,6 @@
-import type { BattleEventPage } from './battle-event-page';
+import type { RPGBattleEventPage } from './battle-event-page';
 
-export type Troop = {
+export type RPGTroop = {
     /**
      * The ID.
      */
@@ -11,12 +11,18 @@ export type Troop = {
      */
     readonly name: string;
 
-    readonly members: readonly TroopMember[];
+    /**
+     * The list of members.
+     */
+    readonly members: readonly RPGTroopMember[];
 
-    readonly pages: readonly BattleEventPage[];
+    /**
+     * The list of pages.
+     */
+    readonly pages: readonly RPGBattleEventPage[];
 };
 
-export type TroopMember = {
+export type RPGTroopMember = {
     /**
      * The enemy ID.
      */

@@ -1,4 +1,6 @@
-export type MoveCommand = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export type RPGMoveCommand = {
     /**
      * The command code.
      */
@@ -7,5 +9,5 @@ export type MoveCommand = {
     /**
      * The parameters according to the command code.
      */
-    readonly parameters: readonly unknown[];
+    readonly parameters: readonly any[];
 };

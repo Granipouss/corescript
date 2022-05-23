@@ -1,7 +1,7 @@
-import type { Damage } from './damage';
-import type { Effect } from './effect';
+import type { RPGDamage } from './damage';
+import type { RPGEffect } from './effect';
 
-export type Skill = {
+export type RPGSkill = {
     /**
      * The ID.
      */
@@ -70,9 +70,12 @@ export type Skill = {
     /**
      * The damage.
      */
-    readonly damage: Damage;
+    readonly damage: RPGDamage;
 
-    readonly effects: readonly Effect[];
+    /**
+     * The list of effects.
+     */
+    readonly effects: readonly RPGEffect[];
 
     /**
      * The skill type ID.
