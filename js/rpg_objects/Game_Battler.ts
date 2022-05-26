@@ -559,6 +559,7 @@ export abstract class Game_Battler extends Game_BattlerBase {
     }
 
     abstract index(): number;
+    abstract isBattleMember(): boolean;
 
     abstract friendsUnit(): Game_Unit;
     abstract opponentsUnit(): Game_Unit;

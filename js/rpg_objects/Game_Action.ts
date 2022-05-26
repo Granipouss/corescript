@@ -36,7 +36,9 @@ export class Game_Action {
     private _forcing: boolean;
     private _item: Game_Item;
     private _targetIndex: number;
-    private _reflectionTarget: Game_Battler;
+
+    // FIXME:
+    _reflectionTarget: Game_Battler;
 
     constructor(subject: Game_Battler, forcing = false) {
         this._subjectActorId = 0;

@@ -1,5 +1,9 @@
-import { RPGBattleEventPage } from '../rpg_data/battle-event-page';
-import { RPGTroop } from '../rpg_data/troop';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGBattleEventPage } from '../rpg_data/battle-event-page';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGTroop } from '../rpg_data/troop';
+import type { RPGWeapon } from '../rpg_data/weapon';
+
 import { BattleManager } from '../rpg_managers/BattleManager';
 
 import { Game_Enemy } from './Game_Enemy';
@@ -249,7 +253,7 @@ export class Game_Troop extends Game_Unit<Game_Enemy> {
         return window.$gameParty.hasGoldDouble() ? 2 : 1;
     }
 
-    makeDropItems() {
+    makeDropItems(): (RPGItem | RPGWeapon | RPGArmor)[] {
         return this.deadMembers().reduce((r, enemy) => r.concat(enemy.makeDropItems()), []);
     }
 }

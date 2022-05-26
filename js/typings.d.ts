@@ -4,6 +4,7 @@ import type { RPGArmor } from './rpg_data/armor';
 import type { RPGClass } from './rpg_data/class';
 import type { RPGCommonEvent } from './rpg_data/common-event';
 import type { RPGEnemy } from './rpg_data/enemy';
+import type { RPGEventCommand } from './rpg_data/event-command';
 import type { RPGItem } from './rpg_data/item';
 import type { RPGMap } from './rpg_data/map';
 import type { RPGMapInfo } from './rpg_data/map-info';
@@ -60,6 +61,6 @@ declare global {
         $gameMap: Game_Map;
         $gamePlayer: Game_Player;
 
-        $testEvent: string;
+        $testEvent: readonly RPGEventCommand[];
     }
 }

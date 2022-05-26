@@ -29,6 +29,7 @@ export type EventInfo = {
     mapId?: number;
     mapEventId?: number;
     commonEventId?: number;
+    troopId?: number;
     page?: number;
     line?: number;
 };
