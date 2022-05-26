@@ -1,4 +1,5 @@
 import { Bitmap } from '../rpg_core/Bitmap';
+import { arrayClone, format } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { Sprite } from '../rpg_core/Sprite';
@@ -319,7 +320,7 @@ export class Window_BattleLog extends Window_Selectable {
         this.push('performActionStart', subject, action);
         this.push('waitForMovement');
         this.push('performAction', subject, action);
-        this.push('showAnimation', subject, targets.clone(), item.animationId);
+        this.push('showAnimation', subject, arrayClone(targets), item.animationId);
         this.displayAction(subject, item);
     }
 
@@ -346,13 +347,13 @@ export class Window_BattleLog extends Window_Selectable {
         const numMethods = this._methods.length;
         if (DataManager.isSkill(item)) {
             if (item.message1) {
-                this.push('addText', subject.name() + item.message1.format(item.name));
+                this.push('addText', subject.name() + format(item.message1, item.name));
             }
             if (item.message2) {
-                this.push('addText', item.message2.format(item.name));
+                this.push('addText', format(item.message2, item.name));
             }
         } else {
-            this.push('addText', TextManager.useItem.format(subject.name(), item.name));
+            this.push('addText', format(TextManager.useItem, subject.name(), item.name));
         }
         if (this._methods.length === numMethods) {
             this.push('wait');
@@ -361,18 +362,18 @@ export class Window_BattleLog extends Window_Selectable {
 
     displayCounter(target) {
         this.push('performCounter', target);
-        this.push('addText', TextManager.counterAttack.format(target.name()));
+        this.push('addText', format(TextManager.counterAttack, target.name()));
     }
 
     displayReflection(target) {
         this.push('performReflection', target);
-        this.push('addText', TextManager.magicReflection.format(target.name()));
+        this.push('addText', format(TextManager.magicReflection, target.name()));
     }
 
     displaySubstitute(substitute, target) {
         const substName = substitute.name();
         this.push('performSubstitute', substitute, target);
-        this.push('addText', TextManager.substitute.format(substName, target.name()));
+        this.push('addText', format(TextManager.substitute, substName, target.name()));
     }
 
     displayActionResults(subject, target) {
@@ -391,7 +392,7 @@ export class Window_BattleLog extends Window_Selectable {
 
     displayFailure(target) {
         if (target.result().isHit() && !target.result().success) {
-            this.push('addText', TextManager.actionFailure.format(target.name()));
+            this.push('addText', format(TextManager.actionFailur, target.name()));
         }
     }
 
@@ -425,7 +426,7 @@ export class Window_BattleLog extends Window_Selectable {
         } else {
             fmt = TextManager.actionFailure;
         }
-        this.push('addText', fmt.format(target.name()));
+        this.push('addText', format(fmt, target.name()));
     }
 
     displayEvasion(target) {
@@ -437,7 +438,7 @@ export class Window_BattleLog extends Window_Selectable {
             fmt = TextManager.magicEvasion;
             this.push('performMagicEvasion', target);
         }
-        this.push('addText', fmt.format(target.name()));
+        this.push('addText', format(fmt, target.name()));
     }
 
     displayHpDamage(target) {
@@ -534,7 +535,7 @@ export class Window_BattleLog extends Window_Selectable {
         buffs.forEach(function (paramId) {
             this.push('popBaseLine');
             this.push('pushBaseLine');
-            this.push('addText', fmt.format(target.name(), TextManager.param(paramId)));
+            this.push('addText', format(fmt, target.name(), TextManager.param(paramId)));
         }, this);
     }
 
@@ -545,16 +546,16 @@ export class Window_BattleLog extends Window_Selectable {
         let fmt;
         if (damage > 0 && result.drain) {
             fmt = isActor ? TextManager.actorDrain : TextManager.enemyDrain;
-            return fmt.format(target.name(), TextManager.hp, damage);
+            return format(fmt, target.name(), TextManager.hp, damage);
         } else if (damage > 0) {
             fmt = isActor ? TextManager.actorDamage : TextManager.enemyDamage;
-            return fmt.format(target.name(), damage);
+            return format(fmt, target.name(), damage);
         } else if (damage < 0) {
             fmt = isActor ? TextManager.actorRecovery : TextManager.enemyRecovery;
-            return fmt.format(target.name(), TextManager.hp, -damage);
+            return format(fmt, target.name(), TextManager.hp, -damage);
         } else {
             fmt = isActor ? TextManager.actorNoDamage : TextManager.enemyNoDamage;
-            return fmt.format(target.name());
+            return format(fmt, target.name());
         }
     }
 
@@ -565,13 +566,13 @@ export class Window_BattleLog extends Window_Selectable {
         let fmt;
         if (damage > 0 && result.drain) {
             fmt = isActor ? TextManager.actorDrain : TextManager.enemyDrain;
-            return fmt.format(target.name(), TextManager.mp, damage);
+            return format(fmt, target.name(), TextManager.mp, damage);
         } else if (damage > 0) {
             fmt = isActor ? TextManager.actorLoss : TextManager.enemyLoss;
-            return fmt.format(target.name(), TextManager.mp, damage);
+            return format(fmt, target.name(), TextManager.mp, damage);
         } else if (damage < 0) {
             fmt = isActor ? TextManager.actorRecovery : TextManager.enemyRecovery;
-            return fmt.format(target.name(), TextManager.mp, -damage);
+            return format(fmt, target.name(), TextManager.mp, -damage);
         } else {
             return '';
         }
@@ -584,10 +585,10 @@ export class Window_BattleLog extends Window_Selectable {
         let fmt;
         if (damage > 0) {
             fmt = isActor ? TextManager.actorLoss : TextManager.enemyLoss;
-            return fmt.format(target.name(), TextManager.tp, damage);
+            return format(fmt, target.name(), TextManager.tp, damage);
         } else if (damage < 0) {
             fmt = isActor ? TextManager.actorGain : TextManager.enemyGain;
-            return fmt.format(target.name(), TextManager.tp, -damage);
+            return format(fmt, target.name(), TextManager.tp, -damage);
         } else {
             return '';
         }

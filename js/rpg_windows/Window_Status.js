@@ -1,3 +1,4 @@
+import { format } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { TextManager } from '../rpg_managers/TextManager';
 import { Window_Selectable } from './Window_Selectable';
@@ -90,8 +91,8 @@ export class Window_Status extends Window_Selectable {
 
     drawExpInfo(x, y) {
         const lineHeight = this.lineHeight();
-        const expTotal = TextManager.expTotal.format(TextManager.exp);
-        const expNext = TextManager.expNext.format(TextManager.level);
+        const expTotal = format(TextManager.expTotal, TextManager.exp);
+        const expNext = format(TextManager.expNext, TextManager.level);
         let value1 = this._actor.currentExp();
         let value2 = this._actor.nextRequiredExp();
         if (this._actor.isMaxLevel()) {

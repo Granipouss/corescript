@@ -1,3 +1,4 @@
+import { arrayClone } from '../rpg_core/extension';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Sprite } from '../rpg_core/Sprite';
 import { AudioManager } from '../rpg_managers/AudioManager';
@@ -290,7 +291,7 @@ export class Sprite_Animation extends Sprite {
     }
 
     startFlash(color, duration) {
-        this._flashColor = color.clone();
+        this._flashColor = arrayClone(color);
         this._flashDuration = duration;
     }
 

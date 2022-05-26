@@ -71,7 +71,7 @@ export class Window_DebugRange extends Window_Selectable {
             text = 'V';
         }
         const end = start + 9;
-        text += ' [' + start.padZero(4) + '-' + end.padZero(4) + ']';
+        text += ' [' + start.padStart(4, '0') + '-' + end.padStart(4, '0') + ']';
         this.drawText(text, rect.x, rect.y, rect.width);
     }
 

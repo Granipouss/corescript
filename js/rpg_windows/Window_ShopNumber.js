@@ -1,3 +1,4 @@
+import { clamp } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { ImageManager } from '../rpg_managers/ImageManager';
@@ -192,7 +193,7 @@ export class Window_ShopNumber extends Window_Selectable {
 
     changeNumber(amount) {
         const lastNumber = this._number;
-        this._number = (this._number + amount).clamp(1, this._max);
+        this._number = clamp(this._number + amount, [1, this._max]);
         if (this._number !== lastNumber) {
             SoundManager.playCursor();
             this.refresh();

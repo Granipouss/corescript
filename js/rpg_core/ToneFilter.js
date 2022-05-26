@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { clamp } from './extension';
 
 /**
  * The color matrix filter for WebGL.
@@ -21,7 +22,7 @@ export class ToneFilter extends PIXI.filters.ColorMatrixFilter {
      * @param {Number} value The saturation value in the range (-255, 255)
      */
     adjustSaturation(value) {
-        value = (value || 0).clamp(-255, 255) / 255;
+        value = clamp(value || 0, [-255, 255]) / 255;
         this.saturate(value, true);
     }
 
@@ -34,9 +35,9 @@ export class ToneFilter extends PIXI.filters.ColorMatrixFilter {
      * @param {Number} b The blue strength in the range (-255, 255)
      */
     adjustTone(r, g, b) {
-        r = (r || 0).clamp(-255, 255) / 255;
-        g = (g || 0).clamp(-255, 255) / 255;
-        b = (b || 0).clamp(-255, 255) / 255;
+        r = clamp(r || 0, [-255, 255]) / 255;
+        g = clamp(g || 0, [-255, 255]) / 255;
+        b = clamp(b || 0, [-255, 255]) / 255;
 
         if (r !== 0 || g !== 0 || b !== 0) {
             const matrix = [1, 0, 0, r, 0, 0, 1, 0, g, 0, 0, 0, 1, b, 0, 0, 0, 0, 1, 0];

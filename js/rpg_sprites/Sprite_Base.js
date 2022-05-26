@@ -1,3 +1,4 @@
+import { arrayClone } from '../rpg_core/extension';
 import { Sprite } from '../rpg_core/Sprite';
 import { Sprite_Animation } from './Sprite_Animation';
 
@@ -34,7 +35,7 @@ export class Sprite_Base extends Sprite {
 
     updateAnimationSprites() {
         if (this._animationSprites.length > 0) {
-            const sprites = this._animationSprites.clone();
+            const sprites = arrayClone(this._animationSprites);
             this._animationSprites = [];
             for (let i = 0; i < sprites.length; i++) {
                 const sprite = sprites[i];

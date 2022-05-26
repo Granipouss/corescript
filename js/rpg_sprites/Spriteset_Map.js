@@ -1,3 +1,4 @@
+import { arrayEquals } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { ShaderTilemap } from '../rpg_core/ShaderTilemap';
 import { Sprite } from '../rpg_core/Sprite';
@@ -71,7 +72,7 @@ export class Spriteset_Map extends Spriteset_Base {
             }
             const newTilesetFlags = global.$gameMap.tilesetFlags();
             this._tilemap.refreshTileset();
-            if (!this._tilemap.flags.equals(newTilesetFlags)) {
+            if (!arrayEquals(this._tilemap.flags, newTilesetFlags)) {
                 this._tilemap.refresh();
             }
             this._tilemap.flags = newTilesetFlags;

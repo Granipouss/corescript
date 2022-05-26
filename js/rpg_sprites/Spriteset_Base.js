@@ -1,3 +1,4 @@
+import { arrayClone, arrayEquals } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { Rectangle } from '../rpg_core/Rectangle';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
@@ -105,8 +106,8 @@ export class Spriteset_Base extends Sprite {
 
     updateToneChanger() {
         const tone = global.$gameScreen.tone();
-        if (!this._tone.equals(tone)) {
-            this._tone = tone.clone();
+        if (!arrayEquals(this._tone, tone)) {
+            this._tone = arrayClone(tone);
             if (Graphics.isWebGL()) {
                 this.updateWebGLToneChanger();
             } else {

@@ -4,6 +4,7 @@ import { Bitmap } from '../rpg_core/Bitmap';
 import { Graphics } from '../rpg_core/Graphics';
 import { Point } from '../rpg_core/Point';
 import { Sprite } from '../rpg_core/Sprite';
+import { arrayEquals, mod } from './extension';
 
 /**
  * The tilemap which displays 2D tile-based game map.
@@ -288,8 +289,8 @@ export class Tilemap extends PIXI.Container {
         const m = this._margin;
         const ox = Math.floor(this.origin.x);
         const oy = Math.floor(this.origin.y);
-        const x2 = (ox - m).mod(this._layerWidth);
-        const y2 = (oy - m).mod(this._layerHeight);
+        const x2 = mod(ox - m, this._layerWidth);
+        const y2 = mod(oy - m, this._layerHeight);
         const w1 = this._layerWidth - x2;
         const h1 = this._layerHeight - y2;
         const w2 = this._width - w1;
@@ -339,8 +340,8 @@ export class Tilemap extends PIXI.Container {
         const tableEdgeVirtualId = 10000;
         const mx = startX + x;
         const my = startY + y;
-        const dx = (mx * this._tileWidth).mod(this._layerWidth);
-        const dy = (my * this._tileHeight).mod(this._layerHeight);
+        const dx = mod(mx * this._tileWidth, this._layerWidth);
+        const dy = mod(my * this._tileHeight, this._layerHeight);
         const lx = dx / this._tileWidth;
         const ly = dy / this._tileHeight;
         const tileId0 = this._readMapData(mx, my, 0);
@@ -388,7 +389,7 @@ export class Tilemap extends PIXI.Container {
         }
 
         const lastLowerTiles = this._readLastTiles(0, lx, ly);
-        if (!lowerTiles.equals(lastLowerTiles) || (Tilemap.isTileA1(tileId0) && this._frameUpdated)) {
+        if (!arrayEquals(lowerTiles, lastLowerTiles) || (Tilemap.isTileA1(tileId0) && this._frameUpdated)) {
             this._lowerBitmap.clearRect(dx, dy, this._tileWidth, this._tileHeight);
             for (let i = 0; i < lowerTiles.length; i++) {
                 const lowerTileId = lowerTiles[i];
@@ -404,7 +405,7 @@ export class Tilemap extends PIXI.Container {
         }
 
         const lastUpperTiles = this._readLastTiles(1, lx, ly);
-        if (!upperTiles.equals(lastUpperTiles)) {
+        if (!arrayEquals(upperTiles, lastUpperTiles)) {
             this._upperBitmap.clearRect(dx, dy, this._tileWidth, this._tileHeight);
             for (let j = 0; j < upperTiles.length; j++) {
                 this._drawTile(this._upperBitmap, upperTiles[j], dx, dy);
@@ -658,10 +659,10 @@ export class Tilemap extends PIXI.Container {
             const width = this._mapWidth;
             const height = this._mapHeight;
             if (this.horizontalWrap) {
-                x = x.mod(width);
+                x = mod(x, width);
             }
             if (this.verticalWrap) {
-                y = y.mod(height);
+                y = mod(y, height);
             }
             if (x >= 0 && x < width && y >= 0 && y < height) {
                 return this._mapData[(z * height + y) * width + x] || 0;

@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Point } from '../rpg_core/Point';
 import { Rectangle } from '../rpg_core/Rectangle';
 import { Sprite } from '../rpg_core/Sprite';
+import { clamp } from './extension';
 
 /**
  * The sprite object for a tiling image.
@@ -75,7 +76,7 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
         return this.alpha * 255;
     }
     set opacity(value) {
-        this.alpha = value.clamp(0, 255) / 255;
+        this.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**

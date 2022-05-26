@@ -476,7 +476,7 @@ export class Bitmap {
         const data = this._context.getImageData(x, y, 1, 1).data;
         let result = '#';
         for (let i = 0; i < 3; i++) {
-            result += data[i].toString(16).padZero(2);
+            result += data[i].toString(16).padStart(2, '0');
         }
         return result;
     }

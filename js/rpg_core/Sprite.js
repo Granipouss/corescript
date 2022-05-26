@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Graphics } from '../rpg_core/Graphics';
 import { Rectangle } from '../rpg_core/Rectangle';
 import { Utils } from '../rpg_core/Utils';
+import { arrayClone, arrayEquals, clamp } from './extension';
 
 /**
  * The basic object that is rendered to the game screen.
@@ -101,7 +102,7 @@ export class Sprite extends PIXI.Sprite {
         return this.alpha * 255;
     }
     set opacity(value) {
-        this.alpha = value.clamp(0, 255) / 255;
+        this.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**
@@ -157,7 +158,7 @@ export class Sprite extends PIXI.Sprite {
      * @return {Array} The blend color [r, g, b, a]
      */
     getBlendColor() {
-        return this._blendColor.clone();
+        return arrayClone(this._blendColor);
     }
 
     /**
@@ -170,8 +171,8 @@ export class Sprite extends PIXI.Sprite {
         if (!(color instanceof Array)) {
             throw new Error('Argument must be an array');
         }
-        if (!this._blendColor.equals(color)) {
-            this._blendColor = color.clone();
+        if (!arrayEquals(this._blendColor, color)) {
+            this._blendColor = arrayClone(color);
             this._refresh();
         }
     }
@@ -183,7 +184,7 @@ export class Sprite extends PIXI.Sprite {
      * @return {Array} The color tone [r, g, b, gray]
      */
     getColorTone() {
-        return this._colorTone.clone();
+        return arrayClone(this._colorTone);
     }
 
     /**
@@ -196,8 +197,8 @@ export class Sprite extends PIXI.Sprite {
         if (!(tone instanceof Array)) {
             throw new Error('Argument must be an array');
         }
-        if (!this._colorTone.equals(tone)) {
-            this._colorTone = tone.clone();
+        if (!arrayEquals(this._colorTone, tone)) {
+            this._colorTone = arrayClone(tone);
             this._refresh();
         }
     }
@@ -227,10 +228,10 @@ export class Sprite extends PIXI.Sprite {
         const frameH = Math.floor(this._frame.height);
         const bitmapW = this._bitmap ? this._bitmap.width : 0;
         const bitmapH = this._bitmap ? this._bitmap.height : 0;
-        const realX = frameX.clamp(0, bitmapW);
-        const realY = frameY.clamp(0, bitmapH);
-        const realW = (frameW - realX + frameX).clamp(0, bitmapW - realX);
-        const realH = (frameH - realY + frameY).clamp(0, bitmapH - realY);
+        const realX = clamp(frameX, [0, bitmapW]);
+        const realY = clamp(frameY, [0, bitmapH]);
+        const realW = clamp(frameW - realX + frameX, [0, bitmapW - realX]);
+        const realH = clamp(frameH - realY + frameY, [0, bitmapH - realY]);
 
         this._realFrame.x = realX;
         this._realFrame.y = realY;

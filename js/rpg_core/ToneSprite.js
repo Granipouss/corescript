@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 
 import { Graphics } from '../rpg_core/Graphics';
 import { Utils } from '../rpg_core/Utils';
+import { clamp } from './extension';
 
 /**
  * The sprite which changes the screen color in 2D canvas mode.
@@ -32,10 +33,10 @@ export class ToneSprite extends PIXI.Container {
      * @param {Number} gray The grayscale level in the range (0, 255)
      */
     setTone(r, g, b, gray) {
-        this._red = Math.round(r || 0).clamp(-255, 255);
-        this._green = Math.round(g || 0).clamp(-255, 255);
-        this._blue = Math.round(b || 0).clamp(-255, 255);
-        this._gray = Math.round(gray || 0).clamp(0, 255);
+        this._red = clamp(Math.round(r || 0), [-255, 255]);
+        this._green = clamp(Math.round(g || 0), [-255, 255]);
+        this._blue = clamp(Math.round(b || 0), [-255, 255]);
+        this._gray = clamp(Math.round(gray || 0), [0, 255]);
     }
 
     /**

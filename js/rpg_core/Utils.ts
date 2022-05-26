@@ -25,7 +25,7 @@ export const Utils = new (class Utils {
         if (location.search.slice(1).split('&').includes(name)) {
             return true;
         }
-        if (typeof nw !== 'undefined' && nw.App.argv.length > 0 && nw.App.argv[0].split('&').contains(name)) {
+        if (typeof nw !== 'undefined' && nw.App.argv.length > 0 && nw.App.argv[0].split('&').includes(name)) {
             return true;
         }
         return false;

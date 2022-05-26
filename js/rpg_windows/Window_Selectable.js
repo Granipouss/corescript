@@ -1,3 +1,4 @@
+import { clamp } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
 import { Rectangle } from '../rpg_core/Rectangle';
 import { TouchInput } from '../rpg_core/TouchInput';
@@ -106,7 +107,7 @@ export class Window_Selectable extends Window_Base {
     }
 
     setTopRow(row) {
-        const scrollY = row.clamp(0, this.maxTopRow()) * this.itemHeight();
+        const scrollY = clamp(row, [0, this.maxTopRow()]) * this.itemHeight();
         if (this._scrollY !== scrollY) {
             this._scrollY = scrollY;
             this.refresh();

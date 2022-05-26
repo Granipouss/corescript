@@ -7,6 +7,7 @@ import { ResourceHandler } from '../rpg_core/ResourceHandler';
 import { Utils } from '../rpg_core/Utils';
 
 import { SceneManager } from '../rpg_managers/SceneManager';
+import { clamp, format } from './extension';
 
 /**
  * The static class that carries out graphics processing.
@@ -833,18 +834,19 @@ export const Graphics = new (class Graphics {
     _formatEventInfo(error) {
         switch (String(error.eventType)) {
             case 'map_event':
-                return 'MapID: %1, MapEventID: %2, page: %3, line: %4'.format(
+                return format(
+                    'MapID: %1, MapEventID: %2, page: %3, line: %4',
                     error.mapId,
                     error.mapEventId,
                     error.page,
                     error.line
                 );
             case 'common_event':
-                return 'CommonEventID: %1, line: %2'.format(error.commonEventId, error.line);
+                return format('CommonEventID: %1, line: %2', error.commonEventId, error.line);
             case 'battle_event':
-                return 'TroopID: %1, page: %2, line: %3'.format(error.troopId, error.page, error.line);
+                return format('TroopID: %1, page: %2, line: %3', error.troopId, error.page, error.line);
             case 'test_event':
-                return 'TestEvent, line: %1'.format(error.line);
+                return format('TestEvent, line: %1', error.line);
             default:
                 return 'No information';
         }
@@ -968,7 +970,7 @@ export const Graphics = new (class Graphics {
             const context = this._upperCanvas.getContext('2d');
             const dx = (this._width - this._loadingImage.width) / 2;
             const dy = (this._height - this._loadingImage.height) / 2;
-            const alpha = ((this._loadingCount - 20) / 30).clamp(0, 1);
+            const alpha = clamp((this._loadingCount - 20) / 30, [0, 1]);
             context.save();
             context.globalAlpha = alpha;
             context.drawImage(this._loadingImage, dx, dy);

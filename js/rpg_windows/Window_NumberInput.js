@@ -1,3 +1,4 @@
+import { clamp } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
@@ -23,7 +24,7 @@ export class Window_NumberInput extends Window_Selectable {
     start() {
         this._maxDigits = global.$gameMessage.numInputMaxDigits();
         this._number = global.$gameVariables.value(global.$gameMessage.numInputVariableId());
-        this._number = this._number.clamp(0, Math.pow(10, this._maxDigits) - 1);
+        this._number = clamp(this._number, [0, Math.pow(10, this._maxDigits) - 1]);
         this.updatePlacement();
         this.placeButtons();
         this.updateButtonsVisiblity();
@@ -195,7 +196,7 @@ export class Window_NumberInput extends Window_Selectable {
     drawItem(index) {
         const rect = this.itemRect(index);
         const align = 'center';
-        const s = this._number.padZero(this._maxDigits);
+        const s = this._number.padStart(this._maxDigits, '0');
         const c = s.slice(index, index + 1);
         this.resetTextColor();
         this.drawText(c, rect.x, rect.y, rect.width, align);

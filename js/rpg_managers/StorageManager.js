@@ -1,5 +1,6 @@
 /* global LZString, process */
 
+import { format } from '../rpg_core/extension';
 import { Utils } from '../rpg_core/Utils';
 
 // FIXME:
@@ -211,7 +212,7 @@ export const StorageManager = new (class StorageManager {
         } else if (savefileId === 0) {
             name = 'global.rpgsave';
         } else {
-            name = 'file%1.rpgsave'.format(savefileId);
+            name = format('file%1.rpgsave', savefileId);
         }
         return this.localFileDirectoryPath() + name;
     }
@@ -222,7 +223,7 @@ export const StorageManager = new (class StorageManager {
         } else if (savefileId === 0) {
             return 'RPG Global';
         } else {
-            return 'RPG File%1'.format(savefileId);
+            return format('RPG File%1', savefileId);
         }
     }
 

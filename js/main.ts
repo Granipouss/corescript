@@ -2,8 +2,6 @@
 // main.js
 //=============================================================================
 
-import './rpg_core/JsExtensions';
-
 import { PluginManager } from './rpg_managers/PluginManager';
 import { SceneManager } from './rpg_managers/SceneManager';
 

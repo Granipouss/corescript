@@ -4,6 +4,7 @@ import { Bitmap } from '../rpg_core/Bitmap';
 import { Point } from '../rpg_core/Point';
 import { Rectangle } from '../rpg_core/Rectangle';
 import { Sprite } from '../rpg_core/Sprite';
+import { clamp } from './extension';
 
 /**
  * The window in the game.
@@ -181,7 +182,7 @@ export class Window extends PIXI.Container {
     }
 
     set opacity(value) {
-        this._windowSpriteContainer.alpha = value.clamp(0, 255) / 255;
+        this._windowSpriteContainer.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**
@@ -195,7 +196,7 @@ export class Window extends PIXI.Container {
     }
 
     set backOpacity(value) {
-        this._windowBackSprite.alpha = value.clamp(0, 255) / 255;
+        this._windowBackSprite.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**
@@ -209,7 +210,7 @@ export class Window extends PIXI.Container {
     }
 
     set contentsOpacity(value) {
-        this._windowContentsSprite.alpha = value.clamp(0, 255) / 255;
+        this._windowContentsSprite.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**
@@ -224,7 +225,7 @@ export class Window extends PIXI.Container {
 
     set openness(value) {
         if (this._openness !== value) {
-            this._openness = value.clamp(0, 255);
+            this._openness = clamp(value, [0, 255]);
             this._windowSpriteContainer.scale.y = this._openness / 255;
             this._windowSpriteContainer.y = (this.height / 2) * (1 - this._openness / 255);
         }

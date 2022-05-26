@@ -25,7 +25,7 @@ export class Window_DebugEdit extends Window_Selectable {
 
     drawItem(index) {
         const dataId = this._topId + index;
-        const idText = dataId.padZero(4) + ':';
+        const idText = dataId.padStart(4, '0') + ':';
         const idWidth = this.textWidth(idText);
         const statusWidth = this.textWidth('-00000000');
         const name = this.itemName(dataId);

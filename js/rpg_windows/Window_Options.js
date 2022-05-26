@@ -1,3 +1,4 @@
+import { clamp } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 
 import { ConfigManager } from '../rpg_managers/ConfigManager';
@@ -70,7 +71,7 @@ export class Window_Options extends Window_Command {
     }
 
     isVolumeSymbol(symbol) {
-        return symbol.contains('Volume');
+        return symbol.includes('Volume');
     }
 
     booleanStatusText(value) {
@@ -90,7 +91,7 @@ export class Window_Options extends Window_Command {
             if (value > 100) {
                 value = 0;
             }
-            value = value.clamp(0, 100);
+            value = clamp(value, [0, 100]);
             this.changeValue(symbol, value);
         } else {
             this.changeValue(symbol, !value);
@@ -103,7 +104,7 @@ export class Window_Options extends Window_Command {
         let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
             value += this.volumeOffset();
-            value = value.clamp(0, 100);
+            value = clamp(value, [0, 100]);
             this.changeValue(symbol, value);
         } else {
             this.changeValue(symbol, true);
@@ -116,7 +117,7 @@ export class Window_Options extends Window_Command {
         let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
             value -= this.volumeOffset();
-            value = value.clamp(0, 100);
+            value = clamp(value, [0, 100]);
             this.changeValue(symbol, value);
         } else {
             this.changeValue(symbol, false);

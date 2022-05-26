@@ -5,6 +5,7 @@ import { Graphics } from '../rpg_core/Graphics';
 import { Point } from '../rpg_core/Point';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Sprite } from '../rpg_core/Sprite';
+import { randomInt } from './extension';
 
 /**
  * The weather effect which displays rain, storm, or snow.
@@ -178,8 +179,8 @@ export class Weather extends PIXI.Container {
      * @private
      */
     _rebornSprite(sprite) {
-        sprite.ax = Math.randomInt(Graphics.width + 100) - 100 + this.origin.x;
-        sprite.ay = Math.randomInt(Graphics.height + 200) - 200 + this.origin.y;
-        sprite.opacity = 160 + Math.randomInt(60);
+        sprite.ax = randomInt(Graphics.width + 100) - 100 + this.origin.x;
+        sprite.ay = randomInt(Graphics.height + 200) - 200 + this.origin.y;
+        sprite.opacity = 160 + randomInt(60);
     }
 }
