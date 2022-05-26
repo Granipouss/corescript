@@ -878,10 +878,6 @@ export class Bitmap {
         context.fillText(text, tx, ty, maxWidth);
     }
 
-    /**
-     * @method _onLoad
-     * @private
-     */
     _onLoad() {
         this._image.removeEventListener('load', this._loadListener);
         this._image.removeEventListener('error', this._errorListener);
@@ -956,9 +952,6 @@ export class Bitmap {
         }
     }
 
-    /**
-     * @private
-     */
     _onError() {
         this._image.removeEventListener('load', this._loadListener);
         this._image.removeEventListener('error', this._errorListener);

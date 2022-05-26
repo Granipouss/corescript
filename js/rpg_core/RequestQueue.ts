@@ -1,16 +1,28 @@
-export class RequestQueue {
+type Item = {
+    isRequestReady: () => boolean;
+    startRequest: () => void;
+};
+
+type Entry = {
+    key: string;
+    value: Item;
+};
+
+export class RequestQueue<T extends Item> {
+    private _queue: Entry[];
+
     constructor() {
         this._queue = [];
     }
 
-    enqueue(key, value) {
+    enqueue(key: string, value: T): void {
         this._queue.push({
             key: key,
             value: value,
         });
     }
 
-    update() {
+    update(): void {
         if (this._queue.length === 0) return;
 
         const top = this._queue[0];
@@ -24,7 +36,7 @@ export class RequestQueue {
         }
     }
 
-    raisePriority(key) {
+    raisePriority(key: string): void {
         for (let n = 0; n < this._queue.length; n++) {
             const item = this._queue[n];
             if (item.key === key) {
@@ -35,7 +47,7 @@ export class RequestQueue {
         }
     }
 
-    clear() {
+    clear(): void {
         this._queue.splice(0);
     }
 }
