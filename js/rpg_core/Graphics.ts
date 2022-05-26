@@ -1,32 +1,73 @@
-/* global FPSMeter, makeVideoPlayableInline */
+// FIXME:
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as PIXI from 'pixi.js';
 
-import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
-import { ResourceHandler } from '../rpg_core/ResourceHandler';
-import { Utils } from '../rpg_core/Utils';
+import { ProgressWatcher } from './ProgressWatcher';
+import { ResourceHandler } from './ResourceHandler';
+import { Utils } from './Utils';
 
 import { SceneManager } from '../rpg_managers/SceneManager';
 import { clamp, format } from './extension';
+import type { Stage } from './Stage';
+
+export type RendererType = 'canvas' | 'webgl' | 'auto';
+
+declare const FPSMeter: new (options: unknown) => any;
 
 /**
  * The static class that carries out graphics processing.
  */
 export const Graphics = new (class Graphics {
-    _cssFontLoading = document.fonts && document.fonts.ready && document.fonts.ready.then;
-    _fontLoaded = null;
-    _videoVolume = 1;
+    private _cssFontLoading = document.fonts && document.fonts.ready && document.fonts.ready.then;
+    private _fontLoaded = null;
+    private _videoVolume = 1;
+
+    private _width: number;
+    private _height: number;
+    private _rendererType: RendererType;
+    private _boxWidth: number;
+    private _boxHeight: number;
+
+    private _scale: number;
+    private _realScale: number;
+
+    private _errorShowed: boolean;
+    private _errorPrinter: HTMLElement;
+    private _canvas: HTMLCanvasElement;
+    private _video: HTMLVideoElement;
+    private _videoUnlocked: boolean;
+    private _videoLoading: boolean;
+    private _upperCanvas: HTMLCanvasElement;
+    private _renderer: PIXI.SystemRenderer;
+    private _fpsMeter: any;
+    private _modeBox: HTMLElement;
+    private _skipCount: number;
+    private _maxSkip: number;
+    private _rendered: boolean;
+    private _loadingImage: HTMLImageElement;
+    private _loadingCount: number;
+    private _fpsMeterToggled: boolean;
+    private _stretchEnabled: boolean;
+
+    private _canUseDifferenceBlend: boolean;
+    private _canUseSaturationBlend: boolean;
+    private _hiddenCanvas: HTMLCanvasElement;
+
+    private _progressEnabled: boolean;
+    private _progressTimeout: NodeJS.Timeout;
+    private _progressElement: HTMLDivElement;
+    private _barElement: HTMLDivElement;
+    private _filledBarElement: HTMLDivElement;
+    private _errorMessage: string;
+    private _showErrorDetail: boolean;
+    private _videoLoader: () => void;
 
     // FIXME:
     /**
      * Initializes the graphics system.
-     *
-     * @param {Number} width The width of the game screen
-     * @param {Number} height The height of the game screen
-     * @param {String} type The type of the renderer.
-     *                 'canvas', 'webgl', or 'auto'.
      */
-    initialize(width, height, type) {
+    initialize(width: number, height: number, type: RendererType): void {
         this._width = width || 800;
         this._height = height || 600;
         this._rendererType = type || 'auto';
@@ -69,7 +110,7 @@ export const Graphics = new (class Graphics {
         this._setupProgress();
     }
 
-    _setupCssFontLoading() {
+    private _setupCssFontLoading(): void {
         if (this._cssFontLoading) {
             document.fonts.ready
                 .then((fonts) => {
@@ -81,58 +122,39 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    canUseCssFontLoading() {
+    canUseCssFontLoading(): boolean {
         return !!this._cssFontLoading;
     }
 
     /**
      * The total frame count of the game screen.
-     *
-     * @property frameCount
-     * @type Number
      */
     frameCount = 0;
 
     /**
      * The alias of PIXI.blendModes.NORMAL.
-     *
-     * @property BLEND_NORMAL
-     * @type Number
-     * @final
      */
-    BLEND_NORMAL = 0;
+    readonly BLEND_NORMAL = 0;
 
     /**
      * The alias of PIXI.blendModes.ADD.
-     *
-     * @property BLEND_ADD
-     * @type Number
-     * @final
      */
-    BLEND_ADD = 1;
+    readonly BLEND_ADD = 1;
 
     /**
      * The alias of PIXI.blendModes.MULTIPLY.
-     *
-     * @property BLEND_MULTIPLY
-     * @type Number
-     * @final
      */
-    BLEND_MULTIPLY = 2;
+    readonly BLEND_MULTIPLY = 2;
 
     /**
      * The alias of PIXI.blendModes.SCREEN.
-     *
-     * @property BLEND_SCREEN
-     * @type Number
-     * @final
      */
-    BLEND_SCREEN = 3;
+    readonly BLEND_SCREEN = 3;
 
     /**
      * Marks the beginning of each frame for FPSMeter.
      */
-    tickStart() {
+    tickStart(): void {
         if (this._fpsMeter) {
             this._fpsMeter.tickStart();
         }
@@ -141,7 +163,7 @@ export const Graphics = new (class Graphics {
     /**
      * Marks the end of each frame for FPSMeter.
      */
-    tickEnd() {
+    tickEnd(): void {
         if (this._fpsMeter && this._rendered) {
             this._fpsMeter.tick();
         }
@@ -149,15 +171,13 @@ export const Graphics = new (class Graphics {
 
     /**
      * Renders the stage to the game screen.
-     *
-     * @param {Stage} stage The stage object to be rendered
      */
-    render(stage) {
+    render(stage: Stage): void {
         if (this._skipCount <= 0) {
             const startTime = Date.now();
             if (stage) {
                 this._renderer.render(stage);
-                if (this._renderer.gl && this._renderer.gl.flush) {
+                if (this._renderer instanceof PIXI.WebGLRenderer) {
                     this._renderer.gl.flush();
                 }
             }
@@ -174,19 +194,15 @@ export const Graphics = new (class Graphics {
 
     /**
      * Checks whether the renderer type is WebGL.
-     *
-     * @return {Boolean} True if the renderer type is WebGL
      */
-    isWebGL() {
+    isWebGL(): boolean {
         return this._renderer && this._renderer.type === PIXI.RENDERER_TYPE.WEBGL;
     }
 
     /**
      * Checks whether the current browser supports WebGL.
-     *
-     * @return {Boolean} True if the current browser supports WebGL.
      */
-    hasWebGL() {
+    hasWebGL(): boolean {
         try {
             const canvas = document.createElement('canvas');
             return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
@@ -197,26 +213,22 @@ export const Graphics = new (class Graphics {
 
     /**
      * Checks whether the canvas blend mode 'difference' is supported.
-     *
-     * @return {Boolean} True if the canvas blend mode 'difference' is supported
      */
-    canUseDifferenceBlend() {
+    canUseDifferenceBlend(): boolean {
         return this._canUseDifferenceBlend;
     }
 
     /**
      * Checks whether the canvas blend mode 'saturation' is supported.
-     *
-     * @return {Boolean} True if the canvas blend mode 'saturation' is supported
      */
-    canUseSaturationBlend() {
+    canUseSaturationBlend(): boolean {
         return this._canUseSaturationBlend;
     }
 
     /**
      * Sets the source of the "Now Loading" image.
      */
-    setLoadingImage(src) {
+    setLoadingImage(src: string): void {
         this._loadingImage = new Image();
         this._loadingImage.src = src;
     }
@@ -224,7 +236,7 @@ export const Graphics = new (class Graphics {
     /**
      * Sets whether the progress bar is enabled.
      */
-    setProgressEnabled(enable) {
+    setProgressEnabled(enable: boolean): void {
         this._progressEnabled = enable;
     }
 
@@ -241,11 +253,9 @@ export const Graphics = new (class Graphics {
         }, 1500);
     }
 
-    _setupProgress() {
+    private _setupProgress(): void {
         this._progressElement = document.createElement('div');
         this._progressElement.id = 'loading-progress';
-        this._progressElement.width = 600;
-        this._progressElement.height = 300;
         this._progressElement.style.visibility = 'hidden';
 
         this._barElement = document.createElement('div');
@@ -271,20 +281,21 @@ export const Graphics = new (class Graphics {
         document.body.appendChild(this._progressElement);
     }
 
-    _showProgress() {
+    private _showProgress(): void {
         if (this._progressEnabled) {
-            this._progressElement.value = 0;
+            // FIXME:
+            // this._progressElement.value = 0;
             this._progressElement.style.visibility = 'visible';
-            this._progressElement.style.zIndex = 98;
+            this._progressElement.style.zIndex = '98';
         }
     }
 
-    _hideProgress() {
+    private _hideProgress(): void {
         this._progressElement.style.visibility = 'hidden';
         clearTimeout(this._progressTimeout);
     }
 
-    _updateProgressCount(countLoaded, countLoading) {
+    private _updateProgressCount(countLoaded, countLoading): void {
         let progressValue;
         if (countLoading !== 0) {
             progressValue = (countLoaded / countLoading) * 100;
@@ -295,42 +306,40 @@ export const Graphics = new (class Graphics {
         this._filledBarElement.style.width = progressValue + '%';
     }
 
-    _updateProgress() {
-        this._centerElement(this._progressElement);
+    private _updateProgress(): void {
+        this._centerElement(this._progressElement, 600, 300);
     }
 
     /**
      * Increments the loading counter and displays the "Now Loading" image if necessary.
      */
-    updateLoading() {
+    updateLoading(): void {
         this._loadingCount++;
         this._paintUpperCanvas();
-        this._upperCanvas.style.opacity = 1;
+        this._upperCanvas.style.opacity = '1';
         this._updateProgress();
     }
 
     /**
      * Erases the "Now Loading" image.
      */
-    endLoading() {
+    endLoading(): void {
         this._clearUpperCanvas();
-        this._upperCanvas.style.opacity = 0;
+        this._upperCanvas.style.opacity = '0';
         this._hideProgress();
     }
 
     /**
      * Displays the loading error text to the screen.
-     *
-     * @param {String} url The url of the resource failed to load
      */
-    printLoadingError(url) {
+    printLoadingError(url: string): void {
         if (this._errorPrinter && !this._errorShowed) {
             this._updateErrorPrinter();
             this._errorPrinter.innerHTML = this._makeErrorHtml('Loading Error', 'Failed to load: ' + url);
             this._errorPrinter.style.userSelect = 'text';
-            this._errorPrinter.style.webkitUserSelect = 'text';
-            this._errorPrinter.style.msUserSelect = 'text';
-            this._errorPrinter.style.mozUserSelect = 'text';
+            (this._errorPrinter as any).style.webkitUserSelect = 'text';
+            (this._errorPrinter as any).style.msUserSelect = 'text';
+            (this._errorPrinter as any).style.mozUserSelect = 'text';
             this._errorPrinter.oncontextmenu = null; // enable context menu
             const button = document.createElement('button');
             button.innerHTML = 'Retry';
@@ -351,13 +360,13 @@ export const Graphics = new (class Graphics {
     /**
      * Erases the loading error text.
      */
-    eraseLoadingError() {
+    eraseLoadingError(): void {
         if (this._errorPrinter && !this._errorShowed) {
             this._errorPrinter.innerHTML = '';
             this._errorPrinter.style.userSelect = 'none';
-            this._errorPrinter.style.webkitUserSelect = 'none';
-            this._errorPrinter.style.msUserSelect = 'none';
-            this._errorPrinter.style.mozUserSelect = 'none';
+            (this._errorPrinter as any).style.webkitUserSelect = 'none';
+            (this._errorPrinter as any).style.msUserSelect = 'none';
+            (this._errorPrinter as any).style.mozUserSelect = 'none';
             this._errorPrinter.oncontextmenu = function () {
                 return false;
             };
@@ -366,13 +375,11 @@ export const Graphics = new (class Graphics {
     }
 
     // The following code is partly borrowed from triacontane.
+
     /**
      * Displays the error text to the screen.
-     *
-     * @param {String} name The name of the error
-     * @param {String} message The message of the error
      */
-    printError(name, message) {
+    printError(name: string, message: string): void {
         this._errorShowed = true;
         this._hideProgress();
         this.hideFps();
@@ -380,9 +387,9 @@ export const Graphics = new (class Graphics {
             this._updateErrorPrinter();
             this._errorPrinter.innerHTML = this._makeErrorHtml(name, message);
             this._errorPrinter.style.userSelect = 'text';
-            this._errorPrinter.style.webkitUserSelect = 'text';
-            this._errorPrinter.style.msUserSelect = 'text';
-            this._errorPrinter.style.mozUserSelect = 'text';
+            (this._errorPrinter as any).style.webkitUserSelect = 'text';
+            (this._errorPrinter as any).style.msUserSelect = 'text';
+            (this._errorPrinter as any).style.mozUserSelect = 'text';
             this._errorPrinter.oncontextmenu = null; // enable context menu
             if (this._errorMessage) {
                 this._makeErrorMessage();
@@ -395,7 +402,7 @@ export const Graphics = new (class Graphics {
     /**
      * Shows the detail of error.
      */
-    printErrorDetail(error) {
+    printErrorDetail(error: any) {
         if (this._errorPrinter && this._showErrorDetail) {
             const eventInfo = this._formatEventInfo(error);
             const eventCommandInfo = this._formatEventCommandInfo(error);
@@ -408,44 +415,41 @@ export const Graphics = new (class Graphics {
     /**
      * Sets the error message.
      */
-    setErrorMessage(message) {
+    setErrorMessage(message: string): void {
         this._errorMessage = message;
     }
 
     /**
      * Sets whether shows the detail of error.
      */
-    setShowErrorDetail(showErrorDetail) {
+    setShowErrorDetail(showErrorDetail: boolean): void {
         this._showErrorDetail = showErrorDetail;
     }
 
     /**
      * Shows the FPSMeter element.
      */
-    showFps() {
+    showFps(): void {
         if (this._fpsMeter) {
             this._fpsMeter.show();
-            this._modeBox.style.opacity = 1;
+            this._modeBox.style.opacity = '1';
         }
     }
 
     /**
      * Hides the FPSMeter element.
      */
-    hideFps() {
+    hideFps(): void {
         if (this._fpsMeter) {
             this._fpsMeter.hide();
-            this._modeBox.style.opacity = 0;
+            this._modeBox.style.opacity = '0';
         }
     }
 
     /**
      * Loads a font file.
-     *
-     * @param {String} name The face name of the font
-     * @param {String} url The url of the font file
      */
-    loadFont(name, url) {
+    loadFont(name: string, url: string): void {
         const style = document.createElement('style');
         const head = document.getElementsByTagName('head');
         const rule = '@font-face { font-family: "' + name + '"; src: url("' + url + '"); }';
@@ -457,11 +461,8 @@ export const Graphics = new (class Graphics {
 
     /**
      * Checks whether the font file is loaded.
-     *
-     * @param {String} name The face name of the font
-     * @return {Boolean} True if the font file is loaded
      */
-    isFontLoaded(name) {
+    isFontLoaded(name: string): boolean {
         if (this._cssFontLoading) {
             if (this._fontLoaded) {
                 return this._fontLoaded.check('10px "' + name + '"');
@@ -474,21 +475,18 @@ export const Graphics = new (class Graphics {
             }
             const context = this._hiddenCanvas.getContext('2d');
             const text = 'abcdefghijklmnopqrstuvwxyz';
-            let width1, width2;
             context.font = '40px ' + name + ', sans-serif';
-            width1 = context.measureText(text).width;
+            const width1 = context.measureText(text).width;
             context.font = '40px sans-serif';
-            width2 = context.measureText(text).width;
+            const width2 = context.measureText(text).width;
             return width1 !== width2;
         }
     }
 
     /**
      * Starts playback of a video.
-     *
-     * @param {String} src
      */
-    playVideo(src) {
+    playVideo(src: string) {
         this._videoLoader = ResourceHandler.createLoader(
             null,
             this._playVideo.bind(this, src),
@@ -497,11 +495,7 @@ export const Graphics = new (class Graphics {
         this._playVideo(src);
     }
 
-    /**
-     * @param {String} src
-     * @private
-     */
-    _playVideo(src) {
+    private _playVideo(src: string) {
         this._video.src = src;
         this._video.onloadeddata = this._onVideoLoad.bind(this);
         this._video.onerror = this._videoLoader;
@@ -512,29 +506,22 @@ export const Graphics = new (class Graphics {
 
     /**
      * Checks whether the video is playing.
-     *
-     * @return {Boolean} True if the video is playing
      */
-    isVideoPlaying() {
+    isVideoPlaying(): boolean {
         return this._videoLoading || this._isVideoVisible();
     }
 
     /**
      * Checks whether the browser can play the specified video type.
-     *
-     * @param {String} type The video type to test support for
-     * @return {Boolean} True if the browser can play the specified video type
      */
-    canPlayVideoType(type) {
-        return this._video && this._video.canPlayType(type);
+    canPlayVideoType(type: string): boolean {
+        return this._video && !!this._video.canPlayType(type);
     }
 
     /**
      * Sets volume of a video.
-     *
-     * @param {Number} value
      */
-    setVideoVolume(value) {
+    setVideoVolume(value: number) {
         this._videoVolume = value;
         if (this._video) {
             this._video.volume = this._videoVolume;
@@ -544,11 +531,8 @@ export const Graphics = new (class Graphics {
     /**
      * Converts an x coordinate on the page to the corresponding
      * x coordinate on the canvas area.
-     *
-     * @param {Number} x The x coordinate on the page to be converted
-     * @return {Number} The x coordinate on the canvas area
      */
-    pageToCanvasX(x) {
+    pageToCanvasX(x: number): number {
         if (this._canvas) {
             const left = this._canvas.offsetLeft;
             return Math.round((x - left) / this._realScale);
@@ -560,11 +544,8 @@ export const Graphics = new (class Graphics {
     /**
      * Converts a y coordinate on the page to the corresponding
      * y coordinate on the canvas area.
-     *
-     * @param {Number} y The y coordinate on the page to be converted
-     * @return {Number} The y coordinate on the canvas area
      */
-    pageToCanvasY(y) {
+    pageToCanvasY(y: number): number {
         if (this._canvas) {
             const top = this._canvas.offsetTop;
             return Math.round((y - top) / this._realScale);
@@ -575,34 +556,27 @@ export const Graphics = new (class Graphics {
 
     /**
      * Checks whether the specified point is inside the game canvas area.
-     *
-     * @param {Number} x The x coordinate on the canvas area
-     * @param {Number} y The y coordinate on the canvas area
-     * @return {Boolean} True if the specified point is inside the game canvas area
      */
-    isInsideCanvas(x, y) {
+    isInsideCanvas(x: number, y: number): boolean {
         return x >= 0 && x < this._width && y >= 0 && y < this._height;
     }
 
     /**
      * Calls pixi.js garbage collector
      */
-    callGC() {
-        if (this.isWebGL()) {
+    callGC(): void {
+        if (this._renderer instanceof PIXI.WebGLRenderer) {
             this._renderer.textureGC.run();
         }
     }
 
     /**
      * The width of the game screen.
-     *
-     * @property width
-     * @type Number
      */
-    get width() {
+    get width(): number {
         return this._width;
     }
-    set width(value) {
+    set width(value: number) {
         if (this._width !== value) {
             this._width = value;
             this._updateAllElements();
@@ -611,14 +585,11 @@ export const Graphics = new (class Graphics {
 
     /**
      * The height of the game screen.
-     *
-     * @property height
-     * @type Number
      */
-    get height() {
+    get height(): number {
         return this._height;
     }
-    set height(value) {
+    set height(value: number) {
         if (this._height !== value) {
             this._height = value;
             this._updateAllElements();
@@ -627,50 +598,38 @@ export const Graphics = new (class Graphics {
 
     /**
      * The width of the window display area.
-     *
-     * @property boxWidth
-     * @type Number
      */
-    get boxWidth() {
+    get boxWidth(): number {
         return this._boxWidth;
     }
-    set boxWidth(value) {
+    set boxWidth(value: number) {
         this._boxWidth = value;
     }
 
     /**
      * The height of the window display area.
-     *
-     * @property boxHeight
-     * @type Number
      */
-    get boxHeight() {
+    get boxHeight(): number {
         return this._boxHeight;
     }
-    set boxHeight(value) {
+    set boxHeight(value: number) {
         this._boxHeight = value;
     }
 
     /**
      * The zoom scale of the game screen.
-     *
-     * @property scale
-     * @type Number
      */
-    get scale() {
+    get scale(): number {
         return this._scale;
     }
-    set scale(value) {
+    set scale(value: number) {
         if (this._scale !== value) {
             this._scale = value;
             this._updateAllElements();
         }
     }
 
-    /**
-     * @private
-     */
-    _createAllElements() {
+    private _createAllElements(): void {
         this._createErrorPrinter();
         this._createCanvas();
         this._createVideo();
@@ -681,10 +640,7 @@ export const Graphics = new (class Graphics {
         this._createGameFontLoader();
     }
 
-    /**
-     * @private
-     */
-    _updateAllElements() {
+    private _updateAllElements(): void {
         this._updateRealScale();
         this._updateErrorPrinter();
         this._updateCanvas();
@@ -695,10 +651,7 @@ export const Graphics = new (class Graphics {
         this._updateProgress();
     }
 
-    /**
-     * @private
-     */
-    _updateRealScale() {
+    private _updateRealScale() {
         if (this._stretchEnabled) {
             let h = window.innerWidth / this._width;
             let v = window.innerHeight / this._height;
@@ -710,13 +663,7 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @param {String} name
-     * @param {String} message
-     * @return {String}
-     * @private
-     */
-    _makeErrorHtml(name, message) {
+    private _makeErrorHtml(name: string, message: string): string {
         return (
             '<font color="yellow"><b>' +
             name +
@@ -727,85 +674,68 @@ export const Graphics = new (class Graphics {
         );
     }
 
-    /**
-     * @private
-     */
-    _defaultStretchMode() {
+    private _defaultStretchMode(): boolean {
         return Utils.isNwjs() || Utils.isMobileDevice();
     }
 
-    /**
-     * @private
-     */
-    _testCanvasBlendModes() {
-        let canvas, context, imageData1, imageData2;
-        canvas = document.createElement('canvas');
+    private _testCanvasBlendModes(): void {
+        const canvas = document.createElement('canvas');
         canvas.width = 1;
         canvas.height = 1;
-        context = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
         context.globalCompositeOperation = 'source-over';
         context.fillStyle = 'white';
         context.fillRect(0, 0, 1, 1);
         context.globalCompositeOperation = 'difference';
         context.fillStyle = 'white';
         context.fillRect(0, 0, 1, 1);
-        imageData1 = context.getImageData(0, 0, 1, 1);
+        const imageData1 = context.getImageData(0, 0, 1, 1);
         context.globalCompositeOperation = 'source-over';
         context.fillStyle = 'black';
         context.fillRect(0, 0, 1, 1);
         context.globalCompositeOperation = 'saturation';
         context.fillStyle = 'white';
         context.fillRect(0, 0, 1, 1);
-        imageData2 = context.getImageData(0, 0, 1, 1);
+        const imageData2 = context.getImageData(0, 0, 1, 1);
         this._canUseDifferenceBlend = imageData1.data[0] === 0;
         this._canUseSaturationBlend = imageData2.data[0] === 0;
     }
 
-    /**
-     * @private
-     */
-    _modifyExistingElements() {
+    private _modifyExistingElements(): void {
         const elements = document.getElementsByTagName('*');
         for (let i = 0; i < elements.length; i++) {
-            if (elements[i].style.zIndex > 0) {
-                elements[i].style.zIndex = 0;
+            const element = elements[i] as HTMLElement;
+            if (Number(element.style.zIndex) > 0) {
+                element.style.zIndex = '0';
             }
         }
     }
 
-    /**
-     * @private
-     */
-    _createErrorPrinter() {
+    private _createErrorPrinter(): void {
         this._errorPrinter = document.createElement('p');
         this._errorPrinter.id = 'ErrorPrinter';
         this._updateErrorPrinter();
         document.body.appendChild(this._errorPrinter);
     }
 
-    /**
-     * @private
-     */
-    _updateErrorPrinter() {
-        this._errorPrinter.width = this._width * 0.9;
+    private _updateErrorPrinter(): void {
+        const width = this._width * 0.9;
+        let height: number;
         if (this._errorShowed && this._showErrorDetail) {
-            this._errorPrinter.height = this._height * 0.9;
+            height = this._height * 0.9;
         } else if (this._errorShowed && this._errorMessage) {
-            this._errorPrinter.height = 100;
+            height = 100;
         } else {
-            this._errorPrinter.height = 40;
+            height = 40;
         }
         this._errorPrinter.style.textAlign = 'center';
         this._errorPrinter.style.textShadow = '1px 1px 3px #000';
         this._errorPrinter.style.fontSize = '20px';
-        this._errorPrinter.style.zIndex = 99;
-        this._centerElement(this._errorPrinter);
+        this._errorPrinter.style.zIndex = '99';
+        this._centerElement(this._errorPrinter, width, height);
     }
 
-    /**
-     * @private
-     */
-    _makeErrorMessage() {
+    private _makeErrorMessage(): void {
         const mainMessage = document.createElement('div');
         const style = mainMessage.style;
         style.color = 'white';
@@ -815,10 +745,7 @@ export const Graphics = new (class Graphics {
         this._errorPrinter.appendChild(mainMessage);
     }
 
-    /**
-     * @private
-     */
-    _makeErrorDetail(info, stack) {
+    private _makeErrorDetail(info: string, stack: string): void {
         const detail = document.createElement('div');
         const style = detail.style;
         style.color = 'white';
@@ -828,10 +755,7 @@ export const Graphics = new (class Graphics {
         this._errorPrinter.appendChild(detail);
     }
 
-    /**
-     * @private
-     */
-    _formatEventInfo(error) {
+    private _formatEventInfo(error: any): string {
         switch (String(error.eventType)) {
             case 'map_event':
                 return format(
@@ -852,10 +776,7 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @private
-     */
-    _formatEventCommandInfo(error) {
+    private _formatEventCommandInfo(error: any): string {
         switch (String(error.eventCommand)) {
             case 'plugin_command':
                 return '◆Plugin Command: ' + error.content;
@@ -875,10 +796,7 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @private
-     */
-    _formatStackTrace(error) {
+    private _formatStackTrace(error: Error): string {
         return decodeURIComponent(
             (error.stack || '')
                 .replace(/file:.*js\//g, '')
@@ -889,33 +807,24 @@ export const Graphics = new (class Graphics {
         );
     }
 
-    /**
-     * @private
-     */
-    _createCanvas() {
+    private _createCanvas(): void {
         this._canvas = document.createElement('canvas');
         this._canvas.id = 'GameCanvas';
         this._updateCanvas();
         document.body.appendChild(this._canvas);
     }
 
-    /**
-     * @private
-     */
-    _updateCanvas() {
+    private _updateCanvas(): void {
         this._canvas.width = this._width;
         this._canvas.height = this._height;
-        this._canvas.style.zIndex = 1;
-        this._centerElement(this._canvas);
+        this._canvas.style.zIndex = '1';
+        this._centerElement(this._canvas, this._width, this._height);
     }
 
-    /**
-     * @private
-     */
-    _createVideo() {
+    private _createVideo(): void {
         this._video = document.createElement('video');
         this._video.id = 'GameVideo';
-        this._video.style.opacity = 0;
+        this._video.style.opacity = '0';
         this._video.setAttribute('playsinline', '');
         this._video.volume = this._videoVolume;
         this._updateVideo();
@@ -923,48 +832,33 @@ export const Graphics = new (class Graphics {
         document.body.appendChild(this._video);
     }
 
-    /**
-     * @private
-     */
-    _updateVideo() {
+    private _updateVideo(): void {
         this._video.width = this._width;
         this._video.height = this._height;
-        this._video.style.zIndex = 2;
-        this._centerElement(this._video);
+        this._video.style.zIndex = '2';
+        this._centerElement(this._video, this._width, this._height);
     }
 
-    /**
-     * @private
-     */
-    _createUpperCanvas() {
+    private _createUpperCanvas(): void {
         this._upperCanvas = document.createElement('canvas');
         this._upperCanvas.id = 'UpperCanvas';
         this._updateUpperCanvas();
         document.body.appendChild(this._upperCanvas);
     }
 
-    /**
-     * @private
-     */
-    _updateUpperCanvas() {
+    private _updateUpperCanvas(): void {
         this._upperCanvas.width = this._width;
         this._upperCanvas.height = this._height;
-        this._upperCanvas.style.zIndex = 3;
-        this._centerElement(this._upperCanvas);
+        this._upperCanvas.style.zIndex = '3';
+        this._centerElement(this._upperCanvas, this._width, this._height);
     }
 
-    /**
-     * @private
-     */
-    _clearUpperCanvas() {
+    private _clearUpperCanvas(): void {
         const context = this._upperCanvas.getContext('2d');
         context.clearRect(0, 0, this._width, this._height);
     }
 
-    /**
-     * @private
-     */
-    _paintUpperCanvas() {
+    private _paintUpperCanvas(): void {
         this._clearUpperCanvas();
         if (this._loadingImage && this._loadingCount >= 20) {
             const context = this._upperCanvas.getContext('2d');
@@ -978,12 +872,9 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @private
-     */
-    _createRenderer() {
-        // eslint-disable-next-line no-import-assign
-        PIXI.dontSayHello = true;
+    private _createRenderer(): void {
+        // FIXME:
+        // PIXI.dontSayHello = true;
         const width = this._width;
         const height = this._height;
         const options = { view: this._canvas };
@@ -1000,25 +891,19 @@ export const Graphics = new (class Graphics {
                     break;
             }
 
-            if (this._renderer && this._renderer.textureGC) this._renderer.textureGC.maxIdle = 1;
+            if (this._renderer instanceof PIXI.WebGLRenderer && this._renderer.textureGC) this._renderer.textureGC.maxIdle = 1;
         } catch (e) {
             this._renderer = null;
         }
     }
 
-    /**
-     * @private
-     */
-    _updateRenderer() {
+    private _updateRenderer(): void {
         if (this._renderer) {
             this._renderer.resize(this._width, this._height);
         }
     }
 
-    /**
-     * @private
-     */
-    _createFPSMeter() {
+    private _createFPSMeter(): void {
         const options = {
             graph: 1,
             decimals: 0,
@@ -1029,10 +914,7 @@ export const Graphics = new (class Graphics {
         this._fpsMeter.hide();
     }
 
-    /**
-     * @private
-     */
-    _createModeBox() {
+    private _createModeBox(): void {
         const box = document.createElement('div');
         box.id = 'modeTextBack';
         box.style.position = 'absolute';
@@ -1041,8 +923,8 @@ export const Graphics = new (class Graphics {
         box.style.width = '119px';
         box.style.height = '58px';
         box.style.background = 'rgba(0,0,0,0.2)';
-        box.style.zIndex = 9;
-        box.style.opacity = 0;
+        box.style.zIndex = '9';
+        box.style.opacity = '0';
 
         const text = document.createElement('div');
         text.id = 'modeText';
@@ -1063,18 +945,11 @@ export const Graphics = new (class Graphics {
         this._modeBox = box;
     }
 
-    /**
-     * @private
-     */
-    _createGameFontLoader() {
+    private _createGameFontLoader(): void {
         this._createFontLoader('GameFont');
     }
 
-    /**
-     * @param {String} name
-     * @private
-     */
-    _createFontLoader(name) {
+    private _createFontLoader(name: string): void {
         const div = document.createElement('div');
         const text = document.createTextNode('.');
         div.style.fontFamily = name;
@@ -1090,103 +965,70 @@ export const Graphics = new (class Graphics {
         document.body.appendChild(div);
     }
 
-    /**
-     * @param {HTMLElement} element
-     * @private
-     */
-    _centerElement(element) {
-        const width = element.width * this._realScale;
-        const height = element.height * this._realScale;
+    private _centerElement(element: HTMLElement, width: number, height: number): void {
+        width = width * this._realScale;
+        height = height * this._realScale;
         element.style.position = 'absolute';
         element.style.margin = 'auto';
-        element.style.top = 0;
-        element.style.left = 0;
-        element.style.right = 0;
-        element.style.bottom = 0;
+        element.style.top = '0';
+        element.style.left = '0';
+        element.style.right = '0';
+        element.style.bottom = '0';
         element.style.width = width + 'px';
         element.style.height = height + 'px';
     }
 
-    /**
-     * @private
-     */
-    _disableTextSelection() {
+    private _disableTextSelection(): void {
         const body = document.body;
         body.style.userSelect = 'none';
-        body.style.webkitUserSelect = 'none';
-        body.style.msUserSelect = 'none';
-        body.style.mozUserSelect = 'none';
+        (body.style as any).webkitUserSelect = 'none';
+        (body.style as any).msUserSelect = 'none';
+        (body.style as any).mozUserSelect = 'none';
     }
 
-    /**
-     * @private
-     */
-    _disableContextMenu() {
+    private _disableContextMenu(): void {
         const elements = document.body.getElementsByTagName('*');
         const oncontextmenu = function () {
             return false;
         };
         for (let i = 0; i < elements.length; i++) {
-            elements[i].oncontextmenu = oncontextmenu;
+            elements[i].addEventListener('contextmenu', oncontextmenu);
         }
     }
 
-    /**
-     * @private
-     */
-    _applyCanvasFilter() {
+    private _applyCanvasFilter(): void {
         if (this._canvas) {
-            this._canvas.style.opacity = 0.5;
+            this._canvas.style.opacity = '0.5';
             this._canvas.style.filter = 'blur(8px)';
             this._canvas.style.webkitFilter = 'blur(8px)';
         }
     }
 
-    /**
-     * @private
-     */
-    _onVideoLoad() {
+    private _onVideoLoad(): void {
         this._video.play();
         this._updateVisibility(true);
         this._videoLoading = false;
     }
 
-    /**
-     * @private
-     */
-    _onVideoError() {
+    private _onVideoError(): void {
         this._updateVisibility(false);
         this._videoLoading = false;
     }
 
-    /**
-     * @private
-     */
-    _onVideoEnd() {
+    private _onVideoEnd(): void {
         this._updateVisibility(false);
     }
 
-    /**
-     * @param {Boolean} videoVisible
-     * @private
-     */
-    _updateVisibility(videoVisible) {
-        this._video.style.opacity = videoVisible ? 1 : 0;
-        this._canvas.style.opacity = videoVisible ? 0 : 1;
+    private _updateVisibility(videoVisible: boolean): void {
+        this._video.style.opacity = videoVisible ? '1' : '0';
+        this._canvas.style.opacity = videoVisible ? '0' : '1';
     }
 
-    /**
-     * @return {Boolean}
-     * @private
-     */
-    _isVideoVisible() {
-        return this._video.style.opacity > 0;
+    private _isVideoVisible(): boolean {
+        return Number(this._video.style.opacity) > 0;
     }
 
-    /**
-     * @private
-     */
-    _setupEventHandlers() {
+    private _setupEventHandlers(): void {
         window.addEventListener('resize', this._onWindowResize.bind(this));
         document.addEventListener('keydown', this._onKeyDown.bind(this));
         document.addEventListener('keydown', this._onTouchEnd.bind(this));
@@ -1194,18 +1036,11 @@ export const Graphics = new (class Graphics {
         document.addEventListener('touchend', this._onTouchEnd.bind(this));
     }
 
-    /**
-     * @private
-     */
-    _onWindowResize() {
+    private _onWindowResize(): void {
         this._updateAllElements();
     }
 
-    /**
-     * @param {KeyboardEvent} event
-     * @private
-     */
-    _onKeyDown(event) {
+    private _onKeyDown(event: KeyboardEvent): void {
         if (!event.ctrlKey && !event.altKey) {
             switch (event.keyCode) {
                 case 113: // F2
@@ -1224,11 +1059,7 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @param {TouchEvent} event
-     * @private
-     */
-    _onTouchEnd(_event) {
+    private _onTouchEnd(_event: TouchEvent): void {
         if (!this._videoUnlocked) {
             this._video.play();
             this._videoUnlocked = true;
@@ -1238,10 +1069,7 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @private
-     */
-    _switchFPSMeter() {
+    private _switchFPSMeter(): void {
         if (this._fpsMeter.isPaused) {
             this.showFps();
             this._fpsMeter.showFps();
@@ -1254,19 +1082,12 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @return {Boolean}
-     * @private
-     */
-    _switchStretchMode() {
+    private _switchStretchMode(): void {
         this._stretchEnabled = !this._stretchEnabled;
         this._updateAllElements();
     }
 
-    /**
-     * @private
-     */
-    _switchFullScreen() {
+    private _switchFullScreen(): void {
         if (this._isFullScreen()) {
             this._cancelFullScreen();
         } else {
@@ -1274,47 +1095,37 @@ export const Graphics = new (class Graphics {
         }
     }
 
-    /**
-     * @return {Boolean}
-     * @private
-     */
-    _isFullScreen() {
+    private _isFullScreen(): boolean {
         return (
             document.fullscreenElement ||
-            document.mozFullScreen ||
-            document.webkitFullscreenElement ||
-            document.msFullscreenElement
+            (document as any).mozFullScreen ||
+            (document as any).webkitFullscreenElement ||
+            (document as any).msFullscreenElement
         );
     }
 
-    /**
-     * @private
-     */
-    _requestFullScreen() {
+    private _requestFullScreen(): void {
         const element = document.body;
         if (element.requestFullscreen) {
             element.requestFullscreen();
-        } else if (element.mozRequestFullScreen) {
-            element.mozRequestFullScreen();
-        } else if (element.webkitRequestFullScreen) {
-            element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        } else if (element.msRequestFullscreen) {
-            element.msRequestFullscreen();
+        } else if ((element as any).mozRequestFullScreen) {
+            (element as any).mozRequestFullScreen();
+        } else if ((element as any).webkitRequestFullScreen) {
+            (element as any).webkitRequestFullScreen((Element as any).ALLOW_KEYBOARD_INPUT);
+        } else if ((element as any).msRequestFullscreen) {
+            (element as any).msRequestFullscreen();
         }
     }
 
-    /**
-     * @private
-     */
-    _cancelFullScreen() {
+    private _cancelFullScreen(): void {
         if (document.exitFullscreen) {
             document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
+        } else if ((document as any).mozCancelFullScreen) {
+            (document as any).mozCancelFullScreen();
+        } else if ((document as any).webkitCancelFullScreen) {
+            (document as any).webkitCancelFullScreen();
+        } else if ((document as any).msExitFullscreen) {
+            (document as any).msExitFullscreen();
         }
     }
 })();
