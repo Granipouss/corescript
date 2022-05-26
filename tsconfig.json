@@ -1,10 +1,11 @@
 {
-  "compilerOptions": {
-    "outDir": "./out/",
-    "noImplicitAny": false,
-    "module": "es6",
-    "target": "es5",
-    "allowJs": true,
-    "moduleResolution": "node"
-  }
+    "compilerOptions": {
+        "outDir": "./out/",
+        "noImplicitAny": false,
+        "module": "es6",
+        "target": "es5",
+        "allowJs": true,
+        "moduleResolution": "node"
+    },
+    "exclude": ["game", "out"]
 }
