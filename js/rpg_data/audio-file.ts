@@ -22,5 +22,5 @@ export type AudioFile = {
     /**
      * The pos.
      */
-    readonly pos?: number;
+    pos?: number;
 };

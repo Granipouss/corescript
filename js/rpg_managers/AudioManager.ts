@@ -3,68 +3,73 @@ import { Graphics } from '../rpg_core/Graphics';
 import { Html5Audio } from '../rpg_core/Html5Audio';
 import { Utils } from '../rpg_core/Utils';
 import { WebAudio } from '../rpg_core/WebAudio';
+import type { AudioFile } from '../rpg_data/audio-file';
 
 /**
  * The static class that handles BGM, BGS, ME and SE.
  */
 export const AudioManager = new (class AudioManager {
-    _masterVolume = 1; // (min: 0, max: 1)
-    _bgmVolume = 100;
-    _bgsVolume = 100;
-    _meVolume = 100;
-    _seVolume = 100;
-    _currentBgm = null;
-    _currentBgs = null;
-    _bgmBuffer = null;
-    _bgsBuffer = null;
-    _meBuffer = null;
-    _seBuffers = [];
-    _staticBuffers = [];
-    _replayFadeTime = 0.5;
-    _path = 'audio/';
-    _blobUrl = null;
+    private _masterVolume = 1; // (min: 0, max: 1)
+    private _bgmVolume = 100;
+    private _bgsVolume = 100;
+    private _meVolume = 100;
+    private _seVolume = 100;
 
-    get masterVolume() {
+    private _currentBgm: AudioFile = null;
+    private _currentBgs: AudioFile = null;
+    private _bgmBuffer: WebAudio = null;
+    private _bgsBuffer: WebAudio = null;
+    private _meBuffer: WebAudio = null;
+    private _seBuffers: WebAudio[] = [];
+    private _staticBuffers: WebAudio[] = [];
+
+    private _replayFadeTime = 0.5;
+    private _path = 'audio/';
+    private _blobUrl: string = null;
+    private _currentMe: AudioFile;
+    private _creationHook?: (audio: WebAudio) => void;
+
+    get masterVolume(): number {
         return this._masterVolume;
     }
-    set masterVolume(value) {
+    set masterVolume(value: number) {
         this._masterVolume = value;
         WebAudio.setMasterVolume(this._masterVolume);
         Graphics.setVideoVolume(this._masterVolume);
     }
 
-    get bgmVolume() {
+    get bgmVolume(): number {
         return this._bgmVolume;
     }
-    set bgmVolume(value) {
+    set bgmVolume(value: number) {
         this._bgmVolume = value;
         this.updateBgmParameters(this._currentBgm);
     }
 
-    get bgsVolume() {
+    get bgsVolume(): number {
         return this._bgsVolume;
     }
-    set bgsVolume(value) {
+    set bgsVolume(value: number) {
         this._bgsVolume = value;
         this.updateBgsParameters(this._currentBgs);
     }
 
-    get meVolume() {
+    get meVolume(): number {
         return this._meVolume;
     }
-    set meVolume(value) {
+    set meVolume(value: number) {
         this._meVolume = value;
         this.updateMeParameters(this._currentMe);
     }
 
-    get seVolume() {
+    get seVolume(): number {
         return this._seVolume;
     }
-    set seVolume(value) {
+    set seVolume(value: number) {
         this._seVolume = value;
     }
 
-    playBgm(bgm, pos) {
+    playBgm(bgm: AudioFile, pos = 0): void {
         if (this.isCurrentBgm(bgm)) {
             this.updateBgmParameters(bgm);
         } else {
@@ -84,14 +89,14 @@ export const AudioManager = new (class AudioManager {
         this.updateCurrentBgm(bgm, pos);
     }
 
-    playEncryptedBgm(bgm, pos) {
+    playEncryptedBgm(bgm: AudioFile, pos = 0): void {
         const ext = this.audioFileExt();
         let url = this._path + 'bgm/' + encodeURIComponent(bgm.name) + ext;
         url = Decrypter.extToEncryptExt(url);
         Decrypter.decryptHTML5Audio(url, bgm, pos);
     }
 
-    createDecryptBuffer(url, bgm, pos) {
+    createDecryptBuffer(url: string, bgm: AudioFile, pos = 0): void {
         this._blobUrl = url;
         this._bgmBuffer = this.createBuffer('bgm', bgm.name);
         this.updateBgmParameters(bgm);
@@ -101,7 +106,7 @@ export const AudioManager = new (class AudioManager {
         this.updateCurrentBgm(bgm, pos);
     }
 
-    replayBgm(bgm) {
+    replayBgm(bgm: AudioFile): void {
         if (this.isCurrentBgm(bgm)) {
             this.updateBgmParameters(bgm);
         } else {
@@ -112,15 +117,15 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    isCurrentBgm(bgm) {
+    isCurrentBgm(bgm: AudioFile): boolean {
         return this._currentBgm && this._bgmBuffer && this._currentBgm.name === bgm.name;
     }
 
-    updateBgmParameters(bgm) {
+    updateBgmParameters(bgm: AudioFile): void {
         this.updateBufferParameters(this._bgmBuffer, this._bgmVolume, bgm);
     }
 
-    updateCurrentBgm(bgm, pos) {
+    updateCurrentBgm(bgm: AudioFile, pos = 0): void {
         this._currentBgm = {
             name: bgm.name,
             volume: bgm.volume,
@@ -130,7 +135,7 @@ export const AudioManager = new (class AudioManager {
         };
     }
 
-    stopBgm() {
+    stopBgm(): void {
         if (this._bgmBuffer) {
             this._bgmBuffer.stop();
             this._bgmBuffer = null;
@@ -138,20 +143,20 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    fadeOutBgm(duration) {
+    fadeOutBgm(duration: number): void {
         if (this._bgmBuffer && this._currentBgm) {
             this._bgmBuffer.fadeOut(duration);
             this._currentBgm = null;
         }
     }
 
-    fadeInBgm(duration) {
+    fadeInBgm(duration: number): void {
         if (this._bgmBuffer && this._currentBgm) {
             this._bgmBuffer.fadeIn(duration);
         }
     }
 
-    playBgs(bgs, pos) {
+    playBgs(bgs: AudioFile, pos = 0): void {
         if (this.isCurrentBgs(bgs)) {
             this.updateBgsParameters(bgs);
         } else {
@@ -165,7 +170,7 @@ export const AudioManager = new (class AudioManager {
         this.updateCurrentBgs(bgs, pos);
     }
 
-    replayBgs(bgs) {
+    replayBgs(bgs: AudioFile): void {
         if (this.isCurrentBgs(bgs)) {
             this.updateBgsParameters(bgs);
         } else {
@@ -176,15 +181,15 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    isCurrentBgs(bgs) {
+    isCurrentBgs(bgs: AudioFile): boolean {
         return this._currentBgs && this._bgsBuffer && this._currentBgs.name === bgs.name;
     }
 
-    updateBgsParameters(bgs) {
+    updateBgsParameters(bgs: AudioFile): void {
         this.updateBufferParameters(this._bgsBuffer, this._bgsVolume, bgs);
     }
 
-    updateCurrentBgs(bgs, pos) {
+    updateCurrentBgs(bgs: AudioFile, pos: number): void {
         this._currentBgs = {
             name: bgs.name,
             volume: bgs.volume,
@@ -194,7 +199,7 @@ export const AudioManager = new (class AudioManager {
         };
     }
 
-    stopBgs() {
+    stopBgs(): void {
         if (this._bgsBuffer) {
             this._bgsBuffer.stop();
             this._bgsBuffer = null;
@@ -202,20 +207,20 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    fadeOutBgs(duration) {
+    fadeOutBgs(duration: number): void {
         if (this._bgsBuffer && this._currentBgs) {
             this._bgsBuffer.fadeOut(duration);
             this._currentBgs = null;
         }
     }
 
-    fadeInBgs(duration) {
+    fadeInBgs(duration: number): void {
         if (this._bgsBuffer && this._currentBgs) {
             this._bgsBuffer.fadeIn(duration);
         }
     }
 
-    playMe(me) {
+    playMe(me: AudioFile): void {
         this.stopMe();
         if (me.name) {
             if (this._bgmBuffer && this._currentBgm) {
@@ -229,17 +234,17 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    updateMeParameters(me) {
+    updateMeParameters(me: AudioFile): void {
         this.updateBufferParameters(this._meBuffer, this._meVolume, me);
     }
 
-    fadeOutMe(duration) {
+    fadeOutMe(duration: number): void {
         if (this._meBuffer) {
             this._meBuffer.fadeOut(duration);
         }
     }
 
-    stopMe() {
+    stopMe(): void {
         if (this._meBuffer) {
             this._meBuffer.stop();
             this._meBuffer = null;
@@ -250,7 +255,7 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    playSe(se) {
+    playSe(se: AudioFile): void {
         if (se.name) {
             this._seBuffers = this._seBuffers.filter((audio) => audio.isPlaying());
             const buffer = this.createBuffer('se', se.name);
@@ -260,18 +265,18 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    updateSeParameters(buffer, se) {
+    updateSeParameters(buffer: WebAudio, se: AudioFile): void {
         this.updateBufferParameters(buffer, this._seVolume, se);
     }
 
-    stopSe() {
+    stopSe(): void {
         this._seBuffers.forEach((buffer) => {
             buffer.stop();
         });
         this._seBuffers = [];
     }
 
-    playStaticSe(se) {
+    playStaticSe(se: AudioFile): void {
         if (se.name) {
             this.loadStaticSe(se);
             for (let i = 0; i < this._staticBuffers.length; i++) {
@@ -286,18 +291,18 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    loadStaticSe(se) {
+    loadStaticSe(se: AudioFile): void {
         if (se.name && !this.isStaticSe(se)) {
             const buffer = this.createBuffer('se', se.name);
             buffer._reservedSeName = se.name;
             this._staticBuffers.push(buffer);
             if (this.shouldUseHtml5Audio()) {
-                Html5Audio.setStaticSe(buffer._url);
+                Html5Audio.setStaticSe(buffer.url);
             }
         }
     }
 
-    isStaticSe(se) {
+    isStaticSe(se: AudioFile): boolean {
         for (let i = 0; i < this._staticBuffers.length; i++) {
             const buffer = this._staticBuffers[i];
             if (buffer._reservedSeName === se.name) {
@@ -307,14 +312,14 @@ export const AudioManager = new (class AudioManager {
         return false;
     }
 
-    stopAll() {
+    stopAll(): void {
         this.stopMe();
         this.stopBgm();
         this.stopBgs();
         this.stopSe();
     }
 
-    saveBgm() {
+    saveBgm(): AudioFile {
         if (this._currentBgm) {
             const bgm = this._currentBgm;
             return {
@@ -329,7 +334,7 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    saveBgs() {
+    saveBgs(): AudioFile {
         if (this._currentBgs) {
             const bgs = this._currentBgs;
             return {
@@ -344,17 +349,17 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    makeEmptyAudioObject() {
+    makeEmptyAudioObject(): AudioFile {
         return { name: '', volume: 0, pitch: 0 };
     }
 
-    createBuffer(folder, name) {
+    createBuffer(folder: string, name: string): WebAudio {
         const ext = this.audioFileExt();
         const url = this._path + folder + '/' + encodeURIComponent(name) + ext;
         if (this.shouldUseHtml5Audio() && folder === 'bgm') {
             if (this._blobUrl) Html5Audio.setup(this._blobUrl);
             else Html5Audio.setup(url);
-            return Html5Audio;
+            return Html5Audio as unknown as WebAudio;
         } else {
             const audio = new WebAudio(url);
             this._callCreationHook(audio);
@@ -362,7 +367,7 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    updateBufferParameters(buffer, configVolume, audio) {
+    updateBufferParameters(buffer: WebAudio, configVolume: number, audio: AudioFile): void {
         if (buffer && audio) {
             buffer.volume = (configVolume * (audio.volume || 0)) / 10000;
             buffer.pitch = (audio.pitch || 0) / 100;
@@ -370,7 +375,7 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    audioFileExt() {
+    audioFileExt(): '.ogg' | '.m4a' {
         if (WebAudio.canPlayOgg() && !Utils.isMobileDevice()) {
             return '.ogg';
         } else {
@@ -378,13 +383,14 @@ export const AudioManager = new (class AudioManager {
         }
     }
 
-    shouldUseHtml5Audio() {
+    shouldUseHtml5Audio(): boolean {
         // The only case where we wanted html5audio was android/ no encrypt
-        // Atsuma-ru asked to force webaudio there too, so just return false for ALL    // return Utils.isAndroidChrome() && !Decrypter.hasEncryptedAudio;
+        // Atsuma-ru asked to force webaudio there too, so just return false for ALL
+        // return Utils.isAndroidChrome() && !Decrypter.hasEncryptedAudio;
         return false;
     }
 
-    checkErrors() {
+    checkErrors(): void {
         this.checkWebAudioError(this._bgmBuffer);
         this.checkWebAudioError(this._bgsBuffer);
         this.checkWebAudioError(this._meBuffer);
@@ -396,17 +402,17 @@ export const AudioManager = new (class AudioManager {
         });
     }
 
-    checkWebAudioError(webAudio) {
+    checkWebAudioError(webAudio: WebAudio): void {
         if (webAudio && webAudio.isError()) {
             throw new Error('Failed to load: ' + webAudio.url);
         }
     }
 
-    setCreationHook(hook) {
+    setCreationHook(hook: (audio: WebAudio) => void) {
         this._creationHook = hook;
     }
 
-    _callCreationHook(audio) {
+    _callCreationHook(audio: WebAudio): void {
         if (this._creationHook) this._creationHook(audio);
     }
 })();

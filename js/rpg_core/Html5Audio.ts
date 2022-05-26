@@ -2,27 +2,30 @@ import { Decrypter } from './Decrypter';
 
 /**
  * The static class that handles HTML5 Audio.
- *
- * @class Html5Audio
- * @constructor
  */
-
 export const Html5Audio = new (class Html5Audio {
-    _initialized = false;
-    _unlocked = false;
-    _audioElement = null;
-    _gainTweenInterval = null;
-    _tweenGain = 0;
-    _tweenTargetGain = 0;
-    _tweenGainStep = 0;
-    _staticSePath = null;
+    private _initialized = false;
+    private _unlocked = false;
+    private _audioElement: HTMLAudioElement = null;
+    private _gainTweenInterval = null;
+    private _tweenGain = 0;
+    private _tweenTargetGain = 0;
+    private _tweenGainStep = 0;
+    private _staticSePath = null;
+    private _url: string;
+    private _isLoading: boolean;
+    private _buffered: boolean;
+    private _hasError: boolean;
+    private _volume: number;
+    private _loadListeners: (() => void)[];
+    private _autoPlay: boolean;
+    private _tweenInterval: NodeJS.Timeout;
 
     /**
      * Sets up the Html5 Audio.
-     *
-     * @param {String} url The url of the audio file
+     * @param url The url of the audio file
      */
-    setup(url) {
+    setup(url: string): void {
         if (!this._initialized) {
             this.initialize();
         }
@@ -36,10 +39,9 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * Initializes the audio system.
-     *
-     * @return {Boolean} True if the audio system is available
+     * @return True if the audio system is available
      */
-    constructor() {
+    initialize(): boolean {
         if (!this._initialized) {
             if (!this._audioElement) {
                 try {
@@ -54,10 +56,7 @@ export const Html5Audio = new (class Html5Audio {
         return !!this._audioElement;
     }
 
-    /**
-     * @private
-     */
-    _setupEventHandlers() {
+    private _setupEventHandlers(): void {
         document.addEventListener('touchstart', this._onTouchStart.bind(this));
         document.addEventListener('visibilitychange', this._onVisibilityChange.bind(this));
         this._audioElement.addEventListener('loadeddata', this._onLoadedData.bind(this));
@@ -65,10 +64,7 @@ export const Html5Audio = new (class Html5Audio {
         this._audioElement.addEventListener('ended', this._onEnded.bind(this));
     }
 
-    /**
-     * @private
-     */
-    _onTouchStart() {
+    private _onTouchStart(): void {
         if (this._audioElement && !this._unlocked) {
             if (this._isLoading) {
                 this._load(this._url);
@@ -85,10 +81,7 @@ export const Html5Audio = new (class Html5Audio {
         }
     }
 
-    /**
-     * @private
-     */
-    _onVisibilityChange() {
+    private _onVisibilityChange(): void {
         if (document.visibilityState === 'hidden') {
             this._onHide();
         } else {
@@ -96,42 +89,27 @@ export const Html5Audio = new (class Html5Audio {
         }
     }
 
-    /**
-     * @private
-     */
-    _onLoadedData() {
+    private _onLoadedData(): void {
         this._buffered = true;
         if (this._unlocked) this._onLoad();
     }
 
-    /**
-     * @private
-     */
-    _onError() {
+    private _onError(): void {
         this._hasError = true;
     }
 
-    /**
-     * @private
-     */
-    _onEnded() {
+    private _onEnded(): void {
         if (!this._audioElement.loop) {
             this.stop();
         }
     }
 
-    /**
-     * @private
-     */
-    _onHide() {
+    private _onHide(): void {
         this._audioElement.volume = 0;
         this._tweenGain = 0;
     }
 
-    /**
-     * @private
-     */
-    _onShow() {
+    private _onShow(): void {
         this.fadeIn(0.5);
     }
 
@@ -150,10 +128,9 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * Set the URL of static se.
-     *
      * @param {String} url
      */
-    setStaticSe(url) {
+    setStaticSe(url: string): void {
         if (!this._initialized) {
             this.initialize();
             this.clear();
@@ -163,24 +140,18 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * [read-only] The url of the audio file.
-     *
-     * @property url
-     * @type String
      */
-    get url() {
+    get url(): string {
         return this._url;
     }
 
     /**
      * The volume of the audio.
-     *
-     * @property volume
-     * @type Number
      */
-    get volume() {
+    get volume(): number {
         return this._volume;
     }
-    set volume(value) {
+    set volume(value: number) {
         this._volume = value;
         if (this._audioElement) {
             this._audioElement.volume = this._volume;
@@ -189,38 +160,31 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * Checks whether the audio data is ready to play.
-     *
-     * @return {Boolean} True if the audio data is ready to play
      */
-    isReady() {
+    isReady(): boolean {
         return this._buffered;
     }
 
     /**
      * Checks whether a loading error has occurred.
-     *
-     * @return {Boolean} True if a loading error has occurred
      */
-    isError() {
+    isError(): boolean {
         return this._hasError;
     }
 
     /**
      * Checks whether the audio is playing.
-     *
-     * @return {Boolean} True if the audio is playing
      */
-    isPlaying() {
+    isPlaying(): boolean {
         return !this._audioElement.paused;
     }
 
     /**
      * Plays the audio.
-     *
-     * @param {Boolean} loop Whether the audio data play in a loop
-     * @param {Number} offset The start position to play in seconds
+     * @param loop Whether the audio data play in a loop
+     * @param offset The start position to play in seconds
      */
-    play(loop, offset) {
+    play(loop: boolean, offset = 0): void {
         if (this.isReady()) {
             offset = offset || 0;
             this._startPlaying(loop, offset);
@@ -254,10 +218,9 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * Performs the audio fade-in.
-     *
      * @param {Number} duration Fade-in time in seconds
      */
-    fadeIn(duration) {
+    fadeIn(duration: number): void {
         if (this.isReady()) {
             if (this._audioElement) {
                 this._tweenTargetGain = this._volume;
@@ -273,10 +236,9 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * Performs the audio fade-out.
-     *
-     * @param {Number} duration Fade-out time in seconds
+     * @param duration Fade-out time in seconds
      */
-    fadeOut(duration) {
+    fadeOut(duration: number): void {
         if (this._audioElement) {
             this._tweenTargetGain = 0;
             this._tweenGain = this._volume;
@@ -287,7 +249,7 @@ export const Html5Audio = new (class Html5Audio {
     /**
      * Gets the seek position of the audio.
      */
-    seek() {
+    seek(): number {
         if (this._audioElement) {
             return this._audioElement.currentTime;
         } else {
@@ -297,18 +259,12 @@ export const Html5Audio = new (class Html5Audio {
 
     /**
      * Add a callback function that will be called when the audio data is loaded.
-     *
-     * @param {Function} listner The callback function
      */
-    addLoadListener(listner) {
+    addLoadListener(listner: () => void): void {
         this._loadListeners.push(listner);
     }
 
-    /**
-     * @param {String} url
-     * @private
-     */
-    _load(url) {
+    private _load(url: string): void {
         if (this._audioElement) {
             this._isLoading = true;
             this._audioElement.src = url;
@@ -316,12 +272,7 @@ export const Html5Audio = new (class Html5Audio {
         }
     }
 
-    /**
-     * @param {Boolean} loop
-     * @param {Number} offset
-     * @private
-     */
-    _startPlaying(loop, offset) {
+    private _startPlaying(loop: boolean, offset: number): void {
         this._audioElement.loop = loop;
         if (this._gainTweenInterval) {
             clearInterval(this._gainTweenInterval);
@@ -334,10 +285,7 @@ export const Html5Audio = new (class Html5Audio {
         }
     }
 
-    /**
-     * @private
-     */
-    _onLoad() {
+    private _onLoad(): void {
         this._isLoading = false;
         while (this._loadListeners.length > 0) {
             const listener = this._loadListeners.shift();
@@ -345,11 +293,7 @@ export const Html5Audio = new (class Html5Audio {
         }
     }
 
-    /**
-     * @params {Number} duration
-     * @private
-     */
-    _startGainTween(duration) {
+    private _startGainTween(duration: number): void {
         this._audioElement.volume = this._tweenGain;
         if (this._gainTweenInterval) {
             clearInterval(this._gainTweenInterval);
@@ -361,11 +305,7 @@ export const Html5Audio = new (class Html5Audio {
         }, 1000 / 60);
     }
 
-    /**
-     * @param {Number} volume
-     * @private
-     */
-    _applyTweenValue(volume) {
+    private _applyTweenValue(volume: number): void {
         this._tweenGain += this._tweenGainStep;
         if (this._tweenGain < 0 && this._tweenGainStep < 0) {
             this._tweenGain = 0;
