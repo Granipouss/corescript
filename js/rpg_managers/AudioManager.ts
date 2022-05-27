@@ -93,7 +93,9 @@ export const AudioManager = new (class AudioManager {
         const ext = this.audioFileExt();
         let url = this._path + 'bgm/' + encodeURIComponent(bgm.name) + ext;
         url = Decrypter.extToEncryptExt(url);
-        Decrypter.decryptHTML5Audio(url, bgm, pos);
+        Decrypter.decrypt(url, (source) => {
+            this.createDecryptBuffer(source, bgm, pos);
+        });
     }
 
     createDecryptBuffer(url: string, bgm: AudioFile, pos = 0): void {

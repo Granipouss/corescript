@@ -1,12 +1,7 @@
-import { AudioManager } from '../rpg_managers/AudioManager';
-import type { AudioFile } from '../rpg_data/audio-file';
-import type { Bitmap } from './Bitmap';
-
 export const Decrypter = new (class Decrypter {
     hasEncryptedImages = false;
     hasEncryptedAudio = false;
 
-    private _requestImgFile = [];
     private _headerlength = 16;
     private _xhrOk = 400;
     private _encryptionKey = '';
@@ -23,9 +18,7 @@ export const Decrypter = new (class Decrypter {
         return false;
     }
 
-    decryptImg(url: string, bitmap: Bitmap) {
-        url = this.extToEncryptExt(url);
-
+    decrypt(url: string, onload: (source: string) => void, onerror?: () => void): void {
         const requestFile = new XMLHttpRequest();
         requestFile.open('GET', url);
         requestFile.responseType = 'arraybuffer';
@@ -34,37 +27,12 @@ export const Decrypter = new (class Decrypter {
         requestFile.onload = () => {
             if (requestFile.status < this._xhrOk) {
                 const arrayBuffer = this.decryptArrayBuffer(requestFile.response);
-                bitmap._image.src = this.createBlobUrl(arrayBuffer);
-                bitmap._image.addEventListener('load', (bitmap._loadListener = () => bitmap._onLoad()));
-                bitmap._image.addEventListener(
-                    'error',
-                    (bitmap._errorListener = bitmap._loader || (() => bitmap._onError()))
-                );
+                const source = this.createBlobUrl(arrayBuffer);
+                onload(source);
             }
         };
 
-        requestFile.onerror = function () {
-            if (bitmap._loader) {
-                bitmap._loader();
-            } else {
-                bitmap._onError();
-            }
-        };
-    }
-
-    decryptHTML5Audio(url: string | URL, bgm: AudioFile, pos = 0): void {
-        const requestFile = new XMLHttpRequest();
-        requestFile.open('GET', url);
-        requestFile.responseType = 'arraybuffer';
-        requestFile.send();
-
-        requestFile.onload = () => {
-            if (requestFile.status < this._xhrOk) {
-                const arrayBuffer = this.decryptArrayBuffer(requestFile.response);
-                const url = this.createBlobUrl(arrayBuffer);
-                AudioManager.createDecryptBuffer(url, bgm, pos);
-            }
-        };
+        requestFile.onerror = onerror;
     }
 
     cutArrayHeader(arrayBuffer: ArrayBuffer, length: number): ArrayBuffer {
