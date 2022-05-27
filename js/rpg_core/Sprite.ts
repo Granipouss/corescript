@@ -1,17 +1,31 @@
 import * as PIXI from 'pixi.js';
 
-import { Graphics } from '../rpg_core/Graphics';
-import { Rectangle } from '../rpg_core/Rectangle';
-import { Utils } from '../rpg_core/Utils';
-import { arrayClone, arrayEquals, clamp } from './extension';
+import { Graphics } from './Graphics';
+import { Rectangle } from './Rectangle';
+import { Utils } from './Utils';
+import { arrayClone, arrayEquals, clamp, Tone } from './extension';
+import type { Bitmap } from './Bitmap';
+import { DisplayObject } from './DisplayObject';
 
 /**
  * The basic object that is rendered to the game screen.
  */
 export class Sprite extends PIXI.Sprite {
-    static voidFilter = new PIXI.filters.VoidFilter();
+    protected _bitmap: Bitmap;
+    protected _frame: Rectangle;
+    protected _realFrame: Rectangle;
+    protected _blendColor: Tone;
+    protected _colorTone: Tone;
+    protected _canvas: HTMLCanvasElement;
+    protected _context: CanvasRenderingContext2D;
+    protected _tintTexture: PIXI.BaseTexture;
 
-    constructor(bitmap) {
+    spriteId: number;
+    opaque: boolean;
+
+    protected _refreshFrame: boolean;
+
+    constructor(bitmap?: Bitmap) {
         const texture = new PIXI.Texture(new PIXI.BaseTexture());
 
         super(texture);
@@ -25,32 +39,27 @@ export class Sprite extends PIXI.Sprite {
         this._context = null;
         this._tintTexture = null;
 
-        /**
-         * use heavy renderer that will reduce border artifacts and apply advanced blendModes
-         * @type {boolean}
-         * @private
-         */
-        this._isPicture = false;
-
         this.spriteId = Sprite._counter++;
         this.opaque = false;
 
         this.bitmap = bitmap;
     }
 
+    /**
+     * use heavy renderer that will reduce border artifacts and apply advanced blendModes
+     */
+    protected _isPicture = false;
+
     // Number of the created objects.
     static _counter = 0;
 
     /**
      * The image for the sprite.
-     *
-     * @property bitmap
-     * @type Bitmap
      */
-    get bitmap() {
+    get bitmap(): Bitmap {
         return this._bitmap;
     }
-    set bitmap(value) {
+    set bitmap(value: Bitmap) {
         if (this._bitmap !== value) {
             this._bitmap = value;
 
@@ -66,51 +75,46 @@ export class Sprite extends PIXI.Sprite {
 
     /**
      * The width of the sprite without the scale.
-     *
-     * @property width
-     * @type Number
      */
-    get width() {
+    // FIXME:
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    get width(): number {
         return this._frame.width;
     }
-    set width(value) {
+    set width(value: number) {
         this._frame.width = value;
         this._refresh();
     }
 
     /**
      * The height of the sprite without the scale.
-     *
-     * @property height
-     * @type Number
      */
-    get height() {
+    // FIXME:
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    get height(): number {
         return this._frame.height;
     }
-    set height(value) {
+    set height(value: number) {
         this._frame.height = value;
         this._refresh();
     }
 
     /**
      * The opacity of the sprite (0 to 255).
-     *
-     * @property opacity
-     * @type Number
      */
-    get opacity() {
+    get opacity(): number {
         return this.alpha * 255;
     }
-    set opacity(value) {
+    set opacity(value: number) {
         this.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**
      * Updates the sprite for each frame.
-     *
-     * @method update
      */
-    update() {
+    update(): void {
         this.children.forEach((child) => {
             if (child.update) {
                 child.update();
@@ -120,26 +124,16 @@ export class Sprite extends PIXI.Sprite {
 
     /**
      * Sets the x and y at once.
-     *
-     * @method move
-     * @param {Number} x The x coordinate of the sprite
-     * @param {Number} y The y coordinate of the sprite
      */
-    move(x, y) {
+    move(x: number, y: number): void {
         this.x = x;
         this.y = y;
     }
 
     /**
      * Sets the rectagle of the bitmap that the sprite displays.
-     *
-     * @method setFrame
-     * @param {Number} x The x coordinate of the frame
-     * @param {Number} y The y coordinate of the frame
-     * @param {Number} width The width of the frame
-     * @param {Number} height The height of the frame
      */
-    setFrame(x, y, width, height) {
+    setFrame(x: number, y: number, width: number, height: number): void {
         this._refreshFrame = false;
         const frame = this._frame;
         if (x !== frame.x || y !== frame.y || width !== frame.width || height !== frame.height) {
@@ -153,21 +147,17 @@ export class Sprite extends PIXI.Sprite {
 
     /**
      * Gets the blend color for the sprite.
-     *
-     * @method getBlendColor
-     * @return {Array} The blend color [r, g, b, a]
+     * @return The blend color [r, g, b, a]
      */
-    getBlendColor() {
+    getBlendColor(): Tone {
         return arrayClone(this._blendColor);
     }
 
     /**
      * Sets the blend color for the sprite.
-     *
-     * @method setBlendColor
-     * @param {Array} color The blend color [r, g, b, a]
+     * @param color The blend color [r, g, b, a]
      */
-    setBlendColor(color) {
+    setBlendColor(color: Tone) {
         if (!(color instanceof Array)) {
             throw new Error('Argument must be an array');
         }
@@ -179,21 +169,17 @@ export class Sprite extends PIXI.Sprite {
 
     /**
      * Gets the color tone for the sprite.
-     *
-     * @method getColorTone
-     * @return {Array} The color tone [r, g, b, gray]
+     * @return The color tone [r, g, b, gray]
      */
-    getColorTone() {
+    getColorTone(): Tone {
         return arrayClone(this._colorTone);
     }
 
     /**
      * Sets the color tone for the sprite.
-     *
-     * @method setColorTone
-     * @param {Array} tone The color tone [r, g, b, gray]
+     * @param tone The color tone [r, g, b, gray]
      */
-    setColorTone(tone) {
+    setColorTone(tone: Tone) {
         if (!(tone instanceof Array)) {
             throw new Error('Argument must be an array');
         }
@@ -203,10 +189,7 @@ export class Sprite extends PIXI.Sprite {
         }
     }
 
-    /**
-     * @private
-     */
-    _onBitmapLoad(bitmapLoaded) {
+    protected _onBitmapLoad(bitmapLoaded): void {
         if (bitmapLoaded === this._bitmap) {
             if (this._refreshFrame && this._bitmap) {
                 this._refreshFrame = false;
@@ -218,10 +201,7 @@ export class Sprite extends PIXI.Sprite {
         this._refresh();
     }
 
-    /**
-     * @private
-     */
-    _refresh() {
+    protected _refresh(): void {
         const frameX = Math.floor(this._frame.x);
         const frameY = Math.floor(this._frame.y);
         const frameW = Math.floor(this._frame.width);
@@ -266,39 +246,20 @@ export class Sprite extends PIXI.Sprite {
             );
             this.texture.frame = this._frame;
         }
-        this.texture._updateID++;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this.texture as any)._updateID++;
     }
 
-    /**
-     * @method _isInBitmapRect
-     * @param {Number} x
-     * @param {Number} y
-     * @param {Number} w
-     * @param {Number} h
-     * @return {Boolean}
-     * @private
-     */
-    _isInBitmapRect(x, y, w, h) {
+    protected _isInBitmapRect(x: number, y: number, w: number, h: number): boolean {
         return this._bitmap && x + w > 0 && y + h > 0 && x < this._bitmap.width && y < this._bitmap.height;
     }
 
-    /**
-     * @method _needsTint
-     * @return {Boolean}
-     * @private
-     */
-    _needsTint() {
+    protected _needsTint(): boolean {
         const tone = this._colorTone;
-        return tone[0] || tone[1] || tone[2] || tone[3] || this._blendColor[3] > 0;
+        return !!tone[0] || !!tone[1] || !!tone[2] || !!tone[3] || this._blendColor[3] > 0;
     }
 
-    /**
-     * @method _createTinter
-     * @param {Number} w
-     * @param {Number} h
-     * @private
-     */
-    _createTinter(w, h) {
+    protected _createTinter(w: number, h: number): void {
         if (!this._canvas) {
             this._canvas = document.createElement('canvas');
             this._context = this._canvas.getContext('2d');
@@ -316,15 +277,7 @@ export class Sprite extends PIXI.Sprite {
         this._tintTexture.scaleMode = this._bitmap.baseTexture.scaleMode;
     }
 
-    /**
-     * @method _executeTint
-     * @param {Number} x
-     * @param {Number} y
-     * @param {Number} w
-     * @param {Number} h
-     * @private
-     */
-    _executeTint(x, y, w, h) {
+    protected _executeTint(x: number, y: number, w: number, h: number) {
         const context = this._context;
         const tone = this._colorTone;
         const color = this._blendColor;
@@ -379,15 +332,7 @@ export class Sprite extends PIXI.Sprite {
         context.drawImage(this._bitmap.canvas, x, y, w, h, 0, 0, w, h);
     }
 
-    _renderCanvas_PIXI = PIXI.Sprite.prototype._renderCanvas;
-    _renderWebGL_PIXI = PIXI.Sprite.prototype._renderWebGL;
-
-    /**
-     * @method _renderCanvas
-     * @param {Object} renderer
-     * @private
-     */
-    _renderCanvas(renderer) {
+    override _renderCanvas(renderer: PIXI.CanvasRenderer): void {
         if (this.bitmap) {
             this.bitmap.touch();
         }
@@ -396,27 +341,26 @@ export class Sprite extends PIXI.Sprite {
         }
 
         if (this.texture.frame.width > 0 && this.texture.frame.height > 0) {
-            this._renderCanvas_PIXI(renderer);
+            super._renderCanvas(renderer);
         }
     }
 
     /**
      * checks if we need to speed up custom blendmodes
-     * @param renderer
-     * @private
      */
-    _speedUpCustomBlendModes(renderer) {
+    protected _speedUpCustomBlendModes(renderer: PIXI.WebGLRenderer): void {
         const picture = renderer.plugins.picture;
         const blend = this.blendMode;
         if (renderer.renderingToScreen && renderer._activeRenderTarget.root) {
             if (picture.drawModes[blend]) {
-                const stage = renderer._lastObjectRendered;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const stage = (renderer as any)._lastObjectRendered;
                 const f = stage._filters;
                 if (!f || !f[0]) {
                     setTimeout(() => {
                         const f = stage._filters;
                         if (!f || !f[0]) {
-                            stage.filters = [Sprite.voidFilter];
+                            stage.filters = [];
                             stage.filterArea = new PIXI.Rectangle(0, 0, Graphics.width, Graphics.height);
                         }
                     }, 0);
@@ -425,12 +369,7 @@ export class Sprite extends PIXI.Sprite {
         }
     }
 
-    /**
-     * @method _renderWebGL
-     * @param {Object} renderer
-     * @private
-     */
-    _renderWebGL(renderer) {
+    override _renderWebGL(renderer: PIXI.WebGLRenderer): void {
         if (this.bitmap) {
             this.bitmap.touch();
         }
@@ -519,10 +458,8 @@ export class Sprite extends PIXI.Sprite {
 
     /**
      * [read-only] The array of children of the sprite.
-     *
-     * @property children
-     * @type Array
      */
+    declare children: DisplayObject[];
 
     /**
      * [read-only] The object that contains the sprite.

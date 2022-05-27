@@ -4,9 +4,6 @@ import * as PIXI from 'pixi.js';
  * The rectangle class.
  */
 export class Rectangle extends PIXI.Rectangle {
-    /**
-     * @private
-     */
     static emptyRectangle = new Rectangle(0, 0, 0, 0);
 
     /**

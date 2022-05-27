@@ -891,7 +891,8 @@ export const Graphics = new (class Graphics {
                     break;
             }
 
-            if (this._renderer instanceof PIXI.WebGLRenderer && this._renderer.textureGC) this._renderer.textureGC.maxIdle = 1;
+            if (this._renderer instanceof PIXI.WebGLRenderer && this._renderer.textureGC)
+                this._renderer.textureGC.maxIdle = 1;
         } catch (e) {
             this._renderer = null;
         }
