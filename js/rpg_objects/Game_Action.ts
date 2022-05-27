@@ -523,14 +523,14 @@ export class Game_Action {
         return value;
     }
 
-    evalDamageFormula(_target: Game_Battler): number {
+    evalDamageFormula(target: Game_Battler): number {
         try {
             const item = this.item();
-            // var a = this.subject();
-            // var b = target;
-            // var v = window.$gameVariables._data;
+            const a = this.subject();
+            const b = target;
+            const v = window.$gameVariables.values();
             const sign = [3, 4].includes(item.damage.type) ? -1 : 1;
-            let value = Math.max(eval(item.damage.formula), 0) * sign;
+            let value = Math.max(eval(`(a, b, v) => ${item.damage.formula}`)(a, b, v), 0) * sign;
             if (isNaN(value)) value = 0;
             return value;
         } catch (e) {

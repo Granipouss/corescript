@@ -14,6 +14,10 @@ export class Game_Variables {
         this._data = [];
     }
 
+    values(): unknown[] {
+        return this._data;
+    }
+
     value(variableId: number): any {
         return this._data[variableId] || 0;
     }
