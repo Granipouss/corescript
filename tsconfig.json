@@ -2,7 +2,7 @@
     "compilerOptions": {
         "outDir": "./out/",
         "noImplicitAny": false,
-        "module": "es6",
+        "module": "commonjs",
         "target": "es5",
         "allowJs": true,
         "moduleResolution": "node"
