@@ -39,7 +39,7 @@ export type RPGAnimation = {
     /**
      * The three-dimensional array containing the frame contents.
      */
-    readonly frames: readonly unknown[];
+    readonly frames: readonly number[][][];
 
     readonly timings: readonly RPGAnimationTiming[];
 };

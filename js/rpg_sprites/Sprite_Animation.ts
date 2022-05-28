@@ -1,15 +1,36 @@
-import { arrayClone } from '../rpg_core/extension';
+import type { Bitmap } from '../rpg_core/Bitmap';
+import { arrayClone, Tone } from '../rpg_core/extension';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Sprite } from '../rpg_core/Sprite';
+import { RPGAnimation, RPGAnimationTiming } from '../rpg_data/animation';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
+import type { Sprite_Base } from './Sprite_Base';
 
 /**
  * The sprite for displaying an animation.
  */
 export class Sprite_Animation extends Sprite {
-    static _checker1 = {};
-    static _checker2 = {};
+    private static _checker1 = new Map<RPGAnimation, boolean>();
+    private static _checker2 = new Map<RPGAnimation, boolean>();
+
+    private _reduceArtifacts: boolean;
+
+    private _target: Sprite_Base;
+    private _animation: RPGAnimation;
+    private _mirror: boolean;
+    private _delay: number;
+    private _rate: number;
+    private _duration: number;
+    private _flashColor: Tone;
+    private _flashDuration: number;
+    private _screenFlashDuration: number;
+    private _hidingDuration: number;
+    private _bitmap1: Bitmap;
+    private _bitmap2: Bitmap;
+    private _cellSprites: Sprite[];
+    private _screenFlashSprite: ScreenSprite;
+    private _duplicated: boolean;
 
     constructor() {
         super();
@@ -17,7 +38,7 @@ export class Sprite_Animation extends Sprite {
         this.initMembers();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._target = null;
         this._animation = null;
         this._mirror = false;
@@ -36,7 +57,7 @@ export class Sprite_Animation extends Sprite {
         this.z = 8;
     }
 
-    setup(target, animation, mirror, delay) {
+    setup(target: Sprite_Base, animation: RPGAnimation, mirror: boolean, delay: number): void {
         this._target = target;
         this._animation = animation;
         this._mirror = mirror;
@@ -50,32 +71,32 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    remove() {
+    remove(): void {
         if (this.parent && this.parent.removeChild(this)) {
             this._target.setBlendColor([0, 0, 0, 0]);
             this._target.show();
         }
     }
 
-    setupRate() {
+    setupRate(): void {
         this._rate = 4;
     }
 
-    setupDuration() {
+    setupDuration(): void {
         this._duration = this._animation.frames.length * this._rate + 1;
     }
 
-    update() {
+    update(): void {
         super.update();
         this.updateMain();
         this.updateFlash();
         this.updateScreenFlash();
         this.updateHiding();
-        Sprite_Animation._checker1 = {};
-        Sprite_Animation._checker2 = {};
+        Sprite_Animation._checker1 = new Map<RPGAnimation, boolean>();
+        Sprite_Animation._checker2 = new Map<RPGAnimation, boolean>();
     }
 
-    updateFlash() {
+    updateFlash(): void {
         if (this._flashDuration > 0) {
             const d = this._flashDuration--;
             this._flashColor[3] *= (d - 1) / d;
@@ -83,7 +104,7 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    updateScreenFlash() {
+    updateScreenFlash(): void {
         if (this._screenFlashDuration > 0) {
             const d = this._screenFlashDuration--;
             if (this._screenFlashSprite) {
@@ -95,11 +116,9 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    absoluteX() {
+    absoluteX(): number {
         let x = 0;
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let object = this;
+        let object = this as PIXI.DisplayObject;
         while (object) {
             x += object.x;
             object = object.parent;
@@ -107,11 +126,9 @@ export class Sprite_Animation extends Sprite {
         return x;
     }
 
-    absoluteY() {
+    absoluteY(): number {
         let y = 0;
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let object = this;
+        let object = this as PIXI.DisplayObject;
         while (object) {
             y += object.y;
             object = object.parent;
@@ -119,7 +136,7 @@ export class Sprite_Animation extends Sprite {
         return y;
     }
 
-    updateHiding() {
+    updateHiding(): void {
         if (this._hidingDuration > 0) {
             this._hidingDuration--;
             if (this._hidingDuration === 0) {
@@ -128,11 +145,11 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    isPlaying() {
+    isPlaying(): boolean {
         return this._duration > 0;
     }
 
-    loadBitmaps() {
+    loadBitmaps(): void {
         const name1 = this._animation.animation1Name;
         const name2 = this._animation.animation2Name;
         const hue1 = this._animation.animation1Hue;
@@ -141,29 +158,29 @@ export class Sprite_Animation extends Sprite {
         this._bitmap2 = ImageManager.loadAnimation(name2, hue2);
     }
 
-    isReady() {
+    isReady(): boolean {
         return this._bitmap1 && this._bitmap1.isReady() && this._bitmap2 && this._bitmap2.isReady();
     }
 
-    createSprites() {
-        if (!Sprite_Animation._checker2[this._animation]) {
+    createSprites(): void {
+        if (!Sprite_Animation._checker2.get(this._animation)) {
             this.createCellSprites();
             if (this._animation.position === 3) {
-                Sprite_Animation._checker2[this._animation] = true;
+                Sprite_Animation._checker2.set(this._animation, true);
             }
             this.createScreenFlashSprite();
         }
-        if (Sprite_Animation._checker1[this._animation]) {
+        if (Sprite_Animation._checker1.get(this._animation)) {
             this._duplicated = true;
         } else {
             this._duplicated = false;
             if (this._animation.position === 3) {
-                Sprite_Animation._checker1[this._animation] = true;
+                Sprite_Animation._checker1.set(this._animation, true);
             }
         }
     }
 
-    createCellSprites() {
+    createCellSprites(): void {
         this._cellSprites = [];
         for (let i = 0; i < 16; i++) {
             const sprite = new Sprite();
@@ -174,12 +191,12 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    createScreenFlashSprite() {
+    createScreenFlashSprite(): void {
         this._screenFlashSprite = new ScreenSprite();
         this.addChild(this._screenFlashSprite);
     }
 
-    updateMain() {
+    updateMain(): void {
         if (this.isPlaying() && this.isReady()) {
             if (this._delay > 0) {
                 this._delay--;
@@ -193,12 +210,12 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    updatePosition() {
+    updatePosition(): void {
         if (this._animation.position === 3) {
             this.x = this.parent.width / 2;
             this.y = this.parent.height / 2;
         } else {
-            var parent = this._target.parent;
+            const parent = this._target.parent;
             const grandparent = parent ? parent.parent : null;
             this.x = this._target.x;
             this.y = this._target.y;
@@ -214,7 +231,7 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    updateFrame() {
+    updateFrame(): void {
         if (this._duration > 0) {
             const frameIndex = this.currentFrameIndex();
             this.updateAllCellSprites(this._animation.frames[frameIndex]);
@@ -226,11 +243,11 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    currentFrameIndex() {
+    currentFrameIndex(): number {
         return this._animation.frames.length - Math.floor((this._duration + this._rate - 1) / this._rate);
     }
 
-    updateAllCellSprites(frame) {
+    updateAllCellSprites(frame: number[][]): void {
         for (let i = 0; i < this._cellSprites.length; i++) {
             const sprite = this._cellSprites[i];
             if (i < frame.length) {
@@ -241,7 +258,7 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    updateCellSprite(sprite, cell) {
+    updateCellSprite(sprite: Sprite, cell: number[]): void {
         const pattern = cell[0];
         if (pattern >= 0) {
             const sx = (pattern % 5) * 192;
@@ -272,7 +289,7 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    processTimingData(timing) {
+    processTimingData(timing: RPGAnimationTiming): void {
         const duration = timing.flashDuration * this._rate;
         switch (timing.flashScope) {
             case 1:
@@ -290,12 +307,12 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    startFlash(color, duration) {
+    startFlash(color: Tone, duration: number): void {
         this._flashColor = arrayClone(color);
         this._flashDuration = duration;
     }
 
-    startScreenFlash(color, duration) {
+    startScreenFlash(color: number[], duration: number): void {
         this._screenFlashDuration = duration;
         if (this._screenFlashSprite) {
             this._screenFlashSprite.setColor(color[0], color[1], color[2]);
@@ -303,7 +320,7 @@ export class Sprite_Animation extends Sprite {
         }
     }
 
-    startHiding(duration) {
+    startHiding(duration: number): void {
         this._hidingDuration = duration;
         this._target.hide();
     }

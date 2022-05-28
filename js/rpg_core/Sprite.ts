@@ -22,6 +22,7 @@ export class Sprite extends PIXI.Sprite {
 
     spriteId: number;
     opaque: boolean;
+    z = 0;
 
     protected _refreshFrame: boolean;
 

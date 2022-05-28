@@ -12,6 +12,16 @@ import { Sprite_Timer } from './Sprite_Timer';
  * The superclass of Spriteset_Map and Spriteset_Battle.
  */
 export class Spriteset_Base extends Sprite {
+    protected _tone: number[];
+    protected _baseSprite: Sprite;
+    protected _blackScreen: ScreenSprite;
+    protected _toneFilter: ToneFilter;
+    protected _toneSprite: ToneSprite;
+    protected _pictureContainer: Sprite;
+    protected _timerSprite: Sprite_Timer;
+    protected _flashSprite: ScreenSprite;
+    protected _fadeSprite: ScreenSprite;
+
     constructor() {
         super();
         this.setFrame(0, 0, Graphics.width, Graphics.height);
@@ -23,24 +33,24 @@ export class Spriteset_Base extends Sprite {
         this.update();
     }
 
-    createLowerLayer() {
+    createLowerLayer(): void {
         this.createBaseSprite();
     }
 
-    createUpperLayer() {
+    createUpperLayer(): void {
         this.createPictures();
         this.createTimer();
         this.createScreenSprites();
     }
 
-    update() {
+    update(): void {
         super.update();
         this.updateScreenSprites();
         this.updateToneChanger();
         this.updatePosition();
     }
 
-    createBaseSprite() {
+    createBaseSprite(): void {
         this._baseSprite = new Sprite();
         this._baseSprite.setFrame(0, 0, this.width, this.height);
         this._blackScreen = new ScreenSprite();
@@ -49,7 +59,7 @@ export class Spriteset_Base extends Sprite {
         this._baseSprite.addChild(this._blackScreen);
     }
 
-    createToneChanger() {
+    createToneChanger(): void {
         if (Graphics.isWebGL()) {
             this.createWebGLToneChanger();
         } else {
@@ -57,7 +67,7 @@ export class Spriteset_Base extends Sprite {
         }
     }
 
-    createWebGLToneChanger() {
+    createWebGLToneChanger(): void {
         const margin = 48;
         const width = Graphics.width + margin * 2;
         const height = Graphics.height + margin * 2;
@@ -67,12 +77,12 @@ export class Spriteset_Base extends Sprite {
         this._baseSprite.filterArea = new Rectangle(-margin, -margin, width, height);
     }
 
-    createCanvasToneChanger() {
+    createCanvasToneChanger(): void {
         this._toneSprite = new ToneSprite();
         this.addChild(this._toneSprite);
     }
 
-    createPictures() {
+    createPictures(): void {
         const width = Graphics.boxWidth;
         const height = Graphics.boxHeight;
         const x = (Graphics.width - width) / 2;
@@ -85,26 +95,26 @@ export class Spriteset_Base extends Sprite {
         this.addChild(this._pictureContainer);
     }
 
-    createTimer() {
+    createTimer(): void {
         this._timerSprite = new Sprite_Timer();
         this.addChild(this._timerSprite);
     }
 
-    createScreenSprites() {
+    createScreenSprites(): void {
         this._flashSprite = new ScreenSprite();
         this._fadeSprite = new ScreenSprite();
         this.addChild(this._flashSprite);
         this.addChild(this._fadeSprite);
     }
 
-    updateScreenSprites() {
+    updateScreenSprites(): void {
         const color = global.$gameScreen.flashColor();
         this._flashSprite.setColor(color[0], color[1], color[2]);
         this._flashSprite.opacity = color[3];
         this._fadeSprite.opacity = 255 - global.$gameScreen.brightness();
     }
 
-    updateToneChanger() {
+    updateToneChanger(): void {
         const tone = global.$gameScreen.tone();
         if (!arrayEquals(this._tone, tone)) {
             this._tone = arrayClone(tone);
@@ -116,7 +126,7 @@ export class Spriteset_Base extends Sprite {
         }
     }
 
-    updateWebGLToneChanger() {
+    updateWebGLToneChanger(): void {
         const tone = this._tone;
         this._toneFilter.reset();
         if (tone[0] || tone[1] || tone[2] || tone[3]) {
@@ -128,12 +138,12 @@ export class Spriteset_Base extends Sprite {
         }
     }
 
-    updateCanvasToneChanger() {
+    updateCanvasToneChanger(): void {
         const tone = this._tone;
         this._toneSprite.setTone(tone[0], tone[1], tone[2], tone[3]);
     }
 
-    updatePosition() {
+    updatePosition(): void {
         const screen = global.$gameScreen;
         const scale = screen.zoomScale();
         this.scale.x = scale;
