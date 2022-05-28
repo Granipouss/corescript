@@ -126,7 +126,7 @@ export class Sprite extends PIXI.Sprite {
     /**
      * Sets the x and y at once.
      */
-    move(x: number, y: number): void {
+    move(x: number, y: number, _width?: number, _height?: number): void {
         this.x = x;
         this.y = y;
     }

@@ -1,8 +1,8 @@
+import { CanvasTilemap } from '../rpg_core/CanvasTilemap';
 import { arrayEquals } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { ShaderTilemap } from '../rpg_core/ShaderTilemap';
 import { Sprite } from '../rpg_core/Sprite';
-import { Tilemap } from '../rpg_core/Tilemap';
 import { TilingSprite } from '../rpg_core/TilingSprite';
 import { Weather } from '../rpg_core/Weather';
 import { ImageManager } from '../rpg_managers/ImageManager';
@@ -52,7 +52,7 @@ export class Spriteset_Map extends Spriteset_Base {
         if (Graphics.isWebGL()) {
             this._tilemap = new ShaderTilemap();
         } else {
-            this._tilemap = new Tilemap();
+            this._tilemap = new CanvasTilemap();
         }
         this._tilemap.tileWidth = global.$gameMap.tileWidth();
         this._tilemap.tileHeight = global.$gameMap.tileHeight();

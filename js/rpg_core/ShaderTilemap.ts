@@ -1,12 +1,25 @@
+import 'pixi-tilemap';
 import * as PIXI from 'pixi.js';
 
-import { Tilemap } from '../rpg_core/Tilemap';
+import { Tilemap } from './Tilemap';
 import { PluginManager } from '../rpg_managers/PluginManager';
+
+type CompositeRectTileLayer = PIXI.tilemap.CompositeRectTileLayer;
+type ZLayer = PIXI.tilemap.ZLayer;
 
 /**
  * The tilemap which displays 2D tile-based game map using shaders
  */
 export class ShaderTilemap extends Tilemap {
+    roundPixels: boolean;
+
+    protected _lastBitmapLength: number;
+
+    lowerLayer: CompositeRectTileLayer;
+    upperLayer: CompositeRectTileLayer;
+    lowerZLayer: ZLayer;
+    upperZLayer: ZLayer;
+
     constructor() {
         super();
         this.roundPixels = true;
@@ -14,36 +27,26 @@ export class ShaderTilemap extends Tilemap {
 
     /**
      * Uploads animation state in renderer
-     *
-     * @method _hackRenderer
-     * @private
      */
-    _hackRenderer(renderer) {
+    protected _hackRenderer(renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer): void {
         let af = this.animationFrame % 4;
         if (af == 3) af = 1;
         renderer.plugins.tilemap.tileAnim[0] = af * this._tileWidth;
         renderer.plugins.tilemap.tileAnim[1] = (this.animationFrame % 3) * this._tileHeight;
-        return renderer;
     }
 
     /**
      * PIXI render method
-     *
-     * @method renderCanvas
-     * @param {Object} pixi renderer
      */
-    renderCanvas(renderer) {
+    renderCanvas(renderer: PIXI.CanvasRenderer): void {
         this._hackRenderer(renderer);
         super.renderCanvas(renderer);
     }
 
     /**
      * PIXI render method
-     *
-     * @method renderWebGL
-     * @param {Object} pixi renderer
      */
-    renderWebGL(renderer) {
+    renderWebGL(renderer: PIXI.WebGLRenderer): void {
         this._hackRenderer(renderer);
         super.renderWebGL(renderer);
     }
@@ -51,29 +54,28 @@ export class ShaderTilemap extends Tilemap {
     /**
      * Forces to repaint the entire tilemap AND update bitmaps list if needed
      */
-    refresh() {
+    refresh(): void {
         if (this._lastBitmapLength !== this.bitmaps.length) {
             this._lastBitmapLength = this.bitmaps.length;
             this.refreshTileset();
         }
         this._needsRepaint = true;
     }
+
     /**
      * Call after you update tileset
      */
-    refreshTileset() {
-        const bitmaps = this.bitmaps.map((x) => (x._baseTexture ? new PIXI.Texture(x._baseTexture) : x));
+    refreshTileset(): void {
+        const bitmaps = this.bitmaps.map((x) => (x.baseTexture ? new PIXI.Texture(x.baseTexture) : PIXI.Texture.EMPTY));
         this.lowerLayer.setBitmaps(bitmaps);
         this.upperLayer.setBitmaps(bitmaps);
     }
 
-    /**
-     * @private
-     */
-    updateTransform() {
+    updateTransform(): void {
+        let ox: number, oy: number;
         if (this.roundPixels) {
-            var ox = Math.floor(this.origin.x);
-            var oy = Math.floor(this.origin.y);
+            ox = Math.floor(this.origin.x);
+            oy = Math.floor(this.origin.y);
         } else {
             ox = this.origin.x;
             oy = this.origin.y;
@@ -91,17 +93,14 @@ export class ShaderTilemap extends Tilemap {
         super.updateTransform();
     }
 
-    /**
-     * @private
-     */
-    _createLayers() {
-        // var width = this._width;
-        // var height = this._height;
-        // var margin = this._margin;
-        // var tileCols = Math.ceil(width / this._tileWidth) + 1;
-        // var tileRows = Math.ceil(height / this._tileHeight) + 1;
-        // var layerWidth = (this._layerWidth = tileCols * this._tileWidth);
-        // var layerHeight = (this._layerHeight = tileRows * this._tileHeight);
+    protected _createLayers(): void {
+        // const width = this._width;
+        // const height = this._height;
+        // const margin = this._margin;
+        // const tileCols = Math.ceil(width / this._tileWidth) + 1;
+        // const tileRows = Math.ceil(height / this._tileHeight) + 1;
+        // const layerWidth = (this._layerWidth = tileCols * this._tileWidth);
+        // const layerHeight = (this._layerHeight = tileRows * this._tileHeight);
         this._needsRepaint = true;
 
         if (!this.lowerZLayer) {
@@ -122,15 +121,11 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    /**
-     * @param {Number} startX
-     * @param {Number} startY
-     * @private
-     */
-    _updateLayerPositions(startX, startY) {
+    protected _updateLayerPositions(startX: number, startY: number): void {
+        let ox: number, oy: number;
         if (this.roundPixels) {
-            var ox = Math.floor(this.origin.x);
-            var oy = Math.floor(this.origin.y);
+            ox = Math.floor(this.origin.x);
+            oy = Math.floor(this.origin.y);
         } else {
             ox = this.origin.x;
             oy = this.origin.y;
@@ -141,12 +136,7 @@ export class ShaderTilemap extends Tilemap {
         this.upperZLayer.position.y = startY * this._tileHeight - oy;
     }
 
-    /**
-     * @param {Number} startX
-     * @param {Number} startY
-     * @private
-     */
-    _paintAllTiles(startX, startY) {
+    protected _paintAllTiles(startX: number, startY: number): void {
         this.lowerZLayer.clear();
         this.upperZLayer.clear();
         const tileCols = Math.ceil(this._width / this._tileWidth) + 1;
@@ -158,14 +148,7 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    /**
-     * @param {Number} startX
-     * @param {Number} startY
-     * @param {Number} x
-     * @param {Number} y
-     * @private
-     */
-    _paintTiles(startX, startY, x, y) {
+    protected _paintTiles(startX: number, startY: number, x: number, y: number): void {
         const mx = startX + x;
         const my = startY + y;
         const dx = x * this._tileWidth,
@@ -176,8 +159,8 @@ export class ShaderTilemap extends Tilemap {
         const tileId3 = this._readMapData(mx, my, 3);
         const shadowBits = this._readMapData(mx, my, 4);
         const upperTileId1 = this._readMapData(mx, my - 1, 1);
-        const lowerLayer = this.lowerLayer.children[0];
-        const upperLayer = this.upperLayer.children[0];
+        const lowerLayer = this.lowerLayer.children[0] as CompositeRectTileLayer;
+        const upperLayer = this.upperLayer.children[0] as CompositeRectTileLayer;
 
         if (this._isHigherTile(tileId0)) {
             this._drawTile(upperLayer, tileId0, dx, dy);
@@ -214,14 +197,7 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    /**
-     * @param {Array} layers
-     * @param {Number} tileId
-     * @param {Number} dx
-     * @param {Number} dy
-     * @private
-     */
-    _drawTile(layer, tileId, dx, dy) {
+    protected _drawTile(layer: CompositeRectTileLayer, tileId: number, dx: number, dy: number): void {
         if (Tilemap.isVisibleTile(tileId)) {
             if (Tilemap.isAutotile(tileId)) {
                 this._drawAutotile(layer, tileId, dx, dy);
@@ -231,14 +207,7 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    /**
-     * @param {Array} layers
-     * @param {Number} tileId
-     * @param {Number} dx
-     * @param {Number} dy
-     * @private
-     */
-    _drawNormalTile(layer, tileId, dx, dy) {
+    protected _drawNormalTile(layer: CompositeRectTileLayer, tileId: number, dx: number, dy: number): void {
         let setNumber = 0;
 
         if (Tilemap.isTileA5(tileId)) {
@@ -255,14 +224,7 @@ export class ShaderTilemap extends Tilemap {
         layer.addRect(setNumber, sx, sy, dx, dy, w, h);
     }
 
-    /**
-     * @param {Array} layers
-     * @param {Number} tileId
-     * @param {Number} dx
-     * @param {Number} dy
-     * @private
-     */
-    _drawAutotile(layer, tileId, dx, dy) {
+    protected _drawAutotile(layer: CompositeRectTileLayer, tileId: number, dx: number, dy: number): void {
         let autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
         const kind = Tilemap.getAutotileKind(tileId);
         const shape = Tilemap.getAutotileShape(tileId);
@@ -346,14 +308,7 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    /**
-     * @param {Array} layers
-     * @param {Number} tileId
-     * @param {Number} dx
-     * @param {Number} dy
-     * @private
-     */
-    _drawTableEdge(layer, tileId, dx, dy) {
+    protected _drawTableEdge(layer: CompositeRectTileLayer, tileId: number, dx: number, dy: number) {
         if (Tilemap.isTileA2(tileId)) {
             const autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
             const kind = Tilemap.getAutotileKind(tileId);
@@ -378,13 +333,7 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    /**
-     * @param {Number} shadowBits
-     * @param {Number} dx
-     * @param {Number} dy
-     * @private
-     */
-    _drawShadow(layer, shadowBits, dx, dy) {
+    protected _drawShadow(layer: CompositeRectTileLayer, shadowBits: number, dx: number, dy: number): void {
         if (shadowBits & 0x0f) {
             const w1 = this._tileWidth / 2;
             const h1 = this._tileHeight / 2;
