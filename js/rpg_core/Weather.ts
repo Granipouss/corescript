@@ -1,16 +1,30 @@
 import * as PIXI from 'pixi.js';
 
-import { Bitmap } from '../rpg_core/Bitmap';
-import { Graphics } from '../rpg_core/Graphics';
-import { Point } from '../rpg_core/Point';
-import { ScreenSprite } from '../rpg_core/ScreenSprite';
-import { Sprite } from '../rpg_core/Sprite';
+import { Bitmap } from './Bitmap';
+import { Graphics } from './Graphics';
+import { Point } from './Point';
+import { ScreenSprite } from './ScreenSprite';
+import { Sprite } from './Sprite';
 import { randomInt } from './extension';
+
+export type WeatherType = 'none' | 'rain' | 'storm' | 'snow';
+
+type WeatherSprite = Sprite & { ax?: number; ay?: number };
 
 /**
  * The weather effect which displays rain, storm, or snow.
  */
 export class Weather extends PIXI.Container {
+    private _width: number;
+    private _height: number;
+    private _sprites: WeatherSprite[];
+
+    private _rainBitmap: Bitmap;
+    private _stormBitmap: Bitmap;
+    private _snowBitmap: Bitmap;
+
+    private _dimmerSprite: ScreenSprite;
+
     constructor() {
         super();
 
@@ -20,44 +34,32 @@ export class Weather extends PIXI.Container {
 
         this._createBitmaps();
         this._createDimmer();
-
-        /**
-         * The type of the weather in ['none', 'rain', 'storm', 'snow'].
-         *
-         * @property type
-         * @type String
-         */
-        this.type = 'none';
-
-        /**
-         * The power of the weather in the range (0, 9).
-         *
-         * @property power
-         * @type Number
-         */
-        this.power = 0;
-
-        /**
-         * The origin point of the weather for scrolling.
-         *
-         * @property origin
-         * @type Point
-         */
-        this.origin = new Point();
     }
+
+    /**
+     * The type of the weather in ['none', 'rain', 'storm', 'snow'].
+     */
+    type: WeatherType = 'none';
+
+    /**
+     * The power of the weather in the range (0, 9).
+     */
+    power = 0;
+
+    /**
+     * The origin point of the weather for scrolling.
+     */
+    origin = new Point();
 
     /**
      * Updates the weather for each frame.
      */
-    update() {
+    update(): void {
         this._updateDimmer();
         this._updateAllSprites();
     }
 
-    /**
-     * @private
-     */
-    _createBitmaps() {
+    private _createBitmaps(): void {
         this._rainBitmap = new Bitmap(1, 60);
         this._rainBitmap.fillAll('white');
         this._stormBitmap = new Bitmap(2, 100);
@@ -66,26 +68,17 @@ export class Weather extends PIXI.Container {
         this._snowBitmap.drawCircle(4, 4, 4, 'white');
     }
 
-    /**
-     * @private
-     */
-    _createDimmer() {
+    private _createDimmer(): void {
         this._dimmerSprite = new ScreenSprite();
         this._dimmerSprite.setColor(80, 80, 80);
         this.addChild(this._dimmerSprite);
     }
 
-    /**
-     * @private
-     */
-    _updateDimmer() {
+    private _updateDimmer(): void {
         this._dimmerSprite.opacity = Math.floor(this.power * 6);
     }
 
-    /**
-     * @private
-     */
-    _updateAllSprites() {
+    private _updateAllSprites(): void {
         const maxSprites = Math.floor(this.power * 10);
         while (this._sprites.length < maxSprites) {
             this._addSprite();
@@ -93,35 +86,25 @@ export class Weather extends PIXI.Container {
         while (this._sprites.length > maxSprites) {
             this._removeSprite();
         }
-        this._sprites.forEach(function (sprite) {
+        this._sprites.forEach((sprite) => {
             this._updateSprite(sprite);
             sprite.x = sprite.ax - this.origin.x;
             sprite.y = sprite.ay - this.origin.y;
-        }, this);
+        });
     }
 
-    /**
-     * @private
-     */
-    _addSprite() {
-        const sprite = new Sprite(this.viewport);
+    private _addSprite(): void {
+        const sprite = new Sprite();
         sprite.opacity = 0;
         this._sprites.push(sprite);
         this.addChild(sprite);
     }
 
-    /**
-     * @private
-     */
-    _removeSprite() {
+    private _removeSprite(): void {
         this.removeChild(this._sprites.pop());
     }
 
-    /**
-     * @param {Sprite} sprite
-     * @private
-     */
-    _updateSprite(sprite) {
+    private _updateSprite(sprite: Sprite): void {
         switch (this.type) {
             case 'rain':
                 this._updateRainSprite(sprite);
@@ -138,11 +121,7 @@ export class Weather extends PIXI.Container {
         }
     }
 
-    /**
-     * @param {Sprite} sprite
-     * @private
-     */
-    _updateRainSprite(sprite) {
+    private _updateRainSprite(sprite: WeatherSprite): void {
         sprite.bitmap = this._rainBitmap;
         sprite.rotation = Math.PI / 16;
         sprite.ax -= 6 * Math.sin(sprite.rotation);
@@ -150,11 +129,7 @@ export class Weather extends PIXI.Container {
         sprite.opacity -= 6;
     }
 
-    /**
-     * @param {Sprite} sprite
-     * @private
-     */
-    _updateStormSprite(sprite) {
+    private _updateStormSprite(sprite: WeatherSprite): void {
         sprite.bitmap = this._stormBitmap;
         sprite.rotation = Math.PI / 8;
         sprite.ax -= 8 * Math.sin(sprite.rotation);
@@ -162,11 +137,7 @@ export class Weather extends PIXI.Container {
         sprite.opacity -= 8;
     }
 
-    /**
-     * @param {Sprite} sprite
-     * @private
-     */
-    _updateSnowSprite(sprite) {
+    private _updateSnowSprite(sprite: WeatherSprite): void {
         sprite.bitmap = this._snowBitmap;
         sprite.rotation = Math.PI / 16;
         sprite.ax -= 3 * Math.sin(sprite.rotation);
@@ -174,11 +145,7 @@ export class Weather extends PIXI.Container {
         sprite.opacity -= 3;
     }
 
-    /**
-     * @param {Sprite} sprite
-     * @private
-     */
-    _rebornSprite(sprite) {
+    private _rebornSprite(sprite: WeatherSprite): void {
         sprite.ax = randomInt(Graphics.width + 100) - 100 + this.origin.x;
         sprite.ay = randomInt(Graphics.height + 200) - 200 + this.origin.y;
         sprite.opacity = 160 + randomInt(60);

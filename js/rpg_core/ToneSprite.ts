@@ -1,13 +1,18 @@
 import * as PIXI from 'pixi.js';
 
-import { Graphics } from '../rpg_core/Graphics';
-import { Utils } from '../rpg_core/Utils';
+import { Graphics } from './Graphics';
+import { Utils } from './Utils';
 import { clamp } from './extension';
 
 /**
  * The sprite which changes the screen color in 2D canvas mode.
  */
 export class ToneSprite extends PIXI.Container {
+    protected _red: number;
+    protected _green: number;
+    protected _blue: number;
+    protected _gray: number;
+
     constructor() {
         super();
         this.clear();
@@ -16,7 +21,7 @@ export class ToneSprite extends PIXI.Container {
     /**
      * Clears the tone.
      */
-    clear() {
+    clear(): void {
         this._red = 0;
         this._green = 0;
         this._blue = 0;
@@ -25,26 +30,19 @@ export class ToneSprite extends PIXI.Container {
 
     /**
      * Sets the tone.
-     *
-     * @method setTone
-     * @param {Number} r The red strength in the range (-255, 255)
-     * @param {Number} g The green strength in the range (-255, 255)
-     * @param {Number} b The blue strength in the range (-255, 255)
-     * @param {Number} gray The grayscale level in the range (0, 255)
+     * @param r The red strength in the range (-255, 255)
+     * @param g The green strength in the range (-255, 255)
+     * @param b The blue strength in the range (-255, 255)
+     * @param gray The grayscale level in the range (0, 255)
      */
-    setTone(r, g, b, gray) {
+    setTone(r = 0, g = 0, b = 0, gray = 0): void {
         this._red = clamp(Math.round(r || 0), [-255, 255]);
         this._green = clamp(Math.round(g || 0), [-255, 255]);
         this._blue = clamp(Math.round(b || 0), [-255, 255]);
         this._gray = clamp(Math.round(gray || 0), [0, 255]);
     }
 
-    /**
-     * @method _renderCanvas
-     * @param {Object} renderSession
-     * @private
-     */
-    _renderCanvas(renderer) {
+    _renderCanvas(renderer: PIXI.CanvasRenderer): void {
         if (this.visible) {
             const context = renderer.context;
             const t = this.worldTransform;
@@ -88,12 +86,7 @@ export class ToneSprite extends PIXI.Container {
         }
     }
 
-    /**
-     * @method _renderWebGL
-     * @param {Object} renderSession
-     * @private
-     */
-    _renderWebGL(_renderer) {
+    _renderWebGL(_renderer: PIXI.WebGLRenderer): void {
         // Not supported
     }
 }

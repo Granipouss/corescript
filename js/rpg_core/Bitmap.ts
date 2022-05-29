@@ -232,7 +232,6 @@ export class Bitmap {
         if (stage) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const renderer = (Graphics as any)._renderer as PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-            console.log(renderer);
             renderer.render(stage, renderTexture);
             stage.worldTransform.identity();
             let canvas: HTMLCanvasElement = null;

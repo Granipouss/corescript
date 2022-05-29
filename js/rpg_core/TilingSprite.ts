@@ -1,17 +1,23 @@
 import * as PIXI from 'pixi.js';
 
-import { Point } from '../rpg_core/Point';
-import { Rectangle } from '../rpg_core/Rectangle';
-import { Sprite } from '../rpg_core/Sprite';
+import { Point } from './Point';
+import { Rectangle } from './Rectangle';
+import { Sprite } from './Sprite';
 import { clamp } from './extension';
+import type { Bitmap } from './Bitmap';
+import { DisplayObject } from './DisplayObject';
 
 /**
  * The sprite object for a tiling image.
  *
  * @param {Bitmap} bitmap The image for the tiling sprite
  */
-export class TilingSprite extends PIXI.extras.PictureTilingSprite {
-    constructor(bitmap) {
+export class TilingSprite extends PIXI.extras.TilingSprite {
+    protected _bitmap: Bitmap;
+    protected _frame: Rectangle;
+    readonly spriteId: number;
+
+    constructor(bitmap: Bitmap) {
         const texture = new PIXI.Texture(new PIXI.BaseTexture());
 
         super(texture);
@@ -21,23 +27,16 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
         this._height = 0;
         this._frame = new Rectangle();
         this.spriteId = Sprite._counter++;
-        /**
-         * The origin point of the tiling sprite for scrolling.
-         *
-         * @property origin
-         * @type Point
-         */
-        this.origin = new Point();
 
         this.bitmap = bitmap;
     }
 
     /**
-     * @method _renderCanvas
-     * @param {Object} renderer
-     * @private
+     * The origin point of the tiling sprite for scrolling.
      */
-    _renderCanvas(renderer) {
+    origin = new Point();
+
+    _renderCanvas(renderer: PIXI.CanvasRenderer): void {
         if (this._bitmap) {
             this._bitmap.touch();
         }
@@ -48,14 +47,11 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
 
     /**
      * The image for the tiling sprite.
-     *
-     * @property bitmap
-     * @type Bitmap
      */
-    get bitmap() {
+    get bitmap(): Bitmap {
         return this._bitmap;
     }
-    set bitmap(value) {
+    set bitmap(value: Bitmap) {
         if (this._bitmap !== value) {
             this._bitmap = value;
             if (this._bitmap) {
@@ -68,23 +64,18 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
 
     /**
      * The opacity of the tiling sprite (0 to 255).
-     *
-     * @property opacity
-     * @type Number
      */
-    get opacity() {
+    get opacity(): number {
         return this.alpha * 255;
     }
-    set opacity(value) {
+    set opacity(value: number) {
         this.alpha = clamp(value, [0, 255]) / 255;
     }
 
     /**
      * Updates the tiling sprite for each frame.
-     *
-     * @method update
      */
-    update() {
+    update(): void {
         this.children.forEach((child) => {
             if (child.update) {
                 child.update();
@@ -94,14 +85,8 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
 
     /**
      * Sets the x, y, width, and height all at once.
-     *
-     * @method move
-     * @param {Number} x The x coordinate of the tiling sprite
-     * @param {Number} y The y coordinate of the tiling sprite
-     * @param {Number} width The width of the tiling sprite
-     * @param {Number} height The height of the tiling sprite
      */
-    move(x, y, width, height) {
+    move(x: number, y: number, width: number, height: number): void {
         this.x = x || 0;
         this.y = y || 0;
         this._width = width || 0;
@@ -110,14 +95,8 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
 
     /**
      * Specifies the region of the image that the tiling sprite will use.
-     *
-     * @method setFrame
-     * @param {Number} x The x coordinate of the frame
-     * @param {Number} y The y coordinate of the frame
-     * @param {Number} width The width of the frame
-     * @param {Number} height The height of the frame
      */
-    setFrame(x, y, width, height) {
+    setFrame(x: number, y: number, width: number, height: number): void {
         this._frame.x = x;
         this._frame.y = y;
         this._frame.width = width;
@@ -125,54 +104,48 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
         this._refresh();
     }
 
-    /**
-     * @private
-     */
     updateTransform() {
         this.tilePosition.x = Math.round(-this.origin.x);
         this.tilePosition.y = Math.round(-this.origin.y);
         super.updateTransform();
     }
 
-    /**
-     * @private
-     */
-    _onBitmapLoad() {
+    private _onBitmapLoad(): void {
         this.texture.baseTexture = this._bitmap.baseTexture;
         this._refresh();
     }
 
-    /**
-     * @private
-     */
-    _refresh() {
+    private _refresh(): void {
         const frame = this._frame.clone();
         if (frame.width === 0 && frame.height === 0 && this._bitmap) {
             frame.width = this._bitmap.width;
             frame.height = this._bitmap.height;
         }
         this.texture.frame = frame;
-        this.texture._updateID++;
-        this.tilingTexture = null;
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this.texture as any)._updateID++;
+        // FIXME:
+        // this.tilingTexture = null;
     }
 
-    /**
-     * @method _renderWebGL
-     * @param {Object} renderer
-     * @private
-     */
-    _renderWebGL(renderer) {
+    _renderWebGL(renderer: PIXI.WebGLRenderer): void {
         if (this._bitmap) {
             this._bitmap.touch();
             this._bitmap.checkDirty();
         }
 
-        this._speedUpCustomBlendModes(renderer);
+        Sprite.speedUpCustomBlendModes(renderer, this.blendMode);
 
         super._renderWebGL(renderer);
     }
 
     // The important members from Pixi.js
+
+    /**
+     * [read-only] The array of children of the sprite.
+     */
+    declare children: DisplayObject[];
 
     /**
      * The visibility of the tiling sprite.
@@ -195,6 +168,3 @@ export class TilingSprite extends PIXI.extras.PictureTilingSprite {
      * @type Number
      */
 }
-
-// FIXME:
-TilingSprite.prototype._speedUpCustomBlendModes = Sprite.prototype._speedUpCustomBlendModes;

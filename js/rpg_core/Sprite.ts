@@ -349,9 +349,8 @@ export class Sprite extends PIXI.Sprite {
     /**
      * checks if we need to speed up custom blendmodes
      */
-    protected _speedUpCustomBlendModes(renderer: PIXI.WebGLRenderer): void {
+    static speedUpCustomBlendModes(renderer: PIXI.WebGLRenderer, blend: number): void {
         const picture = renderer.plugins.picture;
-        const blend = this.blendMode;
         if (renderer.renderingToScreen && renderer._activeRenderTarget.root) {
             if (picture.drawModes[blend]) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -388,7 +387,7 @@ export class Sprite extends PIXI.Sprite {
             if (this.pluginName === 'sprite' && this._isPicture) {
                 // use heavy renderer, which reduces artifacts and applies corrent blendMode,
                 // but does not use multitexture optimization
-                this._speedUpCustomBlendModes(renderer);
+                Sprite.speedUpCustomBlendModes(renderer, this.blendMode);
                 renderer.setObjectRenderer(renderer.plugins.picture);
                 renderer.plugins.picture.render(this);
             } else {
