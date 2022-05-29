@@ -1,7 +1,6 @@
 import { Bitmap } from '../rpg_core/Bitmap';
 import { Utils } from '../rpg_core/Utils';
 import { Graphics } from '../rpg_core/Graphics';
-import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
 import { WebAudio } from '../rpg_core/WebAudio';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Input } from '../rpg_core/Input';
@@ -50,16 +49,11 @@ export const SceneManager = new (class SceneManager {
     }
 
     initialize() {
-        this.initProgressWatcher();
         this.initGraphics();
         this.checkFileAccess();
         this.initAudio();
         this.checkPluginErrors();
         this.setupErrorHandlers();
-    }
-
-    initProgressWatcher() {
-        ProgressWatcher.initialize();
     }
 
     initGraphics() {

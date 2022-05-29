@@ -1,6 +1,7 @@
 import { Bitmap } from '../rpg_core/Bitmap';
 import { CacheMap } from '../rpg_core/CacheMap';
 import { ImageCache } from '../rpg_core/ImageCache';
+import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
 import { RequestQueue } from '../rpg_core/RequestQueue';
 import { Utils } from '../rpg_core/Utils';
 
@@ -14,7 +15,6 @@ export const ImageManager = new (class ImageManager {
     private _requestQueue = new RequestQueue();
     private _systemReservationId = Utils.generateRuntimeId();
 
-    private _creationHook?: (bitmap: Bitmap) => void;
     private _defaultReservationId?: number;
 
     private _generateCacheKey(path: string, hue = 0): string {
@@ -104,8 +104,7 @@ export const ImageManager = new (class ImageManager {
         let bitmap = this._imageCache.get(key);
         if (!bitmap) {
             bitmap = Bitmap.load(path);
-            this._callCreationHook(bitmap);
-
+            bitmap.addLoadListener(ProgressWatcher.makeLoaderListener());
             bitmap.addLoadListener(() => {
                 bitmap.rotateHue(hue);
             });
@@ -293,8 +292,7 @@ export const ImageManager = new (class ImageManager {
         let bitmap = this._imageCache.get(key);
         if (!bitmap) {
             bitmap = Bitmap.request(path);
-            this._callCreationHook(bitmap);
-
+            bitmap.addLoadListener(ProgressWatcher.makeLoaderListener());
             bitmap.addLoadListener(() => {
                 bitmap.rotateHue(hue);
             });
@@ -313,13 +311,5 @@ export const ImageManager = new (class ImageManager {
 
     clearRequest(): void {
         this._requestQueue.clear();
-    }
-
-    setCreationHook(hook: (bitmap: Bitmap) => void): void {
-        this._creationHook = hook;
-    }
-
-    private _callCreationHook(bitmap: Bitmap): void {
-        if (this._creationHook) this._creationHook(bitmap);
     }
 })();

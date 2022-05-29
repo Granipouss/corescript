@@ -1,6 +1,7 @@
 import { Decrypter } from '../rpg_core/Decrypter';
 import { Graphics } from '../rpg_core/Graphics';
 import { Html5Audio } from '../rpg_core/Html5Audio';
+import { ProgressWatcher } from '../rpg_core/ProgressWatcher';
 import { Utils } from '../rpg_core/Utils';
 import { WebAudio } from '../rpg_core/WebAudio';
 import type { AudioFile } from '../rpg_data/audio-file';
@@ -27,7 +28,6 @@ export const AudioManager = new (class AudioManager {
     private _path = 'audio/';
     private _blobUrl: string = null;
     private _currentMe: AudioFile;
-    private _creationHook?: (audio: WebAudio) => void;
 
     get masterVolume(): number {
         return this._masterVolume;
@@ -364,7 +364,7 @@ export const AudioManager = new (class AudioManager {
             return Html5Audio as unknown as WebAudio;
         } else {
             const audio = new WebAudio(url);
-            this._callCreationHook(audio);
+            audio.addLoadListener(ProgressWatcher.makeLoaderListener());
             return audio;
         }
     }
@@ -408,13 +408,5 @@ export const AudioManager = new (class AudioManager {
         if (webAudio && webAudio.isError()) {
             throw new Error('Failed to load: ' + webAudio.url);
         }
-    }
-
-    setCreationHook(hook: (audio: WebAudio) => void) {
-        this._creationHook = hook;
-    }
-
-    _callCreationHook(audio: WebAudio): void {
-        if (this._creationHook) this._creationHook(audio);
     }
 })();
