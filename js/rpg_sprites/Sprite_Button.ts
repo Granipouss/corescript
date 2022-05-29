@@ -1,3 +1,4 @@
+import { DisplayObject } from '../rpg_core/DisplayObject';
 import { Rectangle } from '../rpg_core/Rectangle';
 import { Sprite } from '../rpg_core/Sprite';
 import { TouchInput } from '../rpg_core/TouchInput';
@@ -6,6 +7,11 @@ import { TouchInput } from '../rpg_core/TouchInput';
  * The sprite for displaying a button.
  */
 export class Sprite_Button extends Sprite {
+    protected _touching: boolean;
+    protected _coldFrame: Rectangle;
+    protected _hotFrame: Rectangle;
+    protected _clickHandler: () => void;
+
     constructor() {
         super();
         this._touching = false;
@@ -14,14 +20,14 @@ export class Sprite_Button extends Sprite {
         this._clickHandler = null;
     }
 
-    update() {
+    update(): void {
         super.update();
         this.updateFrame();
         this.processTouch();
     }
 
-    updateFrame() {
-        let frame;
+    updateFrame(): void {
+        let frame: Rectangle;
         if (this._touching) {
             frame = this._hotFrame;
         } else {
@@ -32,25 +38,25 @@ export class Sprite_Button extends Sprite {
         }
     }
 
-    setColdFrame(x, y, width, height) {
+    setColdFrame(x: number, y: number, width: number, height: number): void {
         this._coldFrame = new Rectangle(x, y, width, height);
     }
 
-    setHotFrame(x, y, width, height) {
+    setHotFrame(x: number, y: number, width: number, height: number): void {
         this._hotFrame = new Rectangle(x, y, width, height);
     }
 
-    setClickHandler(method) {
+    setClickHandler(method: () => void): void {
         this._clickHandler = method;
     }
 
-    callClickHandler() {
+    callClickHandler(): void {
         if (this._clickHandler) {
             this._clickHandler();
         }
     }
 
-    processTouch() {
+    processTouch(): void {
         if (this.isActive()) {
             if (TouchInput.isTriggered() && this.isButtonTouched()) {
                 this._touching = true;
@@ -68,10 +74,8 @@ export class Sprite_Button extends Sprite {
         }
     }
 
-    isActive() {
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node = this;
+    isActive(): boolean {
+        let node = this as DisplayObject;
         while (node) {
             if (!node.visible) {
                 return false;
@@ -81,16 +85,14 @@ export class Sprite_Button extends Sprite {
         return true;
     }
 
-    isButtonTouched() {
+    isButtonTouched(): boolean {
         const x = this.canvasToLocalX(TouchInput.x);
         const y = this.canvasToLocalY(TouchInput.y);
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
     }
 
-    canvasToLocalX(x) {
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node = this;
+    canvasToLocalX(x: number): number {
+        let node = this as DisplayObject;
         while (node) {
             x -= node.x;
             node = node.parent;
@@ -98,10 +100,8 @@ export class Sprite_Button extends Sprite {
         return x;
     }
 
-    canvasToLocalY(y) {
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node = this;
+    canvasToLocalY(y: number): number {
+        let node = this as DisplayObject;
         while (node) {
             y -= node.y;
             node = node.parent;

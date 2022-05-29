@@ -5,6 +5,10 @@ import { Sprite_Base } from './Sprite_Base';
  * The sprite for displaying a weapon image for attacking.
  */
 export class Sprite_Weapon extends Sprite_Base {
+    protected _weaponImageId: number;
+    protected _animationCount: number;
+    protected _pattern: number;
+
     constructor() {
         super();
         this.initMembers();
@@ -19,7 +23,7 @@ export class Sprite_Weapon extends Sprite_Base {
         this.x = -16;
     }
 
-    setup(weaponImageId) {
+    setup(weaponImageId: number): void {
         this._weaponImageId = weaponImageId;
         this._animationCount = 0;
         this._pattern = 0;
@@ -27,7 +31,7 @@ export class Sprite_Weapon extends Sprite_Base {
         this.updateFrame();
     }
 
-    update() {
+    update(): void {
         super.update();
         this._animationCount++;
         if (this._animationCount >= this.animationWait()) {
@@ -37,18 +41,18 @@ export class Sprite_Weapon extends Sprite_Base {
         }
     }
 
-    animationWait() {
+    animationWait(): number {
         return 12;
     }
 
-    updatePattern() {
+    updatePattern(): void {
         this._pattern++;
         if (this._pattern >= 3) {
             this._weaponImageId = 0;
         }
     }
 
-    loadBitmap() {
+    loadBitmap(): void {
         const pageId = Math.floor((this._weaponImageId - 1) / 12) + 1;
         if (pageId >= 1) {
             this.bitmap = ImageManager.loadSystem('Weapons' + pageId);
@@ -57,7 +61,7 @@ export class Sprite_Weapon extends Sprite_Base {
         }
     }
 
-    updateFrame() {
+    updateFrame(): void {
         if (this._weaponImageId > 0) {
             const index = (this._weaponImageId - 1) % 12;
             const w = 96;
@@ -70,7 +74,7 @@ export class Sprite_Weapon extends Sprite_Base {
         }
     }
 
-    isPlaying() {
+    isPlaying(): boolean {
         return this._weaponImageId > 0;
     }
 }

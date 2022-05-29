@@ -1,5 +1,7 @@
+import type { Bitmap } from '../rpg_core/Bitmap';
 import { Sprite } from '../rpg_core/Sprite';
 import { ImageManager } from '../rpg_managers/ImageManager';
+import type { Game_Character } from '../rpg_objects/Game_Character';
 import { Sprite_Balloon } from './Sprite_Balloon';
 import { Sprite_Base } from './Sprite_Base';
 
@@ -7,14 +9,26 @@ import { Sprite_Base } from './Sprite_Base';
  * The sprite for displaying a character.
  */
 export class Sprite_Character extends Sprite_Base {
-    constructor(character) {
+    protected _character: Game_Character;
+    protected _balloonDuration: number;
+    protected _tilesetId: number;
+    protected _upperBody: Sprite;
+    protected _lowerBody: Sprite;
+    protected _tileId: number;
+    protected _characterName: string;
+    protected _characterIndex: number;
+    protected _isBigCharacter: boolean;
+    protected _bushDepth: number;
+    protected _balloonSprite: Sprite_Balloon;
+
+    constructor(character: Game_Character) {
         super();
 
         this.initMembers();
         this.setCharacter(character);
     }
 
-    initMembers() {
+    initMembers(): void {
         this.anchor.x = 0.5;
         this.anchor.y = 1;
         this._character = null;
@@ -24,11 +38,11 @@ export class Sprite_Character extends Sprite_Base {
         this._lowerBody = null;
     }
 
-    setCharacter(character) {
+    setCharacter(character: Game_Character): void {
         this._character = character;
     }
 
-    update() {
+    update(): void {
         super.update();
         this.updateBitmap();
         this.updateFrame();
@@ -38,26 +52,26 @@ export class Sprite_Character extends Sprite_Base {
         this.updateOther();
     }
 
-    updateVisibility() {
+    updateVisibility(): void {
         super.updateVisibility();
         if (this._character.isTransparent()) {
             this.visible = false;
         }
     }
 
-    isTile() {
-        return this._character.tileId > 0;
+    isTile(): boolean {
+        return this._character.tileId() > 0;
     }
 
-    tilesetBitmap(tileId) {
-        const tileset = global.$gameMap.tileset();
+    tilesetBitmap(tileId: number): Bitmap {
+        const tileset = window.$gameMap.tileset();
         const setNumber = 5 + Math.floor(tileId / 256);
         return ImageManager.loadTileset(tileset.tilesetNames[setNumber]);
     }
 
-    updateBitmap() {
+    updateBitmap(): void {
         if (this.isImageChanged()) {
-            this._tilesetId = global.$gameMap.tilesetId();
+            this._tilesetId = window.$gameMap.tilesetId();
             this._tileId = this._character.tileId();
             this._characterName = this._character.characterName();
             this._characterIndex = this._character.characterIndex();
@@ -69,25 +83,25 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    isImageChanged() {
+    isImageChanged(): boolean {
         return (
-            this._tilesetId !== global.$gameMap.tilesetId() ||
+            this._tilesetId !== window.$gameMap.tilesetId() ||
             this._tileId !== this._character.tileId() ||
             this._characterName !== this._character.characterName() ||
             this._characterIndex !== this._character.characterIndex()
         );
     }
 
-    setTileBitmap() {
+    setTileBitmap(): void {
         this.bitmap = this.tilesetBitmap(this._tileId);
     }
 
-    setCharacterBitmap() {
+    setCharacterBitmap(): void {
         this.bitmap = ImageManager.loadCharacter(this._characterName);
         this._isBigCharacter = ImageManager.isBigCharacter(this._characterName);
     }
 
-    updateFrame() {
+    updateFrame(): void {
         if (this._tileId > 0) {
             this.updateTileFrame();
         } else {
@@ -95,7 +109,7 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    updateTileFrame() {
+    updateTileFrame(): void {
         const pw = this.patternWidth();
         const ph = this.patternHeight();
         const sx = ((Math.floor(this._tileId / 128) % 2) * 8 + (this._tileId % 8)) * pw;
@@ -103,7 +117,7 @@ export class Sprite_Character extends Sprite_Base {
         this.setFrame(sx, sy, pw, ph);
     }
 
-    updateCharacterFrame() {
+    updateCharacterFrame(): void {
         const pw = this.patternWidth();
         const ph = this.patternHeight();
         const sx = (this.characterBlockX() + this.characterPatternX()) * pw;
@@ -119,7 +133,7 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    characterBlockX() {
+    characterBlockX(): number {
         if (this._isBigCharacter) {
             return 0;
         } else {
@@ -128,7 +142,7 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    characterBlockY() {
+    characterBlockY(): number {
         if (this._isBigCharacter) {
             return 0;
         } else {
@@ -137,17 +151,17 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    characterPatternX() {
+    characterPatternX(): number {
         return this._character.pattern();
     }
 
-    characterPatternY() {
+    characterPatternY(): number {
         return (this._character.direction() - 2) / 2;
     }
 
-    patternWidth() {
+    patternWidth(): number {
         if (this._tileId > 0) {
-            return global.$gameMap.tileWidth();
+            return window.$gameMap.tileWidth();
         } else if (this._isBigCharacter) {
             return this.bitmap.width / 3;
         } else {
@@ -155,9 +169,9 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    patternHeight() {
+    patternHeight(): number {
         if (this._tileId > 0) {
-            return global.$gameMap.tileHeight();
+            return window.$gameMap.tileHeight();
         } else if (this._isBigCharacter) {
             return this.bitmap.height / 4;
         } else {
@@ -165,7 +179,7 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    updateHalfBodySprites() {
+    updateHalfBodySprites(): void {
         if (this._bushDepth > 0) {
             this.createHalfBodySprites();
             this._upperBody.bitmap = this.bitmap;
@@ -183,7 +197,7 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    createHalfBodySprites() {
+    createHalfBodySprites(): void {
         if (!this._upperBody) {
             this._upperBody = new Sprite();
             this._upperBody.anchor.x = 0.5;
@@ -199,13 +213,13 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    updatePosition() {
+    updatePosition(): void {
         this.x = this._character.screenX();
         this.y = this._character.screenY();
         this.z = this._character.screenZ();
     }
 
-    updateAnimation() {
+    updateAnimation(): void {
         this.setupAnimation();
         if (!this.isAnimationPlaying()) {
             this._character.endAnimation();
@@ -215,28 +229,28 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    updateOther() {
+    updateOther(): void {
         this.opacity = this._character.opacity();
         this.blendMode = this._character.blendMode();
         this._bushDepth = this._character.bushDepth();
     }
 
-    setupAnimation() {
+    setupAnimation(): void {
         if (this._character.animationId() > 0) {
-            const animation = global.$dataAnimations[this._character.animationId()];
+            const animation = window.$dataAnimations[this._character.animationId()];
             this.startAnimation(animation, false, 0);
             this._character.startAnimation();
         }
     }
 
-    setupBalloon() {
+    setupBalloon(): void {
         if (this._character.balloonId() > 0) {
             this.startBalloon();
             this._character.startBalloon();
         }
     }
 
-    startBalloon() {
+    startBalloon(): void {
         if (!this._balloonSprite) {
             this._balloonSprite = new Sprite_Balloon();
         }
@@ -244,7 +258,7 @@ export class Sprite_Character extends Sprite_Base {
         this.parent.addChild(this._balloonSprite);
     }
 
-    updateBalloon() {
+    updateBalloon(): void {
         this.setupBalloon();
         if (this._balloonSprite) {
             this._balloonSprite.x = this.x;
@@ -255,14 +269,14 @@ export class Sprite_Character extends Sprite_Base {
         }
     }
 
-    endBalloon() {
+    endBalloon(): void {
         if (this._balloonSprite) {
             this.parent.removeChild(this._balloonSprite);
             this._balloonSprite = null;
         }
     }
 
-    isBalloonPlaying() {
+    isBalloonPlaying(): boolean {
         return !!this._balloonSprite;
     }
 }

@@ -1,3 +1,4 @@
+import { Game_Battler } from '../rpg_objects/Game_Battler';
 import { Sprite_Base } from './Sprite_Base';
 import { Sprite_Damage } from './Sprite_Damage';
 
@@ -5,14 +6,25 @@ import { Sprite_Damage } from './Sprite_Damage';
  * The superclass of Sprite_Actor and Sprite_Enemy.
  */
 export class Sprite_Battler extends Sprite_Base {
-    constructor(battler) {
+    protected _battler: Game_Battler;
+    protected _damages: Sprite_Damage[];
+    protected _homeX: number;
+    protected _homeY: number;
+    protected _offsetX: number;
+    protected _offsetY: number;
+    protected _targetOffsetX: number;
+    protected _targetOffsetY: number;
+    protected _movementDuration: number;
+    protected _selectionEffectCount: number;
+
+    constructor(battler: Game_Battler) {
         super();
 
         this.initMembers();
         this.setBattler(battler);
     }
 
-    initMembers() {
+    initMembers(): void {
         this.anchor.x = 0.5;
         this.anchor.y = 1;
         this._battler = null;
@@ -27,17 +39,17 @@ export class Sprite_Battler extends Sprite_Base {
         this._selectionEffectCount = 0;
     }
 
-    setBattler(battler) {
+    setBattler(battler: Game_Battler): void {
         this._battler = battler;
     }
 
-    setHome(x, y) {
+    setHome(x: number, y: number): void {
         this._homeX = x;
         this._homeY = y;
         this.updatePosition();
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._battler) {
             this.updateMain();
@@ -49,14 +61,14 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    updateVisibility() {
+    updateVisibility(): void {
         super.updateVisibility();
         if (!this._battler || !this._battler.isSpriteVisible()) {
             this.visible = false;
         }
     }
 
-    updateMain() {
+    updateMain(): void {
         if (this._battler.isSpriteVisible()) {
             this.updateBitmap();
             this.updateFrame();
@@ -65,15 +77,15 @@ export class Sprite_Battler extends Sprite_Base {
         this.updatePosition();
     }
 
-    updateBitmap() {
+    updateBitmap(): void {
         // ...
     }
 
-    updateFrame() {
+    updateFrame(): void {
         // ...
     }
 
-    updateMove() {
+    updateMove(): void {
         if (this._movementDuration > 0) {
             const d = this._movementDuration;
             this._offsetX = (this._offsetX * (d - 1) + this._targetOffsetX) / d;
@@ -85,16 +97,16 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    updatePosition() {
+    updatePosition(): void {
         this.x = this._homeX + this._offsetX;
         this.y = this._homeY + this._offsetY;
     }
 
-    updateAnimation() {
+    updateAnimation(): void {
         this.setupAnimation();
     }
 
-    updateDamagePopup() {
+    updateDamagePopup(): void {
         this.setupDamagePopup();
         if (this._damages.length > 0) {
             for (let i = 0; i < this._damages.length; i++) {
@@ -107,7 +119,7 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    updateSelectionEffect() {
+    updateSelectionEffect(): void {
         const target = this._effectTarget;
         if (this._battler.isSelected()) {
             this._selectionEffectCount++;
@@ -122,10 +134,10 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    setupAnimation() {
+    setupAnimation(): void {
         while (this._battler.isAnimationRequested()) {
             const data = this._battler.shiftAnimation();
-            const animation = global.$dataAnimations[data.animationId];
+            const animation = window.$dataAnimations[data.animationId];
             const mirror = data.mirror;
             const delay = animation.position === 3 ? 0 : data.delay;
             this.startAnimation(animation, mirror, delay);
@@ -136,7 +148,7 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    setupDamagePopup() {
+    setupDamagePopup(): void {
         if (this._battler.isDamagePopupRequested()) {
             if (this._battler.isSpriteVisible()) {
                 const sprite = new Sprite_Damage();
@@ -151,15 +163,15 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    damageOffsetX() {
+    damageOffsetX(): number {
         return 0;
     }
 
-    damageOffsetY() {
+    damageOffsetY(): number {
         return 0;
     }
 
-    startMove(x, y, duration) {
+    startMove(x: number, y: number, duration: number): void {
         if (this._targetOffsetX !== x || this._targetOffsetY !== y) {
             this._targetOffsetX = x;
             this._targetOffsetY = y;
@@ -171,19 +183,19 @@ export class Sprite_Battler extends Sprite_Base {
         }
     }
 
-    onMoveEnd() {
+    onMoveEnd(): void {
         // ...
     }
 
-    isEffecting() {
+    isEffecting(): boolean {
         return false;
     }
 
-    isMoving() {
+    isMoving(): boolean {
         return this._movementDuration > 0;
     }
 
-    inHomePosition() {
+    inHomePosition(): boolean {
         return this._offsetX === 0 && this._offsetY === 0;
     }
 }

@@ -1,5 +1,6 @@
 import { Sprite } from '../rpg_core/Sprite';
 import { ImageManager } from '../rpg_managers/ImageManager';
+import type { Game_Battler } from '../rpg_objects/Game_Battler';
 
 /**
  * The sprite for displaying state icons.
@@ -8,13 +9,18 @@ export class Sprite_StateIcon extends Sprite {
     static _iconWidth = 32;
     static _iconHeight = 32;
 
+    protected _battler: Game_Battler;
+    protected _iconIndex: number;
+    protected _animationCount: number;
+    protected _animationIndex: number;
+
     constructor() {
         super();
         this.initMembers();
         this.loadBitmap();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._battler = null;
         this._iconIndex = 0;
         this._animationCount = 0;
@@ -23,16 +29,16 @@ export class Sprite_StateIcon extends Sprite {
         this.anchor.y = 0.5;
     }
 
-    loadBitmap() {
+    loadBitmap(): void {
         this.bitmap = ImageManager.loadSystem('IconSet');
         this.setFrame(0, 0, 0, 0);
     }
 
-    setup(battler) {
+    setup(battler: Game_Battler): void {
         this._battler = battler;
     }
 
-    update() {
+    update(): void {
         super.update();
         this._animationCount++;
         if (this._animationCount >= this.animationWait()) {
@@ -42,11 +48,11 @@ export class Sprite_StateIcon extends Sprite {
         }
     }
 
-    animationWait() {
+    animationWait(): number {
         return 40;
     }
 
-    updateIcon() {
+    updateIcon(): void {
         let icons = [];
         if (this._battler && this._battler.isAlive()) {
             icons = this._battler.allIcons();
@@ -63,7 +69,7 @@ export class Sprite_StateIcon extends Sprite {
         }
     }
 
-    updateFrame() {
+    updateFrame(): void {
         const pw = Sprite_StateIcon._iconWidth;
         const ph = Sprite_StateIcon._iconHeight;
         const sx = (this._iconIndex % 16) * pw;

@@ -6,15 +6,17 @@ import { Sprite } from '../rpg_core/Sprite';
  * The sprite for displaying the destination place of the touch input.
  */
 export class Sprite_Destination extends Sprite {
+    private _frameCount: number;
+
     constructor() {
         super();
         this.createBitmap();
         this._frameCount = 0;
     }
 
-    update() {
+    update(): void {
         super.update();
-        if (global.$gameTemp.isDestinationValid()) {
+        if (window.$gameTemp.isDestinationValid()) {
             this.updatePosition();
             this.updateAnimation();
             this.visible = true;
@@ -24,9 +26,9 @@ export class Sprite_Destination extends Sprite {
         }
     }
 
-    createBitmap() {
-        const tileWidth = global.$gameMap.tileWidth();
-        const tileHeight = global.$gameMap.tileHeight();
+    createBitmap(): void {
+        const tileWidth = window.$gameMap.tileWidth();
+        const tileHeight = window.$gameMap.tileHeight();
         this.bitmap = new Bitmap(tileWidth, tileHeight);
         this.bitmap.fillAll('white');
         this.anchor.x = 0.5;
@@ -34,16 +36,16 @@ export class Sprite_Destination extends Sprite {
         this.blendMode = Graphics.BLEND_ADD;
     }
 
-    updatePosition() {
-        const tileWidth = global.$gameMap.tileWidth();
-        const tileHeight = global.$gameMap.tileHeight();
-        const x = global.$gameTemp.destinationX();
-        const y = global.$gameTemp.destinationY();
-        this.x = (global.$gameMap.adjustX(x) + 0.5) * tileWidth;
-        this.y = (global.$gameMap.adjustY(y) + 0.5) * tileHeight;
+    updatePosition(): void {
+        const tileWidth = window.$gameMap.tileWidth();
+        const tileHeight = window.$gameMap.tileHeight();
+        const x = window.$gameTemp.destinationX();
+        const y = window.$gameTemp.destinationY();
+        this.x = (window.$gameMap.adjustX(x) + 0.5) * tileWidth;
+        this.y = (window.$gameMap.adjustY(y) + 0.5) * tileHeight;
     }
 
-    updateAnimation() {
+    updateAnimation(): void {
         this._frameCount++;
         this._frameCount %= 20;
         this.opacity = (20 - this._frameCount) * 6;

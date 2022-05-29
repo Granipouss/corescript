@@ -5,6 +5,9 @@ import { Sprite_Base } from './Sprite_Base';
  * The sprite for displaying a balloon icon.
  */
 export class Sprite_Balloon extends Sprite_Base {
+    protected _balloonId: number;
+    protected _duration: number;
+
     constructor() {
         super();
 
@@ -12,7 +15,7 @@ export class Sprite_Balloon extends Sprite_Base {
         this.loadBitmap();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._balloonId = 0;
         this._duration = 0;
         this.anchor.x = 0.5;
@@ -20,17 +23,17 @@ export class Sprite_Balloon extends Sprite_Base {
         this.z = 7;
     }
 
-    loadBitmap() {
+    loadBitmap(): void {
         this.bitmap = ImageManager.loadSystem('Balloon');
         this.setFrame(0, 0, 0, 0);
     }
 
-    setup(balloonId) {
+    setup(balloonId: number): void {
         this._balloonId = balloonId;
         this._duration = 8 * this.speed() + this.waitTime();
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._duration > 0) {
             this._duration--;
@@ -40,7 +43,7 @@ export class Sprite_Balloon extends Sprite_Base {
         }
     }
 
-    updateFrame() {
+    updateFrame(): void {
         const w = 48;
         const h = 48;
         const sx = this.frameIndex() * w;
@@ -48,20 +51,20 @@ export class Sprite_Balloon extends Sprite_Base {
         this.setFrame(sx, sy, w, h);
     }
 
-    speed() {
+    speed(): number {
         return 8;
     }
 
-    waitTime() {
+    waitTime(): number {
         return 12;
     }
 
-    frameIndex() {
+    frameIndex(): number {
         const index = (this._duration - this.waitTime()) / this.speed();
         return 7 - Math.max(Math.floor(index), 0);
     }
 
-    isPlaying() {
+    isPlaying(): boolean {
         return this._duration > 0;
     }
 }

@@ -1,10 +1,16 @@
 import { ImageManager } from '../rpg_managers/ImageManager';
+import type { Game_Battler } from '../rpg_objects/Game_Battler';
 import { Sprite_Base } from './Sprite_Base';
 
 /**
  * The sprite for displaying an overlay image for a state.
  */
 export class Sprite_StateOverlay extends Sprite_Base {
+    protected _battler: Game_Battler;
+    protected _overlayIndex: number;
+    protected _animationCount: number;
+    protected _pattern: number;
+
     constructor() {
         super();
 
@@ -12,7 +18,7 @@ export class Sprite_StateOverlay extends Sprite_Base {
         this.loadBitmap();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._battler = null;
         this._overlayIndex = 0;
         this._animationCount = 0;
@@ -21,16 +27,16 @@ export class Sprite_StateOverlay extends Sprite_Base {
         this.anchor.y = 1;
     }
 
-    loadBitmap() {
+    loadBitmap(): void {
         this.bitmap = ImageManager.loadSystem('States');
         this.setFrame(0, 0, 0, 0);
     }
 
-    setup(battler) {
+    setup(battler: Game_Battler): void {
         this._battler = battler;
     }
 
-    update() {
+    update(): void {
         super.update();
         this._animationCount++;
         if (this._animationCount >= this.animationWait()) {
@@ -40,11 +46,11 @@ export class Sprite_StateOverlay extends Sprite_Base {
         }
     }
 
-    animationWait() {
+    animationWait(): number {
         return 8;
     }
 
-    updatePattern() {
+    updatePattern(): void {
         this._pattern++;
         this._pattern %= 8;
         if (this._battler) {
@@ -52,7 +58,7 @@ export class Sprite_StateOverlay extends Sprite_Base {
         }
     }
 
-    updateFrame() {
+    updateFrame(): void {
         if (this._overlayIndex > 0) {
             const w = 96;
             const h = 96;
