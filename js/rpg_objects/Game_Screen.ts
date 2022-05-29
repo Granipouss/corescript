@@ -1,4 +1,5 @@
 import { arrayClone, Tone } from '../rpg_core/extension';
+import { WeatherType } from '../rpg_core/Weather';
 import { Game_Picture } from './Game_Picture';
 
 /**
@@ -13,7 +14,7 @@ export class Game_Screen {
     private _zoomX: number;
     private _zoomY: number;
     private _zoomScale: number;
-    private _weatherType: string;
+    private _weatherType: WeatherType;
     private _weatherPower: number;
     private _pictures: Game_Picture[];
     private _fadeOutDuration: number;
@@ -80,7 +81,7 @@ export class Game_Screen {
         return this._zoomScale;
     }
 
-    weatherType() {
+    weatherType(): WeatherType {
         return this._weatherType;
     }
 
@@ -195,7 +196,7 @@ export class Game_Screen {
         this._zoomScale = scale;
     }
 
-    changeWeather(type: string, power: number, duration: number): void {
+    changeWeather(type: WeatherType, power: number, duration: number): void {
         if (type !== 'none' || duration === 0) {
             this._weatherType = type;
         }

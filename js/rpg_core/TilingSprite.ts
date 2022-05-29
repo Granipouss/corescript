@@ -17,7 +17,7 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
     protected _frame: Rectangle;
     readonly spriteId: number;
 
-    constructor(bitmap: Bitmap) {
+    constructor(bitmap?: Bitmap) {
         const texture = new PIXI.Texture(new PIXI.BaseTexture());
 
         super(texture);

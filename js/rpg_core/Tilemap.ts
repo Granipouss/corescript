@@ -60,7 +60,7 @@ export abstract class Tilemap extends PIXI.Container {
     /**
      * The tileset flags.
      */
-    flags = [];
+    flags: readonly number[] = [];
 
     /**
      * The animation count for autotiles.

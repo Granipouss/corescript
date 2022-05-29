@@ -89,7 +89,7 @@ export class Spriteset_Base extends Sprite {
         const y = (Graphics.height - height) / 2;
         this._pictureContainer = new Sprite();
         this._pictureContainer.setFrame(x, y, width, height);
-        for (let i = 1; i <= global.$gameScreen.maxPictures(); i++) {
+        for (let i = 1; i <= window.$gameScreen.maxPictures(); i++) {
             this._pictureContainer.addChild(new Sprite_Picture(i));
         }
         this.addChild(this._pictureContainer);
@@ -108,14 +108,14 @@ export class Spriteset_Base extends Sprite {
     }
 
     updateScreenSprites(): void {
-        const color = global.$gameScreen.flashColor();
+        const color = window.$gameScreen.flashColor();
         this._flashSprite.setColor(color[0], color[1], color[2]);
         this._flashSprite.opacity = color[3];
-        this._fadeSprite.opacity = 255 - global.$gameScreen.brightness();
+        this._fadeSprite.opacity = 255 - window.$gameScreen.brightness();
     }
 
     updateToneChanger(): void {
-        const tone = global.$gameScreen.tone();
+        const tone = window.$gameScreen.tone();
         if (!arrayEquals(this._tone, tone)) {
             this._tone = arrayClone(tone);
             if (Graphics.isWebGL()) {
@@ -144,7 +144,7 @@ export class Spriteset_Base extends Sprite {
     }
 
     updatePosition(): void {
-        const screen = global.$gameScreen;
+        const screen = window.$gameScreen;
         const scale = screen.zoomScale();
         this.scale.x = scale;
         this.scale.y = scale;
