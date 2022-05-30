@@ -19,15 +19,15 @@ export class Window_BattleActor extends Window_BattleStatus {
 
     hide() {
         super.hide();
-        global.$gameParty.select(null);
+        window.$gameParty.select(null);
     }
 
     select(index) {
         super.select(index);
-        global.$gameParty.select(this.actor());
+        window.$gameParty.select(this.actor());
     }
 
     actor() {
-        return global.$gameParty.members()[this.index()];
+        return window.$gameParty.members()[this.index()];
     }
 }

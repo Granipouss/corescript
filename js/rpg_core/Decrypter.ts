@@ -4,7 +4,7 @@ export const Decrypter = new (class Decrypter {
 
     private _headerlength = 16;
     private _xhrOk = 400;
-    private _encryptionKey = '';
+    private _encryptionKey = [''];
     private _ignoreList = ['img/system/Window.png'];
 
     readonly SIGNATURE = '5250474d56000000';
@@ -86,6 +86,6 @@ export const Decrypter = new (class Decrypter {
     }
 
     readEncryptionkey(): void {
-        this._encryptionKey = global.$dataSystem.encryptionKey.split(/(.{2})/).filter(Boolean);
+        this._encryptionKey = window.$dataSystem.encryptionKey.split(/(.{2})/).filter(Boolean);
     }
 })();

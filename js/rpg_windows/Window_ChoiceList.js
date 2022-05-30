@@ -24,11 +24,11 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     selectDefault() {
-        this.select(global.$gameMessage.choiceDefaultType());
+        this.select(window.$gameMessage.choiceDefaultType());
     }
 
     updatePlacement() {
-        const positionType = global.$gameMessage.choicePositionType();
+        const positionType = window.$gameMessage.choicePositionType();
         const messageY = this._messageWindow.y;
         this.width = this.windowWidth();
         this.height = this.windowHeight();
@@ -51,7 +51,7 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     updateBackground() {
-        this._background = global.$gameMessage.choiceBackground();
+        this._background = window.$gameMessage.choiceBackground();
         this.setBackgroundType(this._background);
     }
 
@@ -64,7 +64,7 @@ export class Window_ChoiceList extends Window_Command {
         const messageY = this._messageWindow.y;
         const messageHeight = this._messageWindow.height;
         const centerY = Graphics.boxHeight / 2;
-        const choices = global.$gameMessage.choices();
+        const choices = window.$gameMessage.choices();
         let numLines = choices.length;
         let maxLines = 8;
         if (messageY < centerY && messageY + messageHeight > centerY) {
@@ -78,7 +78,7 @@ export class Window_ChoiceList extends Window_Command {
 
     maxChoiceWidth() {
         let maxWidth = 96;
-        const choices = global.$gameMessage.choices();
+        const choices = window.$gameMessage.choices();
         for (let i = 0; i < choices.length; i++) {
             const choiceWidth = this.textWidthEx(choices[i]) + this.textPadding() * 2;
             if (maxWidth < choiceWidth) {
@@ -97,7 +97,7 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     makeCommandList() {
-        const choices = global.$gameMessage.choices();
+        const choices = window.$gameMessage.choices();
         for (let i = 0; i < choices.length; i++) {
             this.addCommand(choices[i], 'choice');
         }
@@ -109,7 +109,7 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     isCancelEnabled() {
-        return global.$gameMessage.choiceCancelType() !== -1;
+        return window.$gameMessage.choiceCancelType() !== -1;
     }
 
     isOkTriggered() {
@@ -117,13 +117,13 @@ export class Window_ChoiceList extends Window_Command {
     }
 
     callOkHandler() {
-        global.$gameMessage.onChoice(this.index());
+        window.$gameMessage.onChoice(this.index());
         this._messageWindow.terminateMessage();
         this.close();
     }
 
     callCancelHandler() {
-        global.$gameMessage.onChoice(global.$gameMessage.choiceCancelType());
+        window.$gameMessage.onChoice(window.$gameMessage.choiceCancelType());
         this._messageWindow.terminateMessage();
         this.close();
     }

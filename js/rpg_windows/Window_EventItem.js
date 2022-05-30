@@ -42,7 +42,7 @@ export class Window_EventItem extends Window_ItemList {
     }
 
     includes(item) {
-        const itypeId = global.$gameMessage.itemChoiceItypeId();
+        const itypeId = window.$gameMessage.itemChoiceItypeId();
         return DataManager.isItem(item) && item.itypeId === itypeId;
     }
 
@@ -53,13 +53,13 @@ export class Window_EventItem extends Window_ItemList {
     onOk() {
         const item = this.item();
         const itemId = item ? item.id : 0;
-        global.$gameVariables.setValue(global.$gameMessage.itemChoiceVariableId(), itemId);
+        window.$gameVariables.setValue(window.$gameMessage.itemChoiceVariableId(), itemId);
         this._messageWindow.terminateMessage();
         this.close();
     }
 
     onCancel() {
-        global.$gameVariables.setValue(global.$gameMessage.itemChoiceVariableId(), 0);
+        window.$gameVariables.setValue(window.$gameMessage.itemChoiceVariableId(), 0);
         this._messageWindow.terminateMessage();
         this.close();
     }

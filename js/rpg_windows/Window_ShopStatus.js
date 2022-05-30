@@ -43,7 +43,7 @@ export class Window_ShopStatus extends Window_Base {
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.possession, x, y, width - possessionWidth);
         this.resetTextColor();
-        this.drawText(global.$gameParty.numItems(this._item), x, y, width, 'right');
+        this.drawText(window.$gameParty.numItems(this._item), x, y, width, 'right');
     }
 
     drawEquipInfo(x, y) {
@@ -56,7 +56,7 @@ export class Window_ShopStatus extends Window_Base {
     statusMembers() {
         const start = this._pageIndex * this.pageSize();
         const end = start + this.pageSize();
-        return global.$gameParty.members().slice(start, end);
+        return window.$gameParty.members().slice(start, end);
     }
 
     pageSize() {
@@ -64,7 +64,7 @@ export class Window_ShopStatus extends Window_Base {
     }
 
     maxPages() {
-        return Math.floor((global.$gameParty.size() + this.pageSize() - 1) / this.pageSize());
+        return Math.floor((window.$gameParty.size() + this.pageSize() - 1) / this.pageSize());
     }
 
     drawActorEquipInfo(x, y, actor) {

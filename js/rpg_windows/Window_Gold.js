@@ -28,7 +28,7 @@ export class Window_Gold extends Window_Base {
     }
 
     value() {
-        return global.$gameParty.gold();
+        return window.$gameParty.gold();
     }
 
     currencyUnit() {

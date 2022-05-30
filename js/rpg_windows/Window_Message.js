@@ -97,13 +97,13 @@ export class Window_Message extends Window_Base {
     }
 
     canStart() {
-        return global.$gameMessage.hasText() && !global.$gameMessage.scrollMode();
+        return window.$gameMessage.hasText() && !window.$gameMessage.scrollMode();
     }
 
     startMessage() {
         this._textState = {};
         this._textState.index = 0;
-        this._textState.text = this.convertEscapeCharacters(global.$gameMessage.allText());
+        this._textState.text = this.convertEscapeCharacters(window.$gameMessage.allText());
         this.newPage(this._textState);
         this.updatePlacement();
         this.updateBackground();
@@ -111,20 +111,20 @@ export class Window_Message extends Window_Base {
     }
 
     updatePlacement() {
-        this._positionType = global.$gameMessage.positionType();
+        this._positionType = window.$gameMessage.positionType();
         this.y = (this._positionType * (Graphics.boxHeight - this.height)) / 2;
         this._goldWindow.y = this.y > 0 ? 0 : Graphics.boxHeight - this._goldWindow.height;
     }
 
     updateBackground() {
-        this._background = global.$gameMessage.background();
+        this._background = window.$gameMessage.background();
         this.setBackgroundType(this._background);
     }
 
     terminateMessage() {
         this.close();
         this._goldWindow.close();
-        global.$gameMessage.clear();
+        window.$gameMessage.clear();
     }
 
     updateWait() {
@@ -212,13 +212,13 @@ export class Window_Message extends Window_Base {
     }
 
     startInput() {
-        if (global.$gameMessage.isChoice()) {
+        if (window.$gameMessage.isChoice()) {
             this._choiceWindow.start();
             return true;
-        } else if (global.$gameMessage.isNumberInput()) {
+        } else if (window.$gameMessage.isNumberInput()) {
             this._numberWindow.start();
             return true;
-        } else if (global.$gameMessage.isItemChoice()) {
+        } else if (window.$gameMessage.isItemChoice()) {
             this._itemWindow.start();
             return true;
         } else {
@@ -231,13 +231,13 @@ export class Window_Message extends Window_Base {
     }
 
     doesContinue() {
-        return global.$gameMessage.hasText() && !global.$gameMessage.scrollMode() && !this.areSettingsChanged();
+        return window.$gameMessage.hasText() && !window.$gameMessage.scrollMode() && !this.areSettingsChanged();
     }
 
     areSettingsChanged() {
         return (
-            this._background !== global.$gameMessage.background() ||
-            this._positionType !== global.$gameMessage.positionType()
+            this._background !== window.$gameMessage.background() ||
+            this._positionType !== window.$gameMessage.positionType()
         );
     }
 
@@ -259,16 +259,16 @@ export class Window_Message extends Window_Base {
     }
 
     loadMessageFace() {
-        this._faceBitmap = ImageManager.reserveFace(global.$gameMessage.faceName(), 0, this._imageReservationId);
+        this._faceBitmap = ImageManager.reserveFace(window.$gameMessage.faceName(), 0, this._imageReservationId);
     }
 
     drawMessageFace() {
-        this.drawFace(global.$gameMessage.faceName(), global.$gameMessage.faceIndex(), 0, 0);
+        this.drawFace(window.$gameMessage.faceName(), window.$gameMessage.faceIndex(), 0, 0);
         ImageManager.releaseReservation(this._imageReservationId);
     }
 
     newLineX() {
-        return global.$gameMessage.faceName() === '' ? 0 : 168;
+        return window.$gameMessage.faceName() === '' ? 0 : 168;
     }
 
     processNewLine(textState) {

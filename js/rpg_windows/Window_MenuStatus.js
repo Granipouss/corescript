@@ -25,7 +25,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     maxItems() {
-        return global.$gameParty.size();
+        return window.$gameParty.size();
     }
 
     itemHeight() {
@@ -38,7 +38,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     loadImages() {
-        global.$gameParty.members().forEach((actor) => {
+        window.$gameParty.members().forEach((actor) => {
             ImageManager.reserveFace(actor.faceName());
         }, this);
     }
@@ -60,7 +60,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     drawItemImage(index) {
-        const actor = global.$gameParty.members()[index];
+        const actor = window.$gameParty.members()[index];
         const rect = this.itemRect(index);
         this.changePaintOpacity(actor.isBattleMember());
         this.drawActorFace(actor, rect.x + 1, rect.y + 1, Window_Base._faceWidth, Window_Base._faceHeight);
@@ -68,7 +68,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     drawItemStatus(index) {
-        const actor = global.$gameParty.members()[index];
+        const actor = window.$gameParty.members()[index];
         const rect = this.itemRect(index);
         const x = rect.x + 162;
         const y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
@@ -78,12 +78,12 @@ export class Window_MenuStatus extends Window_Selectable {
 
     processOk() {
         super.processOk();
-        global.$gameParty.setMenuActor(global.$gameParty.members()[this.index()]);
+        window.$gameParty.setMenuActor(window.$gameParty.members()[this.index()]);
     }
 
     isCurrentItemEnabled() {
         if (this._formationMode) {
-            const actor = global.$gameParty.members()[this.index()];
+            const actor = window.$gameParty.members()[this.index()];
             return actor && actor.isFormationChangeOk();
         } else {
             return true;
@@ -91,7 +91,7 @@ export class Window_MenuStatus extends Window_Selectable {
     }
 
     selectLast() {
-        this.select(global.$gameParty.menuActor().index() || 0);
+        this.select(window.$gameParty.menuActor().index() || 0);
     }
 
     formationMode() {

@@ -224,6 +224,8 @@ export type RPGSystem = {
      * The ID of the map currently being edited.
      */
     readonly editMapId: number;
+
+    readonly encryptionKey: string;
 };
 
 export type RPGSystemVehicle = {

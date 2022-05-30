@@ -252,7 +252,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     showNormalAnimation(targets, animationId, mirror) {
-        const animation = global.$dataAnimations[animationId];
+        const animation = window.$dataAnimations[animationId];
         if (animation) {
             let delay = this.animationBaseDelay();
             const nextDelay = this.animationNextDelay();

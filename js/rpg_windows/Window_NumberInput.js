@@ -22,8 +22,8 @@ export class Window_NumberInput extends Window_Selectable {
     }
 
     start() {
-        this._maxDigits = global.$gameMessage.numInputMaxDigits();
-        this._number = global.$gameVariables.value(global.$gameMessage.numInputVariableId());
+        this._maxDigits = window.$gameMessage.numInputMaxDigits();
+        this._number = window.$gameVariables.value(window.$gameMessage.numInputVariableId());
         this._number = clamp(this._number, [0, Math.pow(10, this._maxDigits) - 1]);
         this.updatePlacement();
         this.placeButtons();
@@ -186,7 +186,7 @@ export class Window_NumberInput extends Window_Selectable {
 
     processOk() {
         SoundManager.playOk();
-        global.$gameVariables.setValue(global.$gameMessage.numInputVariableId(), this._number);
+        window.$gameVariables.setValue(window.$gameMessage.numInputVariableId(), this._number);
         this._messageWindow.terminateMessage();
         this.updateInputData();
         this.deactivate();

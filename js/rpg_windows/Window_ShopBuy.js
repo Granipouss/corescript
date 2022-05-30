@@ -39,7 +39,7 @@ export class Window_ShopBuy extends Window_Selectable {
     }
 
     isEnabled(item) {
-        return item && this.price(item) <= this._money && !global.$gameParty.hasMaxItems(item);
+        return item && this.price(item) <= this._money && !window.$gameParty.hasMaxItems(item);
     }
 
     refresh() {
@@ -55,13 +55,13 @@ export class Window_ShopBuy extends Window_Selectable {
             let item = null;
             switch (goods[0]) {
                 case 0:
-                    item = global.$dataItems[goods[1]];
+                    item = window.$dataItems[goods[1]];
                     break;
                 case 1:
-                    item = global.$dataWeapons[goods[1]];
+                    item = window.$dataWeapons[goods[1]];
                     break;
                 case 2:
-                    item = global.$dataArmors[goods[1]];
+                    item = window.$dataArmors[goods[1]];
                     break;
             }
             if (item) {

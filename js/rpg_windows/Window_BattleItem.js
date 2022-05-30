@@ -10,7 +10,7 @@ export class Window_BattleItem extends Window_ItemList {
     }
 
     includes(item) {
-        return global.$gameParty.canUse(item);
+        return window.$gameParty.canUse(item);
     }
 
     show() {

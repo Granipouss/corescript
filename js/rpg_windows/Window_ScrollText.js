@@ -20,18 +20,18 @@ export class Window_ScrollText extends Window_Base {
 
     update() {
         super.update();
-        if (global.$gameMessage.scrollMode()) {
+        if (window.$gameMessage.scrollMode()) {
             if (this._text) {
                 this.updateMessage();
             }
-            if (!this._text && global.$gameMessage.hasText()) {
+            if (!this._text && window.$gameMessage.hasText()) {
                 this.startMessage();
             }
         }
     }
 
     startMessage() {
-        this._text = global.$gameMessage.allText();
+        this._text = window.$gameMessage.allText();
         this.refresh();
         this.show();
     }
@@ -58,7 +58,7 @@ export class Window_ScrollText extends Window_Base {
     }
 
     scrollSpeed() {
-        let speed = global.$gameMessage.scrollSpeed() / 2;
+        let speed = window.$gameMessage.scrollSpeed() / 2;
         if (this.isFastForward()) {
             speed *= this.fastForwardRate();
         }
@@ -66,7 +66,7 @@ export class Window_ScrollText extends Window_Base {
     }
 
     isFastForward() {
-        if (global.$gameMessage.scrollNoFast()) {
+        if (window.$gameMessage.scrollNoFast()) {
             return false;
         } else {
             return Input.isPressed('ok') || Input.isPressed('shift') || TouchInput.isPressed();
@@ -79,7 +79,7 @@ export class Window_ScrollText extends Window_Base {
 
     terminateMessage() {
         this._text = null;
-        global.$gameMessage.clear();
+        window.$gameMessage.clear();
         this.hide();
     }
 }

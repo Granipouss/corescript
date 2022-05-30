@@ -578,9 +578,9 @@ export class Window_NameInput extends Window_Selectable {
     }
 
     table() {
-        if (global.$gameSystem.isJapanese()) {
+        if (window.$gameSystem.isJapanese()) {
             return [Window_NameInput.JAPAN1, Window_NameInput.JAPAN2, Window_NameInput.JAPAN3];
-        } else if (global.$gameSystem.isRussian()) {
+        } else if (window.$gameSystem.isRussian()) {
             return [Window_NameInput.RUSSIA];
         } else {
             return [Window_NameInput.LATIN1, Window_NameInput.LATIN2];

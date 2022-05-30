@@ -41,17 +41,17 @@ export class Window_DebugEdit extends Window_Selectable {
 
     itemName(dataId) {
         if (this._mode === 'switch') {
-            return global.$dataSystem.switches[dataId];
+            return window.$dataSystem.switches[dataId];
         } else {
-            return global.$dataSystem.variables[dataId];
+            return window.$dataSystem.variables[dataId];
         }
     }
 
     itemStatus(dataId) {
         if (this._mode === 'switch') {
-            return global.$gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
+            return window.$gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
         } else {
-            return String(global.$gameVariables.value(dataId));
+            return String(window.$gameVariables.value(dataId));
         }
     }
 
@@ -88,14 +88,14 @@ export class Window_DebugEdit extends Window_Selectable {
         if (Input.isRepeated('ok')) {
             const switchId = this.currentId();
             SoundManager.playCursor();
-            global.$gameSwitches.setValue(switchId, !global.$gameSwitches.value(switchId));
+            window.$gameSwitches.setValue(switchId, !window.$gameSwitches.value(switchId));
             this.redrawCurrentItem();
         }
     }
 
     updateVariable() {
         const variableId = this.currentId();
-        let value = global.$gameVariables.value(variableId);
+        let value = window.$gameVariables.value(variableId);
         if (typeof value === 'number') {
             if (Input.isRepeated('right')) {
                 value++;
@@ -109,8 +109,8 @@ export class Window_DebugEdit extends Window_Selectable {
             if (Input.isRepeated('pageup')) {
                 value -= 10;
             }
-            if (global.$gameVariables.value(variableId) !== value) {
-                global.$gameVariables.setValue(variableId, value);
+            if (window.$gameVariables.value(variableId) !== value) {
+                window.$gameVariables.setValue(variableId, value);
                 SoundManager.playCursor();
                 this.redrawCurrentItem();
             }

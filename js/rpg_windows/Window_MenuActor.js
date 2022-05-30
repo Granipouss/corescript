@@ -13,17 +13,17 @@ export class Window_MenuActor extends Window_MenuStatus {
 
     processOk() {
         if (!this.cursorAll()) {
-            global.$gameParty.setTargetActor(global.$gameParty.members()[this.index()]);
+            window.$gameParty.setTargetActor(window.$gameParty.members()[this.index()]);
         }
         this.callOkHandler();
     }
 
     selectLast() {
-        this.select(global.$gameParty.targetActor().index() || 0);
+        this.select(window.$gameParty.targetActor().index() || 0);
     }
 
     selectForItem(item) {
-        const actor = global.$gameParty.menuActor();
+        const actor = window.$gameParty.menuActor();
         const action = new Game_Action(actor);
         action.setItemObject(item);
         this.setCursorFixed(false);
