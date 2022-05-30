@@ -1,8 +1,9 @@
-/* global PIXI */
+import * as PIXI from 'pixi.js';
 
 import { Graphics } from '../rpg_core/Graphics';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Utils } from '../rpg_core/Utils';
+import { Window } from '../rpg_core/Window';
 import { WindowLayer } from '../rpg_core/WindowLayer';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
@@ -12,12 +13,17 @@ import { Scene_Gameover } from './Scene_Gameover';
 /**
  * The Superclass of all scene within the game.
  */
-export class Scene_Base extends PIXI.Container {
+export abstract class Scene_Base extends PIXI.Container {
+    protected _active: boolean;
+    protected _fadeSign: number;
+    protected _fadeDuration: number;
+    protected _fadeSprite: ScreenSprite;
+    protected _imageReservationId: number;
+
+    protected _windowLayer: WindowLayer;
+
     /**
      * Create a instance of Scene_Base.
-     *
-     * @instance
-     * @memberof Scene_Base
      */
     constructor() {
         super();
@@ -34,92 +40,62 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Attach a reservation to the reserve queue.
-     *
-     * @method attachReservation
-     * @instance
-     * @memberof Scene_Base
      */
-    attachReservation() {
+    attachReservation(): void {
         ImageManager.setDefaultReservationId(this._imageReservationId);
     }
 
     /**
      * Remove the reservation from the Reserve queue.
-     *
-     * @method detachReservation
-     * @instance
-     * @memberof Scene_Base
      */
-    detachReservation() {
+    detachReservation(): void {
         ImageManager.releaseReservation(this._imageReservationId);
+    }
+
+    prepare(): void {
+        // ...
     }
 
     /**
      * Create the components and add them to the rendering process.
-     *
-     * @method create
-     * @instance
-     * @memberof Scene_Base
      */
-    create() {
+    create(): void {
         // ...
     }
 
     /**
      * Returns whether the scene is active or not.
-     *
-     * @method isActive
-     * @instance
-     * @memberof Scene_Base
-     * @return {Boolean} return true if the scene is active
      */
-    isActive() {
+    isActive(): boolean {
         return this._active;
     }
 
     /**
      * Return whether the scene is ready to start or not.
-     *
-     * @method isReady
-     * @instance
-     * @memberof Scene_Base
-     * @return {Boolean} Return true if the scene is ready to start
      */
-    isReady() {
+    isReady(): boolean {
         return ImageManager.isReady();
     }
 
     /**
      * Start the scene processing.
-     *
-     * @method start
-     * @instance
-     * @memberof Scene_Base
      */
-    start() {
+    start(): void {
         this._active = true;
     }
 
     /**
      * Update the scene processing each new frame.
-     *
-     * @method update
-     * @instance
-     * @memberof Scene_Base
      */
-    update() {
+    update(): void {
         this.updateFade();
         this.updateChildren();
     }
 
     /**
      * Stop the scene processing.
-     *
-     * @method stop
-     * @instance
-     * @memberof Scene_Base
      */
-    stop() {
+    stop(): void {
         this._active = false;
     }
 
@@ -131,30 +107,22 @@ export class Scene_Base extends PIXI.Container {
      * @memberof Scene_Base
      * @return {Boolean} Return true if the scene is currently busy
      */
-    isBusy() {
+    isBusy(): boolean {
         return this._fadeDuration > 0;
     }
 
     /**
      * Terminate the scene before switching to a another scene.
-     *
-     * @method terminate
-     * @instance
-     * @memberof Scene_Base
      */
-    terminate() {
+    terminate(): void {
         // ...
     }
 
     /**
      * Create the layer for the windows children
      * and add it to the rendering process.
-     *
-     * @method createWindowLayer
-     * @instance
-     * @memberof Scene_Base
      */
-    createWindowLayer() {
+    createWindowLayer(): void {
         const width = Graphics.boxWidth;
         const height = Graphics.boxHeight;
         const x = (Graphics.width - width) / 2;
@@ -166,26 +134,20 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Add the children window to the windowLayer processing.
-     *
-     * @method addWindow
-     * @instance
-     * @memberof Scene_Base
      */
-    addWindow(window) {
+    addWindow(window: Window): void {
         this._windowLayer.addChild(window);
     }
 
     /**
      * Request a fadeIn screen process.
-     *
-     * @method startFadeIn
-     * @param {Number} [duration=30] The time the process will take for fadeIn the screen
-     * @param {Boolean} [white=false] If true the fadein will be process with a white color else it's will be black
+     * @param duration The time the process will take for fadeIn the screen
+     * @param white If true the fadein will be process with a white color else it's will be black
      *
      * @instance
      * @memberof Scene_Base
      */
-    startFadeIn(duration, white) {
+    startFadeIn(duration = 30, white = false): void {
         this.createFadeSprite(white);
         this._fadeSign = 1;
         this._fadeDuration = duration || 30;
@@ -194,15 +156,10 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Request a fadeOut screen process.
-     *
-     * @method startFadeOut
-     * @param {Number} [duration=30] The time the process will take for fadeOut the screen
-     * @param {Boolean} [white=false] If true the fadeOut will be process with a white color else it's will be black
-     *
-     * @instance
-     * @memberof Scene_Base
+     * @param duration The time the process will take for fadeOut the screen
+     * @param white If true the fadeOut will be process with a white color else it's will be black
      */
-    startFadeOut(duration, white) {
+    startFadeOut(duration = 30, white = false): void {
         this.createFadeSprite(white);
         this._fadeSign = -1;
         this._fadeDuration = duration || 30;
@@ -212,12 +169,8 @@ export class Scene_Base extends PIXI.Container {
     /**
      * Create a Screen sprite for the fadein and fadeOut purpose and
      * add it to the rendering process.
-     *
-     * @method createFadeSprite
-     * @instance
-     * @memberof Scene_Base
      */
-    createFadeSprite(white) {
+    createFadeSprite(white = false): void {
         if (!this._fadeSprite) {
             this._fadeSprite = new ScreenSprite();
             this.addChild(this._fadeSprite);
@@ -231,12 +184,8 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Update the screen fade processing.
-     *
-     * @method updateFade
-     * @instance
-     * @memberof Scene_Base
      */
-    updateFade() {
+    updateFade(): void {
         if (this._fadeDuration > 0) {
             const d = this._fadeDuration;
             if (this._fadeSign > 0) {
@@ -250,13 +199,9 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Update the children of the scene EACH frame.
-     *
-     * @method updateChildren
-     * @instance
-     * @memberof Scene_Base
      */
-    updateChildren() {
-        this.children.forEach((child) => {
+    updateChildren(): void {
+        this.children.forEach((child: PIXI.DisplayObject & { update?: () => void }) => {
             if (child.update) {
                 child.update();
             }
@@ -266,23 +211,15 @@ export class Scene_Base extends PIXI.Container {
     /**
      * Pop the scene from the stack array and switch to the
      * previous scene.
-     *
-     * @method popScene
-     * @instance
-     * @memberof Scene_Base
      */
-    popScene() {
+    popScene(): void {
         SceneManager.pop();
     }
 
     /**
      * Check whether the game should be triggering a gameover.
-     *
-     * @method checkGameover
-     * @instance
-     * @memberof Scene_Base
      */
-    checkGameover() {
+    checkGameover(): void {
         if (global.$gameParty.isAllDead()) {
             SceneManager.goto(Scene_Gameover);
         }
@@ -290,12 +227,8 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Slowly fade out all the visual and audio of the scene.
-     *
-     * @method fadeOutAll
-     * @instance
-     * @memberof Scene_Base
      */
-    fadeOutAll() {
+    fadeOutAll(): void {
         const time = this.slowFadeSpeed() / 60;
         AudioManager.fadeOutBgm(time);
         AudioManager.fadeOutBgs(time);
@@ -305,25 +238,15 @@ export class Scene_Base extends PIXI.Container {
 
     /**
      * Return the screen fade speed value.
-     *
-     * @method fadeSpeed
-     * @instance
-     * @memberof Scene_Base
-     * @return {Number} Return the fade speed
      */
-    fadeSpeed() {
+    fadeSpeed(): number {
         return 24;
     }
 
     /**
      * Return a slow screen fade speed value.
-     *
-     * @method slowFadeSpeed
-     * @instance
-     * @memberof Scene_Base
-     * @return {Number} Return the fade speed
      */
-    slowFadeSpeed() {
+    slowFadeSpeed(): number {
         return this.fadeSpeed() * 2;
     }
 }

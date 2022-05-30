@@ -1,13 +1,16 @@
 import { Bitmap } from '../rpg_core/Bitmap';
 import { Utils } from '../rpg_core/Utils';
-import { Graphics } from '../rpg_core/Graphics';
+import { Graphics, RendererType } from '../rpg_core/Graphics';
 import { WebAudio } from '../rpg_core/WebAudio';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Input } from '../rpg_core/Input';
+import type { Scene_Base } from '../rpg_scenes/Scene_Base';
 
-import { AudioManager } from '../rpg_managers/AudioManager';
-import { ImageManager } from '../rpg_managers/ImageManager';
-import { PluginManager } from '../rpg_managers/PluginManager';
+import { AudioManager } from './AudioManager';
+import { ImageManager } from './ImageManager';
+import { PluginManager } from './PluginManager';
+
+type SceneClass = new (...args: unknown[]) => Scene_Base;
 
 /**
  * The static class that manages scene transitions.
@@ -15,30 +18,29 @@ import { PluginManager } from '../rpg_managers/PluginManager';
 export const SceneManager = new (class SceneManager {
     /*
      * Gets the current time in ms without on iOS Safari.
-     * @private
      */
-    _getTimeInMsWithoutMobileSafari() {
+    private _getTimeInMsWithoutMobileSafari() {
         return performance.now();
     }
 
-    _scene = null;
-    _nextScene = null;
-    _stack = [];
-    _stopped = false;
-    _sceneStarted = false;
-    _exiting = false;
-    _previousClass = null;
-    _backgroundBitmap = null;
-    _screenWidth = 816;
-    _screenHeight = 624;
-    _boxWidth = 816;
-    _boxHeight = 624;
-    _deltaTime = 1.0 / 60.0;
-    _currentTime = !Utils.isMobileSafari() ? this._getTimeInMsWithoutMobileSafari() : undefined;
-    _accumulator = 0.0;
-    _frameCount = 0;
+    private _scene: Scene_Base = null;
+    private _nextScene: Scene_Base = null;
+    private _stack: SceneClass[] = [];
+    private _stopped = false;
+    private _sceneStarted = false;
+    private _exiting = false;
+    private _previousClass: SceneClass = null;
+    private _backgroundBitmap: Bitmap = null;
+    private _screenWidth = 816;
+    private _screenHeight = 624;
+    private _boxWidth = 816;
+    private _boxHeight = 624;
+    private _deltaTime = 1.0 / 60.0;
+    private _currentTime = !Utils.isMobileSafari() ? this._getTimeInMsWithoutMobileSafari() : undefined;
+    private _accumulator = 0.0;
+    private _frameCount = 0;
 
-    run(sceneClass) {
+    run(sceneClass: SceneClass): void {
         try {
             this.initialize();
             this.goto(sceneClass);
@@ -48,7 +50,7 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    initialize() {
+    initialize(): void {
         this.initGraphics();
         this.checkFileAccess();
         this.initAudio();
@@ -56,7 +58,7 @@ export const SceneManager = new (class SceneManager {
         this.setupErrorHandlers();
     }
 
-    initGraphics() {
+    initGraphics(): void {
         const type = this.preferableRendererType();
         Graphics.initialize(this._screenWidth, this._screenHeight, type);
         Graphics.boxWidth = this._boxWidth;
@@ -70,7 +72,7 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    preferableRendererType() {
+    preferableRendererType(): RendererType {
         if (Utils.isOptionValid('canvas')) {
             return 'canvas';
         } else if (Utils.isOptionValid('webgl')) {
@@ -80,57 +82,57 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    shouldUseCanvasRenderer() {
+    shouldUseCanvasRenderer(): boolean {
         return Utils.isMobileDevice();
     }
 
-    checkWebGL() {
+    checkWebGL(): void {
         if (!Graphics.hasWebGL()) {
             throw new Error('Your browser does not support WebGL.');
         }
     }
 
-    checkFileAccess() {
+    checkFileAccess(): void {
         if (!Utils.canReadGameFiles()) {
             throw new Error('Your browser does not allow to read local files.');
         }
     }
 
-    initAudio() {
+    initAudio(): void {
         const noAudio = Utils.isOptionValid('noaudio');
         if (!WebAudio.initialize(noAudio) && !noAudio) {
             throw new Error('Your browser does not support Web Audio API.');
         }
     }
 
-    checkPluginErrors() {
+    checkPluginErrors(): void {
         PluginManager.checkErrors();
     }
 
-    setupErrorHandlers() {
+    setupErrorHandlers(): void {
         window.addEventListener('error', this.onError.bind(this));
         document.addEventListener('keydown', this.onKeyDown.bind(this));
     }
 
-    frameCount() {
+    frameCount(): number {
         return this._frameCount;
     }
 
-    setFrameCount(frameCount) {
+    setFrameCount(frameCount: number): void {
         this._frameCount = frameCount;
     }
 
-    resetFrameCount() {
+    resetFrameCount(): void {
         this._frameCount = 0;
     }
 
-    requestUpdate() {
+    requestUpdate(): void {
         if (!this._stopped) {
             requestAnimationFrame(this.update.bind(this));
         }
     }
 
-    update() {
+    update(): void {
         try {
             this.tickStart();
             if (Utils.isMobileSafari()) {
@@ -144,11 +146,11 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    terminate() {
+    terminate(): void {
         window.close();
     }
 
-    onError(e) {
+    onError(e: Error & { filename?: string; lineno?: number }): void {
         console.error(e.message);
         if (e.filename || e.lineno) {
             console.error(e.filename, e.lineno);
@@ -162,7 +164,7 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    onKeyDown(event) {
+    onKeyDown(event: KeyboardEvent): void {
         if (!event.ctrlKey && !event.altKey) {
             switch (event.keyCode) {
                 case 116: // F5
@@ -172,32 +174,32 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    catchException(e) {
+    catchException(e: unknown): void {
         if (e instanceof Error) {
             Graphics.printError(e.name, e.message);
             Graphics.printErrorDetail(e);
             console.error(e.stack);
         } else {
-            Graphics.printError('UnknownError', e);
+            Graphics.printError('UnknownError', String(e));
         }
         AudioManager.stopAll();
         this.stop();
     }
 
-    tickStart() {
+    tickStart(): void {
         Graphics.tickStart();
     }
 
-    tickEnd() {
+    tickEnd(): void {
         Graphics.tickEnd();
     }
 
-    updateInputData() {
+    updateInputData(): void {
         Input.update();
         TouchInput.update();
     }
 
-    updateMain() {
+    updateMain(): void {
         if (Utils.isMobileSafari()) {
             this.changeScene();
             this.updateScene();
@@ -223,16 +225,16 @@ export const SceneManager = new (class SceneManager {
         this.requestUpdate();
     }
 
-    updateManagers() {
+    updateManagers(): void {
         ImageManager.update();
     }
 
-    changeScene() {
+    changeScene(): void {
         if (this.isSceneChanging() && !this.isCurrentSceneBusy()) {
             if (this._scene) {
                 this._scene.terminate();
                 this._scene.detachReservation();
-                this._previousClass = this._scene.constructor;
+                this._previousClass = this._scene.constructor as SceneClass;
             }
             this._scene = this._nextScene;
             if (this._scene) {
@@ -248,7 +250,7 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    updateScene() {
+    updateScene(): void {
         if (this._scene) {
             if (!this._sceneStarted && this._scene.isReady()) {
                 this._scene.start();
@@ -262,7 +264,7 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    renderScene() {
+    renderScene(): void {
         if (this.isCurrentSceneStarted()) {
             Graphics.render(this._scene);
         } else if (this._scene) {
@@ -270,43 +272,43 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    updateFrameCount() {
+    updateFrameCount(): void {
         this._frameCount++;
     }
 
-    onSceneCreate() {
+    onSceneCreate(): void {
         Graphics.startLoading();
     }
 
-    onSceneStart() {
+    onSceneStart(): void {
         Graphics.endLoading();
     }
 
-    onSceneLoading() {
+    onSceneLoading(): void {
         Graphics.updateLoading();
     }
 
-    isSceneChanging() {
+    isSceneChanging(): boolean {
         return this._exiting || !!this._nextScene;
     }
 
-    isCurrentSceneBusy() {
+    isCurrentSceneBusy(): boolean {
         return this._scene && this._scene.isBusy();
     }
 
-    isCurrentSceneStarted() {
+    isCurrentSceneStarted(): boolean {
         return this._scene && this._sceneStarted;
     }
 
-    isNextScene(sceneClass) {
+    isNextScene(sceneClass: SceneClass): boolean {
         return this._nextScene && this._nextScene.constructor === sceneClass;
     }
 
-    isPreviousScene(sceneClass) {
+    isPreviousScene(sceneClass: SceneClass) {
         return this._previousClass === sceneClass;
     }
 
-    goto(sceneClass) {
+    goto(sceneClass: SceneClass): void {
         if (sceneClass) {
             this._nextScene = new sceneClass();
         }
@@ -315,12 +317,12 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    push(sceneClass) {
-        this._stack.push(this._scene.constructor);
+    push(sceneClass: SceneClass): void {
+        this._stack.push(this._scene.constructor as SceneClass);
         this.goto(sceneClass);
     }
 
-    pop() {
+    pop(): void {
         if (this._stack.length > 0) {
             this.goto(this._stack.pop());
         } else {
@@ -328,37 +330,40 @@ export const SceneManager = new (class SceneManager {
         }
     }
 
-    exit() {
+    exit(): void {
         this.goto(null);
         this._exiting = true;
     }
 
-    clearStack() {
+    clearStack(): void {
         this._stack = [];
     }
 
-    stop() {
+    stop(): void {
         this._stopped = true;
     }
 
-    prepareNextScene(...args) {
+    prepareNextScene(...args: unknown[]) {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         this._nextScene.prepare(...args);
     }
 
-    snap() {
+    snap(): Bitmap {
         return Bitmap.snap(this._scene);
     }
 
-    snapForBackground() {
+    snapForBackground(): void {
         this._backgroundBitmap = this.snap();
         this._backgroundBitmap.blur();
     }
 
-    backgroundBitmap() {
+    backgroundBitmap(): Bitmap {
         return this._backgroundBitmap;
     }
 
-    resume() {
+    resume(): void {
         this._stopped = false;
         this.requestUpdate();
         if (!Utils.isMobileSafari()) {
