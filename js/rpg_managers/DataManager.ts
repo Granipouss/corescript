@@ -63,7 +63,7 @@ window.$gamePlayer = null;
 
 window.$testEvent = null;
 
-type SaveInfo = {
+export type SaveInfo = {
     globalId: string;
     title: string;
     characters: [string, number][];

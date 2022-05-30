@@ -16,37 +16,37 @@ export class Window_Options extends Window_Command {
         this.updatePlacement();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 400;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(Math.min(this.numVisibleRows(), 12));
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         this.x = (Graphics.boxWidth - this.width) / 2;
         this.y = (Graphics.boxHeight - this.height) / 2;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addGeneralOptions();
         this.addVolumeOptions();
     }
 
-    addGeneralOptions() {
+    addGeneralOptions(): void {
         this.addCommand(TextManager.alwaysDash, 'alwaysDash');
         this.addCommand(TextManager.commandRemember, 'commandRemember');
     }
 
-    addVolumeOptions() {
+    addVolumeOptions(): void {
         this.addCommand(TextManager.bgmVolume, 'bgmVolume');
         this.addCommand(TextManager.bgsVolume, 'bgsVolume');
         this.addCommand(TextManager.meVolume, 'meVolume');
         this.addCommand(TextManager.seVolume, 'seVolume');
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const rect = this.itemRectForText(index);
         const statusWidth = this.statusWidth();
         const titleWidth = rect.width - statusWidth;
@@ -62,31 +62,32 @@ export class Window_Options extends Window_Command {
 
     statusText(index) {
         const symbol = this.commandSymbol(index);
-        const value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
+            const value = this.getConfigValue(symbol) as number;
             return this.volumeStatusText(value);
         } else {
+            const value = this.getConfigValue(symbol) as boolean;
             return this.booleanStatusText(value);
         }
     }
 
-    isVolumeSymbol(symbol) {
+    isVolumeSymbol(symbol: string): boolean {
         return symbol.includes('Volume');
     }
 
-    booleanStatusText(value) {
+    booleanStatusText(value: boolean): string {
         return value ? 'ON' : 'OFF';
     }
 
-    volumeStatusText(value) {
+    volumeStatusText(value: number): string {
         return value + '%';
     }
 
-    processOk() {
+    processOk(): void {
         const index = this.index();
         const symbol = this.commandSymbol(index);
-        let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
+            let value = this.getConfigValue(symbol) as number;
             value += this.volumeOffset();
             if (value > 100) {
                 value = 0;
@@ -94,15 +95,16 @@ export class Window_Options extends Window_Command {
             value = clamp(value, [0, 100]);
             this.changeValue(symbol, value);
         } else {
+            const value = this.getConfigValue(symbol) as boolean;
             this.changeValue(symbol, !value);
         }
     }
 
-    cursorRight(_wrap) {
+    cursorRight(_wrap?: boolean): void {
         const index = this.index();
         const symbol = this.commandSymbol(index);
-        let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
+            let value = this.getConfigValue(symbol) as number;
             value += this.volumeOffset();
             value = clamp(value, [0, 100]);
             this.changeValue(symbol, value);
@@ -111,11 +113,11 @@ export class Window_Options extends Window_Command {
         }
     }
 
-    cursorLeft(_wrap) {
+    cursorLeft(_wrap?: boolean): void {
         const index = this.index();
         const symbol = this.commandSymbol(index);
-        let value = this.getConfigValue(symbol);
         if (this.isVolumeSymbol(symbol)) {
+            let value = this.getConfigValue(symbol) as number;
             value -= this.volumeOffset();
             value = clamp(value, [0, 100]);
             this.changeValue(symbol, value);
@@ -124,11 +126,11 @@ export class Window_Options extends Window_Command {
         }
     }
 
-    volumeOffset() {
+    volumeOffset(): number {
         return 20;
     }
 
-    changeValue(symbol, value) {
+    changeValue(symbol: string, value: number | boolean): void {
         const lastValue = this.getConfigValue(symbol);
         if (lastValue !== value) {
             this.setConfigValue(symbol, value);
@@ -137,11 +139,11 @@ export class Window_Options extends Window_Command {
         }
     }
 
-    getConfigValue(symbol) {
+    getConfigValue(symbol: string): number | boolean {
         return ConfigManager[symbol];
     }
 
-    setConfigValue(symbol, volume) {
+    setConfigValue(symbol: string, volume: number | boolean) {
         ConfigManager[symbol] = volume;
     }
 }

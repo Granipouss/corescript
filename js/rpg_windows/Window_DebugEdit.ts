@@ -17,18 +17,18 @@ export class Window_DebugEdit extends Window_Selectable {
         this.refresh();
     }
 
-    maxItems() {
+    maxItems(): number {
         return 10;
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         this.drawAllItems();
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const dataId = this._topId + index;
-        const idText = dataId.padStart(4, '0') + ':';
+        const idText = String(dataId).padStart(4, '0') + ':';
         const idWidth = this.textWidth(idText);
         const statusWidth = this.textWidth('-00000000');
         const name = this.itemName(dataId);
@@ -42,7 +42,7 @@ export class Window_DebugEdit extends Window_Selectable {
         this.drawText(status, rect.x + rect.width, rect.y, statusWidth, 'right');
     }
 
-    itemName(dataId) {
+    itemName(dataId: number): string {
         if (this._mode === 'switch') {
             return window.$dataSystem.switches[dataId];
         } else {
@@ -50,7 +50,7 @@ export class Window_DebugEdit extends Window_Selectable {
         }
     }
 
-    itemStatus(dataId) {
+    itemStatus(dataId: number): string {
         if (this._mode === 'switch') {
             return window.$gameSwitches.value(dataId) ? '[ON]' : '[OFF]';
         } else {
@@ -58,25 +58,25 @@ export class Window_DebugEdit extends Window_Selectable {
         }
     }
 
-    setMode(mode) {
+    setMode(mode: string): void {
         if (this._mode !== mode) {
             this._mode = mode;
             this.refresh();
         }
     }
 
-    setTopId(id) {
+    setTopId(id: number): void {
         if (this._topId !== id) {
             this._topId = id;
             this.refresh();
         }
     }
 
-    currentId() {
+    currentId(): number {
         return this._topId + this.index();
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this.active) {
             if (this._mode === 'switch') {
@@ -87,7 +87,7 @@ export class Window_DebugEdit extends Window_Selectable {
         }
     }
 
-    updateSwitch() {
+    updateSwitch(): void {
         if (Input.isRepeated('ok')) {
             const switchId = this.currentId();
             SoundManager.playCursor();
@@ -96,7 +96,7 @@ export class Window_DebugEdit extends Window_Selectable {
         }
     }
 
-    updateVariable() {
+    updateVariable(): void {
         const variableId = this.currentId();
         let value = window.$gameVariables.value(variableId);
         if (typeof value === 'number') {

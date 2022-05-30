@@ -14,20 +14,20 @@ export class Window_PartyCommand extends Window_Command {
         this.deactivate();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 192;
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addCommand(TextManager.fight, 'fight');
         this.addCommand(TextManager.escape, 'escape', BattleManager.canEscape());
     }
 
-    setup() {
+    setup(): void {
         this.clearCommandList();
         this.makeCommandList();
         this.refresh();

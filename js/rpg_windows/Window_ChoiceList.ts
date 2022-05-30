@@ -18,7 +18,7 @@ export class Window_ChoiceList extends Window_Command {
         this._background = 0;
     }
 
-    start() {
+    start(): void {
         this.updatePlacement();
         this.updateBackground();
         this.refresh();
@@ -27,11 +27,11 @@ export class Window_ChoiceList extends Window_Command {
         this.activate();
     }
 
-    selectDefault() {
+    selectDefault(): void {
         this.select(window.$gameMessage.choiceDefaultType());
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         const positionType = window.$gameMessage.choicePositionType();
         const messageY = this._messageWindow.y;
         this.width = this.windowWidth();
@@ -54,17 +54,17 @@ export class Window_ChoiceList extends Window_Command {
         }
     }
 
-    updateBackground() {
+    updateBackground(): void {
         this._background = window.$gameMessage.choiceBackground();
         this.setBackgroundType(this._background);
     }
 
-    windowWidth() {
+    windowWidth(): number {
         const width = this.maxChoiceWidth() + this.padding * 2;
         return Math.min(width, Graphics.boxWidth);
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         const messageY = this._messageWindow.y;
         const messageHeight = this._messageWindow.height;
         const centerY = Graphics.boxHeight / 2;
@@ -80,7 +80,7 @@ export class Window_ChoiceList extends Window_Command {
         return numLines;
     }
 
-    maxChoiceWidth() {
+    maxChoiceWidth(): number {
         let maxWidth = 96;
         const choices = window.$gameMessage.choices();
         for (let i = 0; i < choices.length; i++) {
@@ -92,41 +92,41 @@ export class Window_ChoiceList extends Window_Command {
         return maxWidth;
     }
 
-    textWidthEx(text) {
+    textWidthEx(text: string): number {
         return this.drawTextEx(text, 0, this.contents.height);
     }
 
-    contentsHeight() {
+    contentsHeight(): number {
         return this.maxItems() * this.itemHeight();
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         const choices = window.$gameMessage.choices();
         for (let i = 0; i < choices.length; i++) {
             this.addCommand(choices[i], 'choice');
         }
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const rect = this.itemRectForText(index);
         this.drawTextEx(this.commandName(index), rect.x, rect.y);
     }
 
-    isCancelEnabled() {
+    isCancelEnabled(): boolean {
         return window.$gameMessage.choiceCancelType() !== -1;
     }
 
-    isOkTriggered() {
+    isOkTriggered(): boolean {
         return Input.isTriggered('ok');
     }
 
-    callOkHandler() {
+    callOkHandler(): void {
         window.$gameMessage.onChoice(this.index());
         this._messageWindow.terminateMessage();
         this.close();
     }
 
-    callCancelHandler() {
+    callCancelHandler(): void {
         window.$gameMessage.onChoice(window.$gameMessage.choiceCancelType());
         this._messageWindow.terminateMessage();
         this.close();

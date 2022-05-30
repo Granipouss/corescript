@@ -577,11 +577,11 @@ export class Window_NameInput extends Window_Selectable {
         this.activate();
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(9);
     }
 
-    table() {
+    table(): string[][] {
         if (window.$gameSystem.isJapanese()) {
             return [Window_NameInput.JAPAN1, Window_NameInput.JAPAN2, Window_NameInput.JAPAN3];
         } else if (window.$gameSystem.isRussian()) {
@@ -591,27 +591,27 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    maxCols() {
+    maxCols(): number {
         return 10;
     }
 
-    maxItems() {
+    maxItems(): number {
         return 90;
     }
 
-    character() {
+    character(): string {
         return this._index < 88 ? this.table()[this._page][this._index] : '';
     }
 
-    isPageChange() {
+    isPageChange(): boolean {
         return this._index === 88;
     }
 
-    isOk() {
+    isOk(): boolean {
         return this._index === 89;
     }
 
-    itemRect(index) {
+    itemRect(index: number): PIXI.Rectangle {
         return new PIXI.Rectangle(
             (index % 10) * 42 + Math.floor((index % 10) / 5) * 24,
             Math.floor(index / 10) * this.lineHeight(),
@@ -620,7 +620,7 @@ export class Window_NameInput extends Window_Selectable {
         );
     }
 
-    refresh() {
+    refresh(): void {
         const table = this.table();
         this.contents.clear();
         this.resetTextColor();
@@ -632,28 +632,28 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    updateCursor() {
+    updateCursor(): void {
         const rect = this.itemRect(this._index);
         this.setCursorRect(rect.x, rect.y, rect.width, rect.height);
     }
 
-    isCursorMovable() {
+    isCursorMovable(): boolean {
         return this.active;
     }
 
-    cursorDown(wrap) {
+    cursorDown(wrap = false): void {
         if (this._index < 80 || wrap) {
             this._index = (this._index + 10) % 90;
         }
     }
 
-    cursorUp(wrap) {
+    cursorUp(wrap = false): void {
         if (this._index >= 10 || wrap) {
             this._index = (this._index + 80) % 90;
         }
     }
 
-    cursorRight(wrap) {
+    cursorRight(wrap = false): void {
         if (this._index % 10 < 9) {
             this._index++;
         } else if (wrap) {
@@ -661,7 +661,7 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    cursorLeft(wrap) {
+    cursorLeft(wrap = false): void {
         if (this._index % 10 > 0) {
             this._index--;
         } else if (wrap) {
@@ -669,17 +669,17 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    cursorPagedown() {
+    cursorPagedown(): void {
         this._page = (this._page + 1) % this.table().length;
         this.refresh();
     }
 
-    cursorPageup() {
+    cursorPageup(): void {
         this._page = (this._page + this.table().length - 1) % this.table().length;
         this.refresh();
     }
 
-    processCursorMove() {
+    processCursorMove(): void {
         const lastPage = this._page;
         super.processCursorMove();
         this.updateCursor();
@@ -688,7 +688,7 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    processHandling() {
+    processHandling(): void {
         if (this.isOpen() && this.active) {
             if (Input.isTriggered('shift')) {
                 this.processJump();
@@ -702,28 +702,28 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    isCancelEnabled() {
+    isCancelEnabled(): boolean {
         return true;
     }
 
-    processCancel() {
+    processCancel(): void {
         this.processBack();
     }
 
-    processJump() {
+    processJump(): void {
         if (this._index !== 89) {
             this._index = 89;
             SoundManager.playCursor();
         }
     }
 
-    processBack() {
+    processBack(): void {
         if (this._editWindow.back()) {
             SoundManager.playCancel();
         }
     }
 
-    processOk() {
+    processOk(): void {
         if (this.character()) {
             this.onNameAdd();
         } else if (this.isPageChange()) {
@@ -734,7 +734,7 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    onNameAdd() {
+    onNameAdd(): void {
         if (this._editWindow.add(this.character())) {
             SoundManager.playOk();
         } else {
@@ -742,7 +742,7 @@ export class Window_NameInput extends Window_Selectable {
         }
     }
 
-    onNameOk() {
+    onNameOk(): void {
         if (this._editWindow.getName() === '') {
             if (this._editWindow.restoreDefault()) {
                 SoundManager.playOk();

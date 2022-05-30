@@ -9,13 +9,13 @@ export class Window_BattleSkill extends Window_SkillList {
         this.hide();
     }
 
-    show() {
+    show(): void {
         this.selectLast();
         this.showHelpWindow();
         super.show();
     }
 
-    hide() {
+    hide(): void {
         this.hideHelpWindow();
         super.hide();
     }

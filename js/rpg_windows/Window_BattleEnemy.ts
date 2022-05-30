@@ -17,59 +17,59 @@ export class Window_BattleEnemy extends Window_Selectable {
         this.hide();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return Graphics.boxWidth - 192;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(this.numVisibleRows());
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    maxCols() {
+    maxCols(): number {
         return 2;
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._enemies.length;
     }
 
-    enemy() {
+    enemy(): Game_Enemy {
         return this._enemies[this.index()];
     }
 
-    enemyIndex() {
+    enemyIndex(): number {
         const enemy = this.enemy();
         return enemy ? enemy.index() : -1;
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         this.resetTextColor();
         const name = this._enemies[index].name();
         const rect = this.itemRectForText(index);
         this.drawText(name, rect.x, rect.y, rect.width);
     }
 
-    show() {
+    show(): void {
         this.refresh();
         this.select(0);
         super.show();
     }
 
-    hide() {
+    hide(): void {
         super.hide();
         window.$gameTroop.select(null);
     }
 
-    refresh() {
+    refresh(): void {
         this._enemies = window.$gameTroop.aliveMembers();
         super.refresh();
     }
 
-    select(index) {
+    select(index: number): void {
         super.select(index);
         window.$gameTroop.select(this.enemy());
     }

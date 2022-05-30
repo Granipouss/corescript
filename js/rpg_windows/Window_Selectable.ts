@@ -538,7 +538,7 @@ export class Window_Selectable extends Window_Base {
         this._helpWindow.clear();
     }
 
-    setHelpWindowItem(item: unknown): void {
+    setHelpWindowItem(item: { description: string }): void {
         if (this._helpWindow) {
             this._helpWindow.setItem(item);
         }

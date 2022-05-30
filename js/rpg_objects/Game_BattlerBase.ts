@@ -810,7 +810,7 @@ export abstract class Game_BattlerBase {
         }
     }
 
-    canEquip(item: unknown): boolean {
+    canEquip(item: unknown): item is RPGWeapon | RPGArmor {
         if (!item) {
             return false;
         } else if (DataManager.isWeapon(item)) {

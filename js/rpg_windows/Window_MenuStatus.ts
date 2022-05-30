@@ -19,40 +19,40 @@ export class Window_MenuStatus extends Window_Selectable {
         this.refresh();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return Graphics.boxWidth - 240;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return Graphics.boxHeight;
     }
 
-    maxItems() {
+    maxItems(): number {
         return window.$gameParty.size();
     }
 
-    itemHeight() {
+    itemHeight(): number {
         const clientHeight = this.height - this.padding * 2;
         return Math.floor(clientHeight / this.numVisibleRows());
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    loadImages() {
+    loadImages(): void {
         window.$gameParty.members().forEach((actor) => {
             ImageManager.reserveFace(actor.faceName());
-        }, this);
+        });
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         this.drawItemBackground(index);
         this.drawItemImage(index);
         this.drawItemStatus(index);
     }
 
-    drawItemBackground(index) {
+    drawItemBackground(index: number): void {
         if (index === this._pendingIndex) {
             const rect = this.itemRect(index);
             const color = this.pendingColor();
@@ -62,7 +62,7 @@ export class Window_MenuStatus extends Window_Selectable {
         }
     }
 
-    drawItemImage(index) {
+    drawItemImage(index: number): void {
         const actor = window.$gameParty.members()[index];
         const rect = this.itemRect(index);
         this.changePaintOpacity(actor.isBattleMember());
@@ -70,7 +70,7 @@ export class Window_MenuStatus extends Window_Selectable {
         this.changePaintOpacity(true);
     }
 
-    drawItemStatus(index) {
+    drawItemStatus(index: number): void {
         const actor = window.$gameParty.members()[index];
         const rect = this.itemRect(index);
         const x = rect.x + 162;
@@ -79,12 +79,12 @@ export class Window_MenuStatus extends Window_Selectable {
         this.drawActorSimpleStatus(actor, x, y, width);
     }
 
-    processOk() {
+    processOk(): void {
         super.processOk();
         window.$gameParty.setMenuActor(window.$gameParty.members()[this.index()]);
     }
 
-    isCurrentItemEnabled() {
+    isCurrentItemEnabled(): boolean {
         if (this._formationMode) {
             const actor = window.$gameParty.members()[this.index()];
             return actor && actor.isFormationChangeOk();
@@ -93,23 +93,23 @@ export class Window_MenuStatus extends Window_Selectable {
         }
     }
 
-    selectLast() {
+    selectLast(): void {
         this.select(window.$gameParty.menuActor().index() || 0);
     }
 
-    formationMode() {
+    formationMode(): boolean {
         return this._formationMode;
     }
 
-    setFormationMode(formationMode) {
+    setFormationMode(formationMode: boolean): void {
         this._formationMode = formationMode;
     }
 
-    pendingIndex() {
+    pendingIndex(): number {
         return this._pendingIndex;
     }
 
-    setPendingIndex(index) {
+    setPendingIndex(index: number): void {
         const lastPendingIndex = this._pendingIndex;
         this._pendingIndex = index;
         this.redrawItem(this._pendingIndex);

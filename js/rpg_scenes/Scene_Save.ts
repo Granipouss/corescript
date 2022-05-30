@@ -8,7 +8,7 @@ import { Scene_File } from './Scene_File';
  * The scene class of the save screen.
  */
 export class Scene_Save extends Scene_File {
-    mode(): string {
+    mode(): 'save' {
         return 'save';
     }
 

@@ -29,7 +29,7 @@ export class Window_NumberInput extends Window_Selectable {
         this.deactivate();
     }
 
-    start() {
+    start(): void {
         this._maxDigits = window.$gameMessage.numInputMaxDigits();
         this._number = window.$gameVariables.value(window.$gameMessage.numInputVariableId());
         this._number = clamp(this._number, [0, Math.pow(10, this._maxDigits) - 1]);
@@ -43,7 +43,7 @@ export class Window_NumberInput extends Window_Selectable {
         this.select(0);
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         const messageY = this._messageWindow.y;
         const spacing = 8;
         this.width = this.windowWidth();
@@ -56,31 +56,31 @@ export class Window_NumberInput extends Window_Selectable {
         }
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return this.maxCols() * this.itemWidth() + this.padding * 2;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(1);
     }
 
-    maxCols() {
+    maxCols(): number {
         return this._maxDigits;
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._maxDigits;
     }
 
-    spacing() {
+    spacing(): number {
         return 0;
     }
 
-    itemWidth() {
+    itemWidth(): number {
         return 32;
     }
 
-    createButtons() {
+    createButtons(): void {
         const bitmap = ImageManager.loadSystem('ButtonSet');
         const buttonWidth = 48;
         const buttonHeight = 48;
@@ -101,7 +101,7 @@ export class Window_NumberInput extends Window_Selectable {
         this._buttons[2].setClickHandler(this.onButtonOk.bind(this));
     }
 
-    placeButtons() {
+    placeButtons(): void {
         const numButtons = this._buttons.length;
         const spacing = 16;
         let totalWidth = -spacing;
@@ -117,7 +117,7 @@ export class Window_NumberInput extends Window_Selectable {
         }
     }
 
-    updateButtonsVisiblity() {
+    updateButtonsVisiblity(): void {
         if (TouchInput.date > Input.date) {
             this.showButtons();
         } else {
@@ -125,19 +125,19 @@ export class Window_NumberInput extends Window_Selectable {
         }
     }
 
-    showButtons() {
+    showButtons(): void {
         for (let i = 0; i < this._buttons.length; i++) {
             this._buttons[i].visible = true;
         }
     }
 
-    hideButtons() {
+    hideButtons(): void {
         for (let i = 0; i < this._buttons.length; i++) {
             this._buttons[i].visible = false;
         }
     }
 
-    buttonY() {
+    buttonY(): number {
         const spacing = 8;
         if (this._messageWindow.y >= Graphics.boxHeight / 2) {
             return 0 - this._buttons[0].height - spacing;
@@ -146,12 +146,12 @@ export class Window_NumberInput extends Window_Selectable {
         }
     }
 
-    update() {
+    update(): void {
         super.update();
         this.processDigitChange();
     }
 
-    processDigitChange() {
+    processDigitChange(): void {
         if (this.isOpenAndActive()) {
             if (Input.isRepeated('up')) {
                 this.changeDigit(true);
@@ -161,7 +161,7 @@ export class Window_NumberInput extends Window_Selectable {
         }
     }
 
-    changeDigit(up) {
+    changeDigit(up = false): void {
         const index = this.index();
         const place = Math.pow(10, this._maxDigits - 1 - index);
         let n = Math.floor(this._number / place) % 10;
@@ -176,23 +176,23 @@ export class Window_NumberInput extends Window_Selectable {
         SoundManager.playCursor();
     }
 
-    isTouchOkEnabled() {
+    isTouchOkEnabled(): boolean {
         return false;
     }
 
-    isOkEnabled() {
+    isOkEnabled(): boolean {
         return true;
     }
 
-    isCancelEnabled() {
+    isCancelEnabled(): boolean {
         return false;
     }
 
-    isOkTriggered() {
+    isOkTriggered(): boolean {
         return Input.isTriggered('ok');
     }
 
-    processOk() {
+    processOk(): void {
         SoundManager.playOk();
         window.$gameVariables.setValue(window.$gameMessage.numInputVariableId(), this._number);
         this._messageWindow.terminateMessage();
@@ -201,7 +201,7 @@ export class Window_NumberInput extends Window_Selectable {
         this.close();
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const rect = this.itemRect(index);
         const align = 'center';
         const s = this._number.toString().padStart(this._maxDigits, '0');
@@ -210,15 +210,15 @@ export class Window_NumberInput extends Window_Selectable {
         this.drawText(c, rect.x, rect.y, rect.width, align);
     }
 
-    onButtonUp() {
+    onButtonUp(): void {
         this.changeDigit(true);
     }
 
-    onButtonDown() {
+    onButtonDown(): void {
         this.changeDigit(false);
     }
 
-    onButtonOk() {
+    onButtonOk(): void {
         this.processOk();
         this.hideButtons();
     }

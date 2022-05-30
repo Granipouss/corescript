@@ -1,3 +1,6 @@
+import { RPGArmor } from '../rpg_data/armor';
+import { RPGItem } from '../rpg_data/item';
+import { RPGWeapon } from '../rpg_data/weapon';
 import { Window_Selectable } from './Window_Selectable';
 import { Window_ShopStatus } from './Window_ShopStatus';
 
@@ -5,10 +8,10 @@ import { Window_ShopStatus } from './Window_ShopStatus';
  * The window for selecting an item to buy on the shop screen.
  */
 export class Window_ShopBuy extends Window_Selectable {
-    protected _shopGoods: any[];
+    protected _shopGoods: [number, number, number, number][];
     protected _money: number;
-    protected _data: any[];
-    protected _price: any[];
+    protected _data: (RPGItem | RPGArmor | RPGWeapon)[];
+    protected _price: number[];
     protected _statusWindow: Window_ShopStatus;
 
     initialize(x, y, height, shopGoods) {
@@ -20,42 +23,42 @@ export class Window_ShopBuy extends Window_Selectable {
         this.select(0);
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 456;
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._data ? this._data.length : 1;
     }
 
-    item() {
+    item(): RPGItem | RPGArmor | RPGWeapon {
         return this._data[this.index()];
     }
 
-    setMoney(money) {
+    setMoney(money: number): void {
         this._money = money;
         this.refresh();
     }
 
-    isCurrentItemEnabled() {
+    isCurrentItemEnabled(): boolean {
         return this.isEnabled(this._data[this.index()]);
     }
 
-    price(item) {
+    price(item: RPGItem | RPGArmor | RPGWeapon): number {
         return this._price[this._data.indexOf(item)] || 0;
     }
 
-    isEnabled(item) {
+    isEnabled(item: RPGItem | RPGArmor | RPGWeapon): boolean {
         return item && this.price(item) <= this._money && !window.$gameParty.hasMaxItems(item);
     }
 
-    refresh() {
+    refresh(): void {
         this.makeItemList();
         this.createContents();
         this.drawAllItems();
     }
 
-    makeItemList() {
+    makeItemList(): void {
         this._data = [];
         this._price = [];
         this._shopGoods.forEach(function (goods) {
@@ -78,23 +81,23 @@ export class Window_ShopBuy extends Window_Selectable {
         }, this);
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const item = this._data[index];
         const rect = this.itemRect(index);
         const priceWidth = 96;
         rect.width -= this.textPadding();
         this.changePaintOpacity(this.isEnabled(item));
         this.drawItemName(item, rect.x, rect.y, rect.width - priceWidth);
-        this.drawText(this.price(item), rect.x + rect.width - priceWidth, rect.y, priceWidth, 'right');
+        this.drawText(this.price(item).toFixed(), rect.x + rect.width - priceWidth, rect.y, priceWidth, 'right');
         this.changePaintOpacity(true);
     }
 
-    setStatusWindow(statusWindow) {
+    setStatusWindow(statusWindow: Window_ShopStatus): void {
         this._statusWindow = statusWindow;
         this.callUpdateHelp();
     }
 
-    updateHelp() {
+    updateHelp(): void {
         this.setHelpWindowItem(this.item());
         if (this._statusWindow) {
             this._statusWindow.setItem(this.item());

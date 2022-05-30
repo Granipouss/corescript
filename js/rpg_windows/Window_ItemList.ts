@@ -1,3 +1,6 @@
+import { RPGArmor } from '../rpg_data/armor';
+import { RPGItem } from '../rpg_data/item';
+import { RPGWeapon } from '../rpg_data/weapon';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Window_Selectable } from './Window_Selectable';
 
@@ -7,7 +10,7 @@ import { Window_Selectable } from './Window_Selectable';
  */
 export class Window_ItemList extends Window_Selectable {
     protected _category: string;
-    protected _data: any[];
+    protected _data: (RPGItem | RPGWeapon | RPGArmor)[];
 
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
@@ -15,7 +18,7 @@ export class Window_ItemList extends Window_Selectable {
         this._data = [];
     }
 
-    setCategory(category) {
+    setCategory(category: string): void {
         if (this._category !== category) {
             this._category = category;
             this.refresh();
@@ -23,15 +26,15 @@ export class Window_ItemList extends Window_Selectable {
         }
     }
 
-    maxCols() {
+    maxCols(): number {
         return 2;
     }
 
-    spacing() {
+    spacing(): number {
         return 48;
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._data ? this._data.length : 1;
     }
 
@@ -40,11 +43,11 @@ export class Window_ItemList extends Window_Selectable {
         return this._data && index >= 0 ? this._data[index] : null;
     }
 
-    isCurrentItemEnabled() {
-        return this.isEnabled(this.item());
+    isCurrentItemEnabled(): boolean {
+        return this.isEnabled(this.item() as RPGItem);
     }
 
-    includes(item) {
+    includes(item: unknown): boolean {
         switch (this._category) {
             case 'item':
                 return DataManager.isItem(item) && item.itypeId === 1;
@@ -59,15 +62,15 @@ export class Window_ItemList extends Window_Selectable {
         }
     }
 
-    needsNumber() {
+    needsNumber(): boolean {
         return true;
     }
 
-    isEnabled(item) {
+    isEnabled(item: RPGItem): boolean {
         return window.$gameParty.canUse(item);
     }
 
-    makeItemList() {
+    makeItemList(): void {
         this._data = window.$gameParty.allItems().filter(function (item) {
             return this.includes(item);
         }, this);
@@ -76,40 +79,40 @@ export class Window_ItemList extends Window_Selectable {
         }
     }
 
-    selectLast() {
+    selectLast(): void {
         const index = this._data.indexOf(window.$gameParty.lastItem());
         this.select(index >= 0 ? index : 0);
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const item = this._data[index];
         if (item) {
             const numberWidth = this.numberWidth();
             const rect = this.itemRect(index);
             rect.width -= this.textPadding();
-            this.changePaintOpacity(this.isEnabled(item));
+            this.changePaintOpacity(this.isEnabled(item as RPGItem));
             this.drawItemName(item, rect.x, rect.y, rect.width - numberWidth);
             this.drawItemNumber(item, rect.x, rect.y, rect.width);
             this.changePaintOpacity(true);
         }
     }
 
-    numberWidth() {
+    numberWidth(): number {
         return this.textWidth('000');
     }
 
-    drawItemNumber(item, x, y, width) {
+    drawItemNumber(item: RPGItem | RPGWeapon | RPGArmor, x: number, y: number, width: number): void {
         if (this.needsNumber()) {
             this.drawText(':', x, y, width - this.textWidth('00'), 'right');
             this.drawText(window.$gameParty.numItems(item).toFixed(), x, y, width, 'right');
         }
     }
 
-    updateHelp() {
+    updateHelp(): void {
         this.setHelpWindowItem(this.item());
     }
 
-    refresh() {
+    refresh(): void {
         this.makeItemList();
         this.createContents();
         this.drawAllItems();

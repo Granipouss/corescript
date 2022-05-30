@@ -12,14 +12,14 @@ export class Window_SkillStatus extends Window_Base {
         this._actor = null;
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         if (this._actor) {
             const w = this.width - this.padding * 2;

@@ -29,26 +29,26 @@ export class Window_NameEdit extends Window_Base {
         ImageManager.reserveFace(actor.faceName());
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 480;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(4);
     }
 
-    getName() {
+    getName(): string {
         return this._name;
     }
 
-    restoreDefault() {
+    restoreDefault(): boolean {
         this._name = this._defaultName;
         this._index = this._name.length;
         this.refresh();
         return this._name.length > 0;
     }
 
-    add(ch) {
+    add(ch: string): boolean {
         if (this._index < this._maxLength) {
             this._name += ch;
             this._index++;
@@ -59,7 +59,7 @@ export class Window_NameEdit extends Window_Base {
         }
     }
 
-    back() {
+    back(): boolean {
         if (this._index > 0) {
             this._index--;
             this._name = this._name.slice(0, this._index);
@@ -70,31 +70,26 @@ export class Window_NameEdit extends Window_Base {
         }
     }
 
-    faceWidth() {
+    faceWidth(): number {
         return 144;
     }
 
-    charWidth() {
+    charWidth(): number {
         const text = window.$gameSystem.isJapanese() ? '\uff21' : 'A';
         return this.textWidth(text);
     }
 
-    left() {
+    left(): number {
         const nameCenter = (this.contentsWidth() + this.faceWidth()) / 2;
         const nameWidth = (this._maxLength + 1) * this.charWidth();
         return Math.min(nameCenter - nameWidth / 2, this.contentsWidth() - nameWidth);
     }
 
-    itemRect(index) {
-        return {
-            x: this.left() + index * this.charWidth(),
-            y: 54,
-            width: this.charWidth(),
-            height: this.lineHeight(),
-        };
+    itemRect(index: number): PIXI.Rectangle {
+        return new PIXI.Rectangle(this.left() + index * this.charWidth(), 54, this.charWidth(), this.lineHeight());
     }
 
-    underlineRect(index) {
+    underlineRect(index: number): PIXI.Rectangle {
         const rect = this.itemRect(index);
         rect.x++;
         rect.y += rect.height - 4;
@@ -103,11 +98,11 @@ export class Window_NameEdit extends Window_Base {
         return rect;
     }
 
-    underlineColor() {
+    underlineColor(): string {
         return this.normalColor();
     }
 
-    drawUnderline(index) {
+    drawUnderline(index: number): void {
         const rect = this.underlineRect(index);
         const color = this.underlineColor();
         this.contents.paintOpacity = 48;
@@ -115,13 +110,13 @@ export class Window_NameEdit extends Window_Base {
         this.contents.paintOpacity = 255;
     }
 
-    drawChar(index) {
+    drawChar(index: number): void {
         const rect = this.itemRect(index);
         this.resetTextColor();
         this.drawText(this._name[index] || '', rect.x, rect.y);
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         this.drawActorFace(this._actor, 0, 0);
         for (let i = 0; i < this._maxLength; i++) {

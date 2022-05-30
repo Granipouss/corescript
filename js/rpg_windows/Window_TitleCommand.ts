@@ -14,37 +14,37 @@ export class Window_TitleCommand extends Window_Command {
         this.selectLast();
     }
 
-    static _lastCommandSymbol = null;
+    static _lastCommandSymbol: string = null;
 
     static initCommandPosition() {
         this._lastCommandSymbol = null;
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 240;
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         this.x = (Graphics.boxWidth - this.width) / 2;
         this.y = Graphics.boxHeight - this.height - 96;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addCommand(TextManager.newGame, 'newGame');
         this.addCommand(TextManager.continue_, 'continue', this.isContinueEnabled());
         this.addCommand(TextManager.options, 'options');
     }
 
-    isContinueEnabled() {
+    isContinueEnabled(): boolean {
         return DataManager.isAnySavefileExists();
     }
 
-    processOk() {
+    processOk(): void {
         Window_TitleCommand._lastCommandSymbol = this.currentSymbol();
         super.processOk();
     }
 
-    selectLast() {
+    selectLast(): void {
         if (Window_TitleCommand._lastCommandSymbol) {
             this.selectSymbol(Window_TitleCommand._lastCommandSymbol);
         } else if (this.isContinueEnabled()) {

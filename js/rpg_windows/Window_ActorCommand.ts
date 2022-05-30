@@ -18,15 +18,15 @@ export class Window_ActorCommand extends Window_Command {
         this._actor = null;
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 192;
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         if (this._actor) {
             this.addAttackCommand();
             this.addSkillCommands();
@@ -35,11 +35,11 @@ export class Window_ActorCommand extends Window_Command {
         }
     }
 
-    addAttackCommand() {
+    addAttackCommand(): void {
         this.addCommand(TextManager.attack, 'attack', this._actor.canAttack());
     }
 
-    addSkillCommands() {
+    addSkillCommands(): void {
         const skillTypes = this._actor.addedSkillTypes();
         skillTypes.sort((a, b) => a - b);
         skillTypes.forEach(function (stypeId) {
@@ -48,15 +48,15 @@ export class Window_ActorCommand extends Window_Command {
         }, this);
     }
 
-    addGuardCommand() {
+    addGuardCommand(): void {
         this.addCommand(TextManager.guard, 'guard', this._actor.canGuard());
     }
 
-    addItemCommand() {
+    addItemCommand(): void {
         this.addCommand(TextManager.item, 'item');
     }
 
-    setup(actor) {
+    setup(actor: Game_Actor): void {
         this._actor = actor;
         this.clearCommandList();
         this.makeCommandList();
@@ -66,7 +66,7 @@ export class Window_ActorCommand extends Window_Command {
         this.open();
     }
 
-    processOk() {
+    processOk(): void {
         if (this._actor) {
             if (ConfigManager.commandRemember) {
                 this._actor.setLastCommandSymbol(this.currentSymbol());
@@ -77,7 +77,7 @@ export class Window_ActorCommand extends Window_Command {
         super.processOk();
     }
 
-    selectLast() {
+    selectLast(): void {
         this.select(0);
         if (this._actor && ConfigManager.commandRemember) {
             const symbol = this._actor.lastCommandSymbol();

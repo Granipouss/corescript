@@ -19,14 +19,14 @@ export class Window_Status extends Window_Selectable {
         this.activate();
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         if (this._actor) {
             const lineHeight = this.lineHeight();
@@ -40,39 +40,39 @@ export class Window_Status extends Window_Selectable {
         }
     }
 
-    drawBlock1(y) {
+    drawBlock1(y: number): void {
         this.drawActorName(this._actor, 6, y);
         this.drawActorClass(this._actor, 192, y);
         this.drawActorNickname(this._actor, 432, y);
     }
 
-    drawBlock2(y) {
+    drawBlock2(y: number): void {
         this.drawActorFace(this._actor, 12, y);
         this.drawBasicInfo(204, y);
         this.drawExpInfo(456, y);
     }
 
-    drawBlock3(y) {
+    drawBlock3(y: number): void {
         this.drawParameters(48, y);
         this.drawEquipments(432, y);
     }
 
-    drawBlock4(y) {
+    drawBlock4(y: number): void {
         this.drawProfile(6, y);
     }
 
-    drawHorzLine(y) {
+    drawHorzLine(y: number): void {
         const lineY = y + this.lineHeight() / 2 - 1;
         this.contents.paintOpacity = 48;
         this.contents.fillRect(0, lineY, this.contentsWidth(), 2, this.lineColor());
         this.contents.paintOpacity = 255;
     }
 
-    lineColor() {
+    lineColor(): string {
         return this.normalColor();
     }
 
-    drawBasicInfo(x, y) {
+    drawBasicInfo(x: number, y: number): void {
         const lineHeight = this.lineHeight();
         this.drawActorLevel(this._actor, x, y + lineHeight * 0);
         this.drawActorIcons(this._actor, x, y + lineHeight * 1);
@@ -80,7 +80,7 @@ export class Window_Status extends Window_Selectable {
         this.drawActorMp(this._actor, x, y + lineHeight * 3);
     }
 
-    drawParameters(x, y) {
+    drawParameters(x: number, y: number): void {
         const lineHeight = this.lineHeight();
         for (let i = 0; i < 6; i++) {
             const paramId = i + 2;
@@ -92,7 +92,7 @@ export class Window_Status extends Window_Selectable {
         }
     }
 
-    drawExpInfo(x, y) {
+    drawExpInfo(x: number, y: number): void {
         const lineHeight = this.lineHeight();
         const expTotal = format(TextManager.expTotal, TextManager.exp);
         const expNext = format(TextManager.expNext, TextManager.level);
@@ -110,7 +110,7 @@ export class Window_Status extends Window_Selectable {
         this.drawText(value2, x, y + lineHeight * 3, 270, 'right');
     }
 
-    drawEquipments(x, y) {
+    drawEquipments(x: number, y: number): void {
         const equips = this._actor.equips();
         const count = Math.min(equips.length, this.maxEquipmentLines());
         for (let i = 0; i < count; i++) {
@@ -118,11 +118,11 @@ export class Window_Status extends Window_Selectable {
         }
     }
 
-    drawProfile(x, y) {
+    drawProfile(x: number, y: number) {
         this.drawTextEx(this._actor.profile(), x, y);
     }
 
-    maxEquipmentLines() {
+    maxEquipmentLines(): number {
         return 6;
     }
 }

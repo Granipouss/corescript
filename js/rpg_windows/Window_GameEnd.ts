@@ -13,16 +13,16 @@ export class Window_GameEnd extends Window_Command {
         this.open();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 240;
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         this.x = (Graphics.boxWidth - this.width) / 2;
         this.y = (Graphics.boxHeight - this.height) / 2;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addCommand(TextManager.toTitle, 'toTitle');
         this.addCommand(TextManager.cancel, 'cancel');
     }

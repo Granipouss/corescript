@@ -47,7 +47,7 @@ export class Scene_File extends Scene_MenuBase {
         this.addWindow(this._listWindow);
     }
 
-    mode(): void {
+    mode(): 'save' | 'load' {
         return null;
     }
 

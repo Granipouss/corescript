@@ -1,3 +1,5 @@
+import { RPGItem } from '../rpg_data/item';
+import { RPGSkill } from '../rpg_data/skill';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Game_Action } from '../rpg_objects/Game_Action';
 import { Window_MenuStatus } from './Window_MenuStatus';
@@ -11,18 +13,18 @@ export class Window_MenuActor extends Window_MenuStatus {
         this.hide();
     }
 
-    processOk() {
+    processOk(): void {
         if (!this.cursorAll()) {
             window.$gameParty.setTargetActor(window.$gameParty.members()[this.index()]);
         }
         this.callOkHandler();
     }
 
-    selectLast() {
+    selectLast(): void {
         this.select(window.$gameParty.targetActor().index() || 0);
     }
 
-    selectForItem(item) {
+    selectForItem(item: RPGSkill | RPGItem): void {
         const actor = window.$gameParty.menuActor();
         const action = new Game_Action(actor);
         action.setItemObject(item);

@@ -1,3 +1,4 @@
+import { RPGItem } from '../rpg_data/item';
 import { Window_ItemList } from './Window_ItemList';
 
 /**
@@ -9,17 +10,17 @@ export class Window_BattleItem extends Window_ItemList {
         this.hide();
     }
 
-    includes(item) {
+    includes(item: RPGItem): boolean {
         return window.$gameParty.canUse(item);
     }
 
-    show() {
+    show(): void {
         this.selectLast();
         this.showHelpWindow();
         super.show();
     }
 
-    hide() {
+    hide(): void {
         this.hideHelpWindow();
         super.hide();
     }

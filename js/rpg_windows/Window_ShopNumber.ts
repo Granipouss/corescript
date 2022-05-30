@@ -1,6 +1,9 @@
 import { clamp } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
+import { RPGArmor } from '../rpg_data/armor';
+import { RPGItem } from '../rpg_data/item';
+import { RPGWeapon } from '../rpg_data/weapon';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { TextManager } from '../rpg_managers/TextManager';
@@ -12,7 +15,7 @@ import { Window_Selectable } from './Window_Selectable';
  * screen.
  */
 export class Window_ShopNumber extends Window_Selectable {
-    protected _item: any;
+    protected _item: RPGItem | RPGArmor | RPGWeapon;
     protected _max: number;
     protected _price: number;
     protected _number: number;
@@ -31,15 +34,15 @@ export class Window_ShopNumber extends Window_Selectable {
         this.createButtons();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 456;
     }
 
-    number() {
+    number(): number {
         return this._number;
     }
 
-    setup(item, max, price) {
+    setup(item: RPGItem | RPGArmor | RPGWeapon, max: number, price: number): void {
         this._item = item;
         this._max = Math.floor(max);
         this._price = price;
@@ -49,12 +52,12 @@ export class Window_ShopNumber extends Window_Selectable {
         this.refresh();
     }
 
-    setCurrencyUnit(currencyUnit) {
+    setCurrencyUnit(currencyUnit: string): void {
         this._currencyUnit = currencyUnit;
         this.refresh();
     }
 
-    createButtons() {
+    createButtons(): void {
         const bitmap = ImageManager.loadSystem('ButtonSet');
         const buttonWidth = 48;
         const buttonHeight = 48;
@@ -77,7 +80,7 @@ export class Window_ShopNumber extends Window_Selectable {
         this._buttons[4].setClickHandler(this.onButtonOk.bind(this));
     }
 
-    placeButtons() {
+    placeButtons(): void {
         const numButtons = this._buttons.length;
         const spacing = 16;
         let totalWidth = -spacing;
@@ -93,7 +96,7 @@ export class Window_ShopNumber extends Window_Selectable {
         }
     }
 
-    updateButtonsVisiblity() {
+    updateButtonsVisiblity(): void {
         if (TouchInput.date > Input.date) {
             this.showButtons();
         } else {
@@ -101,19 +104,19 @@ export class Window_ShopNumber extends Window_Selectable {
         }
     }
 
-    showButtons() {
+    showButtons(): void {
         for (let i = 0; i < this._buttons.length; i++) {
             this._buttons[i].visible = true;
         }
     }
 
-    hideButtons() {
+    hideButtons(): void {
         for (let i = 0; i < this._buttons.length; i++) {
             this._buttons[i].visible = false;
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         this.drawItemName(this._item, 0, this.itemY());
         this.drawMultiplicationSign();
@@ -121,7 +124,7 @@ export class Window_ShopNumber extends Window_Selectable {
         this.drawTotalPrice();
     }
 
-    drawMultiplicationSign() {
+    drawMultiplicationSign(): void {
         const sign = '\u00d7';
         const width = this.textWidth(sign);
         const x = this.cursorX() - width * 2;
@@ -130,7 +133,7 @@ export class Window_ShopNumber extends Window_Selectable {
         this.drawText(sign, x, y, width);
     }
 
-    drawNumber() {
+    drawNumber(): void {
         const x = this.cursorX();
         const y = this.itemY();
         const width = this.cursorWidth() - this.textPadding();
@@ -138,51 +141,51 @@ export class Window_ShopNumber extends Window_Selectable {
         this.drawText(this._number.toFixed(), x, y, width, 'right');
     }
 
-    drawTotalPrice() {
+    drawTotalPrice(): void {
         const total = this._price * this._number;
         const width = this.contentsWidth() - this.textPadding();
         this.drawCurrencyValue(total, this._currencyUnit, 0, this.priceY(), width);
     }
 
-    itemY() {
+    itemY(): number {
         return Math.round(this.contentsHeight() / 2 - this.lineHeight() * 1.5);
     }
 
-    priceY() {
+    priceY(): number {
         return Math.round(this.contentsHeight() / 2 + this.lineHeight() / 2);
     }
 
-    buttonY() {
+    buttonY(): number {
         return Math.round(this.priceY() + this.lineHeight() * 2.5);
     }
 
-    cursorWidth() {
+    cursorWidth(): number {
         const digitWidth = this.textWidth('0');
         return this.maxDigits() * digitWidth + this.textPadding() * 2;
     }
 
-    cursorX() {
+    cursorX(): number {
         return this.contentsWidth() - this.cursorWidth() - this.textPadding();
     }
 
-    maxDigits() {
+    maxDigits(): number {
         return 2;
     }
 
-    update() {
+    update(): void {
         super.update();
         this.processNumberChange();
     }
 
-    isOkTriggered() {
+    isOkTriggered(): boolean {
         return Input.isTriggered('ok');
     }
 
-    playOkSound() {
+    playOkSound(): void {
         // ...
     }
 
-    processNumberChange() {
+    processNumberChange(): void {
         if (this.isOpenAndActive()) {
             if (Input.isRepeated('right')) {
                 this.changeNumber(1);
@@ -199,7 +202,7 @@ export class Window_ShopNumber extends Window_Selectable {
         }
     }
 
-    changeNumber(amount) {
+    changeNumber(amount: number): void {
         const lastNumber = this._number;
         this._number = clamp(this._number + amount, [1, this._max]);
         if (this._number !== lastNumber) {
@@ -208,27 +211,27 @@ export class Window_ShopNumber extends Window_Selectable {
         }
     }
 
-    updateCursor() {
+    updateCursor(): void {
         this.setCursorRect(this.cursorX(), this.itemY(), this.cursorWidth(), this.lineHeight());
     }
 
-    onButtonUp() {
+    onButtonUp(): void {
         this.changeNumber(1);
     }
 
-    onButtonUp2() {
+    onButtonUp2(): void {
         this.changeNumber(10);
     }
 
-    onButtonDown() {
+    onButtonDown(): void {
         this.changeNumber(-1);
     }
 
-    onButtonDown2() {
+    onButtonDown2(): void {
         this.changeNumber(-10);
     }
 
-    onButtonOk() {
+    onButtonOk(): void {
         this.processOk();
     }
 }

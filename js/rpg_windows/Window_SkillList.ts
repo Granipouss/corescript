@@ -1,3 +1,4 @@
+import { RPGSkill } from '../rpg_data/skill';
 import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Selectable } from './Window_Selectable';
 
@@ -7,7 +8,7 @@ import { Window_Selectable } from './Window_Selectable';
 export class Window_SkillList extends Window_Selectable {
     protected _actor: Game_Actor;
     protected _stypeId: number;
-    protected _data: any[];
+    protected _data: RPGSkill[];
 
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
@@ -16,7 +17,7 @@ export class Window_SkillList extends Window_Selectable {
         this._data = [];
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
@@ -24,7 +25,7 @@ export class Window_SkillList extends Window_Selectable {
         }
     }
 
-    setStypeId(stypeId) {
+    setStypeId(stypeId: number): void {
         if (this._stypeId !== stypeId) {
             this._stypeId = stypeId;
             this.refresh();
@@ -32,46 +33,44 @@ export class Window_SkillList extends Window_Selectable {
         }
     }
 
-    maxCols() {
+    maxCols(): number {
         return 2;
     }
 
-    spacing() {
+    spacing(): number {
         return 48;
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._data ? this._data.length : 1;
     }
 
-    item() {
+    item(): RPGSkill {
         return this._data && this.index() >= 0 ? this._data[this.index()] : null;
     }
 
-    isCurrentItemEnabled() {
+    isCurrentItemEnabled(): boolean {
         return this.isEnabled(this._data[this.index()]);
     }
 
-    includes(item) {
+    includes(item: RPGSkill): boolean {
         return item && item.stypeId === this._stypeId;
     }
 
-    isEnabled(item) {
+    isEnabled(item: RPGSkill): boolean {
         return this._actor && this._actor.canUse(item);
     }
 
-    makeItemList() {
+    makeItemList(): void {
         if (this._actor) {
-            this._data = this._actor.skills().filter(function (item) {
-                return this.includes(item);
-            }, this);
+            this._data = this._actor.skills().filter((item) => this.includes(item));
         } else {
             this._data = [];
         }
     }
 
-    selectLast() {
-        let skill;
+    selectLast(): void {
+        let skill: RPGSkill;
         if (window.$gameParty.inBattle()) {
             skill = this._actor.lastBattleSkill();
         } else {
@@ -81,7 +80,7 @@ export class Window_SkillList extends Window_Selectable {
         this.select(index >= 0 ? index : 0);
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const skill = this._data[index];
         if (skill) {
             const costWidth = this.costWidth();
@@ -94,11 +93,11 @@ export class Window_SkillList extends Window_Selectable {
         }
     }
 
-    costWidth() {
+    costWidth(): number {
         return this.textWidth('000');
     }
 
-    drawSkillCost(skill, x, y, width) {
+    drawSkillCost(skill: RPGSkill, x: number, y: number, width: number): void {
         if (this._actor.skillTpCost(skill) > 0) {
             this.changeTextColor(this.tpCostColor());
             this.drawText(this._actor.skillTpCost(skill).toFixed(), x, y, width, 'right');
@@ -108,11 +107,11 @@ export class Window_SkillList extends Window_Selectable {
         }
     }
 
-    updateHelp() {
+    updateHelp(): void {
         this.setHelpWindowItem(this.item());
     }
 
-    refresh() {
+    refresh(): void {
         this.makeItemList();
         this.createContents();
         this.drawAllItems();

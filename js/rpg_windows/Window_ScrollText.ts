@@ -21,7 +21,7 @@ export class Window_ScrollText extends Window_Base {
         this._allTextHeight = 0;
     }
 
-    update() {
+    update(): void {
         super.update();
         if (window.$gameMessage.scrollMode()) {
             if (this._text) {
@@ -33,13 +33,13 @@ export class Window_ScrollText extends Window_Base {
         }
     }
 
-    startMessage() {
+    startMessage(): void {
         this._text = window.$gameMessage.allText();
         this.refresh();
         this.show();
     }
 
-    refresh() {
+    refresh(): void {
         const textState: TextState = { index: 0 };
         textState.text = this.convertEscapeCharacters(this._text);
         this.resetFontSettings();
@@ -49,18 +49,18 @@ export class Window_ScrollText extends Window_Base {
         this.drawTextEx(this._text, this.textPadding(), 1);
     }
 
-    contentsHeight() {
+    contentsHeight(): number {
         return Math.max(this._allTextHeight, 1);
     }
 
-    updateMessage() {
+    updateMessage(): void {
         this.origin.y += this.scrollSpeed();
         if (this.origin.y >= this.contents.height) {
             this.terminateMessage();
         }
     }
 
-    scrollSpeed() {
+    scrollSpeed(): number {
         let speed = window.$gameMessage.scrollSpeed() / 2;
         if (this.isFastForward()) {
             speed *= this.fastForwardRate();
@@ -68,7 +68,7 @@ export class Window_ScrollText extends Window_Base {
         return speed;
     }
 
-    isFastForward() {
+    isFastForward(): boolean {
         if (window.$gameMessage.scrollNoFast()) {
             return false;
         } else {
@@ -76,11 +76,11 @@ export class Window_ScrollText extends Window_Base {
         }
     }
 
-    fastForwardRate() {
+    fastForwardRate(): number {
         return 3;
     }
 
-    terminateMessage() {
+    terminateMessage(): void {
         this._text = null;
         window.$gameMessage.clear();
         this.hide();

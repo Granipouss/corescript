@@ -1,4 +1,5 @@
 import { Graphics } from '../rpg_core/Graphics';
+import { RPGItem } from '../rpg_data/item';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
@@ -291,7 +292,7 @@ export class Scene_Battle extends Scene_Base {
 
     commandSkill(): void {
         this._skillWindow.setActor(BattleManager.actor());
-        this._skillWindow.setStypeId(this._actorCommandWindow.currentExt());
+        this._skillWindow.setStypeId(this._actorCommandWindow.currentExt() as number);
         this._skillWindow.refresh();
         this._skillWindow.show();
         this._skillWindow.activate();
@@ -397,7 +398,7 @@ export class Scene_Battle extends Scene_Base {
         const item = this._itemWindow.item();
         const action = BattleManager.inputtingAction();
         action.setItem(item.id);
-        window.$gameParty.setLastItem(item);
+        window.$gameParty.setLastItem(item as RPGItem);
         this.onSelectAction();
     }
 

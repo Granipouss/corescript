@@ -20,21 +20,21 @@ export class Window_EquipSlot extends Window_Selectable {
         this.refresh();
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
         }
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._itemWindow) {
             this._itemWindow.setSlotId(this.index());
         }
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._actor ? this._actor.equipSlots().length : 0;
     }
 
@@ -42,7 +42,7 @@ export class Window_EquipSlot extends Window_Selectable {
         return this._actor ? this._actor.equips()[this.index()] : null;
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         if (this._actor) {
             const rect = this.itemRectForText(index);
             this.changeTextColor(this.systemColor());
@@ -53,29 +53,29 @@ export class Window_EquipSlot extends Window_Selectable {
         }
     }
 
-    slotName(index) {
+    slotName(index: number): string {
         const slots = this._actor.equipSlots();
         return this._actor ? window.$dataSystem.equipTypes[slots[index]] : '';
     }
 
-    isEnabled(index) {
+    isEnabled(index: number): boolean {
         return this._actor ? this._actor.isEquipChangeOk(index) : false;
     }
 
-    isCurrentItemEnabled() {
+    isCurrentItemEnabled(): boolean {
         return this.isEnabled(this.index());
     }
 
-    setStatusWindow(statusWindow) {
+    setStatusWindow(statusWindow: Window_EquipStatus): void {
         this._statusWindow = statusWindow;
         this.callUpdateHelp();
     }
 
-    setItemWindow(itemWindow) {
+    setItemWindow(itemWindow: Window_EquipItem): void {
         this._itemWindow = itemWindow;
     }
 
-    updateHelp() {
+    updateHelp(): void {
         super.updateHelp();
         this.setHelpWindowItem(this.item());
         if (this._statusWindow) {

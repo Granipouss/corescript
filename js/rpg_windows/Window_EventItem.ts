@@ -1,4 +1,5 @@
 import { Graphics } from '../rpg_core/Graphics';
+import { RPGItem } from '../rpg_data/item';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Window_ItemList } from './Window_ItemList';
 import { Window_Message } from './Window_Message';
@@ -20,15 +21,15 @@ export class Window_EventItem extends Window_ItemList {
         this.setHandler('cancel', this.onCancel.bind(this));
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(this.numVisibleRows());
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    start() {
+    start(): void {
         this.refresh();
         this.updatePlacement();
         this.select(0);
@@ -36,7 +37,7 @@ export class Window_EventItem extends Window_ItemList {
         this.activate();
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         if (this._messageWindow.y >= Graphics.boxHeight / 2) {
             this.y = 0;
         } else {
@@ -44,16 +45,16 @@ export class Window_EventItem extends Window_ItemList {
         }
     }
 
-    includes(item) {
+    includes(item: unknown): boolean {
         const itypeId = window.$gameMessage.itemChoiceItypeId();
         return DataManager.isItem(item) && item.itypeId === itypeId;
     }
 
-    isEnabled(_item) {
+    isEnabled(_item: RPGItem): boolean {
         return true;
     }
 
-    onOk() {
+    onOk(): void {
         const item = this.item();
         const itemId = item ? item.id : 0;
         window.$gameVariables.setValue(window.$gameMessage.itemChoiceVariableId(), itemId);
@@ -61,7 +62,7 @@ export class Window_EventItem extends Window_ItemList {
         this.close();
     }
 
-    onCancel() {
+    onCancel(): void {
         window.$gameVariables.setValue(window.$gameMessage.itemChoiceVariableId(), 0);
         this._messageWindow.terminateMessage();
         this.close();

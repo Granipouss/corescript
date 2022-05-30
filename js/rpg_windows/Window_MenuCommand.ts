@@ -11,21 +11,21 @@ export class Window_MenuCommand extends Window_Command {
         this.selectLast();
     }
 
-    static _lastCommandSymbol = null;
+    static _lastCommandSymbol: string = null;
 
     static initCommandPosition() {
         this._lastCommandSymbol = null;
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 240;
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return this.maxItems();
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addMainCommands();
         this.addFormationCommand();
         this.addOriginalCommands();
@@ -34,7 +34,7 @@ export class Window_MenuCommand extends Window_Command {
         this.addGameEndCommand();
     }
 
-    addMainCommands() {
+    addMainCommands(): void {
         const enabled = this.areMainCommandsEnabled();
         if (this.needsCommand('item')) {
             this.addCommand(TextManager.item, 'item', enabled);
@@ -50,37 +50,37 @@ export class Window_MenuCommand extends Window_Command {
         }
     }
 
-    addFormationCommand() {
+    addFormationCommand(): void {
         if (this.needsCommand('formation')) {
             const enabled = this.isFormationEnabled();
             this.addCommand(TextManager.formation, 'formation', enabled);
         }
     }
 
-    addOriginalCommands() {
+    addOriginalCommands(): void {
         // ...
     }
 
-    addOptionsCommand() {
+    addOptionsCommand(): void {
         if (this.needsCommand('options')) {
             const enabled = this.isOptionsEnabled();
             this.addCommand(TextManager.options, 'options', enabled);
         }
     }
 
-    addSaveCommand() {
+    addSaveCommand(): void {
         if (this.needsCommand('save')) {
             const enabled = this.isSaveEnabled();
             this.addCommand(TextManager.save, 'save', enabled);
         }
     }
 
-    addGameEndCommand() {
+    addGameEndCommand(): void {
         const enabled = this.isGameEndEnabled();
         this.addCommand(TextManager.gameEnd, 'gameEnd', enabled);
     }
 
-    needsCommand(name) {
+    needsCommand(name: string): unknown {
         const flags = window.$dataSystem.menuCommands;
         if (flags) {
             switch (name) {
@@ -101,32 +101,32 @@ export class Window_MenuCommand extends Window_Command {
         return true;
     }
 
-    areMainCommandsEnabled() {
+    areMainCommandsEnabled(): boolean {
         return window.$gameParty.exists();
     }
 
-    isFormationEnabled() {
+    isFormationEnabled(): boolean {
         return window.$gameParty.size() >= 2 && window.$gameSystem.isFormationEnabled();
     }
 
-    isOptionsEnabled() {
+    isOptionsEnabled(): boolean {
         return true;
     }
 
-    isSaveEnabled() {
+    isSaveEnabled(): boolean {
         return !DataManager.isEventTest() && window.$gameSystem.isSaveEnabled();
     }
 
-    isGameEndEnabled() {
+    isGameEndEnabled(): boolean {
         return true;
     }
 
-    processOk() {
+    processOk(): void {
         Window_MenuCommand._lastCommandSymbol = this.currentSymbol();
         super.processOk();
     }
 
-    selectLast() {
+    selectLast(): void {
         this.selectSymbol(Window_MenuCommand._lastCommandSymbol);
     }
 }

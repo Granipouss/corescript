@@ -3,6 +3,7 @@ import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Utils } from '../rpg_core/Utils';
+import { Window } from '../rpg_core/Window';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { TextState, Window_Base } from './Window_Base';
 import { Window_ChoiceList } from './Window_ChoiceList';
@@ -43,7 +44,7 @@ export class Window_Message extends Window_Base {
         this.updatePlacement();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._imageReservationId = Utils.generateRuntimeId();
         this._background = 0;
         this._positionType = 2;
@@ -53,11 +54,11 @@ export class Window_Message extends Window_Base {
         this.clearFlags();
     }
 
-    subWindows() {
+    subWindows(): Window[] {
         return [this._goldWindow, this._choiceWindow, this._numberWindow, this._itemWindow];
     }
 
-    createSubWindows() {
+    createSubWindows(): void {
         this._goldWindow = new Window_Gold(0, 0);
         this._goldWindow.x = Graphics.boxWidth - this._goldWindow.width;
         this._goldWindow.openness = 0;
@@ -66,15 +67,15 @@ export class Window_Message extends Window_Base {
         this._itemWindow = new Window_EventItem(this);
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return Graphics.boxWidth;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(this.numVisibleRows());
     }
 
-    clearFlags() {
+    clearFlags(): void {
         this._showFast = false;
         this._lineShowFast = false;
         this._pauseSkip = false;
@@ -82,11 +83,11 @@ export class Window_Message extends Window_Base {
         this._textSpeedCount = 0;
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    update() {
+    update(): void {
         this.checkToNotClose();
         super.update();
         while (!this.isOpening() && !this.isClosing()) {
@@ -107,7 +108,7 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    checkToNotClose() {
+    checkToNotClose(): void {
         if (this.isClosing() && this.isOpen()) {
             if (this.doesContinue()) {
                 this.open();
@@ -115,11 +116,11 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    canStart() {
+    canStart(): boolean {
         return window.$gameMessage.hasText() && !window.$gameMessage.scrollMode();
     }
 
-    startMessage() {
+    startMessage(): void {
         this._textState = { index: 0 };
         this._textState.text = this.convertEscapeCharacters(window.$gameMessage.allText());
         this.newPage(this._textState);
@@ -128,24 +129,24 @@ export class Window_Message extends Window_Base {
         this.open();
     }
 
-    updatePlacement() {
+    updatePlacement(): void {
         this._positionType = window.$gameMessage.positionType();
         this.y = (this._positionType * (Graphics.boxHeight - this.height)) / 2;
         this._goldWindow.y = this.y > 0 ? 0 : Graphics.boxHeight - this._goldWindow.height;
     }
 
-    updateBackground() {
+    updateBackground(): void {
         this._background = window.$gameMessage.background();
         this.setBackgroundType(this._background);
     }
 
-    terminateMessage() {
+    terminateMessage(): void {
         this.close();
         this._goldWindow.close();
         window.$gameMessage.clear();
     }
 
-    updateWait() {
+    updateWait(): boolean {
         if (this._waitCount > 0) {
             this._waitCount--;
             return true;
@@ -154,7 +155,7 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    updateLoading() {
+    updateLoading(): boolean {
         if (this._faceBitmap) {
             if (this._faceBitmap.isReady()) {
                 this.drawMessageFace();
@@ -168,7 +169,7 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    updateInput() {
+    updateInput(): boolean {
         if (this.isAnySubWindowActive()) {
             return true;
         }
@@ -185,11 +186,11 @@ export class Window_Message extends Window_Base {
         return false;
     }
 
-    isAnySubWindowActive() {
+    isAnySubWindowActive(): boolean {
         return this._choiceWindow.active || this._numberWindow.active || this._itemWindow.active;
     }
 
-    updateMessage() {
+    updateMessage(): boolean {
         if (this._textState) {
             while (!this.isEndOfText(this._textState)) {
                 if (this.needsNewPage(this._textState)) {
@@ -218,7 +219,7 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    onEndOfText() {
+    onEndOfText(): void {
         if (!this.startInput()) {
             if (!this._pauseSkip) {
                 this.startPause();
@@ -229,7 +230,7 @@ export class Window_Message extends Window_Base {
         this._textState = null;
     }
 
-    startInput() {
+    startInput(): boolean {
         if (window.$gameMessage.isChoice()) {
             this._choiceWindow.start();
             return true;
@@ -244,28 +245,28 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    isTriggered() {
+    isTriggered(): boolean {
         return Input.isRepeated('ok') || Input.isRepeated('cancel') || TouchInput.isRepeated();
     }
 
-    doesContinue() {
+    doesContinue(): boolean {
         return window.$gameMessage.hasText() && !window.$gameMessage.scrollMode() && !this.areSettingsChanged();
     }
 
-    areSettingsChanged() {
+    areSettingsChanged(): boolean {
         return (
             this._background !== window.$gameMessage.background() ||
             this._positionType !== window.$gameMessage.positionType()
         );
     }
 
-    updateShowFast() {
+    updateShowFast(): void {
         if (this.isTriggered()) {
             this._showFast = true;
         }
     }
 
-    newPage(textState) {
+    newPage(textState: TextState): void {
         this.contents.clear();
         this.resetFontSettings();
         this.clearFlags();
@@ -276,20 +277,20 @@ export class Window_Message extends Window_Base {
         textState.height = this.calcTextHeight(textState, false);
     }
 
-    loadMessageFace() {
+    loadMessageFace(): void {
         this._faceBitmap = ImageManager.reserveFace(window.$gameMessage.faceName(), 0, this._imageReservationId);
     }
 
-    drawMessageFace() {
+    drawMessageFace(): void {
         this.drawFace(window.$gameMessage.faceName(), window.$gameMessage.faceIndex(), 0, 0);
         ImageManager.releaseReservation(this._imageReservationId);
     }
 
-    newLineX() {
+    newLineX(): number {
         return window.$gameMessage.faceName() === '' ? 0 : 168;
     }
 
-    processNewLine(textState) {
+    processNewLine(textState: TextState): void {
         this._lineShowFast = false;
         super.processNewLine(textState);
         if (this.needsNewPage(textState)) {
@@ -297,7 +298,7 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    processNewPage(textState) {
+    processNewPage(textState: TextState): void {
         super.processNewPage(textState);
         if (textState.text[textState.index] === '\n') {
             textState.index++;
@@ -306,15 +307,15 @@ export class Window_Message extends Window_Base {
         this.startPause();
     }
 
-    isEndOfText(textState) {
+    isEndOfText(textState: TextState): boolean {
         return textState.index >= textState.text.length;
     }
 
-    needsNewPage(textState) {
+    needsNewPage(textState: TextState): boolean {
         return !this.isEndOfText(textState) && textState.y + textState.height > this.contents.height;
     }
 
-    processEscapeCharacter(code, textState) {
+    processEscapeCharacter(code: string, textState: TextState): void {
         switch (code) {
             case '$':
                 this._goldWindow.open();
@@ -346,11 +347,11 @@ export class Window_Message extends Window_Base {
         }
     }
 
-    startWait(count) {
+    startWait(count: number): void {
         this._waitCount = count;
     }
 
-    startPause() {
+    startPause(): void {
         this.startWait(10);
         this.pause = true;
     }

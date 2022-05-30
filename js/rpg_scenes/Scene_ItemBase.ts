@@ -26,7 +26,7 @@ export abstract class Scene_ItemBase<T extends RPGSkill | RPGItem> extends Scene
     }
 
     item(): T {
-        return this._itemWindow.item();
+        return this._itemWindow.item() as T;
     }
 
     user(): Game_Battler {

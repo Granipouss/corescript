@@ -559,6 +559,7 @@ export abstract class Game_Battler extends Game_BattlerBase {
     }
 
     abstract index(): number;
+    abstract name(): string;
     abstract isBattleMember(): boolean;
     abstract isSpriteVisible(): boolean;
 

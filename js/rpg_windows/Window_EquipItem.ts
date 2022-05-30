@@ -1,4 +1,7 @@
 import { JsonEx } from '../rpg_core/JsonEx';
+import { RPGArmor } from '../rpg_data/armor';
+import { RPGItem } from '../rpg_data/item';
+import { RPGWeapon } from '../rpg_data/weapon';
 import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_EquipStatus } from './Window_EquipStatus';
 import { Window_ItemList } from './Window_ItemList';
@@ -18,7 +21,7 @@ export class Window_EquipItem extends Window_ItemList {
         this._slotId = 0;
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
@@ -26,7 +29,7 @@ export class Window_EquipItem extends Window_ItemList {
         }
     }
 
-    setSlotId(slotId) {
+    setSlotId(slotId: number): void {
         if (this._slotId !== slotId) {
             this._slotId = slotId;
             this.refresh();
@@ -34,7 +37,7 @@ export class Window_EquipItem extends Window_ItemList {
         }
     }
 
-    includes(item) {
+    includes(item: RPGArmor | RPGWeapon): boolean {
         if (item === null) {
             return true;
         }
@@ -44,29 +47,29 @@ export class Window_EquipItem extends Window_ItemList {
         return this._actor.canEquip(item);
     }
 
-    isEnabled(_item) {
+    isEnabled(_item: RPGItem): boolean {
         return true;
     }
 
-    selectLast() {
+    selectLast(): void {
         // ...
     }
 
-    setStatusWindow(statusWindow) {
+    setStatusWindow(statusWindow: Window_EquipStatus): void {
         this._statusWindow = statusWindow;
         this.callUpdateHelp();
     }
 
-    updateHelp() {
+    updateHelp(): void {
         super.updateHelp();
         if (this._actor && this._statusWindow) {
             const actor = JsonEx.makeDeepCopy(this._actor);
-            actor.forceChangeEquip(this._slotId, this.item());
+            actor.forceChangeEquip(this._slotId, this.item() as RPGWeapon | RPGArmor);
             this._statusWindow.setTempActor(actor);
         }
     }
 
-    playOkSound() {
+    playOkSound(): void {
         // ...
     }
 }

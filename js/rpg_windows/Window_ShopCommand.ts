@@ -14,15 +14,15 @@ export class Window_ShopCommand extends Window_HorzCommand {
         super.initialize(0, 0);
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return this._windowWidth;
     }
 
-    maxCols() {
+    maxCols(): number {
         return 3;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addCommand(TextManager.buy, 'buy');
         this.addCommand(TextManager.sell, 'sell', !this._purchaseOnly);
         this.addCommand(TextManager.cancel, 'cancel');

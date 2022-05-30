@@ -15,15 +15,15 @@ export class Window_EquipCommand extends Window_HorzCommand {
         super.initialize(x, y);
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return this._windowWidth;
     }
 
-    maxCols() {
+    maxCols(): number {
         return 3;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addCommand(TextManager.equip2, 'equip');
         this.addCommand(TextManager.optimize, 'optimize');
         this.addCommand(TextManager.clear, 'clear');

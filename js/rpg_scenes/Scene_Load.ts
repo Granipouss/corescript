@@ -24,7 +24,7 @@ export class Scene_Load extends Scene_File {
         }
     }
 
-    mode(): string {
+    mode(): 'load' {
         return 'load';
     }
 

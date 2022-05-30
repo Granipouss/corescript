@@ -13,29 +13,29 @@ export class Window_ItemCategory extends Window_HorzCommand {
         super.initialize(0, 0);
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return Graphics.boxWidth;
     }
 
-    maxCols() {
+    maxCols(): number {
         return 4;
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._itemWindow) {
             this._itemWindow.setCategory(this.currentSymbol());
         }
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         this.addCommand(TextManager.item, 'item');
         this.addCommand(TextManager.weapon, 'weapon');
         this.addCommand(TextManager.armor, 'armor');
         this.addCommand(TextManager.keyItem, 'keyItem');
     }
 
-    setItemWindow(itemWindow) {
+    setItemWindow(itemWindow: Window_ItemList): void {
         this._itemWindow = itemWindow;
     }
 }

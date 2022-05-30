@@ -1,4 +1,6 @@
 import { Graphics } from '../rpg_core/Graphics';
+import { RPGArmor } from '../rpg_data/armor';
+import { RPGWeapon } from '../rpg_data/weapon';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_EquipCommand } from '../rpg_windows/Window_EquipCommand';
 import { Window_EquipItem } from '../rpg_windows/Window_EquipItem';
@@ -112,7 +114,7 @@ export class Scene_Equip extends Scene_MenuBase {
 
     onItemOk(): void {
         SoundManager.playEquip();
-        this.actor().changeEquip(this._slotWindow.index(), this._itemWindow.item());
+        this.actor().changeEquip(this._slotWindow.index(), this._itemWindow.item() as RPGWeapon | RPGArmor);
         this._slotWindow.activate();
         this._slotWindow.refresh();
         this._itemWindow.deselect();

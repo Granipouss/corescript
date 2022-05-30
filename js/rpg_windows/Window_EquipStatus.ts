@@ -18,26 +18,26 @@ export class Window_EquipStatus extends Window_Base {
         this.refresh();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 312;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(this.numVisibleRows());
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 7;
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         if (this._actor) {
             this.drawActorName(this._actor, this.textPadding(), 0);
@@ -47,14 +47,14 @@ export class Window_EquipStatus extends Window_Base {
         }
     }
 
-    setTempActor(tempActor) {
+    setTempActor(tempActor: Game_Actor): void {
         if (this._tempActor !== tempActor) {
             this._tempActor = tempActor;
             this.refresh();
         }
     }
 
-    drawItem(x, y, paramId) {
+    drawItem(x: number, y: number, paramId: number): void {
         this.drawParamName(x + this.textPadding(), y, paramId);
         if (this._actor) {
             this.drawCurrentParam(x + 140, y, paramId);
@@ -65,22 +65,22 @@ export class Window_EquipStatus extends Window_Base {
         }
     }
 
-    drawParamName(x, y, paramId) {
+    drawParamName(x: number, y: number, paramId: number): void {
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.param(paramId), x, y, 120);
     }
 
-    drawCurrentParam(x, y, paramId) {
+    drawCurrentParam(x: number, y: number, paramId: number): void {
         this.resetTextColor();
         this.drawText(this._actor.param(paramId).toString(), x, y, 48, 'right');
     }
 
-    drawRightArrow(x, y) {
+    drawRightArrow(x: number, y: number): void {
         this.changeTextColor(this.systemColor());
         this.drawText('\u2192', x, y, 32, 'center');
     }
 
-    drawNewParam(x, y, paramId) {
+    drawNewParam(x: number, y: number, paramId: number): void {
         const newValue = this._tempActor.param(paramId);
         const diffvalue = newValue - this._actor.param(paramId);
         this.changeTextColor(this.paramchangeTextColor(diffvalue));

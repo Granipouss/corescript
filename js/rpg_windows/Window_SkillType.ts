@@ -14,11 +14,11 @@ export class Window_SkillType extends Window_Command {
         this._actor = null;
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 240;
     }
 
-    setActor(actor) {
+    setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {
             this._actor = actor;
             this.refresh();
@@ -26,33 +26,33 @@ export class Window_SkillType extends Window_Command {
         }
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 4;
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         if (this._actor) {
             const skillTypes = this._actor.addedSkillTypes();
             skillTypes.sort((a, b) => a - b);
-            skillTypes.forEach(function (stypeId) {
+            skillTypes.forEach((stypeId) => {
                 const name = window.$dataSystem.skillTypes[stypeId];
                 this.addCommand(name, 'skill', true, stypeId);
-            }, this);
+            });
         }
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._skillWindow) {
-            this._skillWindow.setStypeId(this.currentExt());
+            this._skillWindow.setStypeId(this.currentExt() as number);
         }
     }
 
-    setSkillWindow(skillWindow: Window_SkillList) {
+    setSkillWindow(skillWindow: Window_SkillList): void {
         this._skillWindow = skillWindow;
     }
 
-    selectLast() {
+    selectLast(): void {
         const skill = this._actor.lastMenuSkill();
         if (skill) {
             this.selectExt(skill.stypeId);

@@ -14,22 +14,22 @@ export class Window_Help extends Window_Base {
         this._text = '';
     }
 
-    setText(text) {
+    setText(text: string): void {
         if (this._text !== text) {
             this._text = text;
             this.refresh();
         }
     }
 
-    clear() {
+    clear(): void {
         this.setText('');
     }
 
-    setItem(item) {
+    setItem(item: { description: string }): void {
         this.setText(item ? item.description : '');
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         this.drawTextEx(this._text, this.textPadding(), 0);
     }

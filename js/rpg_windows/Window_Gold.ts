@@ -12,30 +12,30 @@ export class Window_Gold extends Window_Base {
         this.refresh();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 240;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(1);
     }
 
-    refresh() {
+    refresh(): void {
         const x = this.textPadding();
         const width = this.contents.width - this.textPadding() * 2;
         this.contents.clear();
         this.drawCurrencyValue(this.value(), this.currencyUnit(), x, 0, width);
     }
 
-    value() {
+    value(): number {
         return window.$gameParty.gold();
     }
 
-    currencyUnit() {
+    currencyUnit(): string {
         return TextManager.currencyUnit;
     }
 
-    open() {
+    open(): void {
         this.refresh();
         super.open();
     }

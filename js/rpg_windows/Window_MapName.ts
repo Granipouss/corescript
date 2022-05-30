@@ -16,15 +16,15 @@ export class Window_MapName extends Window_Base {
         this.refresh();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 360;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(1);
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._showCount > 0 && window.$gameMap.isNameDisplayEnabled()) {
             this.updateFadeIn();
@@ -34,24 +34,24 @@ export class Window_MapName extends Window_Base {
         }
     }
 
-    updateFadeIn() {
+    updateFadeIn(): void {
         this.contentsOpacity += 16;
     }
 
-    updateFadeOut() {
+    updateFadeOut(): void {
         this.contentsOpacity -= 16;
     }
 
-    open() {
+    open(): void {
         this.refresh();
         this._showCount = 150;
     }
 
-    close() {
+    close(): void {
         this._showCount = 0;
     }
 
-    refresh() {
+    refresh(): void {
         this.contents.clear();
         if (window.$gameMap.displayName()) {
             const width = this.contentsWidth();
@@ -60,7 +60,7 @@ export class Window_MapName extends Window_Base {
         }
     }
 
-    drawBackground(x, y, width, height) {
+    drawBackground(x: number, y: number, width: number, height: number): void {
         const color1 = this.dimColor1();
         const color2 = this.dimColor2();
         this.contents.gradientFillRect(x, y, width / 2, height, color2, color1);

@@ -26,19 +26,19 @@ export class Window_DebugRange extends Window_Selectable {
         this.activate();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 246;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return Graphics.boxHeight;
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._maxSwitches + this._maxVariables;
     }
 
-    update() {
+    update(): void {
         super.update();
         if (this._editWindow) {
             this._editWindow.setMode(this.mode());
@@ -46,11 +46,11 @@ export class Window_DebugRange extends Window_Selectable {
         }
     }
 
-    mode() {
+    mode(): 'switch' | 'variable' {
         return this.index() < this._maxSwitches ? 'switch' : 'variable';
     }
 
-    topId() {
+    topId(): number {
         const index = this.index();
         if (index < this._maxSwitches) {
             return index * 10 + 1;
@@ -59,15 +59,15 @@ export class Window_DebugRange extends Window_Selectable {
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.createContents();
         this.drawAllItems();
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const rect = this.itemRectForText(index);
-        let start;
-        let text;
+        let start: number;
+        let text: string;
         if (index < this._maxSwitches) {
             start = index * 10 + 1;
             text = 'S';
@@ -76,21 +76,21 @@ export class Window_DebugRange extends Window_Selectable {
             text = 'V';
         }
         const end = start + 9;
-        text += ' [' + start.padStart(4, '0') + '-' + end.padStart(4, '0') + ']';
+        text += ' [' + String(start).padStart(4, '0') + '-' + String(end).padStart(4, '0') + ']';
         this.drawText(text, rect.x, rect.y, rect.width);
     }
 
-    isCancelTriggered() {
+    isCancelTriggered(): boolean {
         return super.isCancelTriggered() || Input.isTriggered('debug');
     }
 
-    processCancel() {
+    processCancel(): void {
         super.processCancel();
         Window_DebugRange.lastTopRow = this.topRow();
         Window_DebugRange.lastIndex = this.index();
     }
 
-    setEditWindow(editWindow) {
+    setEditWindow(editWindow: Window_DebugEdit): void {
         this._editWindow = editWindow;
     }
 }
