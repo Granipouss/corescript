@@ -8,25 +8,25 @@ import { Scene_File } from './Scene_File';
  * The scene class of the save screen.
  */
 export class Scene_Save extends Scene_File {
-    mode() {
+    mode(): string {
         return 'save';
     }
 
-    helpWindowText() {
+    helpWindowText(): string {
         return TextManager.saveMessage;
     }
 
-    firstSavefileIndex() {
+    firstSavefileIndex(): number {
         return DataManager.lastAccessedSavefileId() - 1;
     }
 
-    onSavefileOk() {
+    onSavefileOk(): void {
         if (DataManager.isAutoSaveFileId(this.savefileId())) {
             this.onSaveFailure();
             return;
         }
         super.onSavefileOk();
-        global.$gameSystem.onBeforeSave();
+        window.$gameSystem.onBeforeSave();
         if (DataManager.saveGame(this.savefileId())) {
             this.onSaveSuccess();
         } else {
@@ -34,13 +34,13 @@ export class Scene_Save extends Scene_File {
         }
     }
 
-    onSaveSuccess() {
+    onSaveSuccess(): void {
         SoundManager.playSave();
         StorageManager.cleanBackup(this.savefileId());
         this.popScene();
     }
 
-    onSaveFailure() {
+    onSaveFailure(): void {
         SoundManager.playBuzzer();
         this.activateListWindow();
     }

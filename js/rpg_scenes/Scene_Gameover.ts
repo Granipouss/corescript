@@ -11,51 +11,53 @@ import { Scene_Title } from './Scene_Title';
  * The scene class of the game over screen.
  */
 export class Scene_Gameover extends Scene_Base {
-    create() {
+    protected _backSprite: Sprite;
+
+    create(): void {
         super.create();
         this.playGameoverMusic();
         this.createBackground();
     }
 
-    start() {
+    start(): void {
         super.start();
         this.startFadeIn(this.slowFadeSpeed(), false);
     }
 
-    update() {
+    update(): void {
         if (this.isActive() && !this.isBusy() && this.isTriggered()) {
             this.gotoTitle();
         }
         super.update();
     }
 
-    stop() {
+    stop(): void {
         super.stop();
         this.fadeOutAll();
     }
 
-    terminate() {
+    terminate(): void {
         super.terminate();
         AudioManager.stopAll();
     }
 
-    playGameoverMusic() {
+    playGameoverMusic(): void {
         AudioManager.stopBgm();
         AudioManager.stopBgs();
-        AudioManager.playMe(global.$dataSystem.gameoverMe);
+        AudioManager.playMe(window.$dataSystem.gameoverMe);
     }
 
-    createBackground() {
+    createBackground(): void {
         this._backSprite = new Sprite();
         this._backSprite.bitmap = ImageManager.loadSystem('GameOver');
         this.addChild(this._backSprite);
     }
 
-    isTriggered() {
+    isTriggered(): boolean {
         return Input.isTriggered('ok') || TouchInput.isTriggered();
     }
 
-    gotoTitle() {
+    gotoTitle(): void {
         SceneManager.goto(Scene_Title);
     }
 }

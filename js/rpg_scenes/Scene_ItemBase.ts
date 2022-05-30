@@ -1,31 +1,39 @@
 import { Graphics } from '../rpg_core/Graphics';
+import { RPGItem } from '../rpg_data/item';
+import { RPGSkill } from '../rpg_data/skill';
 import { SceneManager } from '../rpg_managers/SceneManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Game_Action } from '../rpg_objects/Game_Action';
+import { Game_Battler } from '../rpg_objects/Game_Battler';
+import { Window_ItemList } from '../rpg_windows/Window_ItemList';
 import { Window_MenuActor } from '../rpg_windows/Window_MenuActor';
+import { Window_SkillList } from '../rpg_windows/Window_SkillList';
 import { Scene_Map } from './Scene_Map';
 import { Scene_MenuBase } from './Scene_MenuBase';
 
 /**
  * The superclass of Scene_Item and Scene_Skill.
  */
-export class Scene_ItemBase extends Scene_MenuBase {
-    createActorWindow() {
+export abstract class Scene_ItemBase<T extends RPGSkill | RPGItem> extends Scene_MenuBase {
+    protected _actorWindow: Window_MenuActor;
+    protected _itemWindow: Window_ItemList | Window_SkillList;
+
+    createActorWindow(): void {
         this._actorWindow = new Window_MenuActor();
         this._actorWindow.setHandler('ok', this.onActorOk.bind(this));
         this._actorWindow.setHandler('cancel', this.onActorCancel.bind(this));
         this.addWindow(this._actorWindow);
     }
 
-    item() {
+    item(): T {
         return this._itemWindow.item();
     }
 
-    user() {
+    user(): Game_Battler {
         return null;
     }
 
-    isCursorLeft() {
+    isCursorLeft(): boolean {
         return this._itemWindow.index() % 2 === 0;
     }
 
@@ -41,7 +49,7 @@ export class Scene_ItemBase extends Scene_MenuBase {
         this.activateItemWindow();
     }
 
-    onActorOk() {
+    onActorOk(): void {
         if (this.canUse()) {
             this.useItem();
         } else {
@@ -49,17 +57,17 @@ export class Scene_ItemBase extends Scene_MenuBase {
         }
     }
 
-    onActorCancel() {
+    onActorCancel(): void {
         this.hideSubWindow(this._actorWindow);
     }
 
-    action() {
+    action(): Game_Action {
         const action = new Game_Action(this.user());
         action.setItemObject(this.item());
         return action;
     }
 
-    determineItem() {
+    determineItem(): void {
         const action = this.action();
         if (action.isForFriend()) {
             this.showSubWindow(this._actorWindow);
@@ -70,7 +78,7 @@ export class Scene_ItemBase extends Scene_MenuBase {
         }
     }
 
-    useItem() {
+    useItem(): void {
         this.playSeForItem();
         this.user().useItem(this.item());
         this.applyItem();
@@ -79,23 +87,23 @@ export class Scene_ItemBase extends Scene_MenuBase {
         this._actorWindow.refresh();
     }
 
-    activateItemWindow() {
+    activateItemWindow(): void {
         this._itemWindow.refresh();
         this._itemWindow.activate();
     }
 
-    itemTargetActors() {
+    itemTargetActors(): Game_Battler[] {
         const action = this.action();
         if (!action.isForFriend()) {
             return [];
         } else if (action.isForAll()) {
-            return global.$gameParty.members();
+            return window.$gameParty.members();
         } else {
-            return [global.$gameParty.members()[this._actorWindow.index()]];
+            return [window.$gameParty.members()[this._actorWindow.index()]];
         }
     }
 
-    canUse() {
+    canUse(): boolean {
         const user = this.user();
         if (user) {
             return user.canUse(this.item()) && this.isItemEffectsValid();
@@ -103,12 +111,12 @@ export class Scene_ItemBase extends Scene_MenuBase {
         return false;
     }
 
-    isItemEffectsValid() {
+    isItemEffectsValid(): boolean {
         const action = this.action();
         return this.itemTargetActors().some((target) => action.testApply(target), this);
     }
 
-    applyItem() {
+    applyItem(): void {
         const action = this.action();
         const targets = this.itemTargetActors();
         targets.forEach((battler) => {
@@ -120,9 +128,11 @@ export class Scene_ItemBase extends Scene_MenuBase {
         action.applyGlobal();
     }
 
-    checkCommonEvent() {
-        if (global.$gameTemp.isCommonEventReserved()) {
+    checkCommonEvent(): void {
+        if (window.$gameTemp.isCommonEventReserved()) {
             SceneManager.goto(Scene_Map);
         }
     }
+
+    abstract playSeForItem(): void;
 }

@@ -14,24 +14,26 @@ import { Scene_Title } from './Scene_Title';
  * The scene class for initializing the entire game.
  */
 export class Scene_Boot extends Scene_Base {
+    protected _startDate: number;
+
     constructor() {
         super();
 
         this._startDate = Date.now();
     }
 
-    create() {
+    create(): void {
         super.create();
         DataManager.loadDatabase();
         ConfigManager.load();
         this.loadSystemWindowImage();
     }
 
-    loadSystemWindowImage() {
+    loadSystemWindowImage(): void {
         ImageManager.reserveSystem('Window');
     }
 
-    static loadSystemImages() {
+    static loadSystemImages(): void {
         ImageManager.reserveSystem('IconSet');
         ImageManager.reserveSystem('Balloon');
         ImageManager.reserveSystem('Shadow1');
@@ -44,7 +46,7 @@ export class Scene_Boot extends Scene_Base {
         ImageManager.reserveSystem('ButtonSet');
     }
 
-    isReady() {
+    isReady(): boolean {
         if (super.isReady()) {
             return DataManager.isDatabaseLoaded() && this.isGameFontLoaded();
         } else {
@@ -52,7 +54,7 @@ export class Scene_Boot extends Scene_Base {
         }
     }
 
-    isGameFontLoaded() {
+    isGameFontLoaded(): boolean {
         if (Graphics.isFontLoaded('GameFont')) {
             return true;
         } else if (!Graphics.canUseCssFontLoading()) {
@@ -63,7 +65,7 @@ export class Scene_Boot extends Scene_Base {
         }
     }
 
-    start() {
+    start(): void {
         super.start();
         SoundManager.preloadImportantSounds();
         if (DataManager.isBattleTest()) {
@@ -81,12 +83,12 @@ export class Scene_Boot extends Scene_Base {
         this.updateDocumentTitle();
     }
 
-    updateDocumentTitle() {
-        document.title = global.$dataSystem.gameTitle;
+    updateDocumentTitle(): void {
+        document.title = window.$dataSystem.gameTitle;
     }
 
-    checkPlayerLocation() {
-        if (global.$dataSystem.startMapId === 0) {
+    checkPlayerLocation(): void {
+        if (window.$dataSystem.startMapId === 0) {
             throw new Error("Player's starting position is not set");
         }
     }

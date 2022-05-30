@@ -9,32 +9,34 @@ import { Scene_Map } from './Scene_Map';
  * The scene class of the load screen.
  */
 export class Scene_Load extends Scene_File {
+    protected _loadSuccess: boolean;
+
     constructor() {
         super();
 
         this._loadSuccess = false;
     }
 
-    terminate() {
+    terminate(): void {
         super.terminate();
         if (this._loadSuccess) {
-            global.$gameSystem.onAfterLoad();
+            window.$gameSystem.onAfterLoad();
         }
     }
 
-    mode() {
+    mode(): string {
         return 'load';
     }
 
-    helpWindowText() {
+    helpWindowText(): string {
         return TextManager.loadMessage;
     }
 
-    firstSavefileIndex() {
+    firstSavefileIndex(): number {
         return DataManager.latestSavefileId() - 1;
     }
 
-    onSavefileOk() {
+    onSavefileOk(): void {
         super.onSavefileOk();
         if (DataManager.loadGame(this.savefileId())) {
             this.onLoadSuccess();
@@ -43,7 +45,7 @@ export class Scene_Load extends Scene_File {
         }
     }
 
-    onLoadSuccess() {
+    onLoadSuccess(): void {
         SoundManager.playLoad();
         this.fadeOutAll();
         this.reloadMapIfUpdated();
@@ -51,15 +53,15 @@ export class Scene_Load extends Scene_File {
         this._loadSuccess = true;
     }
 
-    onLoadFailure() {
+    onLoadFailure(): void {
         SoundManager.playBuzzer();
         this.activateListWindow();
     }
 
-    reloadMapIfUpdated() {
-        if (global.$gameSystem.versionId() !== global.$dataSystem.versionId) {
-            global.$gamePlayer.reserveTransfer(global.$gameMap.mapId(), global.$gamePlayer.x, global.$gamePlayer.y);
-            global.$gamePlayer.requestMapReload();
+    reloadMapIfUpdated(): void {
+        if (window.$gameSystem.versionId() !== window.$dataSystem.versionId) {
+            window.$gamePlayer.reserveTransfer(window.$gameMap.mapId(), window.$gamePlayer.x, window.$gamePlayer.y);
+            window.$gamePlayer.requestMapReload();
         }
     }
 }

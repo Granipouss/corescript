@@ -8,33 +8,35 @@ import { Scene_MenuBase } from './Scene_MenuBase';
  * The superclass of Scene_Save and Scene_Load.
  */
 export class Scene_File extends Scene_MenuBase {
-    create() {
+    protected _listWindow: Window_SavefileList;
+
+    create(): void {
         super.create();
         DataManager.loadAllSavefileImages();
         this.createHelpWindow();
         this.createListWindow();
     }
 
-    start() {
+    start(): void {
         super.start();
         this._listWindow.refresh();
     }
 
-    savefileId() {
+    savefileId(): number {
         return this._listWindow.index() + 1;
     }
 
-    createHelpWindow() {
+    createHelpWindow(): void {
         this._helpWindow = new Window_Help(1);
         this._helpWindow.setText(this.helpWindowText());
         this.addWindow(this._helpWindow);
     }
 
-    createListWindow() {
+    createListWindow(): void {
         const x = 0;
         const y = this._helpWindow.height;
         const width = Graphics.boxWidth;
-        var height = Graphics.boxHeight - y;
+        const height = Graphics.boxHeight - y;
         this._listWindow = new Window_SavefileList(x, y, width, height);
         this._listWindow.setHandler('ok', this.onSavefileOk.bind(this));
         this._listWindow.setHandler('cancel', this.popScene.bind(this));
@@ -45,23 +47,23 @@ export class Scene_File extends Scene_MenuBase {
         this.addWindow(this._listWindow);
     }
 
-    mode() {
+    mode(): void {
         return null;
     }
 
-    activateListWindow() {
+    activateListWindow(): void {
         this._listWindow.activate();
     }
 
-    helpWindowText() {
+    helpWindowText(): string {
         return '';
     }
 
-    firstSavefileIndex() {
+    firstSavefileIndex(): number {
         return 0;
     }
 
-    onSavefileOk() {
+    onSavefileOk(): void {
         // ...
     }
 }

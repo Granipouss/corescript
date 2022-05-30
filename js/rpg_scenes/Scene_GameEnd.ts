@@ -7,29 +7,31 @@ import { Scene_Title } from './Scene_Title';
  * The scene class of the game end screen.
  */
 export class Scene_GameEnd extends Scene_MenuBase {
-    create() {
+    protected _commandWindow: Window_GameEnd;
+
+    create(): void {
         super.create();
         this.createCommandWindow();
     }
 
-    stop() {
+    stop(): void {
         super.stop();
         this._commandWindow.close();
     }
 
-    createBackground() {
+    createBackground(): void {
         super.createBackground();
         this.setBackgroundOpacity(128);
     }
 
-    createCommandWindow() {
+    createCommandWindow(): void {
         this._commandWindow = new Window_GameEnd();
         this._commandWindow.setHandler('toTitle', this.commandToTitle.bind(this));
         this._commandWindow.setHandler('cancel', this.popScene.bind(this));
         this.addWindow(this._commandWindow);
     }
 
-    commandToTitle() {
+    commandToTitle(): void {
         this.fadeOutAll();
         SceneManager.goto(Scene_Title);
     }

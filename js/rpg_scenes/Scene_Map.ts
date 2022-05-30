@@ -1,3 +1,4 @@
+import { Tone } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { AudioManager } from '../rpg_managers/AudioManager';
@@ -23,6 +24,20 @@ import { Scene_Title } from './Scene_Title';
  * The scene class of the map screen.
  */
 export class Scene_Map extends Scene_Base {
+    protected _waitCount: number;
+    protected _encounterEffectDuration: number;
+    protected _mapLoaded: boolean;
+    protected _touchCount: number;
+
+    protected _transfer: boolean;
+
+    protected _mapNameWindow: Window_MapName;
+    protected _messageWindow: Window_Message;
+    protected _scrollTextWindow: Window_ScrollText;
+    protected _spriteset: Spriteset_Map;
+
+    menuCalling: boolean;
+
     constructor() {
         super();
 
@@ -32,14 +47,14 @@ export class Scene_Map extends Scene_Base {
         this._touchCount = 0;
     }
 
-    create() {
+    create(): void {
         super.create();
-        this._transfer = global.$gamePlayer.isTransferring();
-        const mapId = this._transfer ? global.$gamePlayer.newMapId() : global.$gameMap.mapId();
+        this._transfer = window.$gamePlayer.isTransferring();
+        const mapId = this._transfer ? window.$gamePlayer.newMapId() : window.$gameMap.mapId();
         DataManager.loadMapData(mapId);
     }
 
-    isReady() {
+    isReady(): boolean {
         if (!this._mapLoaded && DataManager.isMapLoaded()) {
             this.onMapLoaded();
             this._mapLoaded = true;
@@ -47,27 +62,27 @@ export class Scene_Map extends Scene_Base {
         return this._mapLoaded && super.isReady();
     }
 
-    onMapLoaded() {
+    onMapLoaded(): void {
         if (this._transfer) {
-            global.$gamePlayer.performTransfer();
+            window.$gamePlayer.performTransfer();
         }
         this.createDisplayObjects();
     }
 
-    start() {
+    start(): void {
         super.start();
         SceneManager.clearStack();
         if (this._transfer) {
             this.fadeInForTransfer();
             this._mapNameWindow.open();
-            global.$gameMap.autoplay();
+            window.$gameMap.autoplay();
         } else if (this.needsFadeIn()) {
             this.startFadeIn(this.fadeSpeed(), false);
         }
         this.menuCalling = false;
     }
 
-    update() {
+    update(): void {
         this.updateDestination();
         this.updateMainMultiply();
         if (this.isSceneChangeOk()) {
@@ -79,7 +94,7 @@ export class Scene_Map extends Scene_Base {
         super.update();
     }
 
-    updateMainMultiply() {
+    updateMainMultiply(): void {
         this.updateMain();
         if (this.isFastForward()) {
             if (!this.isMapTouchOk()) {
@@ -89,25 +104,25 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    updateMain() {
+    updateMain(): void {
         const active = this.isActive();
-        global.$gameMap.update(active);
-        global.$gamePlayer.update(active);
-        global.$gameTimer.update(active);
-        global.$gameScreen.update();
+        window.$gameMap.update(active);
+        window.$gamePlayer.update(active);
+        window.$gameTimer.update(active);
+        window.$gameScreen.update();
     }
 
-    isFastForward() {
+    isFastForward(): boolean {
         return (
-            global.$gameMap.isEventRunning() &&
+            window.$gameMap.isEventRunning() &&
             !SceneManager.isSceneChanging() &&
             (Input.isLongPressed('ok') || TouchInput.isLongPressed())
         );
     }
 
-    stop() {
+    stop(): void {
         super.stop();
-        global.$gamePlayer.straighten();
+        window.$gamePlayer.straighten();
         this._mapNameWindow.close();
         if (this.needsSlowFadeOut()) {
             this.startFadeOut(this.slowFadeSpeed(), false);
@@ -118,7 +133,7 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    isBusy() {
+    isBusy(): boolean {
         return (
             (this._messageWindow && this._messageWindow.isClosing()) ||
             this._waitCount > 0 ||
@@ -127,7 +142,7 @@ export class Scene_Map extends Scene_Base {
         );
     }
 
-    terminate() {
+    terminate(): void {
         super.terminate();
         if (!SceneManager.isNextScene(Scene_Battle)) {
             this._spriteset.update();
@@ -141,7 +156,7 @@ export class Scene_Map extends Scene_Base {
             ImageManager.clearRequest();
         }
 
-        global.$gameScreen.clearZoom();
+        window.$gameScreen.clearZoom();
 
         this.removeChild(this._fadeSprite);
         this.removeChild(this._mapNameWindow);
@@ -149,15 +164,15 @@ export class Scene_Map extends Scene_Base {
         this.removeChild(this._spriteset);
     }
 
-    needsFadeIn() {
+    needsFadeIn(): boolean {
         return SceneManager.isPreviousScene(Scene_Battle) || SceneManager.isPreviousScene(Scene_Load);
     }
 
-    needsSlowFadeOut() {
+    needsSlowFadeOut(): boolean {
         return SceneManager.isNextScene(Scene_Title) || SceneManager.isNextScene(Scene_Gameover);
     }
 
-    updateWaitCount() {
+    updateWaitCount(): boolean {
         if (this._waitCount > 0) {
             this._waitCount--;
             return true;
@@ -165,26 +180,26 @@ export class Scene_Map extends Scene_Base {
         return false;
     }
 
-    updateDestination() {
+    updateDestination(): void {
         if (this.isMapTouchOk()) {
             this.processMapTouch();
         } else {
-            global.$gameTemp.clearDestination();
+            window.$gameTemp.clearDestination();
             this._touchCount = 0;
         }
     }
 
-    isMapTouchOk() {
-        return this.isActive() && global.$gamePlayer.canMove();
+    isMapTouchOk(): boolean {
+        return this.isActive() && window.$gamePlayer.canMove();
     }
 
-    processMapTouch() {
+    processMapTouch(): void {
         if (TouchInput.isTriggered() || this._touchCount > 0) {
             if (TouchInput.isPressed()) {
                 if (this._touchCount === 0 || this._touchCount >= 15) {
-                    const x = global.$gameMap.canvasToMapX(TouchInput.x);
-                    const y = global.$gameMap.canvasToMapY(TouchInput.y);
-                    global.$gameTemp.setDestination(x, y);
+                    const x = window.$gameMap.canvasToMapX(TouchInput.x);
+                    const y = window.$gameMap.canvasToMapY(TouchInput.y);
+                    window.$gameTemp.setDestination(x, y);
                 }
                 this._touchCount++;
             } else {
@@ -193,11 +208,11 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    isSceneChangeOk() {
-        return this.isActive() && !global.$gameMessage.isBusy();
+    isSceneChangeOk(): boolean {
+        return this.isActive() && !window.$gameMessage.isBusy();
     }
 
-    updateScene() {
+    updateScene(): void {
         this.checkGameover();
         if (!SceneManager.isSceneChanging()) {
             this.updateTransferPlayer();
@@ -213,29 +228,29 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    createDisplayObjects() {
+    createDisplayObjects(): void {
         this.createSpriteset();
         this.createMapNameWindow();
         this.createWindowLayer();
         this.createAllWindows();
     }
 
-    createSpriteset() {
+    createSpriteset(): void {
         this._spriteset = new Spriteset_Map();
         this.addChild(this._spriteset);
     }
 
-    createAllWindows() {
+    createAllWindows(): void {
         this.createMessageWindow();
         this.createScrollTextWindow();
     }
 
-    createMapNameWindow() {
+    createMapNameWindow(): void {
         this._mapNameWindow = new Window_MapName();
         this.addChild(this._mapNameWindow);
     }
 
-    createMessageWindow() {
+    createMessageWindow(): void {
         this._messageWindow = new Window_Message();
         this.addWindow(this._messageWindow);
         this._messageWindow.subWindows().forEach(function (window) {
@@ -243,29 +258,29 @@ export class Scene_Map extends Scene_Base {
         }, this);
     }
 
-    createScrollTextWindow() {
+    createScrollTextWindow(): void {
         this._scrollTextWindow = new Window_ScrollText();
         this.addWindow(this._scrollTextWindow);
     }
 
-    updateTransferPlayer() {
-        if (global.$gamePlayer.isTransferring()) {
+    updateTransferPlayer(): void {
+        if (window.$gamePlayer.isTransferring()) {
             SceneManager.goto(Scene_Map);
         }
     }
 
-    updateEncounter() {
-        if (global.$gamePlayer.executeEncounter()) {
+    updateEncounter(): void {
+        if (window.$gamePlayer.executeEncounter()) {
             SceneManager.push(Scene_Battle);
         }
     }
 
-    updateCallMenu() {
+    updateCallMenu(): void {
         if (this.isMenuEnabled()) {
             if (this.isMenuCalled()) {
                 this.menuCalling = true;
             }
-            if (this.menuCalling && !global.$gamePlayer.isMoving()) {
+            if (this.menuCalling && !window.$gamePlayer.isMoving()) {
                 this.callMenu();
             }
         } else {
@@ -273,35 +288,35 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    isMenuEnabled() {
-        return global.$gameSystem.isMenuEnabled() && !global.$gameMap.isEventRunning();
+    isMenuEnabled(): boolean {
+        return window.$gameSystem.isMenuEnabled() && !window.$gameMap.isEventRunning();
     }
 
-    isMenuCalled() {
+    isMenuCalled(): boolean {
         return Input.isTriggered('menu') || TouchInput.isCancelled();
     }
 
-    callMenu() {
+    callMenu(): void {
         SoundManager.playOk();
         SceneManager.push(Scene_Menu);
         Window_MenuCommand.initCommandPosition();
-        global.$gameTemp.clearDestination();
+        window.$gameTemp.clearDestination();
         this._mapNameWindow.hide();
         this._waitCount = 2;
     }
 
-    updateCallDebug() {
+    updateCallDebug(): void {
         if (this.isDebugCalled()) {
             SceneManager.push(Scene_Debug);
         }
     }
 
-    isDebugCalled() {
-        return Input.isTriggered('debug') && global.$gameTemp.isPlaytest();
+    isDebugCalled(): boolean {
+        return Input.isTriggered('debug') && window.$gameTemp.isPlaytest();
     }
 
-    fadeInForTransfer() {
-        const fadeType = global.$gamePlayer.fadeType();
+    fadeInForTransfer(): void {
+        const fadeType = window.$gamePlayer.fadeType();
         switch (fadeType) {
             case 0:
             case 1:
@@ -310,8 +325,8 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    fadeOutForTransfer() {
-        const fadeType = global.$gamePlayer.fadeType();
+    fadeOutForTransfer(): void {
+        const fadeType = window.$gamePlayer.fadeType();
         switch (fadeType) {
             case 0:
             case 1:
@@ -320,7 +335,7 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    launchBattle() {
+    launchBattle(): void {
         BattleManager.saveBgmAndBgs();
         this.stopAudioOnBattleStart();
         SoundManager.playBattleStart();
@@ -328,8 +343,8 @@ export class Scene_Map extends Scene_Base {
         this._mapNameWindow.hide();
     }
 
-    stopAudioOnBattleStart() {
-        if (!AudioManager.isCurrentBgm(global.$gameSystem.battleBgm())) {
+    stopAudioOnBattleStart(): void {
+        if (!AudioManager.isCurrentBgm(window.$gameSystem.battleBgm())) {
             AudioManager.stopBgm();
         }
         AudioManager.stopBgs();
@@ -337,26 +352,26 @@ export class Scene_Map extends Scene_Base {
         AudioManager.stopSe();
     }
 
-    startEncounterEffect() {
+    startEncounterEffect(): void {
         this._spriteset.hideCharacters();
         this._encounterEffectDuration = this.encounterEffectSpeed();
     }
 
-    updateEncounterEffect() {
+    updateEncounterEffect(): void {
         if (this._encounterEffectDuration > 0) {
             this._encounterEffectDuration--;
             const speed = this.encounterEffectSpeed();
             const n = speed - this._encounterEffectDuration;
             const p = n / speed;
             const q = ((p - 1) * 20 * p + 5) * p + 1;
-            const zoomX = global.$gamePlayer.screenX();
-            const zoomY = global.$gamePlayer.screenY() - 24;
+            const zoomX = window.$gamePlayer.screenX();
+            const zoomY = window.$gamePlayer.screenY() - 24;
             if (n === 2) {
-                global.$gameScreen.setZoom(zoomX, zoomY, 1);
+                window.$gameScreen.setZoom(zoomX, zoomY, 1);
                 this.snapForBattleBackground();
                 this.startFlashForEncounter(speed / 2);
             }
-            global.$gameScreen.setZoom(zoomX, zoomY, q);
+            window.$gameScreen.setZoom(zoomX, zoomY, q);
             if (n === Math.floor(speed / 6)) {
                 this.startFlashForEncounter(speed / 2);
             }
@@ -367,18 +382,18 @@ export class Scene_Map extends Scene_Base {
         }
     }
 
-    snapForBattleBackground() {
+    snapForBattleBackground(): void {
         this._windowLayer.visible = false;
         SceneManager.snapForBackground();
         this._windowLayer.visible = true;
     }
 
-    startFlashForEncounter(duration) {
-        const color = [255, 255, 255, 255];
-        global.$gameScreen.startFlash(color, duration);
+    startFlashForEncounter(duration: number): void {
+        const color = [255, 255, 255, 255] as Tone;
+        window.$gameScreen.startFlash(color, duration);
     }
 
-    encounterEffectSpeed() {
+    encounterEffectSpeed(): number {
         return 60;
     }
 }

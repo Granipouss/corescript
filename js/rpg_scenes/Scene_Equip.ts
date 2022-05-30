@@ -10,7 +10,12 @@ import { Scene_MenuBase } from './Scene_MenuBase';
  * The scene class of the equipment screen.
  */
 export class Scene_Equip extends Scene_MenuBase {
-    create() {
+    protected _statusWindow: Window_EquipStatus;
+    protected _commandWindow: Window_EquipCommand;
+    protected _slotWindow: Window_EquipSlot;
+    protected _itemWindow: Window_EquipItem;
+
+    create(): void {
         super.create();
         this.createHelpWindow();
         this.createStatusWindow();
@@ -20,12 +25,12 @@ export class Scene_Equip extends Scene_MenuBase {
         this.refreshActor();
     }
 
-    createStatusWindow() {
+    createStatusWindow(): void {
         this._statusWindow = new Window_EquipStatus(0, this._helpWindow.height);
         this.addWindow(this._statusWindow);
     }
 
-    createCommandWindow() {
+    createCommandWindow(): void {
         const wx = this._statusWindow.width;
         const wy = this._helpWindow.height;
         const ww = Graphics.boxWidth - this._statusWindow.width;
@@ -40,7 +45,7 @@ export class Scene_Equip extends Scene_MenuBase {
         this.addWindow(this._commandWindow);
     }
 
-    createSlotWindow() {
+    createSlotWindow(): void {
         const wx = this._statusWindow.width;
         const wy = this._commandWindow.y + this._commandWindow.height;
         const ww = Graphics.boxWidth - this._statusWindow.width;
@@ -53,7 +58,7 @@ export class Scene_Equip extends Scene_MenuBase {
         this.addWindow(this._slotWindow);
     }
 
-    createItemWindow() {
+    createItemWindow(): void {
         const wx = 0;
         const wy = this._statusWindow.y + this._statusWindow.height;
         const ww = Graphics.boxWidth;
@@ -67,19 +72,19 @@ export class Scene_Equip extends Scene_MenuBase {
         this.addWindow(this._itemWindow);
     }
 
-    refreshActor() {
+    refreshActor(): void {
         const actor = this.actor();
         this._statusWindow.setActor(actor);
         this._slotWindow.setActor(actor);
         this._itemWindow.setActor(actor);
     }
 
-    commandEquip() {
+    commandEquip(): void {
         this._slotWindow.activate();
         this._slotWindow.select(0);
     }
 
-    commandOptimize() {
+    commandOptimize(): void {
         SoundManager.playEquip();
         this.actor().optimizeEquipments();
         this._statusWindow.refresh();
@@ -87,7 +92,7 @@ export class Scene_Equip extends Scene_MenuBase {
         this._commandWindow.activate();
     }
 
-    commandClear() {
+    commandClear(): void {
         SoundManager.playEquip();
         this.actor().clearEquipments();
         this._statusWindow.refresh();
@@ -95,17 +100,17 @@ export class Scene_Equip extends Scene_MenuBase {
         this._commandWindow.activate();
     }
 
-    onSlotOk() {
+    onSlotOk(): void {
         this._itemWindow.activate();
         this._itemWindow.select(0);
     }
 
-    onSlotCancel() {
+    onSlotCancel(): void {
         this._slotWindow.deselect();
         this._commandWindow.activate();
     }
 
-    onItemOk() {
+    onItemOk(): void {
         SoundManager.playEquip();
         this.actor().changeEquip(this._slotWindow.index(), this._itemWindow.item());
         this._slotWindow.activate();
@@ -115,12 +120,12 @@ export class Scene_Equip extends Scene_MenuBase {
         this._statusWindow.refresh();
     }
 
-    onItemCancel() {
+    onItemCancel(): void {
         this._slotWindow.activate();
         this._itemWindow.deselect();
     }
 
-    onActorChange() {
+    onActorChange(): void {
         this.refreshActor();
         this._commandWindow.activate();
     }

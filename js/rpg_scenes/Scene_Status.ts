@@ -5,7 +5,9 @@ import { Scene_MenuBase } from './Scene_MenuBase';
  * The scene class of the status screen.
  */
 export class Scene_Status extends Scene_MenuBase {
-    create() {
+    protected _statusWindow: Window_Status;
+
+    create(): void {
         super.create();
         this._statusWindow = new Window_Status();
         this._statusWindow.setHandler('cancel', this.popScene.bind(this));
@@ -15,17 +17,17 @@ export class Scene_Status extends Scene_MenuBase {
         this.addWindow(this._statusWindow);
     }
 
-    start() {
+    start(): void {
         super.start();
         this.refreshActor();
     }
 
-    refreshActor() {
+    refreshActor(): void {
         const actor = this.actor();
         this._statusWindow.setActor(actor);
     }
 
-    onActorChange() {
+    onActorChange(): void {
         this.refreshActor();
         this._statusWindow.activate();
     }

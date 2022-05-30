@@ -1,5 +1,7 @@
 import { Graphics } from '../rpg_core/Graphics';
+import { RPGItem } from '../rpg_data/item';
 import { SoundManager } from '../rpg_managers/SoundManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_ItemCategory } from '../rpg_windows/Window_ItemCategory';
 import { Window_ItemList } from '../rpg_windows/Window_ItemList';
 import { Scene_ItemBase } from './Scene_ItemBase';
@@ -7,8 +9,10 @@ import { Scene_ItemBase } from './Scene_ItemBase';
 /**
  * The scene class of the item screen.
  */
-export class Scene_Item extends Scene_ItemBase {
-    create() {
+export class Scene_Item extends Scene_ItemBase<RPGItem> {
+    protected _categoryWindow: Window_ItemCategory;
+
+    create(): void {
         super.create();
         this.createHelpWindow();
         this.createCategoryWindow();
@@ -16,7 +20,7 @@ export class Scene_Item extends Scene_ItemBase {
         this.createActorWindow();
     }
 
-    createCategoryWindow() {
+    createCategoryWindow(): void {
         this._categoryWindow = new Window_ItemCategory();
         this._categoryWindow.setHelpWindow(this._helpWindow);
         this._categoryWindow.y = this._helpWindow.height;
@@ -25,7 +29,7 @@ export class Scene_Item extends Scene_ItemBase {
         this.addWindow(this._categoryWindow);
     }
 
-    createItemWindow() {
+    createItemWindow(): void {
         const wy = this._categoryWindow.y + this._categoryWindow.height;
         const wh = Graphics.boxHeight - wy;
         this._itemWindow = new Window_ItemList(0, wy, Graphics.boxWidth, wh);
@@ -36,8 +40,8 @@ export class Scene_Item extends Scene_ItemBase {
         this._categoryWindow.setItemWindow(this._itemWindow);
     }
 
-    user() {
-        const members = global.$gameParty.movableMembers();
+    user(): Game_Actor {
+        const members = window.$gameParty.movableMembers();
         let bestActor = members[0];
         let bestPha = 0;
         for (let i = 0; i < members.length; i++) {
@@ -49,26 +53,26 @@ export class Scene_Item extends Scene_ItemBase {
         return bestActor;
     }
 
-    onCategoryOk() {
+    onCategoryOk(): void {
         this._itemWindow.activate();
         this._itemWindow.selectLast();
     }
 
-    onItemOk() {
-        global.$gameParty.setLastItem(this.item());
+    onItemOk(): void {
+        window.$gameParty.setLastItem(this.item());
         this.determineItem();
     }
 
-    onItemCancel() {
+    onItemCancel(): void {
         this._itemWindow.deselect();
         this._categoryWindow.activate();
     }
 
-    playSeForItem() {
+    playSeForItem(): void {
         SoundManager.playUseItem();
     }
 
-    useItem() {
+    useItem(): void {
         super.useItem();
         this._itemWindow.redrawCurrentItem();
     }

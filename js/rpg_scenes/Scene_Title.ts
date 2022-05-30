@@ -15,7 +15,12 @@ import { Scene_Options } from './Scene_Options';
  * The scene class of the title screen.
  */
 export class Scene_Title extends Scene_Base {
-    create() {
+    protected _backSprite1: Sprite;
+    protected _backSprite2: Sprite;
+    protected _gameTitleSprite: Sprite;
+    protected _commandWindow: Window_TitleCommand;
+
+    create(): void {
         super.create();
         this.createBackground();
         this.createForeground();
@@ -23,7 +28,7 @@ export class Scene_Title extends Scene_Base {
         this.createCommandWindow();
     }
 
-    start() {
+    start(): void {
         super.start();
         SceneManager.clearStack();
         this.centerSprite(this._backSprite1);
@@ -32,56 +37,56 @@ export class Scene_Title extends Scene_Base {
         this.startFadeIn(this.fadeSpeed(), false);
     }
 
-    update() {
+    update(): void {
         if (!this.isBusy()) {
             this._commandWindow.open();
         }
         super.update();
     }
 
-    isBusy() {
+    isBusy(): boolean {
         return this._commandWindow.isClosing() || super.isBusy();
     }
 
-    terminate() {
+    terminate(): void {
         super.terminate();
         SceneManager.snapForBackground();
     }
 
-    createBackground() {
-        this._backSprite1 = new Sprite(ImageManager.loadTitle1(global.$dataSystem.title1Name));
-        this._backSprite2 = new Sprite(ImageManager.loadTitle2(global.$dataSystem.title2Name));
+    createBackground(): void {
+        this._backSprite1 = new Sprite(ImageManager.loadTitle1(window.$dataSystem.title1Name));
+        this._backSprite2 = new Sprite(ImageManager.loadTitle2(window.$dataSystem.title2Name));
         this.addChild(this._backSprite1);
         this.addChild(this._backSprite2);
     }
 
-    createForeground() {
+    createForeground(): void {
         this._gameTitleSprite = new Sprite(new Bitmap(Graphics.width, Graphics.height));
         this.addChild(this._gameTitleSprite);
-        if (global.$dataSystem.optDrawTitle) {
+        if (window.$dataSystem.optDrawTitle) {
             this.drawGameTitle();
         }
     }
 
-    drawGameTitle() {
+    drawGameTitle(): void {
         const x = 20;
         const y = Graphics.height / 4;
         const maxWidth = Graphics.width - x * 2;
-        const text = global.$dataSystem.gameTitle;
+        const text = window.$dataSystem.gameTitle;
         this._gameTitleSprite.bitmap.outlineColor = 'black';
         this._gameTitleSprite.bitmap.outlineWidth = 8;
         this._gameTitleSprite.bitmap.fontSize = 72;
         this._gameTitleSprite.bitmap.drawText(text, x, y, maxWidth, 48, 'center');
     }
 
-    centerSprite(sprite) {
+    centerSprite(sprite: Sprite): void {
         sprite.x = Graphics.width / 2;
         sprite.y = Graphics.height / 2;
         sprite.anchor.x = 0.5;
         sprite.anchor.y = 0.5;
     }
 
-    createCommandWindow() {
+    createCommandWindow(): void {
         this._commandWindow = new Window_TitleCommand();
         this._commandWindow.setHandler('newGame', this.commandNewGame.bind(this));
         this._commandWindow.setHandler('continue', this.commandContinue.bind(this));
@@ -89,25 +94,25 @@ export class Scene_Title extends Scene_Base {
         this.addWindow(this._commandWindow);
     }
 
-    commandNewGame() {
+    commandNewGame(): void {
         DataManager.setupNewGame();
         this._commandWindow.close();
         this.fadeOutAll();
         SceneManager.goto(Scene_Map);
     }
 
-    commandContinue() {
+    commandContinue(): void {
         this._commandWindow.close();
         SceneManager.push(Scene_Load);
     }
 
-    commandOptions() {
+    commandOptions(): void {
         this._commandWindow.close();
         SceneManager.push(Scene_Options);
     }
 
-    playTitleMusic() {
-        AudioManager.playBgm(global.$dataSystem.titleBgm);
+    playTitleMusic(): void {
+        AudioManager.playBgm(window.$dataSystem.titleBgm);
         AudioManager.stopBgs();
         AudioManager.stopMe();
     }

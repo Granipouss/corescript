@@ -16,19 +16,23 @@ import { Scene_Status } from './Scene_Status';
  * The scene class of the menu screen.
  */
 export class Scene_Menu extends Scene_MenuBase {
-    create() {
+    protected _commandWindow: Window_MenuCommand;
+    protected _goldWindow: Window_Gold;
+    protected _statusWindow: Window_MenuStatus;
+
+    create(): void {
         super.create();
         this.createCommandWindow();
         this.createGoldWindow();
         this.createStatusWindow();
     }
 
-    start() {
+    start(): void {
         super.start();
         this._statusWindow.refresh();
     }
 
-    createCommandWindow() {
+    createCommandWindow(): void {
         this._commandWindow = new Window_MenuCommand(0, 0);
         this._commandWindow.setHandler('item', this.commandItem.bind(this));
         this._commandWindow.setHandler('skill', this.commandPersonal.bind(this));
@@ -42,23 +46,23 @@ export class Scene_Menu extends Scene_MenuBase {
         this.addWindow(this._commandWindow);
     }
 
-    createGoldWindow() {
+    createGoldWindow(): void {
         this._goldWindow = new Window_Gold(0, 0);
         this._goldWindow.y = Graphics.boxHeight - this._goldWindow.height;
         this.addWindow(this._goldWindow);
     }
 
-    createStatusWindow() {
+    createStatusWindow(): void {
         this._statusWindow = new Window_MenuStatus(this._commandWindow.width, 0);
         this._statusWindow.reserveFaceImages();
         this.addWindow(this._statusWindow);
     }
 
-    commandItem() {
+    commandItem(): void {
         SceneManager.push(Scene_Item);
     }
 
-    commandPersonal() {
+    commandPersonal(): void {
         this._statusWindow.setFormationMode(false);
         this._statusWindow.selectLast();
         this._statusWindow.activate();
@@ -66,7 +70,7 @@ export class Scene_Menu extends Scene_MenuBase {
         this._statusWindow.setHandler('cancel', this.onPersonalCancel.bind(this));
     }
 
-    commandFormation() {
+    commandFormation(): void {
         this._statusWindow.setFormationMode(true);
         this._statusWindow.selectLast();
         this._statusWindow.activate();
@@ -74,19 +78,19 @@ export class Scene_Menu extends Scene_MenuBase {
         this._statusWindow.setHandler('cancel', this.onFormationCancel.bind(this));
     }
 
-    commandOptions() {
+    commandOptions(): void {
         SceneManager.push(Scene_Options);
     }
 
-    commandSave() {
+    commandSave(): void {
         SceneManager.push(Scene_Save);
     }
 
-    commandGameEnd() {
+    commandGameEnd(): void {
         SceneManager.push(Scene_GameEnd);
     }
 
-    onPersonalOk() {
+    onPersonalOk(): void {
         switch (this._commandWindow.currentSymbol()) {
             case 'skill':
                 SceneManager.push(Scene_Skill);
@@ -100,17 +104,17 @@ export class Scene_Menu extends Scene_MenuBase {
         }
     }
 
-    onPersonalCancel() {
+    onPersonalCancel(): void {
         this._statusWindow.deselect();
         this._commandWindow.activate();
     }
 
-    onFormationOk() {
+    onFormationOk(): void {
         const index = this._statusWindow.index();
-        // var actor = global.$gameParty.members()[index];
+        // const actor = window.$gameParty.members()[index];
         const pendingIndex = this._statusWindow.pendingIndex();
         if (pendingIndex >= 0) {
-            global.$gameParty.swapOrder(index, pendingIndex);
+            window.$gameParty.swapOrder(index, pendingIndex);
             this._statusWindow.setPendingIndex(-1);
             this._statusWindow.redrawItem(index);
         } else {
@@ -119,7 +123,7 @@ export class Scene_Menu extends Scene_MenuBase {
         this._statusWindow.activate();
     }
 
-    onFormationCancel() {
+    onFormationCancel(): void {
         if (this._statusWindow.pendingIndex() >= 0) {
             this._statusWindow.setPendingIndex(-1);
             this._statusWindow.activate();

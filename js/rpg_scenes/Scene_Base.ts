@@ -52,7 +52,7 @@ export abstract class Scene_Base extends PIXI.Container {
         ImageManager.releaseReservation(this._imageReservationId);
     }
 
-    prepare(): void {
+    prepare(..._args: unknown[]): void {
         // ...
     }
 
@@ -220,7 +220,7 @@ export abstract class Scene_Base extends PIXI.Container {
      * Check whether the game should be triggering a gameover.
      */
     checkGameover(): void {
-        if (global.$gameParty.isAllDead()) {
+        if (window.$gameParty.isAllDead()) {
             SceneManager.goto(Scene_Gameover);
         }
     }

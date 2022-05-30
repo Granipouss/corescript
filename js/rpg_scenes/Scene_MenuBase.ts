@@ -1,5 +1,6 @@
 import { Sprite } from '../rpg_core/Sprite';
 import { SceneManager } from '../rpg_managers/SceneManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Help } from '../rpg_windows/Window_Help';
 import { Scene_Base } from './Scene_Base';
 
@@ -7,22 +8,27 @@ import { Scene_Base } from './Scene_Base';
  * The superclass of all the menu-type scenes.
  */
 export class Scene_MenuBase extends Scene_Base {
-    create() {
+    protected _actor: Game_Actor;
+
+    protected _backgroundSprite: Sprite;
+    protected _helpWindow: Window_Help;
+
+    create(): void {
         super.create();
         this.createBackground();
         this.updateActor();
         this.createWindowLayer();
     }
 
-    actor() {
+    actor(): Game_Actor {
         return this._actor;
     }
 
-    updateActor() {
-        this._actor = global.$gameParty.menuActor();
+    updateActor(): void {
+        this._actor = window.$gameParty.menuActor();
     }
 
-    createBackground() {
+    createBackground(): void {
         this._backgroundSprite = new Sprite();
         this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
         this.addChild(this._backgroundSprite);
@@ -32,24 +38,24 @@ export class Scene_MenuBase extends Scene_Base {
         this._backgroundSprite.opacity = opacity;
     }
 
-    createHelpWindow() {
+    createHelpWindow(): void {
         this._helpWindow = new Window_Help();
         this.addWindow(this._helpWindow);
     }
 
-    nextActor() {
-        global.$gameParty.makeMenuActorNext();
+    nextActor(): void {
+        window.$gameParty.makeMenuActorNext();
         this.updateActor();
         this.onActorChange();
     }
 
-    previousActor() {
-        global.$gameParty.makeMenuActorPrevious();
+    previousActor(): void {
+        window.$gameParty.makeMenuActorPrevious();
         this.updateActor();
         this.onActorChange();
     }
 
-    onActorChange() {
+    onActorChange(): void {
         // ...
     }
 }
