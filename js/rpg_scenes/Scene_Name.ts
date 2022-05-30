@@ -31,9 +31,7 @@ export class Scene_Name extends Scene_MenuBase {
 
     createEditWindow(): void {
         this._editWindow = new Window_NameEdit(this._actor, this._maxLength);
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.addWindow(this._editWindow as any);
+        this.addWindow(this._editWindow);
     }
 
     createInputWindow(): void {
@@ -43,7 +41,7 @@ export class Scene_Name extends Scene_MenuBase {
     }
 
     onInputOk(): void {
-        this._actor.setName(this._editWindow.name());
+        this._actor.setName(this._editWindow.getName());
         this.popScene();
     }
 }

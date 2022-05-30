@@ -739,7 +739,7 @@ export class Window_NameInput extends Window_Selectable {
     }
 
     onNameOk() {
-        if (this._editWindow.name() === '') {
+        if (this._editWindow.getName() === '') {
             if (this._editWindow.restoreDefault()) {
                 SoundManager.playOk();
             } else {
