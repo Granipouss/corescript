@@ -1,12 +1,13 @@
 import { Input } from '../rpg_core/Input';
 import { SoundManager } from '../rpg_managers/SoundManager';
+import { Window_NameEdit } from './Window_NameEdit';
 import { Window_Selectable } from './Window_Selectable';
 
 /**
  * The window for selecting text characters on the name input screen.
  */
 export class Window_NameInput extends Window_Selectable {
-    static LATIN1 = [
+    static readonly LATIN1 = [
         'A',
         'B',
         'C',
@@ -98,7 +99,7 @@ export class Window_NameInput extends Window_Selectable {
         'Page',
         'OK',
     ];
-    static LATIN2 = [
+    static readonly LATIN2 = [
         'Á',
         'É',
         'Í',
@@ -190,7 +191,7 @@ export class Window_NameInput extends Window_Selectable {
         'Page',
         'OK',
     ];
-    static RUSSIA = [
+    static readonly RUSSIA = [
         'А',
         'Б',
         'В',
@@ -282,7 +283,7 @@ export class Window_NameInput extends Window_Selectable {
         '',
         'OK',
     ];
-    static JAPAN1 = [
+    static readonly JAPAN1 = [
         'あ',
         'い',
         'う',
@@ -374,7 +375,7 @@ export class Window_NameInput extends Window_Selectable {
         'カナ',
         '決定',
     ];
-    static JAPAN2 = [
+    static readonly JAPAN2 = [
         'ア',
         'イ',
         'ウ',
@@ -466,7 +467,7 @@ export class Window_NameInput extends Window_Selectable {
         '英数',
         '決定',
     ];
-    static JAPAN3 = [
+    static readonly JAPAN3 = [
         'Ａ',
         'Ｂ',
         'Ｃ',
@@ -559,11 +560,14 @@ export class Window_NameInput extends Window_Selectable {
         '決定',
     ];
 
+    protected _editWindow: Window_NameEdit;
+    protected _page: number;
+
     initialize(editWindow) {
         const x = editWindow.x;
         const y = editWindow.y + editWindow.height + 8;
         const width = editWindow.width;
-        var height = this.windowHeight();
+        const height = this.windowHeight();
         super.initialize(x, y, width, height);
         this._editWindow = editWindow;
         this._page = 0;
@@ -608,12 +612,12 @@ export class Window_NameInput extends Window_Selectable {
     }
 
     itemRect(index) {
-        return {
-            x: (index % 10) * 42 + Math.floor((index % 10) / 5) * 24,
-            y: Math.floor(index / 10) * this.lineHeight(),
-            width: 42,
-            height: this.lineHeight(),
-        };
+        return new PIXI.Rectangle(
+            (index % 10) * 42 + Math.floor((index % 10) / 5) * 24,
+            Math.floor(index / 10) * this.lineHeight(),
+            42,
+            this.lineHeight()
+        );
     }
 
     refresh() {

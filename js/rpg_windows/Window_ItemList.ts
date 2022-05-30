@@ -6,6 +6,9 @@ import { Window_Selectable } from './Window_Selectable';
  * @abstract
  */
 export class Window_ItemList extends Window_Selectable {
+    protected _category: string;
+    protected _data: any[];
+
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
         this._category = 'none';
@@ -87,7 +90,7 @@ export class Window_ItemList extends Window_Selectable {
             this.changePaintOpacity(this.isEnabled(item));
             this.drawItemName(item, rect.x, rect.y, rect.width - numberWidth);
             this.drawItemNumber(item, rect.x, rect.y, rect.width);
-            this.changePaintOpacity(1);
+            this.changePaintOpacity(true);
         }
     }
 
@@ -98,7 +101,7 @@ export class Window_ItemList extends Window_Selectable {
     drawItemNumber(item, x, y, width) {
         if (this.needsNumber()) {
             this.drawText(':', x, y, width - this.textWidth('00'), 'right');
-            this.drawText(window.$gameParty.numItems(item), x, y, width, 'right');
+            this.drawText(window.$gameParty.numItems(item).toFixed(), x, y, width, 'right');
         }
     }
 

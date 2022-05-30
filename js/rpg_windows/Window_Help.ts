@@ -5,6 +5,8 @@ import { Window_Base } from './Window_Base';
  * The window for displaying the description of the selected item.
  */
 export class Window_Help extends Window_Base {
+    protected _text: string;
+
     initialize(numLines) {
         const width = Graphics.boxWidth;
         const height = this.fittingHeight(numLines || 2);

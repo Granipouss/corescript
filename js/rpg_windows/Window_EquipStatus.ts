@@ -1,10 +1,14 @@
 import { TextManager } from '../rpg_managers/TextManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Base } from './Window_Base';
 
 /**
  * The window for displaying parameter changes on the equipment screen.
  */
 export class Window_EquipStatus extends Window_Base {
+    protected _actor: Game_Actor;
+    protected _tempActor: Game_Actor;
+
     initialize(x, y) {
         const width = this.windowWidth();
         const height = this.windowHeight();
@@ -68,7 +72,7 @@ export class Window_EquipStatus extends Window_Base {
 
     drawCurrentParam(x, y, paramId) {
         this.resetTextColor();
-        this.drawText(this._actor.param(paramId), x, y, 48, 'right');
+        this.drawText(this._actor.param(paramId).toString(), x, y, 48, 'right');
     }
 
     drawRightArrow(x, y) {
@@ -80,6 +84,6 @@ export class Window_EquipStatus extends Window_Base {
         const newValue = this._tempActor.param(paramId);
         const diffvalue = newValue - this._actor.param(paramId);
         this.changeTextColor(this.paramchangeTextColor(diffvalue));
-        this.drawText(newValue, x, y, 48, 'right');
+        this.drawText(newValue.toString(), x, y, 48, 'right');
     }
 }

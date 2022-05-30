@@ -1,9 +1,16 @@
 import { Window_Selectable } from './Window_Selectable';
+import { Window_ShopStatus } from './Window_ShopStatus';
 
 /**
  * The window for selecting an item to buy on the shop screen.
  */
 export class Window_ShopBuy extends Window_Selectable {
+    protected _shopGoods: any[];
+    protected _money: number;
+    protected _data: any[];
+    protected _price: any[];
+    protected _statusWindow: Window_ShopStatus;
+
     initialize(x, y, height, shopGoods) {
         const width = this.windowWidth();
         super.initialize(x, y, width, height);

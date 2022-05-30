@@ -6,6 +6,9 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for displaying switches and variables on the debug screen.
  */
 export class Window_DebugEdit extends Window_Selectable {
+    protected _mode: string;
+    protected _topId: number;
+
     initialize(x, y, width) {
         const height = this.fittingHeight(10);
         super.initialize(x, y, width, height);

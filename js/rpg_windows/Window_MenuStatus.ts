@@ -7,6 +7,9 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for displaying party member status on the menu screen.
  */
 export class Window_MenuStatus extends Window_Selectable {
+    protected _formationMode: boolean;
+    protected _pendingIndex: number;
+
     initialize(x, y) {
         const width = this.windowWidth();
         const height = this.windowHeight();

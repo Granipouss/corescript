@@ -1,11 +1,15 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { Window_Command } from './Window_Command';
+import { Window_Message } from './Window_Message';
 
 /**
  * The window used for the event command [Show Choices].
  */
 export class Window_ChoiceList extends Window_Command {
+    protected _messageWindow: Window_Message;
+    protected _background: number;
+
     initialize(messageWindow) {
         this._messageWindow = messageWindow;
         super.initialize(0, 0);

@@ -1,12 +1,15 @@
 import { format } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { TextManager } from '../rpg_managers/TextManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Selectable } from './Window_Selectable';
 
 /**
  * The window for displaying full status on the status screen.
  */
 export class Window_Status extends Window_Selectable {
+    protected _actor: Game_Actor;
+
     initialize() {
         const width = Graphics.boxWidth;
         const height = Graphics.boxHeight;
@@ -85,7 +88,7 @@ export class Window_Status extends Window_Selectable {
             this.changeTextColor(this.systemColor());
             this.drawText(TextManager.param(paramId), x, y2, 160);
             this.resetTextColor();
-            this.drawText(this._actor.param(paramId), x + 160, y2, 60, 'right');
+            this.drawText(this._actor.param(paramId).toFixed(), x + 160, y2, 60, 'right');
         }
     }
 
@@ -93,8 +96,8 @@ export class Window_Status extends Window_Selectable {
         const lineHeight = this.lineHeight();
         const expTotal = format(TextManager.expTotal, TextManager.exp);
         const expNext = format(TextManager.expNext, TextManager.level);
-        let value1 = this._actor.currentExp();
-        let value2 = this._actor.nextRequiredExp();
+        let value1 = this._actor.currentExp().toFixed();
+        let value2 = this._actor.nextRequiredExp().toFixed();
         if (this._actor.isMaxLevel()) {
             value1 = '-------';
             value2 = '-------';

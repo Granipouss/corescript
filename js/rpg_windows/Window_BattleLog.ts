@@ -7,6 +7,7 @@ import { TouchInput } from '../rpg_core/TouchInput';
 import { DataManager } from '../rpg_managers/DataManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { TextManager } from '../rpg_managers/TextManager';
+import { Spriteset_Battle } from '../rpg_sprites/Spriteset_Battle';
 import { Window_Selectable } from './Window_Selectable';
 
 /**
@@ -14,6 +15,15 @@ import { Window_Selectable } from './Window_Selectable';
  * handled as a window for convenience.
  */
 export class Window_BattleLog extends Window_Selectable {
+    protected _lines: any[];
+    protected _methods: any[];
+    protected _waitCount: number;
+    protected _waitMode: string;
+    protected _baseLineStack: any[];
+    protected _spriteset: Spriteset_Battle;
+    protected _backBitmap: Bitmap;
+    protected _backSprite: Sprite;
+
     initialize() {
         const width = this.windowWidth();
         const height = this.windowHeight();
@@ -66,7 +76,7 @@ export class Window_BattleLog extends Window_Selectable {
     }
 
     isBusy() {
-        return this._waitCount > 0 || this._waitMode || this._methods.length > 0;
+        return this._waitCount > 0 || !!this._waitMode || this._methods.length > 0;
     }
 
     update() {
@@ -114,7 +124,7 @@ export class Window_BattleLog extends Window_Selectable {
         if (this._methods.length > 0) {
             const method = this._methods.shift();
             if (method.name && this[method.name]) {
-                this[method.name].apply(this, method.params);
+                this[method.name](...method.params);
             } else {
                 throw new Error('Method not found: ' + method.name);
             }
@@ -251,7 +261,7 @@ export class Window_BattleLog extends Window_Selectable {
         SoundManager.playEnemyAttack();
     }
 
-    showNormalAnimation(targets, animationId, mirror) {
+    showNormalAnimation(targets, animationId, mirror = false) {
         const animation = window.$dataAnimations[animationId];
         if (animation) {
             let delay = this.animationBaseDelay();
@@ -308,7 +318,7 @@ export class Window_BattleLog extends Window_Selectable {
     drawLineText(index) {
         const rect = this.itemRectForText(index);
         this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
-        this.drawTextEx(this._lines[index], rect.x, rect.y, rect.width);
+        this.drawTextEx(this._lines[index], rect.x, rect.y);
     }
 
     startTurn() {
@@ -392,7 +402,7 @@ export class Window_BattleLog extends Window_Selectable {
 
     displayFailure(target) {
         if (target.result().isHit() && !target.result().success) {
-            this.push('addText', format(TextManager.actionFailur, target.name()));
+            this.push('addText', format(TextManager.actionFailure, target.name()));
         }
     }
 
@@ -483,7 +493,7 @@ export class Window_BattleLog extends Window_Selectable {
 
     displayAutoAffectedStatus(target) {
         if (target.result().isStatusAffected()) {
-            this.displayAffectedStatus(target, null);
+            this.displayAffectedStatus(target);
             this.push('clear');
         }
     }

@@ -6,6 +6,8 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for selecting a save file on the save and load screens.
  */
 export class Window_SavefileList extends Window_Selectable {
+    protected _mode: string;
+
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
         this.activate();

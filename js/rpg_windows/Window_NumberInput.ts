@@ -5,12 +5,20 @@ import { TouchInput } from '../rpg_core/TouchInput';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Sprite_Button } from '../rpg_sprites/Sprite_Button';
+import { Window_Message } from './Window_Message';
 import { Window_Selectable } from './Window_Selectable';
 
 /**
  * The window used for the event command [Input Number].
  */
 export class Window_NumberInput extends Window_Selectable {
+    protected _messageWindow: Window_Message;
+
+    protected _number: number;
+    protected _maxDigits: number;
+
+    protected _buttons: Sprite_Button[];
+
     initialize(messageWindow) {
         this._messageWindow = messageWindow;
         super.initialize(0, 0, 0, 0);
@@ -196,7 +204,7 @@ export class Window_NumberInput extends Window_Selectable {
     drawItem(index) {
         const rect = this.itemRect(index);
         const align = 'center';
-        const s = this._number.padStart(this._maxDigits, '0');
+        const s = this._number.toString().padStart(this._maxDigits, '0');
         const c = s.slice(index, index + 1);
         this.resetTextColor();
         this.drawText(c, rect.x, rect.y, rect.width, align);

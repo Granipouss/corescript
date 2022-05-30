@@ -1,10 +1,17 @@
 import { JsonEx } from '../rpg_core/JsonEx';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
+import { Window_EquipStatus } from './Window_EquipStatus';
 import { Window_ItemList } from './Window_ItemList';
 
 /**
  * The window for selecting an equipment item on the equipment screen.
  */
 export class Window_EquipItem extends Window_ItemList {
+    protected _actor: Game_Actor;
+
+    protected _slotId: number;
+    protected _statusWindow: Window_EquipStatus;
+
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
         this._actor = null;

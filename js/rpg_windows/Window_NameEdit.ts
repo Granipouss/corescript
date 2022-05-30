@@ -1,11 +1,18 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { ImageManager } from '../rpg_managers/ImageManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Base } from './Window_Base';
 
 /**
  * The window for editing an actor's name on the name input screen.
  */
 export class Window_NameEdit extends Window_Base {
+    protected _actor: Game_Actor;
+    protected _name: string;
+    protected _index: number;
+    protected _maxLength: number;
+    protected _defaultName: string;
+
     initialize(actor, maxLength) {
         const width = this.windowWidth();
         const height = this.windowHeight();

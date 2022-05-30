@@ -1,13 +1,16 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
-import { Window_Base } from './Window_Base';
+import { TextState, Window_Base } from './Window_Base';
 
 /**
  * The window for displaying scrolling text. No frame is displayed, but it
  * is handled as a window for convenience.
  */
 export class Window_ScrollText extends Window_Base {
+    protected _text: string;
+    protected _allTextHeight: number;
+
     initialize() {
         const width = Graphics.boxWidth;
         const height = Graphics.boxHeight;
@@ -37,7 +40,7 @@ export class Window_ScrollText extends Window_Base {
     }
 
     refresh() {
-        const textState = { index: 0 };
+        const textState: TextState = { index: 0 };
         textState.text = this.convertEscapeCharacters(this._text);
         this.resetFontSettings();
         this._allTextHeight = this.calcTextHeight(textState, true);

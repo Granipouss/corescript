@@ -12,6 +12,14 @@ import { Window_Selectable } from './Window_Selectable';
  * screen.
  */
 export class Window_ShopNumber extends Window_Selectable {
+    protected _item: any;
+    protected _max: number;
+    protected _price: number;
+    protected _number: number;
+    protected _currencyUnit: string;
+
+    protected _buttons: Sprite_Button[];
+
     initialize(x, y, height) {
         const width = this.windowWidth();
         super.initialize(x, y, width, height);
@@ -127,7 +135,7 @@ export class Window_ShopNumber extends Window_Selectable {
         const y = this.itemY();
         const width = this.cursorWidth() - this.textPadding();
         this.resetTextColor();
-        this.drawText(this._number, x, y, width, 'right');
+        this.drawText(this._number.toFixed(), x, y, width, 'right');
     }
 
     drawTotalPrice() {

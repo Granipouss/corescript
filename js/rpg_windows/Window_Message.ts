@@ -1,9 +1,10 @@
+import { Bitmap } from '../rpg_core/Bitmap';
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Utils } from '../rpg_core/Utils';
 import { ImageManager } from '../rpg_managers/ImageManager';
-import { Window_Base } from './Window_Base';
+import { TextState, Window_Base } from './Window_Base';
 import { Window_ChoiceList } from './Window_ChoiceList';
 import { Window_EventItem } from './Window_EventItem';
 import { Window_Gold } from './Window_Gold';
@@ -13,6 +14,24 @@ import { Window_NumberInput } from './Window_NumberInput';
  * The window for displaying text messages.
  */
 export class Window_Message extends Window_Base {
+    protected _imageReservationId: number;
+    protected _background: number;
+    protected _positionType: number;
+    protected _waitCount: number;
+    protected _faceBitmap: Bitmap;
+    protected _textState: TextState;
+
+    protected _goldWindow: Window_Gold;
+    protected _choiceWindow: Window_ChoiceList;
+    protected _numberWindow: Window_NumberInput;
+    protected _itemWindow: Window_EventItem;
+
+    protected _showFast: boolean;
+    protected _lineShowFast: boolean;
+    protected _pauseSkip: boolean;
+    protected _textSpeed: number;
+    protected _textSpeedCount: number;
+
     initialize() {
         const width = this.windowWidth();
         const height = this.windowHeight();
@@ -101,8 +120,7 @@ export class Window_Message extends Window_Base {
     }
 
     startMessage() {
-        this._textState = {};
-        this._textState.index = 0;
+        this._textState = { index: 0 };
         this._textState.text = this.convertEscapeCharacters(window.$gameMessage.allText());
         this.newPage(this._textState);
         this.updatePlacement();

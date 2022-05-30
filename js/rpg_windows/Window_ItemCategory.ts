@@ -1,11 +1,14 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { TextManager } from '../rpg_managers/TextManager';
 import { Window_HorzCommand } from './Window_HorzCommand';
+import { Window_ItemList } from './Window_ItemList';
 
 /**
  * The window for selecting a category of items on the item and shop screens.
  */
 export class Window_ItemCategory extends Window_HorzCommand {
+    private _itemWindow: Window_ItemList;
+
     initialize() {
         super.initialize(0, 0);
     }

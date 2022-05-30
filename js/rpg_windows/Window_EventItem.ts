@@ -1,11 +1,14 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Window_ItemList } from './Window_ItemList';
+import { Window_Message } from './Window_Message';
 
 /**
  * The window used for the event command [Select Item].
  */
 export class Window_EventItem extends Window_ItemList {
+    protected _messageWindow: Window_Message;
+
     initialize(messageWindow) {
         this._messageWindow = messageWindow;
         const width = Graphics.boxWidth;

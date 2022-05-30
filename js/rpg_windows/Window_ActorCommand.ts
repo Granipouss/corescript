@@ -1,12 +1,15 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { ConfigManager } from '../rpg_managers/ConfigManager';
 import { TextManager } from '../rpg_managers/TextManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Command } from './Window_Command';
 
 /**
  * The window for selecting an actor's action on the battle screen.
  */
 export class Window_ActorCommand extends Window_Command {
+    protected _actor: Game_Actor;
+
     initialize() {
         const y = Graphics.boxHeight - this.windowHeight();
         super.initialize(0, y);

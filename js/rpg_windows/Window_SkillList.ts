@@ -1,9 +1,14 @@
+import { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Selectable } from './Window_Selectable';
 
 /**
  * The window for selecting a skill on the skill screen.
  */
 export class Window_SkillList extends Window_Selectable {
+    protected _actor: Game_Actor;
+    protected _stypeId: number;
+    protected _data: any[];
+
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
         this._actor = null;
@@ -85,7 +90,7 @@ export class Window_SkillList extends Window_Selectable {
             this.changePaintOpacity(this.isEnabled(skill));
             this.drawItemName(skill, rect.x, rect.y, rect.width - costWidth);
             this.drawSkillCost(skill, rect.x, rect.y, rect.width);
-            this.changePaintOpacity(1);
+            this.changePaintOpacity(true);
         }
     }
 
@@ -96,10 +101,10 @@ export class Window_SkillList extends Window_Selectable {
     drawSkillCost(skill, x, y, width) {
         if (this._actor.skillTpCost(skill) > 0) {
             this.changeTextColor(this.tpCostColor());
-            this.drawText(this._actor.skillTpCost(skill), x, y, width, 'right');
+            this.drawText(this._actor.skillTpCost(skill).toFixed(), x, y, width, 'right');
         } else if (this._actor.skillMpCost(skill) > 0) {
             this.changeTextColor(this.mpCostColor());
-            this.drawText(this._actor.skillMpCost(skill), x, y, width, 'right');
+            this.drawText(this._actor.skillMpCost(skill).toFixed(), x, y, width, 'right');
         }
     }
 

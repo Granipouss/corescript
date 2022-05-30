@@ -1,5 +1,6 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
+import { Window_DebugEdit } from './Window_DebugEdit';
 import { Window_Selectable } from './Window_Selectable';
 
 /**
@@ -8,6 +9,10 @@ import { Window_Selectable } from './Window_Selectable';
 export class Window_DebugRange extends Window_Selectable {
     static lastTopRow = 0;
     static lastIndex = 0;
+
+    protected _maxSwitches: number;
+    protected _maxVariables: number;
+    protected _editWindow: Window_DebugEdit;
 
     initialize(x, y) {
         this._maxSwitches = Math.ceil((window.$dataSystem.switches.length - 1) / 10);

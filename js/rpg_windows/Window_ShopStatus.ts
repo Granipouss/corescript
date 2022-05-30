@@ -10,6 +10,9 @@ import { Window_Base } from './Window_Base';
  * equipment on the shop screen.
  */
 export class Window_ShopStatus extends Window_Base {
+    protected _item: any;
+    protected _pageIndex: number;
+
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
         this._item = null;
@@ -43,7 +46,7 @@ export class Window_ShopStatus extends Window_Base {
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.possession, x, y, width - possessionWidth);
         this.resetTextColor();
-        this.drawText(window.$gameParty.numItems(this._item), x, y, width, 'right');
+        this.drawText(window.$gameParty.numItems(this._item).toFixed(), x, y, width, 'right');
     }
 
     drawEquipInfo(x, y) {

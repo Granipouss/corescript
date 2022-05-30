@@ -6,11 +6,11 @@ import { ImageManager } from '../rpg_managers/ImageManager';
 import { TextManager } from '../rpg_managers/TextManager';
 import { Game_Actor } from '../rpg_objects/Game_Actor';
 
-type TextState = {
+export type TextState = {
     index: number;
-    x: number;
-    y: number;
-    left: number;
+    x?: number;
+    y?: number;
+    left?: number;
     text?: string;
     height?: number;
 };
