@@ -1,11 +1,20 @@
 import { Window_Selectable } from './Window_Selectable';
 
+export type Command = {
+    name: string;
+    symbol: string;
+    enabled: boolean;
+    ext: unknown;
+};
+
 /**
  * The superclass of windows for selecting a command.
  * @abstract
  */
 export class Window_Command extends Window_Selectable {
-    initialize(x, y) {
+    protected _list: Command[];
+
+    initialize(x: number, y: number): void {
         this.clearCommandList();
         this.makeCommandList();
         const width = this.windowWidth();
@@ -16,69 +25,63 @@ export class Window_Command extends Window_Selectable {
         this.activate();
     }
 
-    windowWidth() {
+    windowWidth(): number {
         return 240;
     }
 
-    windowHeight() {
+    windowHeight(): number {
         return this.fittingHeight(this.numVisibleRows());
     }
 
-    numVisibleRows() {
+    numVisibleRows(): number {
         return Math.ceil(this.maxItems() / this.maxCols());
     }
 
-    maxItems() {
+    maxItems(): number {
         return this._list.length;
     }
 
-    clearCommandList() {
+    clearCommandList(): void {
         this._list = [];
     }
 
-    makeCommandList() {
+    makeCommandList(): void {
         // ...
     }
 
-    addCommand(name, symbol, enabled, ext) {
-        if (enabled === undefined) {
-            enabled = true;
-        }
-        if (ext === undefined) {
-            ext = null;
-        }
-        this._list.push({ name: name, symbol: symbol, enabled: enabled, ext: ext });
+    addCommand(name: string, symbol: string, enabled = true, ext = null): void {
+        this._list.push({ name, symbol, enabled, ext });
     }
 
-    commandName(index) {
+    commandName(index: number): string {
         return this._list[index].name;
     }
 
-    commandSymbol(index) {
+    commandSymbol(index: number): string {
         return this._list[index].symbol;
     }
 
-    isCommandEnabled(index) {
+    isCommandEnabled(index: number): boolean {
         return this._list[index].enabled;
     }
 
-    currentData() {
+    currentData(): Command {
         return this.index() >= 0 ? this._list[this.index()] : null;
     }
 
-    isCurrentItemEnabled() {
+    isCurrentItemEnabled(): boolean {
         return this.currentData() ? this.currentData().enabled : false;
     }
 
-    currentSymbol() {
+    currentSymbol(): string {
         return this.currentData() ? this.currentData().symbol : null;
     }
 
-    currentExt() {
+    currentExt(): unknown {
         return this.currentData() ? this.currentData().ext : null;
     }
 
-    findSymbol(symbol) {
+    findSymbol(symbol: string): number {
         for (let i = 0; i < this._list.length; i++) {
             if (this._list[i].symbol === symbol) {
                 return i;
@@ -87,7 +90,7 @@ export class Window_Command extends Window_Selectable {
         return -1;
     }
 
-    selectSymbol(symbol) {
+    selectSymbol(symbol: string): void {
         const index = this.findSymbol(symbol);
         if (index >= 0) {
             this.select(index);
@@ -96,7 +99,7 @@ export class Window_Command extends Window_Selectable {
         }
     }
 
-    findExt(ext) {
+    findExt(ext: unknown): number {
         for (let i = 0; i < this._list.length; i++) {
             if (this._list[i].ext === ext) {
                 return i;
@@ -105,7 +108,7 @@ export class Window_Command extends Window_Selectable {
         return -1;
     }
 
-    selectExt(ext) {
+    selectExt(ext: unknown): void {
         const index = this.findExt(ext);
         if (index >= 0) {
             this.select(index);
@@ -114,7 +117,7 @@ export class Window_Command extends Window_Selectable {
         }
     }
 
-    drawItem(index) {
+    drawItem(index: number): void {
         const rect = this.itemRectForText(index);
         const align = this.itemTextAlign();
         this.resetTextColor();
@@ -122,15 +125,15 @@ export class Window_Command extends Window_Selectable {
         this.drawText(this.commandName(index), rect.x, rect.y, rect.width, align);
     }
 
-    itemTextAlign() {
+    itemTextAlign(): CanvasTextAlign {
         return 'left';
     }
 
-    isOkEnabled() {
+    isOkEnabled(): boolean {
         return true;
     }
 
-    callOkHandler() {
+    callOkHandler(): void {
         const symbol = this.currentSymbol();
         if (this.isHandled(symbol)) {
             this.callHandler(symbol);
@@ -141,7 +144,7 @@ export class Window_Command extends Window_Selectable {
         }
     }
 
-    refresh() {
+    refresh(): void {
         this.clearCommandList();
         this.makeCommandList();
         this.createContents();

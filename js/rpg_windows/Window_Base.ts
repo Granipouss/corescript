@@ -4,13 +4,26 @@ import { Window } from '../rpg_core/Window';
 
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { TextManager } from '../rpg_managers/TextManager';
+import { Game_Actor } from '../rpg_objects/Game_Actor';
+
+type TextState = {
+    index: number;
+    x: number;
+    y: number;
+    left: number;
+    text?: string;
+    height?: number;
+};
 
 /**
  * The superclass of all windows within the game.
- * @abstract
  */
 export class Window_Base extends Window {
-    initialize(x, y, width, height) {
+    protected _opening: boolean;
+    protected _closing: boolean;
+    protected _dimmerSprite: Sprite;
+
+    initialize(x: number, y: number, width: number, height: number) {
         super.initialize();
         this.loadWindowskin();
         this.move(x, y, width, height);
@@ -23,38 +36,38 @@ export class Window_Base extends Window {
         this._dimmerSprite = null;
     }
 
-    static _iconWidth = 32;
-    static _iconHeight = 32;
-    static _faceWidth = 144;
-    static _faceHeight = 144;
+    protected static _iconWidth = 32;
+    protected static _iconHeight = 32;
+    protected static _faceWidth = 144;
+    protected static _faceHeight = 144;
 
-    lineHeight() {
+    lineHeight(): number {
         return 36;
     }
 
-    standardFontFace() {
-        if (global.$gameSystem.isChinese()) {
+    standardFontFace(): string {
+        if (window.$gameSystem.isChinese()) {
             return 'SimHei, Heiti TC, sans-serif';
-        } else if (global.$gameSystem.isKorean()) {
+        } else if (window.$gameSystem.isKorean()) {
             return 'Dotum, AppleGothic, sans-serif';
         } else {
             return 'GameFont';
         }
     }
 
-    standardFontSize() {
+    standardFontSize(): number {
         return 28;
     }
 
-    standardPadding() {
+    standardPadding(): number {
         return 18;
     }
 
-    textPadding() {
+    textPadding(): number {
         return 6;
     }
 
-    standardBackOpacity() {
+    standardBackOpacity(): number {
         return 192;
     }
 
@@ -62,47 +75,47 @@ export class Window_Base extends Window {
         this.windowskin = ImageManager.loadSystem('Window');
     }
 
-    updatePadding() {
+    updatePadding(): void {
         this.padding = this.standardPadding();
     }
 
-    updateBackOpacity() {
+    updateBackOpacity(): void {
         this.backOpacity = this.standardBackOpacity();
     }
 
-    contentsWidth() {
+    contentsWidth(): number {
         return this.width - this.standardPadding() * 2;
     }
 
-    contentsHeight() {
+    contentsHeight(): number {
         return this.height - this.standardPadding() * 2;
     }
 
-    fittingHeight(numLines) {
+    fittingHeight(numLines: number): number {
         return numLines * this.lineHeight() + this.standardPadding() * 2;
     }
 
-    updateTone() {
-        const tone = global.$gameSystem.windowTone();
+    updateTone(): void {
+        const tone = window.$gameSystem.windowTone();
         this.setTone(tone[0], tone[1], tone[2]);
     }
 
-    createContents() {
+    createContents(): void {
         this.contents = new Bitmap(this.contentsWidth(), this.contentsHeight());
         this.resetFontSettings();
     }
 
-    resetFontSettings() {
+    resetFontSettings(): void {
         this.contents.fontFace = this.standardFontFace();
         this.contents.fontSize = this.standardFontSize();
         this.resetTextColor();
     }
 
-    resetTextColor() {
+    resetTextColor(): void {
         this.changeTextColor(this.normalColor());
     }
 
-    update() {
+    update(): void {
         super.update();
         this.updateTone();
         this.updateOpen();
@@ -110,7 +123,7 @@ export class Window_Base extends Window {
         this.updateBackgroundDimmer();
     }
 
-    updateOpen() {
+    updateOpen(): void {
         if (this._opening) {
             this.openness += 32;
             if (this.isOpen()) {
@@ -119,7 +132,7 @@ export class Window_Base extends Window {
         }
     }
 
-    updateClose() {
+    updateClose(): void {
         if (this._closing) {
             this.openness -= 32;
             if (this.isClosed()) {
@@ -128,137 +141,137 @@ export class Window_Base extends Window {
         }
     }
 
-    open() {
+    open(): void {
         if (!this.isOpen()) {
             this._opening = true;
         }
         this._closing = false;
     }
 
-    close() {
+    close(): void {
         if (!this.isClosed()) {
             this._closing = true;
         }
         this._opening = false;
     }
 
-    isOpening() {
+    isOpening(): boolean {
         return this._opening;
     }
 
-    isClosing() {
+    isClosing(): boolean {
         return this._closing;
     }
 
-    show() {
+    show(): void {
         this.visible = true;
     }
 
-    hide() {
+    hide(): void {
         this.visible = false;
     }
 
-    activate() {
+    activate(): void {
         this.active = true;
     }
 
-    deactivate() {
+    deactivate(): void {
         this.active = false;
     }
 
-    textColor(n) {
+    textColor(n: number): string {
         const px = 96 + (n % 8) * 12 + 6;
         const py = 144 + Math.floor(n / 8) * 12 + 6;
         return this.windowskin.getPixel(px, py);
     }
 
-    normalColor() {
+    normalColor(): string {
         return this.textColor(0);
     }
 
-    systemColor() {
+    systemColor(): string {
         return this.textColor(16);
     }
 
-    crisisColor() {
+    crisisColor(): string {
         return this.textColor(17);
     }
 
-    deathColor() {
+    deathColor(): string {
         return this.textColor(18);
     }
 
-    gaugeBackColor() {
+    gaugeBackColor(): string {
         return this.textColor(19);
     }
 
-    hpGaugeColor1() {
+    hpGaugeColor1(): string {
         return this.textColor(20);
     }
 
-    hpGaugeColor2() {
+    hpGaugeColor2(): string {
         return this.textColor(21);
     }
 
-    mpGaugeColor1() {
+    mpGaugeColor1(): string {
         return this.textColor(22);
     }
 
-    mpGaugeColor2() {
+    mpGaugeColor2(): string {
         return this.textColor(23);
     }
 
-    mpCostColor() {
+    mpCostColor(): string {
         return this.textColor(23);
     }
 
-    powerUpColor() {
+    powerUpColor(): string {
         return this.textColor(24);
     }
 
-    powerDownColor() {
+    powerDownColor(): string {
         return this.textColor(25);
     }
 
-    tpGaugeColor1() {
+    tpGaugeColor1(): string {
         return this.textColor(28);
     }
 
-    tpGaugeColor2() {
+    tpGaugeColor2(): string {
         return this.textColor(29);
     }
 
-    tpCostColor() {
+    tpCostColor(): string {
         return this.textColor(29);
     }
 
-    pendingColor() {
+    pendingColor(): string {
         return this.windowskin.getPixel(120, 120);
     }
 
-    translucentOpacity() {
+    translucentOpacity(): number {
         return 160;
     }
 
-    changeTextColor(color) {
+    changeTextColor(color: string): void {
         this.contents.textColor = color;
     }
 
-    changePaintOpacity(enabled) {
+    changePaintOpacity(enabled = false): void {
         this.contents.paintOpacity = enabled ? 255 : this.translucentOpacity();
     }
 
-    drawText(text, x, y, maxWidth, align) {
+    drawText(text: string, x: number, y: number, maxWidth?: number, align?: CanvasTextAlign): void {
         this.contents.drawText(text, x, y, maxWidth, this.lineHeight(), align);
     }
 
-    textWidth(text) {
+    textWidth(text: string): number {
         return this.contents.measureTextWidth(text);
     }
 
-    drawTextEx(text, x, y) {
+    drawTextEx(text: string, x: number, y: number): number {
         if (text) {
-            const textState = { index: 0, x: x, y: y, left: x };
+            const textState: TextState = { index: 0, x: x, y: y, left: x };
             textState.text = this.convertEscapeCharacters(text);
             textState.height = this.calcTextHeight(textState, false);
             this.resetFontSettings();
@@ -271,28 +284,28 @@ export class Window_Base extends Window {
         }
     }
 
-    convertEscapeCharacters(text, arg) {
+    convertEscapeCharacters(text: string, arg?: string): string {
         text = text.replace(/\\/g, '\x1b');
         text = text.replace(/\x1b\x1b/g, '\\');
-        text = text.replace(/\x1bV\[(\d+)\]/gi, () => global.$gameVariables.value(parseInt(arg)));
-        text = text.replace(/\x1bV\[(\d+)\]/gi, () => global.$gameVariables.value(parseInt(arg)));
+        text = text.replace(/\x1bV\[(\d+)\]/gi, () => window.$gameVariables.value(parseInt(arg)));
+        text = text.replace(/\x1bV\[(\d+)\]/gi, () => window.$gameVariables.value(parseInt(arg)));
         text = text.replace(/\x1bN\[(\d+)\]/gi, () => this.actorName(parseInt(arg)));
         text = text.replace(/\x1bP\[(\d+)\]/gi, () => this.partyMemberName(parseInt(arg)));
         text = text.replace(/\x1bG/gi, TextManager.currencyUnit);
         return text;
     }
 
-    actorName(n) {
-        const actor = n >= 1 ? global.$gameActors.actor(n) : null;
+    actorName(n: number): string {
+        const actor = n >= 1 ? window.$gameActors.actor(n) : null;
         return actor ? actor.name() : '';
     }
 
-    partyMemberName(n) {
-        const actor = n >= 1 ? global.$gameParty.members()[n - 1] : null;
+    partyMemberName(n: number): string {
+        const actor = n >= 1 ? window.$gameParty.members()[n - 1] : null;
         return actor ? actor.name() : '';
     }
 
-    processCharacter(textState) {
+    processCharacter(textState: TextState): void {
         switch (textState.text[textState.index]) {
             case '\n':
                 this.processNewLine(textState);
@@ -309,25 +322,25 @@ export class Window_Base extends Window {
         }
     }
 
-    processNormalCharacter(textState) {
+    processNormalCharacter(textState: TextState) {
         const c = textState.text[textState.index++];
         const w = this.textWidth(c);
         this.contents.drawText(c, textState.x, textState.y, w * 2, textState.height);
         textState.x += w;
     }
 
-    processNewLine(textState) {
+    processNewLine(textState: TextState) {
         textState.x = textState.left;
         textState.y += textState.height;
         textState.height = this.calcTextHeight(textState, false);
         textState.index++;
     }
 
-    processNewPage(textState) {
+    processNewPage(textState: TextState): void {
         textState.index++;
     }
 
-    obtainEscapeCode(textState) {
+    obtainEscapeCode(textState: TextState): string {
         textState.index++;
         const regExp = /^[$.|^!><{}\\]|^[A-Z]+/i;
         const arr = regExp.exec(textState.text.slice(textState.index));
@@ -339,17 +352,17 @@ export class Window_Base extends Window {
         }
     }
 
-    obtainEscapeParam(textState) {
+    obtainEscapeParam(textState: TextState): number {
         const arr = /^\[\d+\]/.exec(textState.text.slice(textState.index));
         if (arr) {
             textState.index += arr[0].length;
             return parseInt(arr[0].slice(1));
         } else {
-            return '';
+            return 0;
         }
     }
 
-    processEscapeCharacter(code, textState) {
+    processEscapeCharacter(code: string, textState: TextState): void {
         switch (code) {
             case 'C':
                 this.changeTextColor(this.textColor(this.obtainEscapeParam(textState)));
@@ -366,24 +379,24 @@ export class Window_Base extends Window {
         }
     }
 
-    processDrawIcon(iconIndex, textState) {
+    processDrawIcon(iconIndex: number, textState: TextState): void {
         this.drawIcon(iconIndex, textState.x + 2, textState.y + 2);
         textState.x += Window_Base._iconWidth + 4;
     }
 
-    makeFontBigger() {
+    makeFontBigger(): void {
         if (this.contents.fontSize <= 96) {
             this.contents.fontSize += 12;
         }
     }
 
-    makeFontSmaller() {
+    makeFontSmaller(): void {
         if (this.contents.fontSize >= 24) {
             this.contents.fontSize -= 12;
         }
     }
 
-    calcTextHeight(textState, all) {
+    calcTextHeight(textState: TextState, all = false): number {
         const lastFontSize = this.contents.fontSize;
         let textHeight = 0;
         const lines = textState.text.slice(textState.index).split('\n');
@@ -415,7 +428,7 @@ export class Window_Base extends Window {
         return textHeight;
     }
 
-    drawIcon(iconIndex, x, y) {
+    drawIcon(iconIndex: number, x: number, y: number): void {
         const bitmap = ImageManager.loadSystem('IconSet');
         const pw = Window_Base._iconWidth;
         const ph = Window_Base._iconHeight;
@@ -424,9 +437,14 @@ export class Window_Base extends Window {
         this.contents.blt(bitmap, sx, sy, pw, ph, x, y);
     }
 
-    drawFace(faceName, faceIndex, x, y, width, height) {
-        width = width || Window_Base._faceWidth;
-        height = height || Window_Base._faceHeight;
+    drawFace(
+        faceName: string,
+        faceIndex: number,
+        x: number,
+        y: number,
+        width = Window_Base._faceWidth,
+        height = Window_Base._faceHeight
+    ): void {
         const bitmap = ImageManager.loadFace(faceName);
         const pw = Window_Base._faceWidth;
         const ph = Window_Base._faceHeight;
@@ -439,7 +457,7 @@ export class Window_Base extends Window {
         this.contents.blt(bitmap, sx, sy, sw, sh, dx, dy);
     }
 
-    drawCharacter(characterName, characterIndex, x, y) {
+    drawCharacter(characterName: string, characterIndex: number, x: number, y: number): void {
         const bitmap = ImageManager.loadCharacter(characterName);
         const big = ImageManager.isBigCharacter(characterName);
         const pw = bitmap.width / (big ? 3 : 12);
@@ -450,14 +468,14 @@ export class Window_Base extends Window {
         this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
     }
 
-    drawGauge(x, y, width, rate, color1, color2) {
+    drawGauge(x: number, y: number, width: number, rate: number, color1: string, color2: string): void {
         const fillW = Math.floor(width * rate);
         const gaugeY = y + this.lineHeight() - 8;
         this.contents.fillRect(x, gaugeY, width, 6, this.gaugeBackColor());
         this.contents.gradientFillRect(x, gaugeY, fillW, 6, color1, color2);
     }
 
-    hpColor(actor) {
+    hpColor(actor: Game_Actor): string {
         if (actor.isDead()) {
             return this.deathColor();
         } else if (actor.isDying()) {
@@ -467,56 +485,60 @@ export class Window_Base extends Window {
         }
     }
 
-    mpColor(_actor) {
+    mpColor(_actor: Game_Actor): string {
         return this.normalColor();
     }
 
-    tpColor(_actor) {
+    tpColor(_actor: Game_Actor): string {
         return this.normalColor();
     }
 
-    drawActorCharacter(actor, x, y) {
+    drawActorCharacter(actor: Game_Actor, x: number, y: number): void {
         this.drawCharacter(actor.characterName(), actor.characterIndex(), x, y);
     }
 
-    drawActorFace(actor, x, y, width, height) {
+    drawActorFace(actor: Game_Actor, x: number, y: number, width?: number, height?: number): void {
         this.drawFace(actor.faceName(), actor.faceIndex(), x, y, width, height);
     }
 
-    drawActorName(actor, x, y, width) {
-        width = width || 168;
+    drawActorName(actor: Game_Actor, x: number, y: number, width = 168): void {
         this.changeTextColor(this.hpColor(actor));
         this.drawText(actor.name(), x, y, width);
     }
 
-    drawActorClass(actor, x, y, width) {
-        width = width || 168;
+    drawActorClass(actor: Game_Actor, x: number, y: number, width = 168): void {
         this.resetTextColor();
         this.drawText(actor.currentClass().name, x, y, width);
     }
 
-    drawActorNickname(actor, x, y, width) {
-        width = width || 270;
+    drawActorNickname(actor: Game_Actor, x: number, y: number, width = 270): void {
         this.resetTextColor();
         this.drawText(actor.nickname(), x, y, width);
     }
 
-    drawActorLevel(actor, x, y) {
+    drawActorLevel(actor: Game_Actor, x: number, y: number): void {
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.levelA, x, y, 48);
         this.resetTextColor();
-        this.drawText(actor.level, x + 84, y, 36, 'right');
+        this.drawText(actor.level.toFixed(), x + 84, y, 36, 'right');
     }
 
-    drawActorIcons(actor, x, y, width) {
-        width = width || 144;
+    drawActorIcons(actor: Game_Actor, x: number, y: number, width = 144): void {
         const icons = actor.allIcons().slice(0, Math.floor(width / Window_Base._iconWidth));
         for (let i = 0; i < icons.length; i++) {
             this.drawIcon(icons[i], x + Window_Base._iconWidth * i, y + 2);
         }
     }
 
-    drawCurrentAndMax(current, max, x, y, width, color1, color2) {
+    drawCurrentAndMax(
+        current: string,
+        max: string,
+        x: number,
+        y: number,
+        width: number,
+        color1: string,
+        color2: string
+    ): void {
         const labelWidth = this.textWidth('HP');
         const valueWidth = this.textWidth('0000');
         const slashWidth = this.textWidth('/');
@@ -535,38 +557,51 @@ export class Window_Base extends Window {
         }
     }
 
-    drawActorHp(actor, x, y, width) {
-        width = width || 186;
+    drawActorHp(actor: Game_Actor, x: number, y: number, width = 186): void {
         const color1 = this.hpGaugeColor1();
         const color2 = this.hpGaugeColor2();
         this.drawGauge(x, y, width, actor.hpRate(), color1, color2);
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.hpA, x, y, 44);
-        this.drawCurrentAndMax(actor.hp, actor.mhp, x, y, width, this.hpColor(actor), this.normalColor());
+        this.drawCurrentAndMax(
+            actor.hp.toFixed(),
+            actor.mhp.toFixed(),
+            x,
+            y,
+            width,
+            this.hpColor(actor),
+            this.normalColor()
+        );
     }
 
-    drawActorMp(actor, x, y, width) {
-        width = width || 186;
+    drawActorMp(actor: Game_Actor, x: number, y: number, width = 186): void {
         const color1 = this.mpGaugeColor1();
         const color2 = this.mpGaugeColor2();
         this.drawGauge(x, y, width, actor.mpRate(), color1, color2);
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.mpA, x, y, 44);
-        this.drawCurrentAndMax(actor.mp, actor.mmp, x, y, width, this.mpColor(actor), this.normalColor());
+        this.drawCurrentAndMax(
+            actor.mp.toFixed(),
+            actor.mmp.toFixed(),
+            x,
+            y,
+            width,
+            this.mpColor(actor),
+            this.normalColor()
+        );
     }
 
-    drawActorTp(actor, x, y, width) {
-        width = width || 96;
+    drawActorTp(actor: Game_Actor, x: number, y: number, width = 96): void {
         const color1 = this.tpGaugeColor1();
         const color2 = this.tpGaugeColor2();
         this.drawGauge(x, y, width, actor.tpRate(), color1, color2);
         this.changeTextColor(this.systemColor());
         this.drawText(TextManager.tpA, x, y, 44);
         this.changeTextColor(this.tpColor(actor));
-        this.drawText(actor.tp, x + width - 64, y, 64, 'right');
+        this.drawText(actor.tp.toFixed(), x + width - 64, y, 64, 'right');
     }
 
-    drawActorSimpleStatus(actor, x, y, width) {
+    drawActorSimpleStatus(actor: Game_Actor, x: number, y: number, width: number) {
         const lineHeight = this.lineHeight();
         const x2 = x + 180;
         const width2 = Math.min(200, width - 180 - this.textPadding());
@@ -578,8 +613,7 @@ export class Window_Base extends Window {
         this.drawActorMp(actor, x2, y + lineHeight * 2, width2);
     }
 
-    drawItemName(item, x, y, width) {
-        width = width || 312;
+    drawItemName(item: { iconIndex: number; name: string }, x: number, y: number, width = 312): void {
         if (item) {
             const iconBoxWidth = Window_Base._iconWidth + 4;
             this.resetTextColor();
@@ -588,15 +622,15 @@ export class Window_Base extends Window {
         }
     }
 
-    drawCurrencyValue(value, unit, x, y, width) {
+    drawCurrencyValue(value: number, unit: string, x: number, y: number, width: number): void {
         const unitWidth = Math.min(80, this.textWidth(unit));
         this.resetTextColor();
-        this.drawText(value, x, y, width - unitWidth - 6, 'right');
+        this.drawText(value.toFixed(), x, y, width - unitWidth - 6, 'right');
         this.changeTextColor(this.systemColor());
         this.drawText(unit, x + width - unitWidth, y, unitWidth, 'right');
     }
 
-    paramchangeTextColor(change) {
+    paramchangeTextColor(change: number): string {
         if (change > 0) {
             return this.powerUpColor();
         } else if (change < 0) {
@@ -606,7 +640,7 @@ export class Window_Base extends Window {
         }
     }
 
-    setBackgroundType(type) {
+    setBackgroundType(type: number): void {
         if (type === 0) {
             this.opacity = 255;
         } else {
@@ -619,13 +653,13 @@ export class Window_Base extends Window {
         }
     }
 
-    showBackgroundDimmer() {
+    showBackgroundDimmer(): void {
         if (!this._dimmerSprite) {
             this._dimmerSprite = new Sprite();
             this._dimmerSprite.bitmap = new Bitmap(0, 0);
             this.addChildToBack(this._dimmerSprite);
         }
-        var bitmap = this._dimmerSprite.bitmap;
+        const bitmap = this._dimmerSprite.bitmap;
         if (bitmap.width !== this.width || bitmap.height !== this.height) {
             this.refreshDimmerBitmap();
         }
@@ -633,19 +667,19 @@ export class Window_Base extends Window {
         this.updateBackgroundDimmer();
     }
 
-    hideBackgroundDimmer() {
+    hideBackgroundDimmer(): void {
         if (this._dimmerSprite) {
             this._dimmerSprite.visible = false;
         }
     }
 
-    updateBackgroundDimmer() {
+    updateBackgroundDimmer(): void {
         if (this._dimmerSprite) {
             this._dimmerSprite.opacity = this.openness;
         }
     }
 
-    refreshDimmerBitmap() {
+    refreshDimmerBitmap(): void {
         if (this._dimmerSprite) {
             const bitmap = this._dimmerSprite.bitmap;
             const w = this.width;
@@ -661,18 +695,16 @@ export class Window_Base extends Window {
         }
     }
 
-    dimColor1() {
+    dimColor1(): string {
         return 'rgba(0, 0, 0, 0.6)';
     }
 
-    dimColor2() {
+    dimColor2(): string {
         return 'rgba(0, 0, 0, 0)';
     }
 
-    canvasToLocalX(x) {
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node = this;
+    canvasToLocalX(x: number): number {
+        let node = this as PIXI.DisplayObject;
         while (node) {
             x -= node.x;
             node = node.parent;
@@ -680,10 +712,8 @@ export class Window_Base extends Window {
         return x;
     }
 
-    canvasToLocalY(y) {
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node = this;
+    canvasToLocalY(y: number): number {
+        let node = this as PIXI.DisplayObject;
         while (node) {
             y -= node.y;
             node = node.parent;
@@ -691,9 +721,9 @@ export class Window_Base extends Window {
         return y;
     }
 
-    reserveFaceImages() {
-        global.$gameParty.members().forEach((actor) => {
+    reserveFaceImages(): void {
+        window.$gameParty.members().forEach((actor) => {
             ImageManager.reserveFace(actor.faceName());
-        }, this);
+        });
     }
 }

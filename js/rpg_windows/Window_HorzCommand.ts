@@ -5,15 +5,15 @@ import { Window_Command } from './Window_Command';
  * @abstract
  */
 export class Window_HorzCommand extends Window_Command {
-    numVisibleRows() {
+    numVisibleRows(): number {
         return 1;
     }
 
-    maxCols() {
+    maxCols(): number {
         return 4;
     }
 
-    itemTextAlign() {
+    itemTextAlign(): CanvasTextAlign {
         return 'center';
     }
 }

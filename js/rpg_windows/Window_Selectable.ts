@@ -1,17 +1,28 @@
-/* global PIXI */
+import * as PIXI from 'pixi.js';
 
 import { clamp } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_Base } from './Window_Base';
+import { Window_Help } from './Window_Help';
 
 /**
  * The window class with cursor movement and scroll functions.
  * @abstract
  */
 export class Window_Selectable extends Window_Base {
-    initialize(x, y, width, height) {
+    protected _index: number;
+    protected _cursorFixed: boolean;
+    protected _cursorAll: boolean;
+    protected _stayCount: number;
+    protected _helpWindow: Window_Help;
+    protected _handlers: Record<string, () => void>;
+    protected _touching: boolean;
+    protected _scrollX: number;
+    protected _scrollY: number;
+
+    initialize(x: number, y: number, width: number, height: number) {
         super.initialize(x, y, width, height);
         this._index = -1;
         this._cursorFixed = false;
@@ -25,61 +36,61 @@ export class Window_Selectable extends Window_Base {
         this.deactivate();
     }
 
-    index() {
+    index(): number {
         return this._index;
     }
 
-    cursorFixed() {
+    cursorFixed(): boolean {
         return this._cursorFixed;
     }
 
-    setCursorFixed(cursorFixed) {
+    setCursorFixed(cursorFixed: boolean): void {
         this._cursorFixed = cursorFixed;
     }
 
-    cursorAll() {
+    cursorAll(): boolean {
         return this._cursorAll;
     }
 
-    setCursorAll(cursorAll) {
+    setCursorAll(cursorAll: boolean): void {
         this._cursorAll = cursorAll;
     }
 
-    maxCols() {
+    maxCols(): number {
         return 1;
     }
 
-    maxItems() {
+    maxItems(): number {
         return 0;
     }
 
-    spacing() {
+    spacing(): number {
         return 12;
     }
 
-    itemWidth() {
+    itemWidth(): number {
         return Math.floor((this.width - this.padding * 2 + this.spacing()) / this.maxCols() - this.spacing());
     }
 
-    itemHeight() {
+    itemHeight(): number {
         return this.lineHeight();
     }
 
-    maxRows() {
+    maxRows(): number {
         return Math.max(Math.ceil(this.maxItems() / this.maxCols()), 1);
     }
 
-    activate() {
+    activate(): void {
         super.activate();
         this.reselect();
     }
 
-    deactivate() {
+    deactivate(): void {
         super.deactivate();
         this.reselect();
     }
 
-    select(index) {
+    select(index: number): void {
         this._index = index;
         this._stayCount = 0;
         this.ensureCursorVisible();
@@ -87,27 +98,27 @@ export class Window_Selectable extends Window_Base {
         this.callUpdateHelp();
     }
 
-    deselect() {
+    deselect(): void {
         this.select(-1);
     }
 
-    reselect() {
+    reselect(): void {
         this.select(this._index);
     }
 
-    row() {
+    row(): number {
         return Math.floor(this.index() / this.maxCols());
     }
 
-    topRow() {
+    topRow(): number {
         return Math.floor(this._scrollY / this.itemHeight());
     }
 
-    maxTopRow() {
+    maxTopRow(): number {
         return Math.max(0, this.maxRows() - this.maxPageRows());
     }
 
-    setTopRow(row) {
+    setTopRow(row: number): void {
         const scrollY = clamp(row, [0, this.maxTopRow()]) * this.itemHeight();
         if (this._scrollY !== scrollY) {
             this._scrollY = scrollY;
@@ -116,36 +127,36 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    resetScroll() {
+    resetScroll(): void {
         this.setTopRow(0);
     }
 
-    maxPageRows() {
+    maxPageRows(): number {
         const pageHeight = this.height - this.padding * 2;
         return Math.floor(pageHeight / this.itemHeight());
     }
 
-    maxPageItems() {
+    maxPageItems(): number {
         return this.maxPageRows() * this.maxCols();
     }
 
-    isHorizontal() {
+    isHorizontal(): boolean {
         return this.maxPageRows() === 1;
     }
 
-    bottomRow() {
+    bottomRow(): number {
         return Math.max(0, this.topRow() + this.maxPageRows() - 1);
     }
 
-    setBottomRow(row) {
+    setBottomRow(row: number): void {
         this.setTopRow(row - (this.maxPageRows() - 1));
     }
 
-    topIndex() {
+    topIndex(): number {
         return this.topRow() * this.maxCols();
     }
 
-    itemRect(index) {
+    itemRect(index: number): PIXI.Rectangle {
         const rect = new PIXI.Rectangle();
         const maxCols = this.maxCols();
         rect.width = this.itemWidth();
@@ -155,53 +166,53 @@ export class Window_Selectable extends Window_Base {
         return rect;
     }
 
-    itemRectForText(index) {
+    itemRectForText(index: number): PIXI.Rectangle {
         const rect = this.itemRect(index);
         rect.x += this.textPadding();
         rect.width -= this.textPadding() * 2;
         return rect;
     }
 
-    setHelpWindow(helpWindow) {
+    setHelpWindow(helpWindow: Window_Help): void {
         this._helpWindow = helpWindow;
         this.callUpdateHelp();
     }
 
-    showHelpWindow() {
+    showHelpWindow(): void {
         if (this._helpWindow) {
             this._helpWindow.show();
         }
     }
 
-    hideHelpWindow() {
+    hideHelpWindow(): void {
         if (this._helpWindow) {
             this._helpWindow.hide();
         }
     }
 
-    setHandler(symbol, method) {
+    setHandler(symbol: string, method: () => void): void {
         this._handlers[symbol] = method;
     }
 
-    isHandled(symbol) {
+    isHandled(symbol: string): boolean {
         return !!this._handlers[symbol];
     }
 
-    callHandler(symbol) {
+    callHandler(symbol: string): void {
         if (this.isHandled(symbol)) {
             this._handlers[symbol]();
         }
     }
 
-    isOpenAndActive() {
+    isOpenAndActive(): boolean {
         return this.isOpen() && this.active;
     }
 
-    isCursorMovable() {
+    isCursorMovable(): boolean {
         return this.isOpenAndActive() && !this._cursorFixed && !this._cursorAll && this.maxItems() > 0;
     }
 
-    cursorDown(wrap) {
+    cursorDown(wrap = false): void {
         const index = this.index();
         const maxItems = this.maxItems();
         const maxCols = this.maxCols();
@@ -210,7 +221,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    cursorUp(wrap) {
+    cursorUp(wrap = false): void {
         const index = this.index();
         const maxItems = this.maxItems();
         const maxCols = this.maxCols();
@@ -219,7 +230,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    cursorRight(wrap) {
+    cursorRight(wrap = false): void {
         const index = this.index();
         const maxItems = this.maxItems();
         const maxCols = this.maxCols();
@@ -228,7 +239,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    cursorLeft(wrap) {
+    cursorLeft(wrap = false): void {
         const index = this.index();
         const maxItems = this.maxItems();
         const maxCols = this.maxCols();
@@ -237,7 +248,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    cursorPagedown() {
+    cursorPagedown(): void {
         const index = this.index();
         const maxItems = this.maxItems();
         if (this.topRow() + this.maxPageRows() < this.maxRows()) {
@@ -246,7 +257,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    cursorPageup() {
+    cursorPageup(): void {
         const index = this.index();
         if (this.topRow() > 0) {
             this.setTopRow(this.topRow() - this.maxPageRows());
@@ -254,19 +265,19 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    scrollDown() {
+    scrollDown(): void {
         if (this.topRow() + 1 < this.maxRows()) {
             this.setTopRow(this.topRow() + 1);
         }
     }
 
-    scrollUp() {
+    scrollUp(): void {
         if (this.topRow() > 0) {
             this.setTopRow(this.topRow() - 1);
         }
     }
 
-    update() {
+    update(): void {
         super.update();
         this.updateArrows();
         this.processCursorMove();
@@ -276,14 +287,14 @@ export class Window_Selectable extends Window_Base {
         this._stayCount++;
     }
 
-    updateArrows() {
+    updateArrows(): void {
         const topRow = this.topRow();
         const maxTopRow = this.maxTopRow();
         this.downArrowVisible = maxTopRow > 0 && topRow < maxTopRow;
         this.upArrowVisible = topRow > 0;
     }
 
-    processCursorMove() {
+    processCursorMove(): void {
         if (this.isCursorMovable()) {
             const lastIndex = this.index();
             if (Input.isRepeated('down')) {
@@ -310,7 +321,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    processHandling() {
+    processHandling(): void {
         if (this.isOpenAndActive()) {
             if (this.isOkEnabled() && this.isOkTriggered()) {
                 this.processOk();
@@ -324,7 +335,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    processWheel() {
+    processWheel(): void {
         if (this.isOpenAndActive()) {
             const threshold = 20;
             if (TouchInput.wheelY >= threshold) {
@@ -336,7 +347,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    processTouch() {
+    processTouch(): void {
         if (this.isOpenAndActive()) {
             if (TouchInput.isTriggered() && this.isTouchedInsideFrame()) {
                 this._touching = true;
@@ -358,13 +369,13 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    isTouchedInsideFrame() {
+    isTouchedInsideFrame(): boolean {
         const x = this.canvasToLocalX(TouchInput.x);
         const y = this.canvasToLocalY(TouchInput.y);
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
     }
 
-    onTouch(triggered) {
+    onTouch(triggered = false): void {
         const lastIndex = this.index();
         const x = this.canvasToLocalX(TouchInput.x);
         const y = this.canvasToLocalY(TouchInput.y);
@@ -389,7 +400,7 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    hitTest(x, y) {
+    hitTest(x: number, y: number): number {
         if (this.isContentsArea(x, y)) {
             const cx = x - this.padding;
             const cy = y - this.padding;
@@ -409,7 +420,7 @@ export class Window_Selectable extends Window_Base {
         return -1;
     }
 
-    isContentsArea(x, y) {
+    isContentsArea(x: number, y: number): boolean {
         const left = this.padding;
         const top = this.padding;
         const right = this.width - this.padding;
@@ -417,27 +428,27 @@ export class Window_Selectable extends Window_Base {
         return x >= left && y >= top && x < right && y < bottom;
     }
 
-    isTouchOkEnabled() {
+    isTouchOkEnabled(): boolean {
         return this.isOkEnabled();
     }
 
-    isOkEnabled() {
+    isOkEnabled(): boolean {
         return this.isHandled('ok');
     }
 
-    isCancelEnabled() {
+    isCancelEnabled(): boolean {
         return this.isHandled('cancel');
     }
 
-    isOkTriggered() {
+    isOkTriggered(): boolean {
         return Input.isRepeated('ok');
     }
 
-    isCancelTriggered() {
+    isCancelTriggered(): boolean {
         return Input.isRepeated('cancel');
     }
 
-    processOk() {
+    processOk(): void {
         if (this.isCurrentItemEnabled()) {
             this.playOkSound();
             this.updateInputData();
@@ -448,49 +459,49 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    playOkSound() {
+    playOkSound(): void {
         SoundManager.playOk();
     }
 
-    playBuzzerSound() {
+    playBuzzerSound(): void {
         SoundManager.playBuzzer();
     }
 
-    callOkHandler() {
+    callOkHandler(): void {
         this.callHandler('ok');
     }
 
-    processCancel() {
+    processCancel(): void {
         SoundManager.playCancel();
         this.updateInputData();
         this.deactivate();
         this.callCancelHandler();
     }
 
-    callCancelHandler() {
+    callCancelHandler(): void {
         this.callHandler('cancel');
     }
 
-    processPageup() {
+    processPageup(): void {
         SoundManager.playCursor();
         this.updateInputData();
         this.deactivate();
         this.callHandler('pageup');
     }
 
-    processPagedown() {
+    processPagedown(): void {
         SoundManager.playCursor();
         this.updateInputData();
         this.deactivate();
         this.callHandler('pagedown');
     }
 
-    updateInputData() {
+    updateInputData(): void {
         Input.update();
         TouchInput.update();
     }
 
-    updateCursor() {
+    updateCursor(): void {
         if (this._cursorAll) {
             const allRowsHeight = this.maxRows() * this.itemHeight();
             this.setCursorRect(0, 0, this.contents.width, allRowsHeight);
@@ -503,12 +514,12 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    isCursorVisible() {
+    isCursorVisible(): boolean {
         const row = this.row();
         return row >= this.topRow() && row <= this.bottomRow();
     }
 
-    ensureCursorVisible() {
+    ensureCursorVisible(): void {
         const row = this.row();
         if (row < this.topRow()) {
             this.setTopRow(row);
@@ -517,27 +528,27 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    callUpdateHelp() {
+    callUpdateHelp(): void {
         if (this.active && this._helpWindow) {
             this.updateHelp();
         }
     }
 
-    updateHelp() {
+    updateHelp(): void {
         this._helpWindow.clear();
     }
 
-    setHelpWindowItem(item) {
+    setHelpWindowItem(item: number): void {
         if (this._helpWindow) {
             this._helpWindow.setItem(item);
         }
     }
 
-    isCurrentItemEnabled() {
+    isCurrentItemEnabled(): boolean {
         return true;
     }
 
-    drawAllItems() {
+    drawAllItems(): void {
         const topIndex = this.topIndex();
         for (let i = 0; i < this.maxPageItems(); i++) {
             const index = topIndex + i;
@@ -547,27 +558,27 @@ export class Window_Selectable extends Window_Base {
         }
     }
 
-    drawItem(_index) {
+    drawItem(_index: number): void {
         // ...
     }
 
-    clearItem(index) {
+    clearItem(index: number): void {
         const rect = this.itemRect(index);
         this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
     }
 
-    redrawItem(index) {
+    redrawItem(index: number): void {
         if (index >= 0) {
             this.clearItem(index);
             this.drawItem(index);
         }
     }
 
-    redrawCurrentItem() {
+    redrawCurrentItem(): void {
         this.redrawItem(this.index());
     }
 
-    refresh() {
+    refresh(): void {
         if (this.contents) {
             this.contents.clear();
             this.drawAllItems();
