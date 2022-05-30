@@ -1,11 +1,21 @@
 import * as PIXI from 'pixi.js';
 
 import { Graphics } from '../rpg_core/Graphics';
+import type { Sprite } from './Sprite';
+import type { Window } from './Window';
 
 /**
  * The layer which contains game windows.
  */
 export class WindowLayer extends PIXI.Container {
+    protected _width: number;
+    protected _height: number;
+    protected _tempCanvas: HTMLCanvasElement;
+    protected _translationMatrix: number[];
+    protected _windowMask: PIXI.Graphics;
+    protected _windowRect: PIXI.Rectangle;
+    protected _renderSprite: Sprite;
+
     constructor() {
         super();
 
@@ -18,28 +28,32 @@ export class WindowLayer extends PIXI.Container {
         this._windowMask.beginFill(0xffffff, 1);
         this._windowMask.drawRect(0, 0, 0, 0);
         this._windowMask.endFill();
-        this._windowRect = this._windowMask.graphicsData[0].shape;
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this._windowRect = (this._windowMask as any).graphicsData[0].shape;
 
         this._renderSprite = null;
         this.filterArea = new PIXI.Rectangle();
         this.filters = [WindowLayer.voidFilter];
 
-        //temporary fix for memory leak bug
+        // Temporary fix for memory leak bug
         this.on('removed', this.onRemoveAsAChild);
     }
 
-    onRemoveAsAChild() {
+    onRemoveAsAChild(): void {
         this.removeChildren();
     }
 
-    static voidFilter = new PIXI.filters.VoidFilter();
+    // FIXME:
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static voidFilter = new (PIXI.filters as any).VoidFilter();
 
     /**
      * The width of the window layer in pixels.
-     *
-     * @property width
-     * @type Number
      */
+    // FIXME:
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     get width() {
         return this._width;
     }
@@ -49,10 +63,10 @@ export class WindowLayer extends PIXI.Container {
 
     /**
      * The height of the window layer in pixels.
-     *
-     * @property height
-     * @type Number
      */
+    // FIXME:
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     get height() {
         return this._height;
     }
@@ -62,14 +76,8 @@ export class WindowLayer extends PIXI.Container {
 
     /**
      * Sets the x, y, width, and height all at once.
-     *
-     * @method move
-     * @param {Number} x The x coordinate of the window layer
-     * @param {Number} y The y coordinate of the window layer
-     * @param {Number} width The width of the window layer
-     * @param {Number} height The height of the window layer
      */
-    move(x, y, width, height) {
+    move(x: number, y: number, width: number, height: number): void {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -78,23 +86,16 @@ export class WindowLayer extends PIXI.Container {
 
     /**
      * Updates the window layer for each frame.
-     *
-     * @method update
      */
-    update() {
-        this.children.forEach((child) => {
+    update(): void {
+        this.children.forEach((child: PIXI.DisplayObject & { update?: () => void }) => {
             if (child.update) {
                 child.update();
             }
         });
     }
 
-    /**
-     * @method _renderCanvas
-     * @param {Object} renderSession
-     * @private
-     */
-    renderCanvas(renderer) {
+    renderCanvas(renderer: PIXI.CanvasRenderer): void {
         if (!this.visible || !this.renderable) {
             return;
         }
@@ -107,7 +108,7 @@ export class WindowLayer extends PIXI.Container {
         this._tempCanvas.height = Graphics.height;
 
         const realCanvasContext = renderer.context;
-        var context = this._tempCanvas.getContext('2d');
+        const context = this._tempCanvas.getContext('2d');
 
         context.save();
         context.clearRect(0, 0, Graphics.width, Graphics.height);
@@ -119,7 +120,7 @@ export class WindowLayer extends PIXI.Container {
         renderer.context = context;
 
         for (let i = 0; i < this.children.length; i++) {
-            const child = this.children[i];
+            const child = this.children[i] as Window;
             if (child._isWindow && child.visible && child.openness > 0) {
                 this._canvasClearWindowRect(renderer, child);
                 context.save();
@@ -143,26 +144,18 @@ export class WindowLayer extends PIXI.Container {
         }
     }
 
-    /**
-     * @method _canvasClearWindowRect
-     * @param {Object} renderSession
-     * @param {Window} window
-     * @private
-     */
-    _canvasClearWindowRect(renderSession, window) {
+    protected _canvasClearWindowRect(renderSession: PIXI.CanvasRenderer, window: Window): void {
         const rx = this.x + window.x;
-        const ry = this.y + window.y + (window.height / 2) * (1 - window._openness / 255);
+        const ry = this.y + window.y + (window.height / 2) * (1 - window.openness / 255);
         const rw = window.width;
-        const rh = (window.height * window._openness) / 255;
+        const rh = (window.height * window.openness) / 255;
         renderSession.context.clearRect(rx, ry, rw, rh);
     }
 
-    /**
-     * @method _renderWebGL
-     * @param {Object} renderSession
-     * @private
-     */
-    renderWebGL(renderer) {
+    renderWebGL(renderer: PIXI.WebGLRenderer): void {
+        // super.renderWebGL(renderer);
+        // return;
+
         if (!this.visible || !this.renderable) {
             return;
         }
@@ -172,8 +165,14 @@ export class WindowLayer extends PIXI.Container {
         }
 
         renderer.flush();
-        this.filterArea.copy(this);
-        renderer.filterManager.pushFilter(this, this.filters);
+        this.filterArea.x = this.x;
+        this.filterArea.y = this.y;
+        this.filterArea.width = this.width;
+        this.filterArea.height = this.height;
+
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        renderer.filterManager.pushFilter(this as any, this.filters);
         renderer.currentRenderer.start();
 
         const shift = new PIXI.Point();
@@ -183,10 +182,12 @@ export class WindowLayer extends PIXI.Container {
         shift.y = Math.round(((projectionMatrix.ty + 1) / 2) * rt.sourceFrame.height);
 
         for (let i = 0; i < this.children.length; i++) {
-            const child = this.children[i];
+            const child = this.children[i] as Window;
             if (child._isWindow && child.visible && child.openness > 0) {
                 this._maskWindow(child, shift);
-                renderer.maskManager.pushScissorMask(this, this._windowMask);
+                // FIXME:
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                renderer.maskManager.pushScissorMask(this as any, this._windowMask);
                 renderer.clear();
                 renderer.maskManager.popScissorMask();
                 renderer.currentRenderer.start();
@@ -206,19 +207,18 @@ export class WindowLayer extends PIXI.Container {
         }
     }
 
-    /**
-     * @method _maskWindow
-     * @param {Window} window
-     * @private
-     */
-    _maskWindow(window, shift) {
-        this._windowMask._currentBounds = null;
-        this._windowMask.boundsDirty = true;
+    protected _maskWindow(window: Window, shift: PIXI.Point): void {
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this._windowMask as any)._currentBounds = null;
+        // FIXME:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this._windowMask as any).boundsDirty = true;
         const rect = this._windowRect;
         rect.x = this.x + shift.x + window.x;
-        rect.y = this.y + shift.y + window.y + (window.height / 2) * (1 - window._openness / 255);
+        rect.y = this.y + shift.y + window.y + (window.height / 2) * (1 - window.openness / 255);
         rect.width = window.width;
-        rect.height = (window.height * window._openness) / 255;
+        rect.height = (window.height * window.openness) / 255;
     }
 
     // The important members from Pixi.js
@@ -239,10 +239,8 @@ export class WindowLayer extends PIXI.Container {
 
     /**
      * [read-only] The array of children of the window layer.
-     *
-     * @property children
-     * @type Array
      */
+    children: (PIXI.DisplayObject & { _isWindow?: boolean })[];
 
     /**
      * [read-only] The object that contains the window layer.
