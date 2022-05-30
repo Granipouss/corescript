@@ -1,6 +1,5 @@
 import { arrayClone, arrayEquals } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
-import { Rectangle } from '../rpg_core/Rectangle';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Sprite } from '../rpg_core/Sprite';
 import { ToneFilter } from '../rpg_core/ToneFilter';
@@ -74,7 +73,7 @@ export class Spriteset_Base extends Sprite {
         this._toneFilter = new ToneFilter();
         this._toneFilter.enabled = false;
         this._baseSprite.filters = [this._toneFilter];
-        this._baseSprite.filterArea = new Rectangle(-margin, -margin, width, height);
+        this._baseSprite.filterArea = new PIXI.Rectangle(-margin, -margin, width, height);
     }
 
     createCanvasToneChanger(): void {

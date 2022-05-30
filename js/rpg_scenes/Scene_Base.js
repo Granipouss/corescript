@@ -1,6 +1,7 @@
+/* global PIXI */
+
 import { Graphics } from '../rpg_core/Graphics';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
-import { Stage } from '../rpg_core/Stage';
 import { Utils } from '../rpg_core/Utils';
 import { WindowLayer } from '../rpg_core/WindowLayer';
 import { AudioManager } from '../rpg_managers/AudioManager';
@@ -11,7 +12,7 @@ import { Scene_Gameover } from './Scene_Gameover';
 /**
  * The Superclass of all scene within the game.
  */
-export class Scene_Base extends Stage {
+export class Scene_Base extends PIXI.Container {
     /**
      * Create a instance of Scene_Base.
      *
@@ -20,6 +21,9 @@ export class Scene_Base extends Stage {
      */
     constructor() {
         super();
+
+        // The interactive flag causes a memory leak.
+        this.interactive = false;
 
         this._active = false;
         this._fadeSign = 0;

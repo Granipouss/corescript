@@ -1,6 +1,7 @@
+/* global PIXI */
+
 import { clamp } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
-import { Rectangle } from '../rpg_core/Rectangle';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_Base } from './Window_Base';
@@ -145,7 +146,7 @@ export class Window_Selectable extends Window_Base {
     }
 
     itemRect(index) {
-        const rect = new Rectangle();
+        const rect = new PIXI.Rectangle();
         const maxCols = this.maxCols();
         rect.width = this.itemWidth();
         rect.height = this.itemHeight();

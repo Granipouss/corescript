@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 
 import { Bitmap } from './Bitmap';
 import { Graphics } from './Graphics';
-import { Point } from './Point';
 import { ScreenSprite } from './ScreenSprite';
 import { Sprite } from './Sprite';
 import { randomInt } from './extension';
@@ -49,7 +48,7 @@ export class Weather extends PIXI.Container {
     /**
      * The origin point of the weather for scrolling.
      */
-    origin = new Point();
+    origin = new PIXI.Point();
 
     /**
      * Updates the weather for each frame.

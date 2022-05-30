@@ -1,11 +1,8 @@
 import * as PIXI from 'pixi.js';
 
-import { Point } from './Point';
-import { Rectangle } from './Rectangle';
 import { Sprite } from './Sprite';
 import { clamp } from './extension';
 import type { Bitmap } from './Bitmap';
-import { DisplayObject } from './DisplayObject';
 
 /**
  * The sprite object for a tiling image.
@@ -14,7 +11,7 @@ import { DisplayObject } from './DisplayObject';
  */
 export class TilingSprite extends PIXI.extras.TilingSprite {
     protected _bitmap: Bitmap;
-    protected _frame: Rectangle;
+    protected _frame: PIXI.Rectangle;
     readonly spriteId: number;
 
     constructor(bitmap?: Bitmap) {
@@ -25,7 +22,7 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
         this._bitmap = null;
         this._width = 0;
         this._height = 0;
-        this._frame = new Rectangle();
+        this._frame = new PIXI.Rectangle();
         this.spriteId = Sprite._counter++;
 
         this.bitmap = bitmap;
@@ -34,7 +31,7 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
     /**
      * The origin point of the tiling sprite for scrolling.
      */
-    origin = new Point();
+    origin = new PIXI.Point();
 
     _renderCanvas(renderer: PIXI.CanvasRenderer): void {
         if (this._bitmap) {
@@ -57,7 +54,7 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
             if (this._bitmap) {
                 this._bitmap.addLoadListener(this._onBitmapLoad.bind(this));
             } else {
-                this.texture.frame = Rectangle.emptyRectangle;
+                this.texture.frame = PIXI.Rectangle.EMPTY;
             }
         }
     }
@@ -76,7 +73,7 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
      * Updates the tiling sprite for each frame.
      */
     update(): void {
-        this.children.forEach((child) => {
+        this.children.forEach((child: PIXI.DisplayObject & { update?: () => void }) => {
             if (child.update) {
                 child.update();
             }
@@ -139,32 +136,4 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
 
         super._renderWebGL(renderer);
     }
-
-    // The important members from Pixi.js
-
-    /**
-     * [read-only] The array of children of the sprite.
-     */
-    declare children: DisplayObject[];
-
-    /**
-     * The visibility of the tiling sprite.
-     *
-     * @property visible
-     * @type Boolean
-     */
-
-    /**
-     * The x coordinate of the tiling sprite.
-     *
-     * @property x
-     * @type Number
-     */
-
-    /**
-     * The y coordinate of the tiling sprite.
-     *
-     * @property y
-     * @type Number
-     */
 }

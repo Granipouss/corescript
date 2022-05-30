@@ -1,11 +1,8 @@
 import * as PIXI from 'pixi.js';
 
 import { Bitmap } from './Bitmap';
-import { Point } from './Point';
-import { Rectangle } from './Rectangle';
 import { Sprite } from './Sprite';
 import { clamp } from './extension';
-import { DisplayObject } from './DisplayObject';
 
 /**
  * The window in the game.
@@ -16,7 +13,7 @@ export class Window extends PIXI.Container {
     protected _windowskin: Bitmap;
     protected _width: number;
     protected _height: number;
-    protected _cursorRect: Rectangle;
+    protected _cursorRect: PIXI.Rectangle;
     protected _openness: number;
     protected _animationCount: number;
 
@@ -49,7 +46,7 @@ export class Window extends PIXI.Container {
         this._windowskin = null;
         this._width = 0;
         this._height = 0;
-        this._cursorRect = new Rectangle();
+        this._cursorRect = new PIXI.Rectangle();
         this._openness = 255;
         this._animationCount = 0;
 
@@ -71,7 +68,7 @@ export class Window extends PIXI.Container {
     /**
      * The origin point of the window for scrolling.
      */
-    origin = new Point();
+    origin = new PIXI.Point();
 
     /**
      * The active state for the window.
@@ -224,7 +221,7 @@ export class Window extends PIXI.Container {
         if (this.active) {
             this._animationCount++;
         }
-        this.children.forEach((child) => {
+        this.children.forEach((child: PIXI.DisplayObject & { update?: () => void }) => {
             if (child.update) {
                 child.update();
             }
@@ -502,72 +499,4 @@ export class Window extends PIXI.Container {
         sprite.setFrame(sx + x * p, sy + y * p, p, p);
         sprite.visible = this.isOpen();
     }
-
-    // The important members from Pixi.js
-
-    /**
-     * The visibility of the window.
-     *
-     * @property visible
-     * @type Boolean
-     */
-
-    /**
-     * The x coordinate of the window.
-     *
-     * @property x
-     * @type Number
-     */
-
-    /**
-     * The y coordinate of the window.
-     *
-     * @property y
-     * @type Number
-     */
-
-    /**
-     * [read-only] The array of children of the sprite.
-     */
-    declare children: DisplayObject[];
-
-    /**
-     * [read-only] The object that contains the window.
-     *
-     * @property parent
-     * @type Object
-     */
-
-    /**
-     * Adds a child to the container.
-     *
-     * @method addChild
-     * @param {Object} child The child to add
-     * @return {Object} The child that was added
-     */
-
-    /**
-     * Adds a child to the container at a specified index.
-     *
-     * @method addChildAt
-     * @param {Object} child The child to add
-     * @param {Number} index The index to place the child in
-     * @return {Object} The child that was added
-     */
-
-    /**
-     * Removes a child from the container.
-     *
-     * @method removeChild
-     * @param {Object} child The child to remove
-     * @return {Object} The child that was removed
-     */
-
-    /**
-     * Removes a child from the specified index position.
-     *
-     * @method removeChildAt
-     * @param {Number} index The index to get the child from
-     * @return {Object} The child that was removed
-     */
 }

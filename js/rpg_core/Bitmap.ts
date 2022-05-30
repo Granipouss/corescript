@@ -3,7 +3,6 @@ import { CacheEntry } from './CacheEntry';
 
 import { Decrypter } from './Decrypter';
 import { Graphics } from './Graphics';
-import { Rectangle } from './Rectangle';
 import { ResourceHandler } from './ResourceHandler';
 
 export type BitmapState =
@@ -324,8 +323,8 @@ export class Bitmap {
     /**
      * [read-only] The rectangle of the bitmap.
      */
-    get rect(): Rectangle {
-        return new Rectangle(0, 0, this.width, this.height);
+    get rect(): PIXI.Rectangle {
+        return new PIXI.Rectangle(0, 0, this.width, this.height);
     }
 
     /**

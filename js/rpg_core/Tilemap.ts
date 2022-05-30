@@ -2,9 +2,7 @@ import * as PIXI from 'pixi.js';
 
 import { Bitmap } from './Bitmap';
 import { Graphics } from './Graphics';
-import { Point } from './Point';
 import { mod } from './extension';
-import { DisplayObject } from './DisplayObject';
 
 /**
  * The tilemap which displays 2D tile-based game map.
@@ -55,7 +53,7 @@ export abstract class Tilemap extends PIXI.Container {
     /**
      * The origin point of the tilemap for scrolling.
      */
-    origin = new Point();
+    origin = new PIXI.Point();
 
     /**
      * The tileset flags.
@@ -165,7 +163,7 @@ export abstract class Tilemap extends PIXI.Container {
     update(): void {
         this.animationCount++;
         this.animationFrame = Math.floor(this.animationCount / 30);
-        this.children.forEach((child) => {
+        this.children.forEach((child: PIXI.DisplayObject & { update?: () => void }) => {
             if (child.update) {
                 child.update();
             }
@@ -261,17 +259,15 @@ export abstract class Tilemap extends PIXI.Container {
     }
 
     protected _sortChildren() {
-        this.children.sort((a, b) => this._compareChildOrder(a, b));
-    }
-
-    protected _compareChildOrder(a: DisplayObject, b: DisplayObject) {
-        if (a.z !== b.z) {
-            return a.z - b.z;
-        } else if (a.y !== b.y) {
-            return a.y - b.y;
-        } else {
-            return a.spriteId - b.spriteId;
-        }
+        this.children.sort((a, b) => {
+            if (a.z !== b.z) {
+                return a.z - b.z;
+            } else if (a.y !== b.y) {
+                return a.y - b.y;
+            } else {
+                return a.spriteId - b.spriteId;
+            }
+        });
     }
 
     // Tile type checkers
@@ -815,7 +811,7 @@ export abstract class Tilemap extends PIXI.Container {
     /**
      * [read-only] The array of children of the sprite.
      */
-    declare children: DisplayObject[];
+    declare children: (PIXI.DisplayObject & { z: number; spriteId: number })[];
 
     /**
      * [read-only] The object that contains the tilemap.

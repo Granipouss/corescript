@@ -1,19 +1,17 @@
 import * as PIXI from 'pixi.js';
 
 import { Graphics } from './Graphics';
-import { Rectangle } from './Rectangle';
 import { Utils } from './Utils';
 import { arrayClone, arrayEquals, clamp, Tone } from './extension';
 import type { Bitmap } from './Bitmap';
-import { DisplayObject } from './DisplayObject';
 
 /**
  * The basic object that is rendered to the game screen.
  */
 export class Sprite extends PIXI.Sprite {
     protected _bitmap: Bitmap;
-    protected _frame: Rectangle;
-    protected _realFrame: Rectangle;
+    protected _frame: PIXI.Rectangle;
+    protected _realFrame: PIXI.Rectangle;
     protected _blendColor: Tone;
     protected _colorTone: Tone;
     protected _canvas: HTMLCanvasElement;
@@ -32,8 +30,8 @@ export class Sprite extends PIXI.Sprite {
         super(texture);
 
         this._bitmap = null;
-        this._frame = new Rectangle();
-        this._realFrame = new Rectangle();
+        this._frame = new PIXI.Rectangle();
+        this._realFrame = new PIXI.Rectangle();
         this._blendColor = [0, 0, 0, 0];
         this._colorTone = [0, 0, 0, 0];
         this._canvas = null;
@@ -69,7 +67,7 @@ export class Sprite extends PIXI.Sprite {
                 value.addLoadListener(this._onBitmapLoad.bind(this));
             } else {
                 this._refreshFrame = false;
-                this.texture.frame = Rectangle.emptyRectangle;
+                this.texture.frame = PIXI.Rectangle.EMPTY;
             }
         }
     }
@@ -116,7 +114,7 @@ export class Sprite extends PIXI.Sprite {
      * Updates the sprite for each frame.
      */
     update(): void {
-        this.children.forEach((child) => {
+        this.children.forEach((child: PIXI.DisplayObject & { update?: () => void }) => {
             if (child.update) {
                 child.update();
             }
@@ -227,7 +225,7 @@ export class Sprite extends PIXI.Sprite {
                 this._executeTint(realX, realY, realW, realH);
                 this._tintTexture.update();
                 this.texture.baseTexture = this._tintTexture;
-                this.texture.frame = new Rectangle(0, 0, realW, realH);
+                this.texture.frame = new PIXI.Rectangle(0, 0, realW, realH);
             } else {
                 if (this._bitmap) {
                     this.texture.baseTexture = this._bitmap.baseTexture;
@@ -235,7 +233,7 @@ export class Sprite extends PIXI.Sprite {
                 this.texture.frame = this._realFrame;
             }
         } else if (this._bitmap) {
-            this.texture.frame = Rectangle.emptyRectangle;
+            this.texture.frame = PIXI.Rectangle.EMPTY;
         } else {
             this.texture.baseTexture.width = Math.max(
                 this.texture.baseTexture.width,
@@ -397,107 +395,4 @@ export class Sprite extends PIXI.Sprite {
             }
         }
     }
-
-    // The important members from Pixi.js
-
-    /**
-     * The visibility of the sprite.
-     *
-     * @property visible
-     * @type Boolean
-     */
-
-    /**
-     * The x coordinate of the sprite.
-     *
-     * @property x
-     * @type Number
-     */
-
-    /**
-     * The y coordinate of the sprite.
-     *
-     * @property y
-     * @type Number
-     */
-
-    /**
-     * The origin point of the sprite. (0,0) to (1,1).
-     *
-     * @property anchor
-     * @type Point
-     */
-
-    /**
-     * The scale factor of the sprite.
-     *
-     * @property scale
-     * @type Point
-     */
-
-    /**
-     * The rotation of the sprite in radians.
-     *
-     * @property rotation
-     * @type Number
-     */
-
-    /**
-     * The blend mode to be applied to the sprite.
-     *
-     * @property blendMode
-     * @type Number
-     */
-
-    /**
-     * Sets the filters for the sprite.
-     *
-     * @property filters
-     * @type Array
-     */
-
-    /**
-     * [read-only] The array of children of the sprite.
-     */
-    declare children: DisplayObject[];
-
-    /**
-     * [read-only] The object that contains the sprite.
-     *
-     * @property parent
-     * @type Object
-     */
-
-    /**
-     * Adds a child to the container.
-     *
-     * @method addChild
-     * @param {Object} child The child to add
-     * @return {Object} The child that was added
-     */
-
-    /**
-     * Adds a child to the container at a specified index.
-     *
-     * @method addChildAt
-     * @param {Object} child The child to add
-     * @param {Number} index The index to place the child in
-     * @return {Object} The child that was added
-     */
-
-    /**
-     * Removes a child from the container.
-     *
-     * @method removeChild
-     * @param {Object} child The child to remove
-     * @return {Object} The child that was removed
-     */
-
-    /**
-     * Removes a child from the specified index position.
-     *
-     * @method removeChildAt
-     * @param {Number} index The index to get the child from
-     * @return {Object} The child that was removed
-     */
 }

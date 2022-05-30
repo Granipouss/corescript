@@ -9,7 +9,6 @@ import { Utils } from './Utils';
 
 import { SceneManager } from '../rpg_managers/SceneManager';
 import { clamp, format } from './extension';
-import type { Stage } from './Stage';
 
 export type RendererType = 'canvas' | 'webgl' | 'auto';
 
@@ -172,7 +171,7 @@ export const Graphics = new (class Graphics {
     /**
      * Renders the stage to the game screen.
      */
-    render(stage: Stage): void {
+    render(stage: PIXI.DisplayObject): void {
         if (this._skipCount <= 0) {
             const startTime = Date.now();
             if (stage) {

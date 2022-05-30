@@ -1,5 +1,3 @@
-import { DisplayObject } from '../rpg_core/DisplayObject';
-import { Rectangle } from '../rpg_core/Rectangle';
 import { Sprite } from '../rpg_core/Sprite';
 import { TouchInput } from '../rpg_core/TouchInput';
 
@@ -8,8 +6,8 @@ import { TouchInput } from '../rpg_core/TouchInput';
  */
 export class Sprite_Button extends Sprite {
     protected _touching: boolean;
-    protected _coldFrame: Rectangle;
-    protected _hotFrame: Rectangle;
+    protected _coldFrame: PIXI.Rectangle;
+    protected _hotFrame: PIXI.Rectangle;
     protected _clickHandler: () => void;
 
     constructor() {
@@ -27,7 +25,7 @@ export class Sprite_Button extends Sprite {
     }
 
     updateFrame(): void {
-        let frame: Rectangle;
+        let frame: PIXI.Rectangle;
         if (this._touching) {
             frame = this._hotFrame;
         } else {
@@ -39,11 +37,11 @@ export class Sprite_Button extends Sprite {
     }
 
     setColdFrame(x: number, y: number, width: number, height: number): void {
-        this._coldFrame = new Rectangle(x, y, width, height);
+        this._coldFrame = new PIXI.Rectangle(x, y, width, height);
     }
 
     setHotFrame(x: number, y: number, width: number, height: number): void {
-        this._hotFrame = new Rectangle(x, y, width, height);
+        this._hotFrame = new PIXI.Rectangle(x, y, width, height);
     }
 
     setClickHandler(method: () => void): void {
@@ -75,7 +73,7 @@ export class Sprite_Button extends Sprite {
     }
 
     isActive(): boolean {
-        let node = this as DisplayObject;
+        let node = this as PIXI.DisplayObject;
         while (node) {
             if (!node.visible) {
                 return false;
@@ -92,7 +90,7 @@ export class Sprite_Button extends Sprite {
     }
 
     canvasToLocalX(x: number): number {
-        let node = this as DisplayObject;
+        let node = this as PIXI.DisplayObject;
         while (node) {
             x -= node.x;
             node = node.parent;
@@ -101,7 +99,7 @@ export class Sprite_Button extends Sprite {
     }
 
     canvasToLocalY(y: number): number {
-        let node = this as DisplayObject;
+        let node = this as PIXI.DisplayObject;
         while (node) {
             y -= node.y;
             node = node.parent;
