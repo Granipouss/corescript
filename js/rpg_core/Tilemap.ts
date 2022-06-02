@@ -258,7 +258,7 @@ export abstract class Tilemap extends PIXI.Container {
         return false;
     }
 
-    protected _sortChildren() {
+    protected _sortChildren(): void {
         this.children.sort((a, b) => {
             if (a.z !== b.z) {
                 return a.z - b.z;

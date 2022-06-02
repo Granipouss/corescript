@@ -42,7 +42,7 @@ export const PluginManager = new (class PluginManager {
         script.type = 'text/javascript';
         script.src = url;
         script.async = false;
-        script.onerror = (e: Event) => this.onError(e, url);
+        script.onerror = (e: Event): void => this.onError(e, url);
         document.body.appendChild(script);
     }
 

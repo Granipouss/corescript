@@ -9,7 +9,7 @@ import { Window_ItemList } from './Window_ItemList';
 export class Window_ItemCategory extends Window_HorzCommand {
     private _itemWindow: Window_ItemList;
 
-    initialize() {
+    initialize(): void {
         super.initialize(0, 0);
     }
 

@@ -76,7 +76,7 @@ export class Window_Base extends Window {
         return 192;
     }
 
-    loadWindowskin() {
+    loadWindowskin(): void {
         this.windowskin = ImageManager.loadSystem('Window');
     }
 
@@ -327,14 +327,14 @@ export class Window_Base extends Window {
         }
     }
 
-    processNormalCharacter(textState: TextState) {
+    processNormalCharacter(textState: TextState): void {
         const c = textState.text[textState.index++];
         const w = this.textWidth(c);
         this.contents.drawText(c, textState.x, textState.y, w * 2, textState.height);
         textState.x += w;
     }
 
-    processNewLine(textState: TextState) {
+    processNewLine(textState: TextState): void {
         textState.x = textState.left;
         textState.y += textState.height;
         textState.height = this.calcTextHeight(textState, false);
@@ -606,7 +606,7 @@ export class Window_Base extends Window {
         this.drawText(actor.tp.toFixed(), x + width - 64, y, 64, 'right');
     }
 
-    drawActorSimpleStatus(actor: Game_Actor, x: number, y: number, width: number) {
+    drawActorSimpleStatus(actor: Game_Actor, x: number, y: number, width: number): void {
         const lineHeight = this.lineHeight();
         const x2 = x + 180;
         const width2 = Math.min(200, width - 180 - this.textPadding());

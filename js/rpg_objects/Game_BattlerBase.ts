@@ -780,7 +780,7 @@ export abstract class Game_BattlerBase {
         }
     }
 
-    meetsUsableItemConditions(item: RPGSkill | RPGItem) {
+    meetsUsableItemConditions(item: RPGSkill | RPGItem): boolean {
         return this.canMove() && this.isOccasionOk(item);
     }
 

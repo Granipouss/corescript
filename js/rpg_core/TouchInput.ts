@@ -47,7 +47,7 @@ export const TouchInput = new (class TouchInput {
     /**
      * Clears all the touch data.
      */
-    clear() {
+    clear(): void {
         this._mousePressed = false;
         this._screenPressed = false;
         this._pressedTime = 0;
@@ -73,7 +73,7 @@ export const TouchInput = new (class TouchInput {
     /**
      * Updates the touch data.
      */
-    update() {
+    update(): void {
         this._triggered = this._events.triggered;
         this._cancelled = this._events.cancelled;
         this._moved = this._events.moved;
@@ -180,7 +180,7 @@ export const TouchInput = new (class TouchInput {
         return this._date;
     }
 
-    private _setupEventHandlers() {
+    private _setupEventHandlers(): void {
         const isSupportPassive = Utils.isSupportPassiveEvent();
         document.addEventListener('mousedown', this._onMouseDown.bind(this));
         document.addEventListener('mousemove', this._onMouseMove.bind(this));

@@ -116,7 +116,7 @@ export const Html5Audio = new (class Html5Audio {
     /**
      * Clears the audio data.
      */
-    clear() {
+    clear(): void {
         this.stop();
         this._volume = 1;
         this._loadListeners = [];
@@ -206,7 +206,7 @@ export const Html5Audio = new (class Html5Audio {
     /**
      * Stops the audio.
      */
-    stop() {
+    stop(): void {
         if (this._audioElement) this._audioElement.pause();
         this._autoPlay = false;
         if (this._tweenInterval) {

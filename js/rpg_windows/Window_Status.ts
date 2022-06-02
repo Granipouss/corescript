@@ -117,7 +117,7 @@ export class Window_Status extends Window_Selectable {
         }
     }
 
-    drawProfile(x: number, y: number) {
+    drawProfile(x: number, y: number): void {
         this.drawTextEx(this._actor.profile(), x, y);
     }
 

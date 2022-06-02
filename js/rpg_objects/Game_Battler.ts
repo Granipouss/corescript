@@ -33,7 +33,7 @@ export abstract class Game_Battler extends Game_BattlerBase {
     protected _motionRefresh: boolean;
     protected _selected: boolean;
 
-    initMembers() {
+    initMembers(): void {
         super.initMembers();
         this._actions = [];
         this._speed = 0;
@@ -49,23 +49,23 @@ export abstract class Game_Battler extends Game_BattlerBase {
         this._selected = false;
     }
 
-    clearAnimations() {
+    clearAnimations(): void {
         this._animations = [];
     }
 
-    clearDamagePopup() {
+    clearDamagePopup(): void {
         this._damagePopup = false;
     }
 
-    clearWeaponAnimation() {
+    clearWeaponAnimation(): void {
         this._weaponImageId = 0;
     }
 
-    clearEffect() {
+    clearEffect(): void {
         this._effectType = null;
     }
 
-    clearMotion() {
+    clearMotion(): void {
         this._motionType = null;
         this._motionRefresh = false;
     }
@@ -78,7 +78,7 @@ export abstract class Game_Battler extends Game_BattlerBase {
         this._motionType = motionType;
     }
 
-    requestMotionRefresh() {
+    requestMotionRefresh(): void {
         this._motionRefresh = true;
     }
 
@@ -118,15 +118,15 @@ export abstract class Game_Battler extends Game_BattlerBase {
         return this._selected;
     }
 
-    effectType() {
+    effectType(): string {
         return this._effectType;
     }
 
-    motionType() {
+    motionType(): string {
         return this._motionType;
     }
 
-    weaponImageId() {
+    weaponImageId(): number {
         return this._weaponImageId;
     }
 

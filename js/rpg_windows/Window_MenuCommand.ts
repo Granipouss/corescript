@@ -13,7 +13,7 @@ export class Window_MenuCommand extends Window_Command {
 
     static _lastCommandSymbol: string = null;
 
-    static initCommandPosition() {
+    static initCommandPosition(): void {
         this._lastCommandSymbol = null;
     }
 

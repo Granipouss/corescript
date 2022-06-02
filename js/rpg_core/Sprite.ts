@@ -156,7 +156,7 @@ export class Sprite extends PIXI.Sprite {
      * Sets the blend color for the sprite.
      * @param color The blend color [r, g, b, a]
      */
-    setBlendColor(color: Tone) {
+    setBlendColor(color: Tone): void {
         if (!(color instanceof Array)) {
             throw new Error('Argument must be an array');
         }
@@ -178,7 +178,7 @@ export class Sprite extends PIXI.Sprite {
      * Sets the color tone for the sprite.
      * @param tone The color tone [r, g, b, gray]
      */
-    setColorTone(tone: Tone) {
+    setColorTone(tone: Tone): void {
         if (!(tone instanceof Array)) {
             throw new Error('Argument must be an array');
         }
@@ -276,7 +276,7 @@ export class Sprite extends PIXI.Sprite {
         this._tintTexture.scaleMode = this._bitmap.baseTexture.scaleMode;
     }
 
-    protected _executeTint(x: number, y: number, w: number, h: number) {
+    protected _executeTint(x: number, y: number, w: number, h: number): void {
         const context = this._context;
         const tone = this._colorTone;
         const color = this._blendColor;

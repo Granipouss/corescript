@@ -149,7 +149,7 @@ export const DataManager = new (class DataManager {
         const url = 'data/' + src;
         xhr.open('GET', url);
         xhr.overrideMimeType('application/json');
-        xhr.onload = () => {
+        xhr.onload = (): void => {
             if (xhr.status < 400) {
                 window[name] = JSON.parse(xhr.responseText);
                 this.onLoad(window[name]);
@@ -157,7 +157,7 @@ export const DataManager = new (class DataManager {
         };
         xhr.onerror =
             this._mapLoader ||
-            (() => {
+            ((): void => {
                 this._errorUrl = this._errorUrl || url;
             });
         window[name] = null;
@@ -441,7 +441,7 @@ export const DataManager = new (class DataManager {
         }
     }
 
-    loadSavefileInfo(savefileId: number) {
+    loadSavefileInfo(savefileId: number): SaveInfo {
         const globalInfo = this.loadGlobalInfo();
         return globalInfo && globalInfo[savefileId] ? globalInfo[savefileId] : null;
     }
@@ -525,7 +525,7 @@ export const DataManager = new (class DataManager {
         };
     }
 
-    extractSaveContents(contents: SaveContent) {
+    extractSaveContents(contents: SaveContent): void {
         window.$gameSystem = contents.system;
         window.$gameScreen = contents.screen;
         window.$gameTimer = contents.timer;
@@ -546,7 +546,7 @@ export const DataManager = new (class DataManager {
         return this._autoSaveFileId !== 0 && this._autoSaveFileId === saveFileId;
     }
 
-    autoSaveGame() {
+    autoSaveGame(): void {
         if (this._autoSaveFileId !== 0 && !this.isEventTest() && window.$gameSystem.isSaveEnabled()) {
             window.$gameSystem.onBeforeSave();
             if (this.saveGame(this._autoSaveFileId)) {

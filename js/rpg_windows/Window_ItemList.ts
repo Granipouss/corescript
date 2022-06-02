@@ -32,7 +32,7 @@ export class Window_ItemList extends Window_Selectable {
         return this._data ? this._data.length : 1;
     }
 
-    item() {
+    item(): RPGItem | RPGWeapon | RPGArmor {
         const index = this.index();
         return this._data && index >= 0 ? this._data[index] : null;
     }

@@ -308,7 +308,7 @@ export class ShaderTilemap extends Tilemap {
         }
     }
 
-    protected _drawTableEdge(layer: CompositeRectTileLayer, tileId: number, dx: number, dy: number) {
+    protected _drawTableEdge(layer: CompositeRectTileLayer, tileId: number, dx: number, dy: number): void {
         if (Tilemap.isTileA2(tileId)) {
             const autotileTable = Tilemap.FLOOR_AUTOTILE_TABLE;
             const kind = Tilemap.getAutotileKind(tileId);

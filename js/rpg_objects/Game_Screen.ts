@@ -35,7 +35,7 @@ export class Game_Screen {
         this.clear();
     }
 
-    clear() {
+    clear(): void {
         this.clearFade();
         this.clearTone();
         this.clearFlash();
@@ -45,7 +45,7 @@ export class Game_Screen {
         this.clearPictures();
     }
 
-    onBattleStart() {
+    onBattleStart(): void {
         this.clearFade();
         this.clearFlash();
         this.clearShake();
@@ -53,31 +53,31 @@ export class Game_Screen {
         this.eraseBattlePictures();
     }
 
-    brightness() {
+    brightness(): number {
         return this._brightness;
     }
 
-    tone() {
+    tone(): Tone {
         return this._tone;
     }
 
-    flashColor() {
+    flashColor(): Tone {
         return this._flashColor;
     }
 
-    shake() {
+    shake(): number {
         return this._shake;
     }
 
-    zoomX() {
+    zoomX(): number {
         return this._zoomX;
     }
 
-    zoomY() {
+    zoomY(): number {
         return this._zoomY;
     }
 
-    zoomScale() {
+    zoomScale(): number {
         return this._zoomScale;
     }
 
@@ -85,11 +85,11 @@ export class Game_Screen {
         return this._weatherType;
     }
 
-    weatherPower() {
+    weatherPower(): number {
         return this._weatherPower;
     }
 
-    picture(pictureId: number) {
+    picture(pictureId: number): Game_Picture {
         const realPictureId = this.realPictureId(pictureId);
         return this._pictures[realPictureId];
     }
@@ -299,7 +299,7 @@ export class Game_Screen {
         });
     }
 
-    startFlashForDamage() {
+    startFlashForDamage(): void {
         this.startFlash([255, 0, 0, 128], 8);
     }
 

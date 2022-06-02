@@ -11,6 +11,6 @@ const $plugins: unknown[] = [];
 
 PluginManager.setup($plugins);
 
-window.onload = function () {
+window.onload = function (): void {
     SceneManager.run(Scene_Boot);
 };

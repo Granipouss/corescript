@@ -15,7 +15,7 @@ export class Window_ShopCommand extends Window_HorzCommand {
         this._purchaseOnly = purchaseOnly;
     }
 
-    initialize() {
+    initialize(): void {
         super.initialize(0, 0);
     }
 

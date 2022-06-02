@@ -56,7 +56,7 @@ export class Window_Options extends Window_Command {
         this.drawText(this.statusText(index), rect.x + titleWidth, rect.y, statusWidth, 'right');
     }
 
-    statusWidth() {
+    statusWidth(): number {
         return 120;
     }
 
@@ -64,7 +64,7 @@ export class Window_Options extends Window_Command {
         return super.commandSymbol(index) as keyof Config;
     }
 
-    statusText(index: number) {
+    statusText(index: number): string {
         const symbol = this.commandSymbol(index);
         if (this.isVolumeSymbol(symbol)) {
             const value = this.getConfigValue(symbol) as number;
@@ -147,7 +147,7 @@ export class Window_Options extends Window_Command {
         return ConfigManager[symbol];
     }
 
-    setConfigValue<T extends keyof Config>(symbol: T, volume: typeof ConfigManager[T]) {
+    setConfigValue<T extends keyof Config>(symbol: T, volume: typeof ConfigManager[T]): void {
         ConfigManager[symbol] = volume;
     }
 }

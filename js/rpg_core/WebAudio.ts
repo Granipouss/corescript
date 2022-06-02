@@ -138,7 +138,7 @@ export class WebAudio {
     }
 
     private static _setupEventHandlers(): void {
-        const resumeHandler = function () {
+        const resumeHandler = function (): void {
             const context = WebAudio._context;
             if (context && context.state === 'suspended' && typeof context.resume === 'function') {
                 context.resume().then(() => {
@@ -402,14 +402,14 @@ export class WebAudio {
             if (Decrypter.hasEncryptedAudio) url = Decrypter.extToEncryptExt(url);
             xhr.open('GET', url);
             xhr.responseType = 'arraybuffer';
-            xhr.onload = () => {
+            xhr.onload = (): void => {
                 if (xhr.status < 400) {
                     this._onXhrLoad(xhr);
                 }
             };
             xhr.onerror =
                 this._loader ||
-                (() => {
+                ((): void => {
                     this._hasError = true;
                 });
             xhr.send();

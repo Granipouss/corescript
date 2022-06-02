@@ -20,7 +20,7 @@ export class CacheEntry<T> {
     /**
      * frees the resource
      */
-    free(byTTL = false) {
+    free(byTTL = false): void {
         this.freedByTTL = byTTL;
         if (this.cached) {
             this.cached = false;

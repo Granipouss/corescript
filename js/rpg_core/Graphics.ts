@@ -242,7 +242,7 @@ export const Graphics = new (class Graphics {
     /**
      * Initializes the counter for displaying the "Now Loading" image.
      */
-    startLoading() {
+    startLoading(): void {
         this._loadingCount = 0;
 
         ProgressWatcher.truncateProgress();
@@ -366,7 +366,7 @@ export const Graphics = new (class Graphics {
             (this._errorPrinter as any).style.webkitUserSelect = 'none';
             (this._errorPrinter as any).style.msUserSelect = 'none';
             (this._errorPrinter as any).style.mozUserSelect = 'none';
-            this._errorPrinter.oncontextmenu = function () {
+            this._errorPrinter.oncontextmenu = function (): boolean {
                 return false;
             };
             this.startLoading();
@@ -401,7 +401,7 @@ export const Graphics = new (class Graphics {
     /**
      * Shows the detail of error.
      */
-    printErrorDetail(error: any) {
+    printErrorDetail(error: any): void {
         if (this._errorPrinter && this._showErrorDetail) {
             const eventInfo = this._formatEventInfo(error);
             const eventCommandInfo = this._formatEventCommandInfo(error);
@@ -485,7 +485,7 @@ export const Graphics = new (class Graphics {
     /**
      * Starts playback of a video.
      */
-    playVideo(src: string) {
+    playVideo(src: string): void {
         this._videoLoader = ResourceHandler.createLoader(
             null,
             this._playVideo.bind(this, src),
@@ -494,7 +494,7 @@ export const Graphics = new (class Graphics {
         this._playVideo(src);
     }
 
-    private _playVideo(src: string) {
+    private _playVideo(src: string): void {
         this._video.src = src;
         this._video.onloadeddata = this._onVideoLoad.bind(this);
         this._video.onerror = this._videoLoader;
@@ -520,7 +520,7 @@ export const Graphics = new (class Graphics {
     /**
      * Sets volume of a video.
      */
-    setVideoVolume(value: number) {
+    setVideoVolume(value: number): void {
         this._videoVolume = value;
         if (this._video) {
             this._video.volume = this._videoVolume;
@@ -650,7 +650,7 @@ export const Graphics = new (class Graphics {
         this._updateProgress();
     }
 
-    private _updateRealScale() {
+    private _updateRealScale(): void {
         if (this._stretchEnabled) {
             let h = window.innerWidth / this._width;
             let v = window.innerHeight / this._height;
@@ -988,7 +988,7 @@ export const Graphics = new (class Graphics {
 
     private _disableContextMenu(): void {
         const elements = document.body.getElementsByTagName('*');
-        const oncontextmenu = function () {
+        const oncontextmenu = function (): boolean {
             return false;
         };
         for (let i = 0; i < elements.length; i++) {

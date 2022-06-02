@@ -32,7 +32,7 @@ export class Window_Message extends Window_Base {
     protected _textSpeed: number;
     protected _textSpeedCount: number;
 
-    initialize() {
+    initialize(): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         const x = (Graphics.boxWidth - width) / 2;

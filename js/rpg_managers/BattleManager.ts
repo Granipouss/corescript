@@ -100,7 +100,7 @@ export const BattleManager = new (class BattleManager {
         this._spriteset = spriteset;
     }
 
-    onEncounter() {
+    onEncounter(): void {
         this._preemptive = Math.random() < this.ratePreemptive();
         this._surprise = Math.random() < this.rateSurprise() && !this._preemptive;
     }

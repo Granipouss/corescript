@@ -14,7 +14,7 @@ export const JsonEx = new (class JsonEx {
     maxDepth = 100;
 
     private _id = 1;
-    private _generateId() {
+    private _generateId(): number {
         return this._id++;
     }
 

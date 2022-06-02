@@ -146,7 +146,7 @@ export class Game_System {
         return this._windowTone || window.$dataSystem.windowTone;
     }
 
-    setWindowTone(value: Tone) {
+    setWindowTone(value: Tone): void {
         this._windowTone = value;
     }
 

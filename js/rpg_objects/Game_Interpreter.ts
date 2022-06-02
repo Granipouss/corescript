@@ -402,7 +402,7 @@ export class Game_Interpreter {
         return false;
     }
 
-    setupChoices(params: readonly [string[], number, number?, number?, number?]) {
+    setupChoices(params: readonly [string[], number, number?, number?, number?]): void {
         const choices = arrayClone(params[0]);
         let cancelType = params[1];
         const defaultType = params.length > 2 ? params[2] : 0;
@@ -445,7 +445,7 @@ export class Game_Interpreter {
         return false;
     }
 
-    setupNumInput(params: readonly any[]) {
+    setupNumInput(params: readonly any[]): void {
         window.$gameMessage.setNumberInput(params[0], params[1]);
     }
 
@@ -459,7 +459,7 @@ export class Game_Interpreter {
         return false;
     }
 
-    setupItemChoice(params: readonly any[]) {
+    setupItemChoice(params: readonly any[]): void {
         window.$gameMessage.setItemChoice(params[0], params[1] || 2);
     }
 
@@ -1429,7 +1429,7 @@ export class Game_Interpreter {
         return false;
     }
 
-    videoFileExt() {
+    videoFileExt(): '.webm' | '.mp4' {
         if (Graphics.canPlayVideoType('video/webm') && !Utils.isMobileDevice()) {
             return '.webm';
         } else {
@@ -1923,11 +1923,11 @@ export class Game_Interpreter {
         return true;
     }
 
-    pluginCommand(_command: RPGEventCommand, _args: unknown[]) {
+    pluginCommand(_command: RPGEventCommand, _args: unknown[]): void {
         // to be overridden by plugins
     }
 
-    static requestImagesByPluginCommand(_command: RPGEventCommand, _args: unknown[]) {
+    static requestImagesByPluginCommand(_command: RPGEventCommand, _args: unknown[]): void {
         // to be overridden by plugins
     }
 

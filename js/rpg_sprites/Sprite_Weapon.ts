@@ -14,7 +14,7 @@ export class Sprite_Weapon extends Sprite_Base {
         this.initMembers();
     }
 
-    initMembers() {
+    initMembers(): void {
         this._weaponImageId = 0;
         this._animationCount = 0;
         this._pattern = 0;

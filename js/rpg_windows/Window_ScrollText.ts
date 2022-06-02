@@ -11,7 +11,7 @@ export class Window_ScrollText extends Window_Base {
     protected _text = '';
     protected _allTextHeight = 0;
 
-    initialize() {
+    initialize(): void {
         const width = Graphics.boxWidth;
         const height = Graphics.boxHeight;
         super.initialize(0, 0, width, height);

@@ -237,11 +237,7 @@ export const Input = new (class Input {
         return false;
     }
 
-    /**
-     * @param {KeyboardEvent} event
-     * @private
-     */
-    _onKeyUp(event: KeyboardEvent) {
+    private _onKeyUp(event: KeyboardEvent): void {
         const buttonName = this.keyMapper[event.keyCode];
         if (buttonName) {
             this._currentState[buttonName] = false;
@@ -252,17 +248,11 @@ export const Input = new (class Input {
         }
     }
 
-    /**
-     * @private
-     */
-    _onLostFocus() {
+    private _onLostFocus(): void {
         this.clear();
     }
 
-    /**
-     * @private
-     */
-    _pollGamepads() {
+    private _pollGamepads(): void {
         if (navigator.getGamepads) {
             const gamepads = navigator.getGamepads();
             if (gamepads) {
@@ -276,12 +266,7 @@ export const Input = new (class Input {
         }
     }
 
-    /**
-     * @param {Gamepad} gamepad
-     * @param {Number} index
-     * @private
-     */
-    _updateGamepadState(gamepad: Gamepad) {
+    private _updateGamepadState(gamepad: Gamepad): void {
         const lastState = this._gamepadStates[gamepad.index] || [];
         const newState = [];
         const buttons = gamepad.buttons;

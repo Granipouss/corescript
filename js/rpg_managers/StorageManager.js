@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* global LZString, process */
 
 import { format } from '../rpg_core/extension';

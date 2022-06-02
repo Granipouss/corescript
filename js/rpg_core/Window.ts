@@ -100,15 +100,11 @@ export class Window extends PIXI.Container {
 
     /**
      * The bitmap used for the window contents.
-     *
-     * @property contents
-     * @type Bitmap
      */
-    get contents() {
+    get contents(): Bitmap {
         return this._windowContentsSprite.bitmap;
     }
-
-    set contents(value) {
+    set contents(value: Bitmap) {
         this._windowContentsSprite.bitmap = value;
     }
 

@@ -224,12 +224,12 @@ export class Scene_Shop extends Scene_MenuBase {
         this.endNumberInput();
     }
 
-    doBuy(number: number) {
+    doBuy(number: number): void {
         window.$gameParty.loseGold(number * this.buyingPrice());
         window.$gameParty.gainItem(this._item, number);
     }
 
-    doSell(number: number) {
+    doSell(number: number): void {
         window.$gameParty.gainGold(number * this.sellingPrice());
         window.$gameParty.loseItem(this._item, number);
     }

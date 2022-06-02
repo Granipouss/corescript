@@ -19,7 +19,7 @@ export const SceneManager = new (class SceneManager {
     /*
      * Gets the current time in ms without on iOS Safari.
      */
-    private _getTimeInMsWithoutMobileSafari() {
+    private _getTimeInMsWithoutMobileSafari(): number {
         return performance.now();
     }
 
@@ -304,7 +304,7 @@ export const SceneManager = new (class SceneManager {
         return this._nextScene && this._nextScene.constructor === sceneClass;
     }
 
-    isPreviousScene(sceneClass: SceneClass) {
+    isPreviousScene(sceneClass: SceneClass): boolean {
         return this._previousClass === sceneClass;
     }
 
@@ -343,7 +343,7 @@ export const SceneManager = new (class SceneManager {
         this._stopped = true;
     }
 
-    prepareNextScene(...args: unknown[]) {
+    prepareNextScene(...args: unknown[]): void {
         // FIXME:
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

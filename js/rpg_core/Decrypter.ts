@@ -24,7 +24,7 @@ export const Decrypter = new (class Decrypter {
         requestFile.responseType = 'arraybuffer';
         requestFile.send();
 
-        requestFile.onload = () => {
+        requestFile.onload = (): void => {
             if (requestFile.status < this._xhrOk) {
                 const arrayBuffer = this.decryptArrayBuffer(requestFile.response);
                 const source = this.createBlobUrl(arrayBuffer);

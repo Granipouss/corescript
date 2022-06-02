@@ -95,7 +95,7 @@ export const Utils = new (class Utils {
     }
 
     private _id = 1;
-    generateRuntimeId() {
+    generateRuntimeId(): number {
         return this._id++;
     }
 

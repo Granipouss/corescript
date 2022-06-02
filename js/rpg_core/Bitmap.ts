@@ -668,7 +668,7 @@ export class Bitmap {
      * @param offset The hue offset in 360 degrees
      */
     rotateHue(offset: number): void {
-        function rgbToHsl(r: number, g: number, b: number) {
+        function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
             const cmin = Math.min(r, g, b);
             const cmax = Math.max(r, g, b);
             let h = 0;
@@ -689,7 +689,7 @@ export class Bitmap {
             return [h, s, l];
         }
 
-        function hslToRgb(h: number, s: number, l: number) {
+        function hslToRgb(h: number, s: number, l: number): [number, number, number] {
             const c = (255 - Math.abs(2 * l - 255)) * s;
             const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
             const m = l - c / 2;
@@ -921,10 +921,10 @@ export class Bitmap {
                 url,
                 (source) => {
                     this._image.src = source;
-                    this._image.addEventListener('load', (this._loadListener = () => this._onLoad()));
+                    this._image.addEventListener('load', (this._loadListener = (): void => this._onLoad()));
                     this._image.addEventListener(
                         'error',
-                        (this._errorListener = this._loader || (() => this._onError()))
+                        (this._errorListener = this._loader || ((): void => this._onError()))
                     );
                 },
                 () => {

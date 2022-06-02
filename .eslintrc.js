@@ -24,6 +24,7 @@ module.exports = {
         "no-control-regex": "off",
         "no-prototype-builtins": "off",
         "no-unused-vars": "off",
+        "@typescript-eslint/explicit-function-return-type": ["error"],
         "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
     }
 }

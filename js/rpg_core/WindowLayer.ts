@@ -54,10 +54,10 @@ export class WindowLayer extends PIXI.Container {
     // FIXME:
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    get width() {
+    get width(): number {
         return this._width;
     }
-    set width(value) {
+    set width(value: number) {
         this._width = value;
     }
 
@@ -67,10 +67,10 @@ export class WindowLayer extends PIXI.Container {
     // FIXME:
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    get height() {
+    get height(): number {
         return this._height;
     }
-    set height(value) {
+    set height(value: number) {
         this._height = value;
     }
 

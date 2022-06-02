@@ -37,13 +37,13 @@ export abstract class Scene_ItemBase<T extends RPGSkill | RPGItem> extends Scene
         return this._itemWindow.index() % 2 === 0;
     }
 
-    showSubWindow(window: Window_MenuActor) {
+    showSubWindow(window: Window_MenuActor): void {
         window.x = this.isCursorLeft() ? Graphics.boxWidth - window.width : 0;
         window.show();
         window.activate();
     }
 
-    hideSubWindow(window: Window_MenuActor) {
+    hideSubWindow(window: Window_MenuActor): void {
         window.hide();
         window.deactivate();
         this.activateItemWindow();

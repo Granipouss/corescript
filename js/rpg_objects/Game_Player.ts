@@ -95,7 +95,7 @@ export class Game_Player extends Game_Character {
         return this._transferring;
     }
 
-    newMapId() {
+    newMapId(): number {
         return this._newMapId;
     }
 

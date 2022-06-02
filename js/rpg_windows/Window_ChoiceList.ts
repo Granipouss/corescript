@@ -16,7 +16,7 @@ export class Window_ChoiceList extends Window_Command {
         this._messageWindow = messageWindow;
     }
 
-    initialize() {
+    initialize(): void {
         super.initialize(0, 0);
         this.openness = 0;
         this.deactivate();

@@ -16,7 +16,7 @@ export class Window_TitleCommand extends Window_Command {
 
     static _lastCommandSymbol: string = null;
 
-    static initCommandPosition() {
+    static initCommandPosition(): void {
         this._lastCommandSymbol = null;
     }
 

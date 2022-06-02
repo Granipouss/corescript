@@ -1,21 +1,21 @@
 /**
  * Returns a number whose value is limited to the given range.
  */
-export const clamp = (value: number, [min, max]: [number, number]) => {
+export const clamp = (value: number, [min, max]: [number, number]): number => {
     return Math.min(Math.max(value, min), max);
 };
 
 /**
  * Returns a modulo value which is always positive.
  */
-export const mod = (value: number, div: number) => {
+export const mod = (value: number, div: number): number => {
     return ((value % div) + div) % div;
 };
 
 /**
  * Replaces %1, %2 and so on in the string to the arguments.
  */
-export const format = (template: string, ...args: unknown[]) => {
+export const format = (template: string, ...args: unknown[]): string => {
     return template.replace(/%([0-9]+)/g, (s, n) => String(args[Number(n) - 1]));
 };
 
@@ -48,7 +48,7 @@ export const arrayClone = <T extends unknown[]>(list: T): T => {
 /**
  * Generates a random integer in the range (0, max-1).
  */
-export const randomInt = (max: number) => {
+export const randomInt = (max: number): number => {
     return Math.floor(max * Math.random());
 };
 

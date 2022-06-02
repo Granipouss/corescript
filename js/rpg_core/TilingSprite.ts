@@ -101,7 +101,7 @@ export class TilingSprite extends PIXI.extras.TilingSprite {
         this._refresh();
     }
 
-    updateTransform() {
+    updateTransform(): void {
         this.tilePosition.x = Math.round(-this.origin.x);
         this.tilePosition.y = Math.round(-this.origin.y);
         super.updateTransform();

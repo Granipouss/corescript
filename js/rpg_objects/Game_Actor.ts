@@ -628,7 +628,7 @@ export class Game_Actor extends Game_Battler {
         this._battlerName = battlerName;
     }
 
-    isSpriteVisible() {
+    isSpriteVisible(): boolean {
         return window.$gameSystem.isSideView();
     }
 

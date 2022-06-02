@@ -33,7 +33,7 @@ export class Window_ShopStatus extends Window_Base {
         }
     }
 
-    setItem(item: RPGItem | RPGWeapon | RPGArmor) {
+    setItem(item: RPGItem | RPGWeapon | RPGArmor): void {
         this._item = item;
         this.refresh();
     }

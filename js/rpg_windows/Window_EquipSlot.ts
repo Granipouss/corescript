@@ -14,7 +14,7 @@ export class Window_EquipSlot extends Window_Selectable {
     protected _statusWindow: Window_EquipStatus;
     protected _itemWindow: Window_EquipItem;
 
-    initialize(x: number, y: number, width: number, height: number) {
+    initialize(x: number, y: number, width: number, height: number): void {
         super.initialize(x, y, width, height);
         this.refresh();
     }
