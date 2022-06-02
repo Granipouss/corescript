@@ -124,8 +124,10 @@ export class Window_BattleLog extends Window_Selectable {
     callNextMethod(): void {
         if (this._methods.length > 0) {
             const method = this._methods.shift();
-            if (method.name && this[method.name]) {
-                this[method.name](...method.params);
+            const methodName = method.name as BattleLogMethods;
+            if (methodName && this[methodName]) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (this[methodName] as any)(...method.params);
             } else {
                 throw new Error('Method not found: ' + method.name);
             }
@@ -600,3 +602,7 @@ export class Window_BattleLog extends Window_Selectable {
         }
     }
 }
+
+type BattleLogMethods = {
+    [K in keyof Window_BattleLog]: Window_BattleLog[K] extends (...args: unknown[]) => unknown ? K : never;
+}[keyof Window_BattleLog];

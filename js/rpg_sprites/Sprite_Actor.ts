@@ -13,7 +13,7 @@ type Motion = { index: number; loop: boolean };
  * The sprite for displaying an actor.
  */
 export class Sprite_Actor extends Sprite_Battler {
-    static readonly MOTIONS = {
+    static readonly MOTIONS: Record<string, Motion> = {
         walk: { index: 0, loop: true },
         wait: { index: 1, loop: true },
         chant: { index: 2, loop: true },

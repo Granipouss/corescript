@@ -2,7 +2,7 @@ import { clamp } from '../rpg_core/extension';
 import { AudioManager } from './AudioManager';
 import { StorageManager } from './StorageManager';
 
-type Config = {
+export type Config = {
     alwaysDash: boolean;
     commandRemember: boolean;
     bgmVolume: number;

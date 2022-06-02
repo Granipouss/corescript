@@ -19,7 +19,7 @@ declare const FPSMeter: new (options: unknown) => any;
  */
 export const Graphics = new (class Graphics {
     private _cssFontLoading = document.fonts && document.fonts.ready && document.fonts.ready.then;
-    private _fontLoaded = null;
+    private _fontLoaded: FontFaceSet = null;
     private _videoVolume = 1;
 
     private _width: number;
@@ -294,8 +294,8 @@ export const Graphics = new (class Graphics {
         clearTimeout(this._progressTimeout);
     }
 
-    private _updateProgressCount(countLoaded, countLoading): void {
-        let progressValue;
+    private _updateProgressCount(countLoaded: number, countLoading: number): void {
+        let progressValue: number;
         if (countLoading !== 0) {
             progressValue = (countLoaded / countLoading) * 100;
         } else {
@@ -908,7 +908,7 @@ export const Graphics = new (class Graphics {
             graph: 1,
             decimals: 0,
             theme: 'transparent',
-            toggleOn: null,
+            toggleOn: null as boolean,
         };
         this._fpsMeter = new FPSMeter(options);
         this._fpsMeter.hide();

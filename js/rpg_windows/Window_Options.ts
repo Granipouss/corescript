@@ -1,7 +1,7 @@
 import { clamp } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 
-import { ConfigManager } from '../rpg_managers/ConfigManager';
+import { Config, ConfigManager } from '../rpg_managers/ConfigManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { TextManager } from '../rpg_managers/TextManager';
 
@@ -60,7 +60,11 @@ export class Window_Options extends Window_Command {
         return 120;
     }
 
-    statusText(index) {
+    commandSymbol(index: number): keyof Config {
+        return super.commandSymbol(index) as keyof Config;
+    }
+
+    statusText(index: number) {
         const symbol = this.commandSymbol(index);
         if (this.isVolumeSymbol(symbol)) {
             const value = this.getConfigValue(symbol) as number;
@@ -130,7 +134,7 @@ export class Window_Options extends Window_Command {
         return 20;
     }
 
-    changeValue(symbol: string, value: number | boolean): void {
+    changeValue<T extends keyof Config>(symbol: T, value: typeof ConfigManager[T]): void {
         const lastValue = this.getConfigValue(symbol);
         if (lastValue !== value) {
             this.setConfigValue(symbol, value);
@@ -139,11 +143,11 @@ export class Window_Options extends Window_Command {
         }
     }
 
-    getConfigValue(symbol: string): number | boolean {
+    getConfigValue<T extends keyof Config>(symbol: T): typeof ConfigManager[T] {
         return ConfigManager[symbol];
     }
 
-    setConfigValue(symbol: string, volume: number | boolean) {
+    setConfigValue<T extends keyof Config>(symbol: T, volume: typeof ConfigManager[T]) {
         ConfigManager[symbol] = volume;
     }
 }

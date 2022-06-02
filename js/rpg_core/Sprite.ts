@@ -188,7 +188,7 @@ export class Sprite extends PIXI.Sprite {
         }
     }
 
-    protected _onBitmapLoad(bitmapLoaded): void {
+    protected _onBitmapLoad(bitmapLoaded: Bitmap): void {
         if (bitmapLoaded === this._bitmap) {
             if (this._refreshFrame && this._bitmap) {
                 this._refreshFrame = false;

@@ -54,7 +54,7 @@ export class Window_Command extends Window_Selectable {
         // ...
     }
 
-    addCommand(name: string, symbol: string, enabled = true, ext = null): void {
+    addCommand(name: string, symbol: string, enabled = true, ext: unknown = null): void {
         this._list.push({ name, symbol, enabled, ext });
     }
 

@@ -34,7 +34,7 @@ export class Scene_MenuBase extends Scene_Base {
         this.addChild(this._backgroundSprite);
     }
 
-    setBackgroundOpacity(opacity) {
+    setBackgroundOpacity(opacity: number) {
         this._backgroundSprite.opacity = opacity;
     }
 

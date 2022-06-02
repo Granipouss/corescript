@@ -6,7 +6,7 @@ import { SceneManager } from '../rpg_managers/SceneManager';
  * The static class that handles resource loading.
  */
 export const ResourceHandler = new (class ResourceHandler {
-    private _reloaders = [];
+    private _reloaders: (() => void)[] = [];
     private _defaultRetryInterval = [500, 1000, 3000];
 
     createLoader(

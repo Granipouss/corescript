@@ -7,11 +7,11 @@ export const Html5Audio = new (class Html5Audio {
     private _initialized = false;
     private _unlocked = false;
     private _audioElement: HTMLAudioElement = null;
-    private _gainTweenInterval = null;
+    private _gainTweenInterval: NodeJS.Timeout = null;
     private _tweenGain = 0;
     private _tweenTargetGain = 0;
     private _tweenGainStep = 0;
-    private _staticSePath = null;
+    private _staticSePath: string = null;
     private _url: string;
     private _isLoading: boolean;
     private _buffered: boolean;

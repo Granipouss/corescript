@@ -625,5 +625,5 @@ export class WebAudio {
     }
 
     // FIXME:
-    _reservedSeName = undefined;
+    _reservedSeName: string = undefined;
 }

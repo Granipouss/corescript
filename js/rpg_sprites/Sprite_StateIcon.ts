@@ -53,7 +53,7 @@ export class Sprite_StateIcon extends Sprite {
     }
 
     updateIcon(): void {
-        let icons = [];
+        let icons: number[] = [];
         if (this._battler && this._battler.isAlive()) {
             icons = this._battler.allIcons();
         }

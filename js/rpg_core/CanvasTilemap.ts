@@ -107,11 +107,11 @@ export class CanvasTilemap extends Tilemap {
         const h2 = this._height - h1;
 
         for (let i = 0; i < 2; i++) {
-            let children;
+            let children: Sprite[];
             if (i === 0) {
-                children = this._lowerLayer.children;
+                children = this._lowerLayer.children as Sprite[];
             } else {
-                children = this._upperLayer.children;
+                children = this._upperLayer.children as Sprite[];
             }
             children[0].move(0, 0, w1, h1);
             children[0].setFrame(x2, y2, w1, h1);
