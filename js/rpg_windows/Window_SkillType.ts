@@ -6,13 +6,8 @@ import { Window_SkillList } from './Window_SkillList';
  * The window for selecting a skill type on the skill screen.
  */
 export class Window_SkillType extends Window_Command {
-    protected _actor: Game_Actor;
+    protected _actor: Game_Actor = null;
     protected _skillWindow: Window_SkillList;
-
-    initialize(x, y) {
-        super.initialize(x, y);
-        this._actor = null;
-    }
 
     windowWidth(): number {
         return 240;

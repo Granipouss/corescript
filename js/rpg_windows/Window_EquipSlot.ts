@@ -9,14 +9,13 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for selecting an equipment slot on the equipment screen.
  */
 export class Window_EquipSlot extends Window_Selectable {
-    protected _actor: Game_Actor;
+    protected _actor: Game_Actor = null;
 
     protected _statusWindow: Window_EquipStatus;
     protected _itemWindow: Window_EquipItem;
 
     initialize(x, y, width, height) {
         super.initialize(x, y, width, height);
-        this._actor = null;
         this.refresh();
     }
 

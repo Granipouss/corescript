@@ -12,11 +12,16 @@ export type Command = {
  * @abstract
  */
 export class Window_Command extends Window_Selectable {
-    protected _list: Command[];
+    protected _list: Command[] = [];
 
-    initialize(x: number, y: number): void {
+    constructor(x = 0, y = 0) {
+        super(x, y);
+
         this.clearCommandList();
         this.makeCommandList();
+    }
+
+    initialize(x: number, y: number): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         super.initialize(x, y, width, height);

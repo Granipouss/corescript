@@ -6,15 +6,13 @@ import { Window_Base } from './Window_Base';
  * The window for displaying parameter changes on the equipment screen.
  */
 export class Window_EquipStatus extends Window_Base {
-    protected _actor: Game_Actor;
-    protected _tempActor: Game_Actor;
+    protected _actor: Game_Actor = null;
+    protected _tempActor: Game_Actor = null;
 
-    initialize(x, y) {
+    initialize(x: number, y: number): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         super.initialize(x, y, width, height);
-        this._actor = null;
-        this._tempActor = null;
         this.refresh();
     }
 

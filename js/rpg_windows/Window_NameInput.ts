@@ -563,15 +563,20 @@ export class Window_NameInput extends Window_Selectable {
     protected _editWindow: Window_NameEdit;
     protected _page: number;
 
-    initialize(editWindow) {
-        const x = editWindow.x;
-        const y = editWindow.y + editWindow.height + 8;
-        const width = editWindow.width;
-        const height = this.windowHeight();
-        super.initialize(x, y, width, height);
+    constructor(editWindow: Window_NameEdit) {
+        super();
+
         this._editWindow = editWindow;
         this._page = 0;
         this._index = 0;
+    }
+
+    initialize(): void {
+        const x = this._editWindow.x;
+        const y = this._editWindow.y + this._editWindow.height + 8;
+        const width = this._editWindow.width;
+        const height = this.windowHeight();
+        super.initialize(x, y, width, height);
         this.refresh();
         this.updateCursor();
         this.activate();

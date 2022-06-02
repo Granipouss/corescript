@@ -8,7 +8,7 @@ import { Window_MenuStatus } from './Window_MenuStatus';
  * The window for selecting a target actor on the item and skill screens.
  */
 export class Window_MenuActor extends Window_MenuStatus {
-    initialize() {
+    initialize(): void {
         super.initialize(0, 0);
         this.hide();
     }

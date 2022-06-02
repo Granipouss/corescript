@@ -6,16 +6,9 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for selecting a skill on the skill screen.
  */
 export class Window_SkillList extends Window_Selectable {
-    protected _actor: Game_Actor;
-    protected _stypeId: number;
-    protected _data: RPGSkill[];
-
-    initialize(x, y, width, height) {
-        super.initialize(x, y, width, height);
-        this._actor = null;
-        this._stypeId = 0;
-        this._data = [];
-    }
+    protected _actor: Game_Actor = null;
+    protected _stypeId = 0;
+    protected _data: RPGSkill[] = [];
 
     setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {

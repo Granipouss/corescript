@@ -8,13 +8,12 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for displaying full status on the status screen.
  */
 export class Window_Status extends Window_Selectable {
-    protected _actor: Game_Actor;
+    protected _actor: Game_Actor = null;
 
-    initialize() {
+    initialize(): void {
         const width = Graphics.boxWidth;
         const height = Graphics.boxHeight;
         super.initialize(0, 0, width, height);
-        this._actor = null;
         this.refresh();
         this.activate();
     }

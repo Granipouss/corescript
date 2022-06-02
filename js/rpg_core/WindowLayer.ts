@@ -153,9 +153,6 @@ export class WindowLayer extends PIXI.Container {
     }
 
     renderWebGL(renderer: PIXI.WebGLRenderer): void {
-        // super.renderWebGL(renderer);
-        // return;
-
         if (!this.visible || !this.renderable) {
             return;
         }

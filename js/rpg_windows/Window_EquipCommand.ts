@@ -7,12 +7,9 @@ import { Window_HorzCommand } from './Window_HorzCommand';
 export class Window_EquipCommand extends Window_HorzCommand {
     protected _windowWidth: number;
 
-    // FIXME:
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    initialize(x, y, width) {
+    constructor(x: number, y: number, width: number) {
+        super(x, y);
         this._windowWidth = width;
-        super.initialize(x, y);
     }
 
     windowWidth(): number {

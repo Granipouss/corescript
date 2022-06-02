@@ -14,13 +14,11 @@ import { Window_Base } from './Window_Base';
  * equipment on the shop screen.
  */
 export class Window_ShopStatus extends Window_Base {
-    protected _item: RPGItem | RPGWeapon | RPGArmor;
-    protected _pageIndex: number;
+    protected _item: RPGItem | RPGWeapon | RPGArmor = null;
+    protected _pageIndex = 0;
 
-    initialize(x, y, width, height) {
+    initialize(x: number, y: number, width: number, height: number): void {
         super.initialize(x, y, width, height);
-        this._item = null;
-        this._pageIndex = 0;
         this.refresh();
     }
 

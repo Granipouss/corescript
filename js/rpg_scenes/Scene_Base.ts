@@ -3,11 +3,11 @@ import * as PIXI from 'pixi.js';
 import { Graphics } from '../rpg_core/Graphics';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Utils } from '../rpg_core/Utils';
-import { Window } from '../rpg_core/Window';
 import { WindowLayer } from '../rpg_core/WindowLayer';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { SceneManager } from '../rpg_managers/SceneManager';
+import { Window_Base } from '../rpg_windows/Window_Base';
 import { Scene_Gameover } from './Scene_Gameover';
 
 /**
@@ -135,7 +135,8 @@ export abstract class Scene_Base extends PIXI.Container {
     /**
      * Add the children window to the windowLayer processing.
      */
-    addWindow(window: Window): void {
+    addWindow(window: Window_Base): void {
+        window.initialize(window.x, window.y, window.width, window.height);
         this._windowLayer.addChild(window);
     }
 

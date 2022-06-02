@@ -6,7 +6,7 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for displaying the status of party members on the battle screen.
  */
 export class Window_BattleStatus extends Window_Selectable {
-    initialize() {
+    initialize(_x = 0, _y = 0): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         const x = Graphics.boxWidth - width;

@@ -13,20 +13,26 @@ export class Window_NameEdit extends Window_Base {
     protected _maxLength: number;
     protected _defaultName: string;
 
-    initialize(actor, maxLength) {
-        const width = this.windowWidth();
-        const height = this.windowHeight();
-        const x = (Graphics.boxWidth - width) / 2;
-        const y = (Graphics.boxHeight - (height + this.fittingHeight(9) + 8)) / 2;
-        super.initialize(x, y, width, height);
+    constructor(actor: Game_Actor, maxLength: number) {
+        super();
+
         this._actor = actor;
         this._name = actor.name().slice(0, this._maxLength);
         this._index = this._name.length;
         this._maxLength = maxLength;
         this._defaultName = this._name;
+
+        ImageManager.reserveFace(actor.faceName());
+    }
+
+    initialize(): void {
+        const width = this.windowWidth();
+        const height = this.windowHeight();
+        const x = (Graphics.boxWidth - width) / 2;
+        const y = (Graphics.boxHeight - (height + this.fittingHeight(9) + 8)) / 2;
+        super.initialize(x, y, width, height);
         this.deactivate();
         this.refresh();
-        ImageManager.reserveFace(actor.faceName());
     }
 
     windowWidth(): number {

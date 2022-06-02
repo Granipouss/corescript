@@ -6,10 +6,9 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for selecting a target enemy on the battle screen.
  */
 export class Window_BattleEnemy extends Window_Selectable {
-    protected _enemies: Game_Enemy[];
+    protected _enemies: Game_Enemy[] = [];
 
-    initialize(x, y) {
-        this._enemies = [];
+    initialize(x: number, y: number): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         super.initialize(x, y, width, height);

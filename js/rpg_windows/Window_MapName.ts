@@ -4,15 +4,14 @@ import { Window_Base } from './Window_Base';
  * The window for displaying the map name on the map screen.
  */
 export class Window_MapName extends Window_Base {
-    protected _showCount: number;
+    protected _showCount = 0;
 
-    initialize() {
+    initialize(): void {
         const wight = this.windowWidth();
         const height = this.windowHeight();
         super.initialize(0, 0, wight, height);
         this.opacity = 0;
         this.contentsOpacity = 0;
-        this._showCount = 0;
         this.refresh();
     }
 

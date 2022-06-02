@@ -10,8 +10,13 @@ export class Window_ChoiceList extends Window_Command {
     protected _messageWindow: Window_Message;
     protected _background: number;
 
-    initialize(messageWindow) {
+    constructor(messageWindow: Window_Message) {
+        super();
+
         this._messageWindow = messageWindow;
+    }
+
+    initialize() {
         super.initialize(0, 0);
         this.openness = 0;
         this.deactivate();

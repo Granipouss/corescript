@@ -7,7 +7,7 @@ import { Window_Command } from './Window_Command';
  * The window for selecting whether to fight or escape on the battle screen.
  */
 export class Window_PartyCommand extends Window_Command {
-    initialize() {
+    initialize(): void {
         const y = Graphics.boxHeight - this.windowHeight();
         super.initialize(0, y);
         this.openness = 0;

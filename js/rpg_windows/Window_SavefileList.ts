@@ -6,12 +6,11 @@ import { Window_Selectable } from './Window_Selectable';
  * The window for selecting a save file on the save and load screens.
  */
 export class Window_SavefileList extends Window_Selectable {
-    protected _mode: 'save' | 'load';
+    protected _mode: 'save' | 'load' = null;
 
-    initialize(x, y, width, height) {
+    initialize(x: number, y: number, width: number, height: number): void {
         super.initialize(x, y, width, height);
         this.activate();
-        this._mode = null;
     }
 
     setMode(mode: 'save' | 'load'): void {

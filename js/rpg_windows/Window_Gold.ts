@@ -5,7 +5,7 @@ import { Window_Base } from './Window_Base';
  * The window for displaying the party's gold.
  */
 export class Window_Gold extends Window_Base {
-    initialize(x, y) {
+    initialize(x: number, y: number): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         super.initialize(x, y, width, height);

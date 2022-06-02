@@ -8,9 +8,14 @@ export class Window_ShopCommand extends Window_HorzCommand {
     protected _windowWidth: number;
     protected _purchaseOnly: boolean;
 
-    initialize(width, purchaseOnly) {
+    constructor(width: number, purchaseOnly = false) {
+        super();
+
         this._windowWidth = width;
         this._purchaseOnly = purchaseOnly;
+    }
+
+    initialize() {
         super.initialize(0, 0);
     }
 

@@ -20,25 +20,21 @@ import { Window_Selectable } from './Window_Selectable';
  * handled as a window for convenience.
  */
 export class Window_BattleLog extends Window_Selectable {
-    protected _lines: string[];
-    protected _methods: { name: string; params: unknown[] }[];
-    protected _waitCount: number;
-    protected _waitMode: string;
-    protected _baseLineStack: number[];
+    protected _lines: string[] = [];
+    protected _methods: { name: string; params: unknown[] }[] = [];
+    protected _waitCount = 0;
+    protected _waitMode = '';
+    protected _baseLineStack: number[] = [];
+
     protected _spriteset: Spriteset_Battle;
     protected _backBitmap: Bitmap;
     protected _backSprite: Sprite;
 
-    initialize() {
+    initialize(): void {
         const width = this.windowWidth();
         const height = this.windowHeight();
         super.initialize(0, 0, width, height);
         this.opacity = 0;
-        this._lines = [];
-        this._methods = [];
-        this._waitCount = 0;
-        this._waitMode = '';
-        this._baseLineStack = [];
         this._spriteset = null;
         this.createBackBitmap();
         this.createBackSprite();

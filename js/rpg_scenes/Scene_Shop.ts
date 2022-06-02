@@ -26,11 +26,11 @@ export class Scene_Shop extends Scene_MenuBase {
     protected _categoryWindow: Window_ItemCategory;
     protected _sellWindow: Window_ShopSell;
 
-    protected _goods: (RPGItem | RPGArmor | RPGWeapon)[];
+    protected _goods: [number, number, number, number][];
     protected _purchaseOnly: boolean;
     protected _item: RPGItem | RPGArmor | RPGWeapon;
 
-    prepare(goods: (RPGItem | RPGArmor | RPGWeapon)[], purchaseOnly = false): void {
+    prepare(goods: [number, number, number, number][], purchaseOnly = false): void {
         this._goods = goods;
         this._purchaseOnly = purchaseOnly;
         this._item = null;
@@ -87,8 +87,8 @@ export class Scene_Shop extends Scene_MenuBase {
         const ww = Graphics.boxWidth - wx;
         const wh = this._dummyWindow.height;
         this._statusWindow = new Window_ShopStatus(wx, wy, ww, wh);
-        this._statusWindow.hide();
         this.addWindow(this._statusWindow);
+        this._statusWindow.hide();
     }
 
     createBuyWindow(): void {
@@ -97,21 +97,21 @@ export class Scene_Shop extends Scene_MenuBase {
         this._buyWindow = new Window_ShopBuy(0, wy, wh, this._goods);
         this._buyWindow.setHelpWindow(this._helpWindow);
         this._buyWindow.setStatusWindow(this._statusWindow);
-        this._buyWindow.hide();
         this._buyWindow.setHandler('ok', this.onBuyOk.bind(this));
         this._buyWindow.setHandler('cancel', this.onBuyCancel.bind(this));
         this.addWindow(this._buyWindow);
+        this._buyWindow.hide();
     }
 
     createCategoryWindow(): void {
         this._categoryWindow = new Window_ItemCategory();
         this._categoryWindow.setHelpWindow(this._helpWindow);
         this._categoryWindow.y = this._dummyWindow.y;
-        this._categoryWindow.hide();
-        this._categoryWindow.deactivate();
         this._categoryWindow.setHandler('ok', this.onCategoryOk.bind(this));
         this._categoryWindow.setHandler('cancel', this.onCategoryCancel.bind(this));
         this.addWindow(this._categoryWindow);
+        this._categoryWindow.hide();
+        this._categoryWindow.deactivate();
     }
 
     createSellWindow(): void {
@@ -119,11 +119,11 @@ export class Scene_Shop extends Scene_MenuBase {
         const wh = Graphics.boxHeight - wy;
         this._sellWindow = new Window_ShopSell(0, wy, Graphics.boxWidth, wh);
         this._sellWindow.setHelpWindow(this._helpWindow);
-        this._sellWindow.hide();
         this._sellWindow.setHandler('ok', this.onSellOk.bind(this));
         this._sellWindow.setHandler('cancel', this.onSellCancel.bind(this));
         this._categoryWindow.setItemWindow(this._sellWindow);
         this.addWindow(this._sellWindow);
+        this._sellWindow.hide();
     }
 
     activateBuyWindow(): void {

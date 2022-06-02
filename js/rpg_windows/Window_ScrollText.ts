@@ -8,8 +8,8 @@ import { TextState, Window_Base } from './Window_Base';
  * is handled as a window for convenience.
  */
 export class Window_ScrollText extends Window_Base {
-    protected _text: string;
-    protected _allTextHeight: number;
+    protected _text = '';
+    protected _allTextHeight = 0;
 
     initialize() {
         const width = Graphics.boxWidth;
@@ -17,8 +17,6 @@ export class Window_ScrollText extends Window_Base {
         super.initialize(0, 0, width, height);
         this.opacity = 0;
         this.hide();
-        this._text = '';
-        this._allTextHeight = 0;
     }
 
     update(): void {

@@ -14,7 +14,7 @@ export class Window_DebugRange extends Window_Selectable {
     protected _maxVariables: number;
     protected _editWindow: Window_DebugEdit;
 
-    initialize(x, y) {
+    initialize(x: number, y: number): void {
         this._maxSwitches = Math.ceil((window.$dataSystem.switches.length - 1) / 10);
         this._maxVariables = Math.ceil((window.$dataSystem.variables.length - 1) / 10);
         const width = this.windowWidth();

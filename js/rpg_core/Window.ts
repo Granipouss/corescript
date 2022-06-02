@@ -32,17 +32,9 @@ export class Window extends PIXI.Container {
     protected _downArrowSprite: Sprite;
     protected _upArrowSprite: Sprite;
 
-    // FIXME:
-    constructor(...args: unknown[]) {
+    constructor() {
         super();
 
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.initialize(...args);
-    }
-
-    initialize(..._args: unknown[]): void {
         this._windowskin = null;
         this._width = 0;
         this._height = 0;

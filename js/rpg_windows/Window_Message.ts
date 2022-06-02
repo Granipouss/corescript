@@ -3,7 +3,6 @@ import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Utils } from '../rpg_core/Utils';
-import { Window } from '../rpg_core/Window';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { TextState, Window_Base } from './Window_Base';
 import { Window_ChoiceList } from './Window_ChoiceList';
@@ -54,7 +53,7 @@ export class Window_Message extends Window_Base {
         this.clearFlags();
     }
 
-    subWindows(): Window[] {
+    subWindows(): Window_Base[] {
         return [this._goldWindow, this._choiceWindow, this._numberWindow, this._itemWindow];
     }
 

@@ -9,14 +9,8 @@ import { Window_Selectable } from './Window_Selectable';
  * @abstract
  */
 export class Window_ItemList extends Window_Selectable {
-    protected _category: string;
-    protected _data: (RPGItem | RPGWeapon | RPGArmor)[];
-
-    initialize(x, y, width, height) {
-        super.initialize(x, y, width, height);
-        this._category = 'none';
-        this._data = [];
-    }
+    protected _category = 'none';
+    protected _data: (RPGItem | RPGWeapon | RPGArmor)[] = [];
 
     setCategory(category: string): void {
         if (this._category !== category) {

@@ -11,7 +11,7 @@ import { Window_Command } from './Window_Command';
  * The window for changing various settings on the options screen.
  */
 export class Window_Options extends Window_Command {
-    initialize() {
+    initialize(): void {
         super.initialize(0, 0);
         this.updatePlacement();
     }

@@ -247,15 +247,16 @@ export class Scene_Map extends Scene_Base {
 
     createMapNameWindow(): void {
         this._mapNameWindow = new Window_MapName();
+        this._mapNameWindow.initialize();
         this.addChild(this._mapNameWindow);
     }
 
     createMessageWindow(): void {
         this._messageWindow = new Window_Message();
         this.addWindow(this._messageWindow);
-        this._messageWindow.subWindows().forEach(function (window) {
+        this._messageWindow.subWindows().forEach((window) => {
             this.addWindow(window);
-        }, this);
+        });
     }
 
     createScrollTextWindow(): void {

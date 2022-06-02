@@ -19,21 +19,26 @@ export type TextState = {
  * The superclass of all windows within the game.
  */
 export class Window_Base extends Window {
-    protected _opening: boolean;
-    protected _closing: boolean;
-    protected _dimmerSprite: Sprite;
+    protected _opening = false;
+    protected _closing = false;
+    protected _dimmerSprite: Sprite = null;
 
-    initialize(x: number, y: number, width: number, height: number) {
-        super.initialize();
+    constructor(x = 0, y = 0, width = 0, height = 0) {
+        super();
+
+        this.x = x;
+        this.y = y;
+        this._width = width;
+        this._height = height;
+    }
+
+    initialize(x: number, y: number, width: number, height: number): void {
         this.loadWindowskin();
         this.move(x, y, width, height);
         this.updatePadding();
         this.updateBackOpacity();
         this.updateTone();
         this.createContents();
-        this._opening = false;
-        this._closing = false;
-        this._dimmerSprite = null;
     }
 
     protected static _iconWidth = 32;

@@ -10,8 +10,13 @@ import { Window_Message } from './Window_Message';
 export class Window_EventItem extends Window_ItemList {
     protected _messageWindow: Window_Message;
 
-    initialize(messageWindow) {
+    constructor(messageWindow: Window_Message) {
+        super();
+
         this._messageWindow = messageWindow;
+    }
+
+    initialize(): void {
         const width = Graphics.boxWidth;
         const height = this.windowHeight();
         super.initialize(0, 0, width, height);

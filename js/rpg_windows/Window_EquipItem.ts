@@ -10,16 +10,10 @@ import { Window_ItemList } from './Window_ItemList';
  * The window for selecting an equipment item on the equipment screen.
  */
 export class Window_EquipItem extends Window_ItemList {
-    protected _actor: Game_Actor;
+    protected _actor: Game_Actor = null;
+    protected _slotId = 0;
 
-    protected _slotId: number;
     protected _statusWindow: Window_EquipStatus;
-
-    initialize(x, y, width, height) {
-        super.initialize(x, y, width, height);
-        this._actor = null;
-        this._slotId = 0;
-    }
 
     setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {

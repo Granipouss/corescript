@@ -5,13 +5,18 @@ import { Window_Base } from './Window_Base';
  * The window for displaying the description of the selected item.
  */
 export class Window_Help extends Window_Base {
-    protected _text: string;
+    protected _text = '';
+    protected _numLines: number;
 
-    initialize(numLines) {
+    constructor(numLines = 2) {
+        super();
+        this._numLines = numLines;
+    }
+
+    initialize(): void {
         const width = Graphics.boxWidth;
-        const height = this.fittingHeight(numLines || 2);
+        const height = this.fittingHeight(this._numLines);
         super.initialize(0, 0, width, height);
-        this._text = '';
     }
 
     setText(text: string): void {

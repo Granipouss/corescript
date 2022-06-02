@@ -5,7 +5,7 @@ import { Window_ItemList } from './Window_ItemList';
  * The window for selecting an item to use on the battle screen.
  */
 export class Window_BattleItem extends Window_ItemList {
-    initialize(x, y, width, height) {
+    initialize(x: number, y: number, width: number, height: number): void {
         super.initialize(x, y, width, height);
         this.hide();
     }

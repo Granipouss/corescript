@@ -6,7 +6,7 @@ import { Window_Command } from './Window_Command';
  * The window for selecting "Go to Title" on the game end screen.
  */
 export class Window_GameEnd extends Window_Command {
-    initialize() {
+    initialize(): void {
         super.initialize(0, 0);
         this.updatePlacement();
         this.openness = 0;

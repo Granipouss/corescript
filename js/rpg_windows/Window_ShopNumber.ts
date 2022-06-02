@@ -15,22 +15,17 @@ import { Window_Selectable } from './Window_Selectable';
  * screen.
  */
 export class Window_ShopNumber extends Window_Selectable {
-    protected _item: RPGItem | RPGArmor | RPGWeapon;
-    protected _max: number;
-    protected _price: number;
-    protected _number: number;
-    protected _currencyUnit: string;
+    protected _item: RPGItem | RPGArmor | RPGWeapon = null;
+    protected _max = 1;
+    protected _price = 0;
+    protected _number = 1;
+    protected _currencyUnit = TextManager.currencyUnit;
 
     protected _buttons: Sprite_Button[];
 
-    initialize(x, y, height) {
+    initialize(x: number, y: number, _width: number, height: number): void {
         const width = this.windowWidth();
         super.initialize(x, y, width, height);
-        this._item = null;
-        this._max = 1;
-        this._price = 0;
-        this._number = 1;
-        this._currencyUnit = TextManager.currencyUnit;
         this.createButtons();
     }
 

@@ -5,12 +5,7 @@ import { Window_Base } from './Window_Base';
  * The window for displaying the skill user's status on the skill screen.
  */
 export class Window_SkillStatus extends Window_Base {
-    protected _actor: Game_Actor;
-
-    initialize(x, y, width, height) {
-        super.initialize(x, y, width, height);
-        this._actor = null;
-    }
+    protected _actor: Game_Actor = null;
 
     setActor(actor: Game_Actor): void {
         if (this._actor !== actor) {

@@ -6,7 +6,7 @@ import { Window_Command } from './Window_Command';
  * The window for selecting a command on the menu screen.
  */
 export class Window_MenuCommand extends Window_Command {
-    initialize(x, y) {
+    initialize(x: number, y: number): void {
         super.initialize(x, y);
         this.selectLast();
     }

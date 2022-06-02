@@ -28,8 +28,8 @@ export class Scene_File extends Scene_MenuBase {
 
     createHelpWindow(): void {
         this._helpWindow = new Window_Help(1);
-        this._helpWindow.setText(this.helpWindowText());
         this.addWindow(this._helpWindow);
+        this._helpWindow.setText(this.helpWindowText());
     }
 
     createListWindow(): void {
@@ -43,8 +43,8 @@ export class Scene_File extends Scene_MenuBase {
         this._listWindow.select(this.firstSavefileIndex());
         this._listWindow.setTopRow(this.firstSavefileIndex() - 2);
         this._listWindow.setMode(this.mode());
-        this._listWindow.refresh();
         this.addWindow(this._listWindow);
+        this._listWindow.refresh();
     }
 
     mode(): 'save' | 'load' {

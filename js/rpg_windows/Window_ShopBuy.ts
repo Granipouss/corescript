@@ -9,16 +9,19 @@ import { Window_ShopStatus } from './Window_ShopStatus';
  */
 export class Window_ShopBuy extends Window_Selectable {
     protected _shopGoods: [number, number, number, number][];
-    protected _money: number;
+    protected _money = 0;
     protected _data: (RPGItem | RPGArmor | RPGWeapon)[];
     protected _price: number[];
     protected _statusWindow: Window_ShopStatus;
 
-    initialize(x, y, height, shopGoods) {
+    constructor(x: number, y: number, height: number, shopGoods: [number, number, number, number][]) {
+        super(x, y, 0, height);
+        this._shopGoods = shopGoods;
+    }
+
+    initialize(x: number, y: number, _width: number, height: number): void {
         const width = this.windowWidth();
         super.initialize(x, y, width, height);
-        this._shopGoods = shopGoods;
-        this._money = 0;
         this.refresh();
         this.select(0);
     }

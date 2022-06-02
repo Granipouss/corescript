@@ -8,14 +8,13 @@ import { Window_Command } from './Window_Command';
  * The window for selecting an actor's action on the battle screen.
  */
 export class Window_ActorCommand extends Window_Command {
-    protected _actor: Game_Actor;
+    protected _actor: Game_Actor = null;
 
-    initialize() {
+    initialize(): void {
         const y = Graphics.boxHeight - this.windowHeight();
         super.initialize(0, y);
         this.openness = 0;
         this.deactivate();
-        this._actor = null;
     }
 
     windowWidth(): number {

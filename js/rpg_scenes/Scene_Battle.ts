@@ -190,8 +190,8 @@ export class Scene_Battle extends Scene_Base {
         this._partyCommandWindow = new Window_PartyCommand();
         this._partyCommandWindow.setHandler('fight', this.commandFight.bind(this));
         this._partyCommandWindow.setHandler('escape', this.commandEscape.bind(this));
-        this._partyCommandWindow.deselect();
         this.addWindow(this._partyCommandWindow);
+        this._partyCommandWindow.deselect();
     }
 
     createActorCommandWindow(): void {
@@ -206,8 +206,8 @@ export class Scene_Battle extends Scene_Base {
 
     createHelpWindow(): void {
         this._helpWindow = new Window_Help();
-        this._helpWindow.visible = false;
         this.addWindow(this._helpWindow);
+        this._helpWindow.visible = false;
     }
 
     createSkillWindow(): void {

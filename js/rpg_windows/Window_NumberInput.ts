@@ -14,16 +14,19 @@ import { Window_Selectable } from './Window_Selectable';
 export class Window_NumberInput extends Window_Selectable {
     protected _messageWindow: Window_Message;
 
-    protected _number: number;
-    protected _maxDigits: number;
+    protected _number = 0;
+    protected _maxDigits = 1;
 
     protected _buttons: Sprite_Button[];
 
-    initialize(messageWindow) {
+    constructor(messageWindow: Window_Message) {
+        super();
+
         this._messageWindow = messageWindow;
+    }
+
+    initialize(): void {
         super.initialize(0, 0, 0, 0);
-        this._number = 0;
-        this._maxDigits = 1;
         this.openness = 0;
         this.createButtons();
         this.deactivate();

@@ -12,27 +12,18 @@ import { Window_Help } from './Window_Help';
  * @abstract
  */
 export class Window_Selectable extends Window_Base {
-    protected _index: number;
-    protected _cursorFixed: boolean;
-    protected _cursorAll: boolean;
-    protected _stayCount: number;
-    protected _helpWindow: Window_Help;
-    protected _handlers: Record<string, () => void>;
-    protected _touching: boolean;
-    protected _scrollX: number;
-    protected _scrollY: number;
+    protected _index = -1;
+    protected _cursorFixed = false;
+    protected _cursorAll = false;
+    protected _stayCount = 0;
+    protected _helpWindow: Window_Help = null;
+    protected _handlers: Record<string, () => void> = {};
+    protected _touching = false;
+    protected _scrollX = 0;
+    protected _scrollY = 0;
 
     initialize(x: number, y: number, width: number, height: number) {
         super.initialize(x, y, width, height);
-        this._index = -1;
-        this._cursorFixed = false;
-        this._cursorAll = false;
-        this._stayCount = 0;
-        this._helpWindow = null;
-        this._handlers = {};
-        this._touching = false;
-        this._scrollX = 0;
-        this._scrollY = 0;
         this.deactivate();
     }
 
