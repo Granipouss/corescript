@@ -47,7 +47,7 @@ export const ConfigManager = new (class ConfigManager {
     }
 
     load(): void {
-        let json;
+        let json: string;
         let config = {};
         try {
             json = StorageManager.load(-1);

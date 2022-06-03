@@ -20,6 +20,10 @@ export default {
     resolve: {
         extensions: ['.ts', '.ts', '.js'],
     },
-    externals: [{ 'pixi.js': 'PIXI' }],
+    externals: {
+        'pixi.js': 'PIXI',
+        fs: 'commonjs fs',
+        path: 'commonjs path',
+    },
     devtool: 'eval-source-map',
 } as Configuration;

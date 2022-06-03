@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* global LZString, process */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+import * as LZString from 'lz-string';
 
 import { format } from '../rpg_core/extension';
 import { Utils } from '../rpg_core/Utils';
-
-// FIXME:
-const require = () => void 0;
 
 /**
  * The static class that manages storage for saving game data.
  */
 export const StorageManager = new (class StorageManager {
-    save(savefileId, json) {
+    private _canMakeWwwSaveDirectory: boolean;
+
+    save(savefileId: number, json: string): void {
         if (this.isLocalMode()) {
             this.saveToLocalFile(savefileId, json);
         } else {
@@ -19,7 +19,7 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    load(savefileId) {
+    load(savefileId: number): string {
         if (this.isLocalMode()) {
             return this.loadFromLocalFile(savefileId);
         } else {
@@ -27,7 +27,7 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    exists(savefileId) {
+    exists(savefileId: number): boolean {
         if (this.isLocalMode()) {
             return this.localFileExists(savefileId);
         } else {
@@ -35,7 +35,7 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    remove(savefileId) {
+    remove(savefileId: number): void {
         if (this.isLocalMode()) {
             this.removeLocalFile(savefileId);
         } else {
@@ -43,11 +43,11 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    backup(savefileId) {
+    backup(savefileId: number): void {
         if (this.exists(savefileId)) {
             if (this.isLocalMode()) {
                 const data = this.loadFromLocalFile(savefileId);
-                var compressed = LZString.compressToBase64(data);
+                const compressed = LZString.compressToBase64(data);
                 const fs = require('fs');
                 const dirPath = this.localFileDirectoryPath();
                 const filePath = this.localFilePath(savefileId) + '.bak';
@@ -56,15 +56,15 @@ export const StorageManager = new (class StorageManager {
                 }
                 fs.writeFileSync(filePath, compressed);
             } else {
-                // var data = this.loadFromWebStorage(savefileId);
-                // var compressed = LZString.compressToBase64(data);
+                const data = this.loadFromWebStorage(savefileId);
+                const compressed = LZString.compressToBase64(data);
                 const key = this.webStorageKey(savefileId) + 'bak';
                 localStorage.setItem(key, compressed);
             }
         }
     }
 
-    backupExists(savefileId) {
+    backupExists(savefileId: number): boolean {
         if (this.isLocalMode()) {
             return this.localFileBackupExists(savefileId);
         } else {
@@ -72,11 +72,11 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    cleanBackup(savefileId) {
+    cleanBackup(savefileId: number): void {
         if (this.backupExists(savefileId)) {
             if (this.isLocalMode()) {
                 const fs = require('fs');
-                // var dirPath = this.localFileDirectoryPath();
+                // const dirPath = this.localFileDirectoryPath();
                 const filePath = this.localFilePath(savefileId);
                 fs.unlinkSync(filePath + '.bak');
             } else {
@@ -86,11 +86,11 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    restoreBackup(savefileId) {
+    restoreBackup(savefileId: number): void {
         if (this.backupExists(savefileId)) {
             if (this.isLocalMode()) {
                 const data = this.loadFromLocalBackupFile(savefileId);
-                var compressed = LZString.compressToBase64(data);
+                const compressed = LZString.compressToBase64(data);
                 const fs = require('fs');
                 const dirPath = this.localFileDirectoryPath();
                 const filePath = this.localFilePath(savefileId);
@@ -100,8 +100,8 @@ export const StorageManager = new (class StorageManager {
                 fs.writeFileSync(filePath, compressed);
                 fs.unlinkSync(filePath + '.bak');
             } else {
-                // var data = this.loadFromWebStorageBackup(savefileId);
-                // var compressed = LZString.compressToBase64(data);
+                const data = this.loadFromWebStorageBackup(savefileId);
+                const compressed = LZString.compressToBase64(data);
                 const key = this.webStorageKey(savefileId);
                 localStorage.setItem(key, compressed);
                 localStorage.removeItem(key + 'bak');
@@ -109,11 +109,11 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    isLocalMode() {
+    isLocalMode(): boolean {
         return Utils.isNwjs();
     }
 
-    saveToLocalFile(savefileId, json) {
+    saveToLocalFile(savefileId: number, json: string): void {
         const data = LZString.compressToBase64(json);
         const fs = require('fs');
         const dirPath = this.localFileDirectoryPath();
@@ -124,7 +124,7 @@ export const StorageManager = new (class StorageManager {
         fs.writeFileSync(filePath, data);
     }
 
-    loadFromLocalFile(savefileId) {
+    loadFromLocalFile(savefileId: number): string {
         let data = null;
         const fs = require('fs');
         const filePath = this.localFilePath(savefileId);
@@ -134,7 +134,7 @@ export const StorageManager = new (class StorageManager {
         return LZString.decompressFromBase64(data);
     }
 
-    loadFromLocalBackupFile(savefileId) {
+    loadFromLocalBackupFile(savefileId: number): string {
         let data = null;
         const fs = require('fs');
         const filePath = this.localFilePath(savefileId) + '.bak';
@@ -144,17 +144,17 @@ export const StorageManager = new (class StorageManager {
         return LZString.decompressFromBase64(data);
     }
 
-    localFileBackupExists(savefileId) {
+    localFileBackupExists(savefileId: number): boolean {
         const fs = require('fs');
         return fs.existsSync(this.localFilePath(savefileId) + '.bak');
     }
 
-    localFileExists(savefileId) {
+    localFileExists(savefileId: number): boolean {
         const fs = require('fs');
         return fs.existsSync(this.localFilePath(savefileId));
     }
 
-    removeLocalFile(savefileId) {
+    removeLocalFile(savefileId: number): void {
         const fs = require('fs');
         const filePath = this.localFilePath(savefileId);
         if (fs.existsSync(filePath)) {
@@ -162,40 +162,40 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    saveToWebStorage(savefileId, json) {
+    saveToWebStorage(savefileId: number, json: string): void {
         const key = this.webStorageKey(savefileId);
         const data = LZString.compressToBase64(json);
         localStorage.setItem(key, data);
     }
 
-    loadFromWebStorage(savefileId) {
+    loadFromWebStorage(savefileId: number): string {
         const key = this.webStorageKey(savefileId);
         const data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     }
 
-    loadFromWebStorageBackup(savefileId) {
+    loadFromWebStorageBackup(savefileId: number): string {
         const key = this.webStorageKey(savefileId) + 'bak';
         const data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     }
 
-    webStorageBackupExists(savefileId) {
+    webStorageBackupExists(savefileId: number): boolean {
         const key = this.webStorageKey(savefileId) + 'bak';
         return !!localStorage.getItem(key);
     }
 
-    webStorageExists(savefileId) {
+    webStorageExists(savefileId: number): boolean {
         const key = this.webStorageKey(savefileId);
         return !!localStorage.getItem(key);
     }
 
-    removeWebStorage(savefileId) {
+    removeWebStorage(savefileId: number): void {
         const key = this.webStorageKey(savefileId);
         localStorage.removeItem(key);
     }
 
-    localFileDirectoryPath() {
+    localFileDirectoryPath(): string {
         const path = require('path');
 
         const base = path.dirname(process.mainModule.filename);
@@ -206,8 +206,8 @@ export const StorageManager = new (class StorageManager {
         }
     }
 
-    localFilePath(savefileId) {
-        let name;
+    localFilePath(savefileId: number): string {
+        let name: string;
         if (savefileId < 0) {
             name = 'config.rpgsave';
         } else if (savefileId === 0) {
@@ -218,7 +218,7 @@ export const StorageManager = new (class StorageManager {
         return this.localFileDirectoryPath() + name;
     }
 
-    webStorageKey(savefileId) {
+    webStorageKey(savefileId: number): string {
         if (savefileId < 0) {
             return 'RPG Config';
         } else if (savefileId === 0) {
@@ -229,7 +229,7 @@ export const StorageManager = new (class StorageManager {
     }
 
     // Enigma Virtual Box cannot make www/save directory
-    canMakeWwwSaveDirectory() {
+    canMakeWwwSaveDirectory(): boolean {
         if (this._canMakeWwwSaveDirectory === undefined) {
             const fs = require('fs');
             const path = require('path');
