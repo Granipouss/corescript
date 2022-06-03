@@ -1,12 +1,12 @@
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGItem } from '../rpg_data/item';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { DataManager } from '../rpg_managers/DataManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { TextManager } from '../rpg_managers/TextManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Base } from './Window_Base';
 
 /**

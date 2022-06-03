@@ -1,6 +1,6 @@
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGItem } from '../rpg_data/item';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Window_Selectable } from './Window_Selectable';
 

@@ -1,11 +1,11 @@
 import { format } from '../rpg_core/extension';
-import { RPGArmor } from '../rpg_data/armor';
-import { AudioFile } from '../rpg_data/audio-file';
-import { RPGItem } from '../rpg_data/item';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { AudioFile } from '../rpg_data/audio-file';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { Game_Action } from '../rpg_objects/Game_Action';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
-import { Game_Battler } from '../rpg_objects/Game_Battler';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Battler } from '../rpg_objects/Game_Battler';
 import { Scene_Gameover } from '../rpg_scenes/Scene_Gameover';
 import type { Spriteset_Battle } from '../rpg_sprites/Spriteset_Battle';
 import type { Window_BattleLog } from '../rpg_windows/Window_BattleLog';

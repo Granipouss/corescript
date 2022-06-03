@@ -1,4 +1,4 @@
-import { Game_Battler } from '../rpg_objects/Game_Battler';
+import type { Game_Battler } from '../rpg_objects/Game_Battler';
 import { Sprite_Base } from './Sprite_Base';
 import { Sprite_Damage } from './Sprite_Damage';
 

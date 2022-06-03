@@ -1,7 +1,7 @@
 import { Sprite } from '../rpg_core/Sprite';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Sprite_Base } from './Sprite_Base';
 import { Sprite_Battler } from './Sprite_Battler';
 import { Sprite_StateOverlay } from './Sprite_StateOverlay';

@@ -1,7 +1,7 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGItem } from '../rpg_data/item';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_Base } from '../rpg_windows/Window_Base';
 import { Window_Gold } from '../rpg_windows/Window_Gold';

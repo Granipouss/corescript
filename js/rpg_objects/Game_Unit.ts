@@ -1,4 +1,4 @@
-import { Game_Battler } from './Game_Battler';
+import type { Game_Battler } from './Game_Battler';
 
 /**
  * The superclass of Game_Party and Game_Troop.

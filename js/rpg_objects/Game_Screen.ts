@@ -1,5 +1,6 @@
-import { arrayClone, Tone } from '../rpg_core/extension';
-import { WeatherType } from '../rpg_core/Weather';
+import type { Tone } from '../rpg_core/extension';
+import { arrayClone } from '../rpg_core/extension';
+import type { WeatherType } from '../rpg_core/Weather';
 import { Game_Picture } from './Game_Picture';
 
 /**

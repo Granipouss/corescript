@@ -1,4 +1,4 @@
-import { Tone } from '../rpg_core/extension';
+import type { Tone } from '../rpg_core/extension';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { AudioManager } from '../rpg_managers/AudioManager';

@@ -1,13 +1,13 @@
 import { randomInt } from '../rpg_core/extension';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGEffect } from '../rpg_data/effect';
-import { RPGEnemyAction } from '../rpg_data/enemy';
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
-import { RPGWeapon } from '../rpg_data/weapon';
-import { Game_Battler } from './Game_Battler';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGEffect } from '../rpg_data/effect';
+import type { RPGEnemyAction } from '../rpg_data/enemy';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
+import type { RPGWeapon } from '../rpg_data/weapon';
+import type { Game_Battler } from './Game_Battler';
 import { Game_Item } from './Game_Item';
-import { Game_Unit } from './Game_Unit';
+import type { Game_Unit } from './Game_Unit';
 
 /**
  * The game object class for a battle action.

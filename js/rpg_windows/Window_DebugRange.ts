@@ -1,6 +1,6 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
-import { Window_DebugEdit } from './Window_DebugEdit';
+import type { Window_DebugEdit } from './Window_DebugEdit';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

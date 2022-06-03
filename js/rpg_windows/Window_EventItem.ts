@@ -1,8 +1,8 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGItem } from '../rpg_data/item';
+import type { RPGItem } from '../rpg_data/item';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Window_ItemList } from './Window_ItemList';
-import { Window_Message } from './Window_Message';
+import type { Window_Message } from './Window_Message';
 
 /**
  * The window used for the event command [Select Item].

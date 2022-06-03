@@ -1,8 +1,9 @@
 import type { Bitmap } from '../rpg_core/Bitmap';
-import { arrayClone, Tone } from '../rpg_core/extension';
+import type { Tone } from '../rpg_core/extension';
+import { arrayClone } from '../rpg_core/extension';
 import { ScreenSprite } from '../rpg_core/ScreenSprite';
 import { Sprite } from '../rpg_core/Sprite';
-import { RPGAnimation, RPGAnimationTiming } from '../rpg_data/animation';
+import type { RPGAnimation, RPGAnimationTiming } from '../rpg_data/animation';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import type { Sprite_Base } from './Sprite_Base';

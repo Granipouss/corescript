@@ -7,7 +7,7 @@ import { ImageManager } from '../rpg_managers/ImageManager';
 import { SceneManager } from '../rpg_managers/SceneManager';
 import { Spriteset_Base } from './Spriteset_Base';
 import { Sprite_Actor } from './Sprite_Actor';
-import { Sprite_Battler } from './Sprite_Battler';
+import type { Sprite_Battler } from './Sprite_Battler';
 import { Sprite_Enemy } from './Sprite_Enemy';
 
 /**

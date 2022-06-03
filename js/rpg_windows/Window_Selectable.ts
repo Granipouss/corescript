@@ -5,7 +5,7 @@ import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Window_Base } from './Window_Base';
-import { Window_Help } from './Window_Help';
+import type { Window_Help } from './Window_Help';
 
 /**
  * The window class with cursor movement and scroll functions.

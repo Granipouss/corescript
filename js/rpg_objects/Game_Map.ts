@@ -1,8 +1,8 @@
 import { clamp, mod } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGCommonEvent } from '../rpg_data/common-event';
-import { MapEncounter } from '../rpg_data/map';
-import { RPGTileset } from '../rpg_data/tileset';
+import type { RPGCommonEvent } from '../rpg_data/common-event';
+import type { MapEncounter } from '../rpg_data/map';
+import type { RPGTileset } from '../rpg_data/tileset';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { Game_CommonEvent } from './Game_CommonEvent';

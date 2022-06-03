@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { CacheEntry } from './CacheEntry';
+import type { CacheEntry } from './CacheEntry';
 
 import { Decrypter } from './Decrypter';
 import { Graphics } from './Graphics';

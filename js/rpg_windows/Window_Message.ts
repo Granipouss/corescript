@@ -1,10 +1,11 @@
-import { Bitmap } from '../rpg_core/Bitmap';
+import type { Bitmap } from '../rpg_core/Bitmap';
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Utils } from '../rpg_core/Utils';
 import { ImageManager } from '../rpg_managers/ImageManager';
-import { TextState, Window_Base } from './Window_Base';
+import type { TextState } from './Window_Base';
+import { Window_Base } from './Window_Base';
 import { Window_ChoiceList } from './Window_ChoiceList';
 import { Window_EventItem } from './Window_EventItem';
 import { Window_Gold } from './Window_Gold';

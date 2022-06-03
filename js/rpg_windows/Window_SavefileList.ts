@@ -1,4 +1,5 @@
-import { DataManager, SaveInfo } from '../rpg_managers/DataManager';
+import type { SaveInfo } from '../rpg_managers/DataManager';
+import { DataManager } from '../rpg_managers/DataManager';
 import { TextManager } from '../rpg_managers/TextManager';
 import { Window_Selectable } from './Window_Selectable';
 

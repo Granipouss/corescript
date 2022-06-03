@@ -1,4 +1,4 @@
-import { RPGItem } from '../rpg_data/item';
+import type { RPGItem } from '../rpg_data/item';
 import { Window_ItemList } from './Window_ItemList';
 
 /**

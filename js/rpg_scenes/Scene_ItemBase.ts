@@ -1,13 +1,13 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
 import { SceneManager } from '../rpg_managers/SceneManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Game_Action } from '../rpg_objects/Game_Action';
-import { Game_Battler } from '../rpg_objects/Game_Battler';
-import { Window_ItemList } from '../rpg_windows/Window_ItemList';
+import type { Game_Battler } from '../rpg_objects/Game_Battler';
+import type { Window_ItemList } from '../rpg_windows/Window_ItemList';
 import { Window_MenuActor } from '../rpg_windows/Window_MenuActor';
-import { Window_SkillList } from '../rpg_windows/Window_SkillList';
+import type { Window_SkillList } from '../rpg_windows/Window_SkillList';
 import { Scene_Map } from './Scene_Map';
 import { Scene_MenuBase } from './Scene_MenuBase';
 

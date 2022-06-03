@@ -7,7 +7,7 @@ import { WindowLayer } from '../rpg_core/WindowLayer';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { SceneManager } from '../rpg_managers/SceneManager';
-import { Window_Base } from '../rpg_windows/Window_Base';
+import type { Window_Base } from '../rpg_windows/Window_Base';
 import { Scene_Gameover } from './Scene_Gameover';
 
 /**

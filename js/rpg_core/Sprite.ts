@@ -2,7 +2,8 @@ import * as PIXI from 'pixi.js';
 
 import { Graphics } from './Graphics';
 import { Utils } from './Utils';
-import { arrayClone, arrayEquals, clamp, Tone } from './extension';
+import type { Tone } from './extension';
+import { arrayClone, arrayEquals, clamp } from './extension';
 import type { Bitmap } from './Bitmap';
 
 /**

@@ -1,5 +1,5 @@
-import { RPGSkill } from '../rpg_data/skill';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { RPGSkill } from '../rpg_data/skill';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

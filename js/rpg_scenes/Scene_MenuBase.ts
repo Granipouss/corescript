@@ -1,6 +1,6 @@
 import { Sprite } from '../rpg_core/Sprite';
 import { SceneManager } from '../rpg_managers/SceneManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Help } from '../rpg_windows/Window_Help';
 import { Scene_Base } from './Scene_Base';
 

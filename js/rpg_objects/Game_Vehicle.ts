@@ -1,5 +1,5 @@
-import { AudioFile } from '../rpg_data/audio-file';
-import { RPGSystemVehicle } from '../rpg_data/system';
+import type { AudioFile } from '../rpg_data/audio-file';
+import type { RPGSystemVehicle } from '../rpg_data/system';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { Game_Character } from './Game_Character';
 

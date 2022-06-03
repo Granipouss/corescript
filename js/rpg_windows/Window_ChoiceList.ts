@@ -1,7 +1,7 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { Window_Command } from './Window_Command';
-import { Window_Message } from './Window_Message';
+import type { Window_Message } from './Window_Message';
 
 /**
  * The window used for the event command [Show Choices].

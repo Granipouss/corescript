@@ -1,7 +1,8 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
-import { TextState, Window_Base } from './Window_Base';
+import type { TextState } from './Window_Base';
+import { Window_Base } from './Window_Base';
 
 /**
  * The window for displaying scrolling text. No frame is displayed, but it

@@ -1,6 +1,7 @@
 import { Bitmap } from '../rpg_core/Bitmap';
 import { Utils } from '../rpg_core/Utils';
-import { Graphics, RendererType } from '../rpg_core/Graphics';
+import type { RendererType } from '../rpg_core/Graphics';
+import { Graphics } from '../rpg_core/Graphics';
 import { WebAudio } from '../rpg_core/WebAudio';
 import { TouchInput } from '../rpg_core/TouchInput';
 import { Input } from '../rpg_core/Input';

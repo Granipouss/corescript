@@ -1,6 +1,6 @@
 import { randomInt } from '../rpg_core/extension';
-import { RPGMoveCommand } from '../rpg_data/move-command';
-import { RPGMoveRoute } from '../rpg_data/move-route';
+import type { RPGMoveCommand } from '../rpg_data/move-command';
+import type { RPGMoveRoute } from '../rpg_data/move-route';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { Game_CharacterBase } from './Game_CharacterBase';
 

@@ -1,7 +1,7 @@
 import { Graphics } from '../rpg_core/Graphics';
 import { ConfigManager } from '../rpg_managers/ConfigManager';
 import { TextManager } from '../rpg_managers/TextManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Command } from './Window_Command';
 
 /**

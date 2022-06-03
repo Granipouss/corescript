@@ -1,13 +1,13 @@
 import { clamp, randomInt } from '../rpg_core/extension';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
-import { RPGState } from '../rpg_data/state';
-import { RPGTrait, RPGTraitObject } from '../rpg_data/trait';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
+import type { RPGState } from '../rpg_data/state';
+import type { RPGTrait, RPGTraitObject } from '../rpg_data/trait';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { DataManager } from '../rpg_managers/DataManager';
-import { Game_Actor } from './Game_Actor';
-import { Game_Enemy } from './Game_Enemy';
+import type { Game_Actor } from './Game_Actor';
+import type { Game_Enemy } from './Game_Enemy';
 
 /**
  * The superclass of Game_Battler. It mainly contains parameters calculation.

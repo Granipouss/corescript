@@ -1,6 +1,6 @@
 import { Input } from '../rpg_core/Input';
 import { SoundManager } from '../rpg_managers/SoundManager';
-import { Window_NameEdit } from './Window_NameEdit';
+import type { Window_NameEdit } from './Window_NameEdit';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

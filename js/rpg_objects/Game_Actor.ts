@@ -1,12 +1,12 @@
 import { clamp, format } from '../rpg_core/extension';
-import { RPGActor } from '../rpg_data/actor';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGClass } from '../rpg_data/class';
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
-import { RPGState } from '../rpg_data/state';
-import { RPGTraitObject } from '../rpg_data/trait';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGActor } from '../rpg_data/actor';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGClass } from '../rpg_data/class';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
+import type { RPGState } from '../rpg_data/state';
+import type { RPGTraitObject } from '../rpg_data/trait';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { DataManager } from '../rpg_managers/DataManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
@@ -14,8 +14,8 @@ import { TextManager } from '../rpg_managers/TextManager';
 import { Game_Action } from './Game_Action';
 import { Game_Battler } from './Game_Battler';
 import { Game_Item } from './Game_Item';
-import { Game_Party } from './Game_Party';
-import { Game_Troop } from './Game_Troop';
+import type { Game_Party } from './Game_Party';
+import type { Game_Troop } from './Game_Troop';
 
 /**
  * The game object class for an actor.

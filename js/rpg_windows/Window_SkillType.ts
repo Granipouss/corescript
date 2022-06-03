@@ -1,6 +1,6 @@
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Command } from './Window_Command';
-import { Window_SkillList } from './Window_SkillList';
+import type { Window_SkillList } from './Window_SkillList';
 
 /**
  * The window for selecting a skill type on the skill screen.

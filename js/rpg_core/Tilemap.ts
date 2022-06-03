@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import { Bitmap } from './Bitmap';
+import type { Bitmap } from './Bitmap';
 import { Graphics } from './Graphics';
 import { mod } from './extension';
 

@@ -1,4 +1,4 @@
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Base } from './Window_Base';
 
 /**

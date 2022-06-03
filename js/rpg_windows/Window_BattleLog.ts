@@ -4,15 +4,15 @@ import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { Sprite } from '../rpg_core/Sprite';
 import { TouchInput } from '../rpg_core/TouchInput';
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
 import { DataManager } from '../rpg_managers/DataManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { TextManager } from '../rpg_managers/TextManager';
-import { Game_Action } from '../rpg_objects/Game_Action';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
-import { Game_Battler } from '../rpg_objects/Game_Battler';
-import { Spriteset_Battle } from '../rpg_sprites/Spriteset_Battle';
+import type { Game_Action } from '../rpg_objects/Game_Action';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Battler } from '../rpg_objects/Game_Battler';
+import type { Spriteset_Battle } from '../rpg_sprites/Spriteset_Battle';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

@@ -1,7 +1,8 @@
 import { clamp } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 
-import { Config, ConfigManager } from '../rpg_managers/ConfigManager';
+import type { Config } from '../rpg_managers/ConfigManager';
+import { ConfigManager } from '../rpg_managers/ConfigManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { TextManager } from '../rpg_managers/TextManager';
 

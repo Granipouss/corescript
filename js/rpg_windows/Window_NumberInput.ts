@@ -5,7 +5,7 @@ import { TouchInput } from '../rpg_core/TouchInput';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Sprite_Button } from '../rpg_sprites/Sprite_Button';
-import { Window_Message } from './Window_Message';
+import type { Window_Message } from './Window_Message';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

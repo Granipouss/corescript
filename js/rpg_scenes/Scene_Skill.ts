@@ -1,7 +1,7 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGSkill } from '../rpg_data/skill';
+import type { RPGSkill } from '../rpg_data/skill';
 import { SoundManager } from '../rpg_managers/SoundManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_SkillList } from '../rpg_windows/Window_SkillList';
 import { Window_SkillStatus } from '../rpg_windows/Window_SkillStatus';
 import { Window_SkillType } from '../rpg_windows/Window_SkillType';

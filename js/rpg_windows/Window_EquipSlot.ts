@@ -1,8 +1,8 @@
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGWeapon } from '../rpg_data/weapon';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
-import { Window_EquipItem } from './Window_EquipItem';
-import { Window_EquipStatus } from './Window_EquipStatus';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGWeapon } from '../rpg_data/weapon';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Window_EquipItem } from './Window_EquipItem';
+import type { Window_EquipStatus } from './Window_EquipStatus';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

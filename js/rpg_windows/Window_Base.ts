@@ -4,7 +4,7 @@ import { Window } from '../rpg_core/Window';
 
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { TextManager } from '../rpg_managers/TextManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 
 export type TextState = {
     index: number;

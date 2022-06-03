@@ -2,13 +2,13 @@ import { randomInt } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { Input } from '../rpg_core/Input';
 import { TouchInput } from '../rpg_core/TouchInput';
-import { MapEncounter } from '../rpg_data/map';
+import type { MapEncounter } from '../rpg_data/map';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { ConfigManager } from '../rpg_managers/ConfigManager';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Game_Character } from './Game_Character';
 import { Game_Followers } from './Game_Followers';
-import { Game_Vehicle } from './Game_Vehicle';
+import type { Game_Vehicle } from './Game_Vehicle';
 
 /**
  * The game object class for the player. It contains event starting

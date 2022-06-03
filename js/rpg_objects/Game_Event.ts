@@ -1,10 +1,11 @@
 import { randomInt } from '../rpg_core/extension';
-import { RPGEvent } from '../rpg_data/event';
-import { RPGEventCommand } from '../rpg_data/event-command';
-import { RPGEventPage } from '../rpg_data/event-page';
-import { RPGMoveRoute } from '../rpg_data/move-route';
+import type { RPGEvent } from '../rpg_data/event';
+import type { RPGEventCommand } from '../rpg_data/event-command';
+import type { RPGEventPage } from '../rpg_data/event-page';
+import type { RPGMoveRoute } from '../rpg_data/move-route';
 import { Game_Character } from './Game_Character';
-import { EventInfo, Game_Interpreter } from './Game_Interpreter';
+import type { EventInfo } from './Game_Interpreter';
+import { Game_Interpreter } from './Game_Interpreter';
 
 /**
  * The game object class for an event. It contains functionality for event page

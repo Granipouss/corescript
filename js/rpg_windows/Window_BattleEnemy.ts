@@ -1,5 +1,5 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { Game_Enemy } from '../rpg_objects/Game_Enemy';
+import type { Game_Enemy } from '../rpg_objects/Game_Enemy';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

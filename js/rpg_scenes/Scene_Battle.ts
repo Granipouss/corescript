@@ -1,5 +1,5 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGItem } from '../rpg_data/item';
+import type { RPGItem } from '../rpg_data/item';
 import { AudioManager } from '../rpg_managers/AudioManager';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { ImageManager } from '../rpg_managers/ImageManager';

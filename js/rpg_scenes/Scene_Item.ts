@@ -1,7 +1,7 @@
 import { Graphics } from '../rpg_core/Graphics';
-import { RPGItem } from '../rpg_data/item';
+import type { RPGItem } from '../rpg_data/item';
 import { SoundManager } from '../rpg_managers/SoundManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_ItemCategory } from '../rpg_windows/Window_ItemCategory';
 import { Window_ItemList } from '../rpg_windows/Window_ItemList';
 import { Scene_ItemBase } from './Scene_ItemBase';

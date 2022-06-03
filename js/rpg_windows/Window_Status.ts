@@ -1,7 +1,7 @@
 import { format } from '../rpg_core/extension';
 import { Graphics } from '../rpg_core/Graphics';
 import { TextManager } from '../rpg_managers/TextManager';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
 import { Window_Selectable } from './Window_Selectable';
 
 /**

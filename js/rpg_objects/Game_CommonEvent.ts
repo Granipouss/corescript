@@ -1,5 +1,5 @@
-import { RPGCommonEvent } from '../rpg_data/common-event';
-import { RPGEventCommand } from '../rpg_data/event-command';
+import type { RPGCommonEvent } from '../rpg_data/common-event';
+import type { RPGEventCommand } from '../rpg_data/event-command';
 import { Game_Interpreter } from './Game_Interpreter';
 
 /**

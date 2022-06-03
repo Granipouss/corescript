@@ -1,5 +1,5 @@
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
 import { DataManager } from '../rpg_managers/DataManager';
 import { Game_Action } from '../rpg_objects/Game_Action';
 import { Window_MenuStatus } from './Window_MenuStatus';

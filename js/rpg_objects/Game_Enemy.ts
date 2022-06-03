@@ -1,11 +1,11 @@
 import { randomInt } from '../rpg_core/extension';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGEnemy, RPGEnemyAction } from '../rpg_data/enemy';
-import { RPGItem } from '../rpg_data/item';
-import { RPGTraitObject } from '../rpg_data/trait';
-import { RPGWeapon } from '../rpg_data/weapon';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGEnemy, RPGEnemyAction } from '../rpg_data/enemy';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGTraitObject } from '../rpg_data/trait';
+import type { RPGWeapon } from '../rpg_data/weapon';
 import { SoundManager } from '../rpg_managers/SoundManager';
-import { Game_Action } from './Game_Action';
+import type { Game_Action } from './Game_Action';
 import { Game_Battler } from './Game_Battler';
 import type { Game_Party } from './Game_Party';
 import type { Game_Troop } from './Game_Troop';

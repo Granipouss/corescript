@@ -1,5 +1,5 @@
 import { Utils } from '../rpg_core/Utils';
-import { RPGCommonEvent } from '../rpg_data/common-event';
+import type { RPGCommonEvent } from '../rpg_data/common-event';
 
 /**
  * The game object class for temporary data that is not included in save data.

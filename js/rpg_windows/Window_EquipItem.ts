@@ -1,9 +1,9 @@
 import { JsonEx } from '../rpg_core/JsonEx';
-import { RPGArmor } from '../rpg_data/armor';
-import { RPGItem } from '../rpg_data/item';
-import { RPGWeapon } from '../rpg_data/weapon';
-import { Game_Actor } from '../rpg_objects/Game_Actor';
-import { Window_EquipStatus } from './Window_EquipStatus';
+import type { RPGArmor } from '../rpg_data/armor';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGWeapon } from '../rpg_data/weapon';
+import type { Game_Actor } from '../rpg_objects/Game_Actor';
+import type { Window_EquipStatus } from './Window_EquipStatus';
 import { Window_ItemList } from './Window_ItemList';
 
 /**

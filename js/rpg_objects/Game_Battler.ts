@@ -1,13 +1,13 @@
 import { randomInt } from '../rpg_core/extension';
-import { RPGItem } from '../rpg_data/item';
-import { RPGSkill } from '../rpg_data/skill';
+import type { RPGItem } from '../rpg_data/item';
+import type { RPGSkill } from '../rpg_data/skill';
 import { BattleManager } from '../rpg_managers/BattleManager';
 import { DataManager } from '../rpg_managers/DataManager';
 import { SoundManager } from '../rpg_managers/SoundManager';
 import { Game_Action } from './Game_Action';
 import { Game_ActionResult } from './Game_ActionResult';
 import { Game_BattlerBase } from './Game_BattlerBase';
-import { Game_Unit } from './Game_Unit';
+import type { Game_Unit } from './Game_Unit';
 
 export type AnimationData = {
     animationId: number;

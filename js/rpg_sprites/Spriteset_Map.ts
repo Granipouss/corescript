@@ -6,7 +6,7 @@ import { Sprite } from '../rpg_core/Sprite';
 import type { Tilemap } from '../rpg_core/Tilemap';
 import { TilingSprite } from '../rpg_core/TilingSprite';
 import { Weather } from '../rpg_core/Weather';
-import { RPGTileset } from '../rpg_data/tileset';
+import type { RPGTileset } from '../rpg_data/tileset';
 import { ImageManager } from '../rpg_managers/ImageManager';
 import { Spriteset_Base } from './Spriteset_Base';
 import { Sprite_Character } from './Sprite_Character';

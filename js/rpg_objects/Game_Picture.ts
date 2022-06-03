@@ -1,4 +1,5 @@
-import { arrayClone, Tone } from '../rpg_core/extension';
+import type { Tone } from '../rpg_core/extension';
+import { arrayClone } from '../rpg_core/extension';
 
 /**
  * The game object class for a picture.
