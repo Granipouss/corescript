@@ -12,7 +12,9 @@ export class Scene_Name extends Scene_MenuBase {
     protected _actorId: number;
     protected _maxLength: number;
 
-    prepare(actorId: number, maxLength: number): void {
+    constructor(actorId: number, maxLength: number) {
+        super();
+
         this._actorId = actorId;
         this._maxLength = maxLength;
     }

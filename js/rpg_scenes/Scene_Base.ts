@@ -52,10 +52,6 @@ export abstract class Scene_Base extends PIXI.Container {
         ImageManager.releaseReservation(this._imageReservationId);
     }
 
-    prepare(..._args: unknown[]): void {
-        // ...
-    }
-
     /**
      * Create the components and add them to the rendering process.
      */

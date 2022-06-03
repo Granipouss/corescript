@@ -11,7 +11,7 @@ import { AudioManager } from './AudioManager';
 import { ImageManager } from './ImageManager';
 import { PluginManager } from './PluginManager';
 
-type SceneClass = new (...args: unknown[]) => Scene_Base;
+type SceneClass<TParams extends unknown[] = []> = new (...args: TParams) => Scene_Base;
 
 /**
  * The static class that manages scene transitions.
@@ -309,18 +309,18 @@ export const SceneManager = new (class SceneManager {
         return this._previousClass === sceneClass;
     }
 
-    goto(sceneClass: SceneClass): void {
+    goto<T extends unknown[]>(sceneClass: SceneClass<T>, ...params: T): void {
         if (sceneClass) {
-            this._nextScene = new sceneClass();
+            this._nextScene = new sceneClass(...params);
         }
         if (this._scene) {
             this._scene.stop();
         }
     }
 
-    push(sceneClass: SceneClass): void {
+    push<T extends unknown[]>(sceneClass: SceneClass<T>, ...params: T): void {
         this._stack.push(this._scene.constructor as SceneClass);
-        this.goto(sceneClass);
+        this.goto(sceneClass, ...params);
     }
 
     pop(): void {
@@ -342,13 +342,6 @@ export const SceneManager = new (class SceneManager {
 
     stop(): void {
         this._stopped = true;
-    }
-
-    prepareNextScene(...args: unknown[]): void {
-        // FIXME:
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this._nextScene.prepare(...args);
     }
 
     snap(): Bitmap {

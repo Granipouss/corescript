@@ -1580,8 +1580,7 @@ export class Game_Interpreter {
                 this._index++;
                 goods.push([...this.currentCommand().parameters]);
             }
-            SceneManager.push(Scene_Shop);
-            SceneManager.prepareNextScene(goods, this._params[4]);
+            SceneManager.push(Scene_Shop, goods as [number, number, number, number][], this._params[4]);
         }
         return true;
     }
@@ -1590,8 +1589,7 @@ export class Game_Interpreter {
     command303(): boolean {
         if (!window.$gameParty.inBattle()) {
             if (window.$dataActors[this._params[0]]) {
-                SceneManager.push(Scene_Name);
-                SceneManager.prepareNextScene(this._params[0], this._params[1]);
+                SceneManager.push(Scene_Name, this._params[0], this._params[1]);
             }
         }
         return true;

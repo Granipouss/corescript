@@ -30,7 +30,9 @@ export class Scene_Shop extends Scene_MenuBase {
     protected _purchaseOnly: boolean;
     protected _item: RPGItem | RPGArmor | RPGWeapon;
 
-    prepare(goods: [number, number, number, number][], purchaseOnly = false): void {
+    constructor(goods: [number, number, number, number][], purchaseOnly = false) {
+        super();
+
         this._goods = goods;
         this._purchaseOnly = purchaseOnly;
         this._item = null;
