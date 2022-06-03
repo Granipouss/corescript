@@ -36,9 +36,7 @@ export class Game_Action {
     private _forcing: boolean;
     private _item: Game_Item;
     private _targetIndex: number;
-
-    // FIXME:
-    _reflectionTarget: Game_Battler;
+    private _reflectionTarget: Game_Battler;
 
     constructor(subject: Game_Battler, forcing = false) {
         this._subjectActorId = 0;
@@ -602,6 +600,10 @@ export class Game_Action {
         }
         target.gainMp(-value);
         this.gainDrainedMp(value);
+    }
+
+    setReflectionTarget(reflectionTarget: Game_Battler): void {
+        this._reflectionTarget = reflectionTarget;
     }
 
     gainDrainedHp(value: number): void {

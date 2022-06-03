@@ -465,7 +465,7 @@ export const BattleManager = new (class BattleManager {
     }
 
     invokeMagicReflection(subject: Game_Battler, target: Game_Battler): void {
-        this._action._reflectionTarget = target;
+        this._action.setReflectionTarget(target);
         this._logWindow.displayReflection(target);
         this._action.apply(subject);
         this._logWindow.displayActionResults(target, subject);
