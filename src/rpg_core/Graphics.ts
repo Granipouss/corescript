@@ -13,6 +13,7 @@ import { clamp, format } from './extension';
 export type RendererType = 'canvas' | 'webgl' | 'auto';
 
 declare const FPSMeter: new (options: unknown) => any;
+declare const makeVideoPlayableInline: (video: HTMLVideoElement) => void;
 
 /**
  * The static class that carries out graphics processing.

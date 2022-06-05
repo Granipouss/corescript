@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import { Graphics } from '../rpg_core/Graphics';
+import { Graphics } from './Graphics';
 import type { Sprite } from './Sprite';
 import type { Window } from './Window';
 

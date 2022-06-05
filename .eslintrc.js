@@ -1,5 +1,5 @@
 module.exports = {
-    "ignorePatterns": ["js/libs/*.js"],
+    "ignorePatterns": ["template"],
     "env": {
         "browser": true,
         "es2021": true
