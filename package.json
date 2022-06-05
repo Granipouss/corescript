@@ -7,6 +7,7 @@
   "scripts": {
     "watch": "webpack --watch --mode development",
     "build": "webpack --mode production",
+    "serve": "webpack serve --mode development",
     "zip": "bestzip corescript.zip ./corescript/",
     "test": "run-s build copy",
     "unittest": "node ./tests/test-save.js",
@@ -37,7 +38,8 @@
     "ts-node": "^10.8.0",
     "typescript": "^4.6.4",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.1"
   },
   "dependencies": {
     "lz-string": "^1.4.4",

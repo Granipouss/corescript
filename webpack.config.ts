@@ -42,4 +42,11 @@ export default {
         }),
     ],
     devtool: 'eval-source-map',
+    devServer: {
+        static: {
+            directory: resolve(__dirname, 'template'),
+        },
+        compress: true,
+        port: 9000,
+    },
 } as Configuration;
